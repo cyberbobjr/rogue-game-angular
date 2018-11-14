@@ -4,4 +4,6 @@ export interface IEntity {
   position: Position;
   name: string;
   character: string;
+
+  act();
 }

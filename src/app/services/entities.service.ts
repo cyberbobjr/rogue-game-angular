@@ -1,24 +1,25 @@
 import {Injectable} from '@angular/core';
-import {RotDisplayService} from './rot-display.service';
 import {IEntity} from '../interfaces/ientity';
-import {Entity} from '../classes/entity';
 
 @Injectable({
               providedIn: 'root'
             })
 export class EntitiesService {
-  playerEntity: IEntity;
-  entities: Array<IEntity> = [];
+  private _playerEntity: IEntity;
+  entities: Map<string, IEntity> = new Map<string, IEntity>();
 
-  set player(entity: Entity) {
-    this.playerEntity = entity;
+  set player(entity: IEntity) {
+    this._playerEntity = entity;
   }
 
   get player(): IEntity {
-    return this.playerEntity;
-
+    return this._playerEntity;
   }
 
   constructor() {
+  }
+
+  addEntity(actor: IEntity) {
+    this.entities.set(actor.name, actor);
   }
 }

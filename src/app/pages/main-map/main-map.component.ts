@@ -1,6 +1,8 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import Display from 'rot-js/lib/display/display';
 import {RotDisplayService} from '../../services/rot-display.service';
+import {EntitiesService} from '../../services/entities.service';
+import {IEntity} from '../../interfaces/ientity';
 
 @Component({
              selector: 'app-main-map',
@@ -18,7 +20,13 @@ export class MainMapComponent implements OnInit {
 
   ngOnInit() {
     this.refMap.nativeElement.appendChild(this.display.getContainer());
-    this.displayService.drawMap();
-    this.displayService.drawPlayer();
+    this.displayService.draw();
+    this.mainLoop();
+  }
+
+  async mainLoop() {
+    setTimeout(() => {
+      this.displayService.drawEntities();
+    }, 1000);
   }
 }
