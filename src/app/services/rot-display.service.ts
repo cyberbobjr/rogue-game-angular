@@ -39,7 +39,7 @@ export class RotDisplayService {
   }
 
   drawEntities() {
-    for (const actor of this.entitiesService.entities) {
+    for (const [actorName, actor] of this.entitiesService.entities) {
       this.display.draw(actor.position.x, actor.position.y, actor.character, 'white', null);
     }
   }
