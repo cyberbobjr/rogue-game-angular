@@ -16,16 +16,10 @@ export class Entity implements IEntity {
     if (position) {
       this.position = position;
     }
-    window.addEventListener('keydown', this);
   }
 
   act() {
     console.log('act');
     return new Promise(resolve => setTimeout(resolve, 500));
-  }
-
-  handleEvent(e: KeyboardEvent) {
-    console.log(e.code);
-//    window.removeEventListener('keydown', this);
   }
 }
