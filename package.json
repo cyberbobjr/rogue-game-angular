@@ -24,6 +24,7 @@
     "help": "^3.0.2",
     "rot-js": "^2.0.0",
     "rxjs": "~6.3.3",
+    "ts-keycode-enum": "^1.0.6",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

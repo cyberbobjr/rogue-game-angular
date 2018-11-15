@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import Arena from 'rot-js/lib/map/arena';
+import {MapEngine} from '../interfaces/map-engine';
 
 @Injectable({
               providedIn: 'root'
             })
-export class RotMapService {
+export class RotMapEngine implements MapEngine {
   width = 10;
   height = 10;
   map: string[][] = [];
@@ -34,4 +35,9 @@ export class RotMapService {
       this.map[index] = new Array(width).fill('/');
     });
   }
+
+  isWalkable(position: Position): boolean {
+    return true;
+  }
+
 }

@@ -1,9 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {RotMapService} from '../../services/rot-map.service';
-import {EntitiesService} from '../../services/entities.service';
-import {Entity} from '../../classes/entity';
-import {Position} from '../../classes/position';
-import {IEntity} from '../../interfaces/ientity';
+import {RotMapEngine} from '../../services/rot-map-engine.service';
+import {GameEngineService} from '../../services/game-engine.service';
 
 @Component({
              selector: 'app-main-page',
@@ -12,27 +9,25 @@ import {IEntity} from '../../interfaces/ientity';
            })
 export class MainPageComponent implements OnInit, OnDestroy {
   private _gameloop: any = null;
+  map: string[][] = null;
 
-  constructor(private rotMapService: RotMapService,
-              private entitiesService: EntitiesService) {
+  constructor(private _rotMapService: RotMapEngine,
+              private _gameEngineService: GameEngineService) {
   }
 
   ngOnInit() {
-    this.rotMapService.generateNewMap(50, 50);
-    this._createPlayer();
+    this.map = this._rotMapService.generateNewMap(50, 50);
+    this._gameEngineService.createPlayer();
+    this.startGameLoop();
   }
 
   ngOnDestroy() {
     clearTimeout(this._gameloop);
   }
 
-  private _createPlayer() {
-    const actorPlayer: IEntity = new Entity('player', '@', new Position(5, 5));
-    this.entitiesService.addEntity(actorPlayer);
-  }
-
   startGameLoop() {
-    this._gameloop = setTimeout(() => {
+    this._gameloop = setInterval(() => {
+      this._gameEngineService.process();
     }, 1000);
   }
 }
