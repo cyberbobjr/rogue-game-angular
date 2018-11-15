@@ -12,7 +12,6 @@ import {RotMapEngine} from './rot-map-engine.service';
             })
 export class GameEngineService {
   private _currentActorIndex = 0;
-  private _player: IEntity = null;
 
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: RotMapEngine) {
@@ -32,8 +31,7 @@ export class GameEngineService {
   }
 
   private _createPlayer() {
-    this._player = new Player('player', '@', new Position(5, 5));
-    this._entitiesService.addEntity(this._player);
+    this._entitiesService.player = new Player('player', '@', new Position(5, 5));
   }
 
   handleKeyEvent(key: KeyboardEvent) {
@@ -58,6 +56,7 @@ export class GameEngineService {
   }
 
   private _moveActor(direction: Direction) {
-    this._player.setNextAction(new WalkAction(direction, this._mapEngine));
+    const player = this._entitiesService.player;
+    player.setNextAction(new WalkAction(direction, this._mapEngine));
   }
 }

@@ -6,18 +6,18 @@ import {Position} from './position';
 
 export class WalkAction implements Iaction {
 
-  constructor(private _direction: Direction, private _engine: RotMapEngine) {
+  constructor(private _direction: Direction, private _mapEngine: RotMapEngine) {
   }
 
   perform(actor: IEntity): boolean {
     const {x, y} = actor.position.computeDestination(this._direction);
-    actor.position = new Position(x, y);
-    /*if (this._engine.isWalkable(destination)) {
-
-     }*/
+    const destPosition = new Position(x, y);
+    if (this._mapEngine.isWalkable(destPosition)) {
+      actor.position = destPosition;
+      actor.setNextAction(null);
+      return true;
+    }
     actor.setNextAction(null);
-    return true;
+    return false;
   }
-
 }
-

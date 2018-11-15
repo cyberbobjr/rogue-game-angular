@@ -1,8 +1,6 @@
 import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import Display from 'rot-js/lib/display/display';
 import {RotDisplayService} from '../../services/rot-display.service';
-import {EntitiesService} from '../../services/entities.service';
-import {IEntity} from '../../interfaces/ientity';
 import {GameEngineService} from '../../services/game-engine.service';
 
 @Component({
@@ -28,17 +26,8 @@ export class MainMapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.refMap.nativeElement.appendChild(this.display.getContainer());
-    this.startDrawLoopEntities();
   }
 
   ngOnDestroy() {
-    clearTimeout(this._mainLoop);
-  }
-
-  async startDrawLoopEntities() {
-    this._mainLoop = setInterval(() => {
-      this._displayService.drawMap();
-      this._displayService.drawEntities();
-    }, 250);
   }
 }

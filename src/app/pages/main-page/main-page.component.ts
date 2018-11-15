@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RotMapEngine} from '../../services/rot-map-engine.service';
 import {GameEngineService} from '../../services/game-engine.service';
+import {RotDisplayService} from '../../services/rot-display.service';
 
 @Component({
              selector: 'app-main-page',
@@ -12,7 +13,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   map: string[][] = null;
 
   constructor(private _rotMapService: RotMapEngine,
-              private _gameEngineService: GameEngineService) {
+              private _gameEngineService: GameEngineService,
+              private _rotDisplayService: RotDisplayService) {
   }
 
   ngOnInit() {
@@ -28,6 +30,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
   startGameLoop() {
     this._gameloop = setInterval(() => {
       this._gameEngineService.process();
-    }, 1000);
+      this._rotDisplayService.drawMap();
+      this._rotDisplayService.drawEntities();
+    }, 250);
   }
 }
