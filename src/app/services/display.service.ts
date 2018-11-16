@@ -17,6 +17,7 @@ export class DisplayService {
   maxVisiblesRows = 20;
   cameraStartPosition: { col: number, row: number } = {col: 0, row: 0};
   cameraEndPosition: { col: number, row: number } = {col: this.maxVisiblesCols, row: this.maxVisiblesRows};
+  viewport: string[][];
 
   get display(): Display {
     return this._display;
@@ -29,19 +30,21 @@ export class DisplayService {
   constructor(private mapEngine: MapEngine,
               private entitiesService: EntitiesService) {
     this._display = new Display();
+    this.viewport = Utility.initArray(this.maxVisiblesCols, this.maxVisiblesRows);
   }
 
   drawMap() {
-    for (let i = this.cameraStartPosition.col; i < this.cameraEndPosition.col; i++) {
-      for (let j = this.cameraStartPosition.row; j < this.cameraEndPosition.row; j++) {
-        this.display.draw(i, j, this.mapEngine.map[j][i], 'gray', null);
+    for (let j = 0; j < this.viewport.length; j++) {
+      for (let i = 0; i < this.viewport[0].length; i++) {
+        this.display.draw(i, j, this.viewport[j][i], 'gray', null);
       }
     }
   }
 
   drawEntities() {
     for (const actor of this.entitiesService.entities) {
-      this.display.draw(actor.position.x, actor.position.y, actor.character, 'white', null);
+      const newTranslatedPosition = this._translatePosition(actor.position);
+      this.display.draw(newTranslatedPosition.x, newTranslatedPosition.y, actor.character, 'white', null);
     }
   }
 
@@ -54,12 +57,13 @@ export class DisplayService {
     if (this.cameraStartPosition.row < 0) {
       this.cameraStartPosition.row = 0;
     }
+    this._computeViewport();
   }
 
   private _computeViewport() {
     const currentMap: string[][] = this.mapEngine.map;
-    this.cameraEndPosition.col = this.cameraStartPosition.col + this.maxVisiblesCols + 1;
-    this.cameraEndPosition.row = this.cameraStartPosition.row + this.maxVisiblesRows + 1;
+    this.cameraEndPosition.col = this.cameraStartPosition.col + this.maxVisiblesCols;
+    this.cameraEndPosition.row = this.cameraStartPosition.row + this.maxVisiblesRows;
 
     if (this.cameraEndPosition.col > currentMap[0].length) {
       this.cameraEndPosition.col = currentMap[0].length;
@@ -69,5 +73,23 @@ export class DisplayService {
       this.cameraEndPosition.row = currentMap.length;
       this.cameraStartPosition.row = this.cameraEndPosition.row - this.maxVisiblesRows;
     }
+    let y = 0;
+    let x = 0;
+    try {
+      for (let j = this.cameraStartPosition.row; j < this.cameraEndPosition.row; j++) {
+        for (let i = this.cameraStartPosition.col; i < this.cameraEndPosition.col; i++) {
+          this.viewport[y][x] = currentMap[j][i];
+          x++;
+        }
+        y++;
+        x = 0;
+      }
+    } catch (e) {
+      console.log(this);
+    }
+  }
+
+  private _translatePosition(position: Position): Position {
+    return new Position(position.x - this.cameraStartPosition.col, position.y - this.cameraStartPosition.row);
   }
 }

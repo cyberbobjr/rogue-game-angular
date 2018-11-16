@@ -30,8 +30,12 @@ export class GameEngineService {
     }, 250);
   }
 
+  refreshDisplay() {
+
+  }
+
   createPlayer() {
-    this._entitiesService.player = new Player('player', '@', new Position(5, 5));
+    this._entitiesService.player = new Player('player', '@', new Position(70, 70));
   }
 
   process() {

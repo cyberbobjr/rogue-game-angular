@@ -9,8 +9,8 @@ import {Utility} from '../classes/utility';
               providedIn: 'root'
             })
 export class MapEngine implements IMapEngine {
-  width = 10;
-  height = 10;
+  width: number;
+  height: number;
   map: string[][] = [];
 
   constructor() {
@@ -19,13 +19,13 @@ export class MapEngine implements IMapEngine {
   generateNewMap(width: number, height: number): Array<Array<string>> {
     this.width = width;
     this.height = height;
-    this.map = Utility.initArray(width, height);
     this._createMap(width, height);
     return this.map;
   }
 
   private _createMap(width: number, height: number) {
-    const arena = new Digger(width, height);
+    this.map = Utility.initArray(width, height);
+    const arena = new Arena(width, height);
     arena.create((y: number, x: number, value: number) => {
       this.map[y][x] = (value === 1) ? '#' : '.';
     });
