@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
 import Display from 'rot-js/lib/display/display';
-import {RotMapEngine} from './rot-map-engine.service';
+import {MapEngine} from './map-engine.service';
 import {EntitiesService} from './entities.service';
 import Scheduler from 'rot-js/lib/scheduler/scheduler';
 
 @Injectable({
               providedIn: 'root'
             })
-export class RotDisplayService {
+export class DisplayService {
   private _display: Display;
   private _scheduler: Scheduler = null;
 
@@ -19,7 +19,7 @@ export class RotDisplayService {
     return this._scheduler;
   }
 
-  constructor(private rotmapService: RotMapEngine,
+  constructor(private rotmapService: MapEngine,
               private entitiesService: EntitiesService) {
     this._display = new Display();
   }

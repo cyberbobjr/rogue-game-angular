@@ -1,3 +1,8 @@
 app-main-map {
-  width: 75%;
+}
+
+app-info-page {
+  width: 25%;
+  background-color: green;
+  flex: 1;
 }

@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RotDisplayService } from './rot-display.service';
+import { MapEngine } from './map-engine.service';
 
-describe('RotDisplayService', () => {
+describe('RotMapService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: RotDisplayService = TestBed.get(RotDisplayService);
+    const service: MapEngine = TestBed.get(MapEngine);
     expect(service).toBeTruthy();
   });
 });

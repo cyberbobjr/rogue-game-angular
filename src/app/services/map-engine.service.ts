@@ -2,11 +2,12 @@ import {Injectable} from '@angular/core';
 import {IMapEngine} from '../interfaces/i-map-engine';
 import Arena from 'rot-js/lib/map/arena';
 import {Position} from '../classes/position';
+import Digger from 'rot-js/lib/map/digger';
 
 @Injectable({
               providedIn: 'root'
             })
-export class RotMapEngine implements IMapEngine {
+export class MapEngine implements IMapEngine {
   width = 10;
   height = 10;
   map: string[][] = [];
@@ -23,9 +24,9 @@ export class RotMapEngine implements IMapEngine {
   }
 
   private _createMap(width: number, height: number) {
-    const arena = new Arena(width, height);
-    arena.create((x: number, y: number, value: number) => {
-      this.map[x][y] = (value === 1) ? '#' : '.';
+    const arena = new Digger(width, height);
+    arena.create((y: number, x: number, value: number) => {
+      this.map[y][x] = (value === 1) ? '#' : '.';
     });
   }
 
@@ -38,6 +39,6 @@ export class RotMapEngine implements IMapEngine {
   }
 
   isWalkable(position: Position): boolean {
-    return (this.map[position.x][position.y] !== '#');
+    return (this.map[position.y][position.x] !== '#');
   }
 }
