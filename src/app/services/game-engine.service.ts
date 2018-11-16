@@ -7,6 +7,7 @@ import {WalkAction} from '../classes/walk-action';
 import {Direction} from '../enums/direction.enum';
 import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';
+import {DisplayService} from './display.service';
 
 @Injectable({
               providedIn: 'root'
@@ -16,11 +17,21 @@ export class GameEngineService {
 
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine,
-              private _logService: LoggingService) {
+              private _logService: LoggingService,
+              private _displayService: DisplayService) {
+  }
+
+  startGameLoop() {
+    return setInterval(() => {
+      this.process();
+      this._displayService.setCameraPosition(this._entitiesService.player.position);
+      this._displayService.drawMap();
+      this._displayService.drawEntities();
+    }, 250);
   }
 
   createPlayer() {
-    this._createPlayer();
+    this._entitiesService.player = new Player('player', '@', new Position(5, 5));
   }
 
   process() {
@@ -35,10 +46,6 @@ export class GameEngineService {
       this._logService.text.next(actorAction.getInfo());
     }
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
-  }
-
-  private _createPlayer() {
-    this._entitiesService.player = new Player('player', '@', new Position(5, 5));
   }
 
   handleKeyEvent(key: KeyboardEvent) {

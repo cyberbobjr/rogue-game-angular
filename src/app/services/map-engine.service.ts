@@ -3,6 +3,7 @@ import {IMapEngine} from '../interfaces/i-map-engine';
 import Arena from 'rot-js/lib/map/arena';
 import {Position} from '../classes/position';
 import Digger from 'rot-js/lib/map/digger';
+import {Utility} from '../classes/utility';
 
 @Injectable({
               providedIn: 'root'
@@ -18,7 +19,7 @@ export class MapEngine implements IMapEngine {
   generateNewMap(width: number, height: number): Array<Array<string>> {
     this.width = width;
     this.height = height;
-    this._initMapArray(width, height);
+    this.map = Utility.initArray(width, height);
     this._createMap(width, height);
     return this.map;
   }
@@ -27,14 +28,6 @@ export class MapEngine implements IMapEngine {
     const arena = new Digger(width, height);
     arena.create((y: number, x: number, value: number) => {
       this.map[y][x] = (value === 1) ? '#' : '.';
-    });
-  }
-
-  private _initMapArray(width: number, height: number) {
-    this.map = new Array(height);
-    this.map.fill(['.']);
-    this.map.forEach((value: any, index: number) => {
-      this.map[index] = new Array(width).fill('/');
     });
   }
 
