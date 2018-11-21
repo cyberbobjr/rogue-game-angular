@@ -24,7 +24,7 @@ export class GameEngineService {
   startGameLoop() {
     return setInterval(() => {
       this.process();
-      this._displayService.setCameraPosition(this._entitiesService.player.position);
+      this._displayService.centerCameraOnPosition(this._entitiesService.player.position);
       this._displayService.drawMap();
       this._displayService.drawEntities();
     }, 250);
