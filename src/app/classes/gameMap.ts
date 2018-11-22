@@ -18,7 +18,11 @@ export class GameMap {
   }
 
   constructor(private _width: number, private _height: number, data?: string[][]) {
-    this._data = data ? data : this._initArray(this._width, this._height);
+    this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
+  }
+
+  clone(): GameMap {
+    return this.extract(0, 0, this._width, this._height);
   }
 
   extract(startPosX: number, startPosY: number, width: number, height: number): GameMap {
@@ -35,15 +39,18 @@ export class GameMap {
 
     const finalWidth: number = endPosX - startPosX;
     const finalHeight: number = endPosY - startPosY;
-    return new GameMap(finalWidth, finalHeight, this._getRawData(startPosX, startPosY, finalWidth, finalHeight));
+
+    const arrayExtracted: string[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
+
+    return new GameMap(finalWidth, finalHeight, arrayExtracted);
   }
 
   private _getRawData(startX, startY, width, height): string[][] {
     const arrayExtracted: string[][] = this._initArray(width, height);
     let y = 0;
     let x = 0;
-    for (let j = startY; j < height; j++) {
-      for (let i = startX; i < width; i++) {
+    for (let j = startY; j < startY + height; j++) {
+      for (let i = startX; i < startX + width; i++) {
         arrayExtracted[y][x] = this._data[j][i];
         x++;
       }

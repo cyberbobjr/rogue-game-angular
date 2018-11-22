@@ -24,6 +24,7 @@ export class DisplayService {
   set options(options: Partial<DisplayOptions>) {
     this._fontSize = this._fontSize || options.fontSize;
     this.display.setOptions(options);
+    this.display.clear();
   }
 
   get container(): HTMLElement | null {
@@ -37,28 +38,15 @@ export class DisplayService {
   computeBounds() {
     const [width, height] = (this.display.computeSize(this.container.offsetWidth, this.container.offsetHeight));
     this.maxVisiblesCols = width;
-    this.maxVisiblesRows = height - 1;
+    this.maxVisiblesRows = height;
   }
 
   draw() {
-    const gameMap = Object.assign(this.mapEngine.map);
-    const viewport: GameMap = this._computeViewport(gameMap);
-    this._putEntities(viewport);
-    this._drawViewPort(viewport);
-  }
-
-  private _drawViewPort(viewport: GameMap) {
-    for (let j = 0; j < viewport.content.length; j++) {
-      for (let i = 0; i < viewport.content[0].length; i++) {
-        this.display.draw(i, j, viewport.content[j][i], 'gray', null);
-      }
-    }
-  }
-
-  private _putEntities(gameMap: GameMap) {
-    for (const actor of this.entitiesService.entities) {
-      gameMap.content[actor.position.y][actor.position.x] = actor.character;
-    }
+    let gameMap = this.mapEngine.map.clone();
+    gameMap = this.putEntitiesOn(gameMap);
+    const viewport: GameMap = this.computeViewport(gameMap);
+    this.display.clear();
+    this.drawViewPort(viewport);
   }
 
   centerCameraOnPosition(cameraPosition: Position) {
@@ -66,7 +54,22 @@ export class DisplayService {
     this.cameraStartPosition.row = cameraPosition.y - Math.round(this.maxVisiblesRows / 2);
   }
 
-  private _computeViewport(currentMap: GameMap): GameMap {
+  private drawViewPort(viewport: GameMap) {
+    for (let j = 0; j < viewport.content.length; j++) {
+      for (let i = 0; i < viewport.content[0].length; i++) {
+        this.display.draw(i, j, viewport.content[j][i], 'gray', null);
+      }
+    }
+  }
+
+  private putEntitiesOn(gameMap: GameMap): GameMap {
+    for (const actor of this.entitiesService.entities) {
+      gameMap.content[actor.position.y][actor.position.x] = actor.character;
+    }
+    return gameMap;
+  }
+
+  private computeViewport(currentMap: GameMap): GameMap {
     return currentMap.extract(this.cameraStartPosition.col, this.cameraStartPosition.row, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

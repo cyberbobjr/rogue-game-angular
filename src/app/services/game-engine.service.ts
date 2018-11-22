@@ -23,15 +23,10 @@ export class GameEngineService {
   }
 
   startGameLoop() {
-    this.refreshMap();
     return setInterval(() => {
       this.processAction();
+      this.refreshMap();
     }, 250);
-  }
-
-  refreshMap() {
-    this._displayService.centerCameraOnPosition(this._entitiesService.player.position);
-    this._displayService.draw();
   }
 
   createPlayer() {
@@ -39,7 +34,33 @@ export class GameEngineService {
     this._entitiesService.player.position = new Position(10, 10);
   }
 
-  processAction() {
+  handleKeyEvent(key: KeyboardEvent) {
+    switch (key.code) {
+      case 'ArrowUp':
+      case 'u':
+        this.moveActor(Direction.N);
+        break;
+      case 'ArrowLeft':
+      case 'h':
+        this.moveActor(Direction.W);
+        break;
+      case 'ArrowDown':
+      case 'j':
+        this.moveActor(Direction.S);
+        break;
+      case 'ArrowRight':
+      case 'k':
+        this.moveActor(Direction.E);
+        break;
+    }
+  }
+
+  private refreshMap() {
+    this._displayService.centerCameraOnPosition(this._entitiesService.player.position);
+    this._displayService.draw();
+  }
+
+  private processAction() {
     const currentActor = this._entitiesService.entities[this._currentActorIndex];
     const actorAction = currentActor.getAction();
     if (actorAction === null || !actorAction.perform(currentActor)) {
@@ -50,32 +71,10 @@ export class GameEngineService {
     } else {
       this._logService.text.next(actorAction.getInfo());
     }
-    this.refreshMap();
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }
 
-  handleKeyEvent(key: KeyboardEvent) {
-    switch (key.code) {
-      case 'ArrowUp':
-      case 'u':
-        this._moveActor(Direction.N);
-        break;
-      case 'ArrowLeft':
-      case 'h':
-        this._moveActor(Direction.W);
-        break;
-      case 'ArrowDown':
-      case 'j':
-        this._moveActor(Direction.S);
-        break;
-      case 'ArrowRight':
-      case 'k':
-        this._moveActor(Direction.E);
-        break;
-    }
-  }
-
-  private _moveActor(direction: Direction) {
+  private moveActor(direction: Direction) {
     const player = this._entitiesService.player;
     player.setNextAction(new WalkAction(direction, this._mapEngine));
   }
