@@ -5,6 +5,7 @@ import {EntitiesService} from './entities.service';
 import {Position} from '../classes/position';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {GameMap} from '../classes/gameMap';
+import {Tile} from '../classes/tile';
 
 @Injectable({
               providedIn: 'root'
@@ -44,7 +45,7 @@ export class DisplayService {
   draw() {
     let gameMap = this.mapEngine.map.clone();
     gameMap = this.putEntitiesOn(gameMap);
-    const viewport: GameMap = this.computeViewport(gameMap);
+    const viewport: GameMap<Tile> = this.computeViewport(gameMap);
     this.display.clear();
     this.drawViewPort(viewport);
   }
@@ -54,22 +55,22 @@ export class DisplayService {
     this.cameraStartPosition.row = cameraPosition.y - Math.round(this.maxVisiblesRows / 2);
   }
 
-  private drawViewPort(viewport: GameMap) {
+  private drawViewPort(viewport: GameMap<Tile>) {
     for (let j = 0; j < viewport.content.length; j++) {
       for (let i = 0; i < viewport.content[0].length; i++) {
-        this.display.draw(i, j, viewport.content[j][i], 'gray', null);
+        this.display.draw(i, j, viewport.content[j][i].character, 'gray', null);
       }
     }
   }
 
-  private putEntitiesOn(gameMap: GameMap): GameMap {
+  private putEntitiesOn(gameMap: GameMap<Tile>): GameMap<Tile> {
     for (const actor of this.entitiesService.entities) {
-      gameMap.content[actor.position.y][actor.position.x] = actor.character;
+      gameMap.content[actor.position.y][actor.position.x].character = actor.character;
     }
     return gameMap;
   }
 
-  private computeViewport(currentMap: GameMap): GameMap {
+  private computeViewport(currentMap: GameMap<Tile>): GameMap<Tile> {
     return currentMap.extract(this.cameraStartPosition.col, this.cameraStartPosition.row, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

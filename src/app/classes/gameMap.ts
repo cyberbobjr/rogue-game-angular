@@ -1,11 +1,11 @@
-export class GameMap {
-  private _data: string[][];
+export class GameMap<T> {
+  private _data: T[][];
 
-  set content(data: string[][]) {
+  set content(data: T[][]) {
     this._data = data;
   }
 
-  get content(): string[][] {
+  get content(): T[][] {
     return this._data;
   }
 
@@ -17,15 +17,15 @@ export class GameMap {
     return this._height;
   }
 
-  constructor(private _width: number, private _height: number, data?: string[][]) {
+  constructor(private _width: number, private _height: number, data?: T[][]) {
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
   }
 
-  clone(): GameMap {
+  clone(): GameMap<T> {
     return this.extract(0, 0, this._width, this._height);
   }
 
-  extract(startPosX: number, startPosY: number, width: number, height: number): GameMap {
+  extract(startPosX: number, startPosY: number, width: number, height: number): GameMap<T> {
     if (startPosX < 0) {
       startPosX = 0;
     }
@@ -40,13 +40,13 @@ export class GameMap {
     const finalWidth: number = endPosX - startPosX;
     const finalHeight: number = endPosY - startPosY;
 
-    const arrayExtracted: string[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
+    const arrayExtracted: T[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
 
     return new GameMap(finalWidth, finalHeight, arrayExtracted);
   }
 
-  private _getRawData(startX, startY, width, height): string[][] {
-    const arrayExtracted: string[][] = this._initArray(width, height);
+  private _getRawData(startX, startY, width, height): T[][] {
+    const arrayExtracted: T[][] = this._initArray(width, height);
     let y = 0;
     let x = 0;
     for (let j = startY; j < startY + height; j++) {
@@ -60,9 +60,9 @@ export class GameMap {
     return arrayExtracted;
   }
 
-  private _initArray(width: number, height: number, fill = '.'): string[][] {
+  private _initArray(width: number, height: number, fill = '.'): T[][] {
     const newArray = new Array(height);
-    newArray.fill(['.']);
+    newArray.fill(fill);
     newArray.forEach((value: any, index: number) => {
       newArray[index] = new Array(width).fill(fill);
     });

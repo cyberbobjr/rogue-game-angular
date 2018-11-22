@@ -14,7 +14,6 @@ import {Position} from '../classes/position';
             })
 export class GameEngineService {
   private _currentActorIndex = 0;
-  private _entitiesFactory: EntitiesFactory = new EntitiesFactory();
 
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine,
@@ -30,7 +29,7 @@ export class GameEngineService {
   }
 
   createPlayer() {
-    this._entitiesService.player = this._entitiesFactory.createEntity(EntityType.PLAYER);
+    this._entitiesService.player = EntitiesFactory.createEntity(EntityType.PLAYER);
     this._entitiesService.player.position = new Position(10, 10);
   }
 

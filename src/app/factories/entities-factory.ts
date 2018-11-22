@@ -6,7 +6,7 @@ export class EntitiesFactory {
   constructor() {
   }
 
-  createEntity(type: EntityType): Entity | null {
+  static createEntity(type: EntityType): Entity | null {
     switch (type) {
       case EntityType.PLAYER:
         return new Player('player', '@');
