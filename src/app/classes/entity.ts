@@ -7,16 +7,41 @@ import {Iaction} from '../interfaces/iaction';
               providedIn: 'root'
             })
 export class Entity implements IEntity {
-  position: Position;
-  name: string;
-  character: string;
-  _currentAction: Iaction = null;
+  private _position: Position;
+  private _name: string;
+  private _currentAction: Iaction = null;
+
+  get name(): string {
+    return this._name;
+  }
+
+  set name(value: string) {
+    this._name = value;
+  }
+
+  get position(): Position {
+    return this._position;
+  }
+
+  set position(value: Position) {
+    this._position = value;
+  }
+
+  private _character: string;
+
+  get character(): string {
+    return this._character;
+  }
+
+  set character(value: string) {
+    this._character = value;
+  }
 
   constructor(name: string, character: string, position?: Position) {
-    this.name = name;
-    this.character = character;
+    this._name = name;
+    this._character = character;
     if (position) {
-      this.position = position;
+      this._position = position;
     }
   }
 

@@ -12,8 +12,7 @@ export class WalkAction implements Iaction {
   }
 
   perform(actor: IEntity): boolean {
-    const {x, y} = actor.position.computeDestination(this._direction);
-    const destPosition = new Position(x, y);
+    const destPosition = actor.position.computeDestination(this._direction);
     if (this._mapEngine.isWalkable(destPosition)) {
       actor.position = destPosition;
       actor.setNextAction(null);

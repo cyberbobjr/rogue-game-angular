@@ -10,29 +10,53 @@ import {GameMap} from '../classes/gameMap';
               providedIn: 'root'
             })
 export class MapEngine implements IMapEngine {
-  width: number;
-  height: number;
-  map: GameMap = null;
+  private _width: number;
+  private _height: number;
+  private _map: GameMap = null;
+
+  get width(): number {
+    return this._width;
+  }
+
+  set width(value: number) {
+    this._width = value;
+  }
+
+  get height(): number {
+    return this._height;
+  }
+
+  set height(value: number) {
+    this._height = value;
+  }
+
+  get map(): GameMap {
+    return this._map;
+  }
+
+  set map(value: GameMap) {
+    this._map = value;
+  }
 
   constructor() {
   }
 
   generateNewMap(width: number, height: number): GameMap {
-    this.width = width;
-    this.height = height;
+    this._width = width;
+    this._height = height;
     this._createMap(width, height);
-    return this.map;
+    return this._map;
   }
 
   private _createMap(width: number, height: number) {
-    this.map = new GameMap(width, height);
+    this._map = new GameMap(width, height);
     const arena = new Arena(width, height);
     arena.create((y: number, x: number, value: number) => {
-      this.map.content[y][x] = (value === 1) ? '#' : '.';
+      this._map.content[y][x] = (value === 1) ? '#' : '.';
     });
   }
 
   isWalkable(position: Position): boolean {
-    return (this.map.content[position.y][position.x] !== '#');
+    return (this._map.content[position.y][position.x] !== '#');
   }
 }

@@ -1,35 +1,50 @@
 import {Direction} from '../enums/direction.enum';
 
 export class Position {
-  x: number;
-  y: number;
+  private _x: number;
+  private _y: number;
 
-  constructor(posX: number, posY: number) {
-    this.x = posX;
-    this.y = posY;
+  get x(): number {
+    return this._x;
   }
 
-  computeDestination(direction: Direction): { x: number, y: number } {
+  set x(value: number) {
+    this._x = value;
+  }
+
+  get y(): number {
+    return this._y;
+  }
+
+  set y(value: number) {
+    this._y = value;
+  }
+
+  constructor(posX: number, posY: number) {
+    this._x = posX;
+    this._y = posY;
+  }
+
+  computeDestination(direction: Direction): Position {
     switch (direction) {
       case Direction.N :
-        return {x: this.x, y: this.y - 1};
+        return new Position(this._x, this._y - 1);
       case Direction.E:
-        return {x: this.x + 1, y: this.y};
+        return new Position(this._x + 1, this._y);
       case Direction.NE:
-        return {x: this.x + 1, y: this.y - 1};
+        return new Position(this._x + 1, this._y - 1);
       case Direction.NW:
-        return {x: this.x - 1, y: this.y - 1};
+        return new Position(this._x - 1, this._y - 1);
       case Direction.S:
-        return {x: this.x, y: this.y + 1};
+        return new Position(this._x, this._y + 1);
       case Direction.SE:
-        return {x: this.x + 1, y: this.y + 1};
+        return new Position(this._x + 1, this._y + 1);
       case Direction.SW:
-        return {x: this.x - 1, y: this.y + 1};
+        return new Position(this._x - 1, this._y + 1);
       case Direction.W:
-        return {x: this.x - 1, y: this.y};
+        return new Position(this._x - 1, this._y);
       default:
-        return {x: this.x, y: this.y};
+        return new Position(this._x, this._y);
     }
-
   }
 }

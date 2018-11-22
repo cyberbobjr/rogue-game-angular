@@ -1,19 +1,20 @@
 import {Injectable} from '@angular/core';
 import {EntitiesService} from './entities.service';
-import {IEntity} from '../interfaces/ientity';
-import {Position} from '../classes/position';
-import {Player} from '../classes/player';
 import {WalkAction} from '../classes/walk-action';
 import {Direction} from '../enums/direction.enum';
 import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';
 import {DisplayService} from './display.service';
+import {EntitiesFactory} from '../factories/entities-factory';
+import {EntityType} from '../enums/entity-type.enum';
+import {Position} from '../classes/position';
 
 @Injectable({
               providedIn: 'root'
             })
 export class GameEngineService {
   private _currentActorIndex = 0;
+  private _entitiesFactory: EntitiesFactory = new EntitiesFactory();
 
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine,
@@ -22,23 +23,23 @@ export class GameEngineService {
   }
 
   startGameLoop() {
+    this.refreshMap();
     return setInterval(() => {
-      this.process();
-      this._displayService.centerCameraOnPosition(this._entitiesService.player.position);
-      this._displayService.drawMap();
-      this._displayService.drawEntities();
+      this.processAction();
     }, 250);
   }
 
-  refreshDisplay() {
-
+  refreshMap() {
+    this._displayService.centerCameraOnPosition(this._entitiesService.player.position);
+    this._displayService.draw();
   }
 
   createPlayer() {
-    this._entitiesService.player = new Player('player', '@', new Position(70, 70));
+    this._entitiesService.player = this._entitiesFactory.createEntity(EntityType.PLAYER);
+    this._entitiesService.player.position = new Position(10, 10);
   }
 
-  process() {
+  processAction() {
     const currentActor = this._entitiesService.entities[this._currentActorIndex];
     const actorAction = currentActor.getAction();
     if (actorAction === null || !actorAction.perform(currentActor)) {
@@ -49,6 +50,7 @@ export class GameEngineService {
     } else {
       this._logService.text.next(actorAction.getInfo());
     }
+    this.refreshMap();
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }
 

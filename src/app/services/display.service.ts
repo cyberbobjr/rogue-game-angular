@@ -2,9 +2,7 @@ import {Injectable} from '@angular/core';
 import Display from 'rot-js/lib/display/display';
 import {MapEngine} from './map-engine.service';
 import {EntitiesService} from './entities.service';
-import Scheduler from 'rot-js/lib/scheduler/scheduler';
 import {Position} from '../classes/position';
-import {Utility} from '../classes/utility';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {GameMap} from '../classes/gameMap';
 
@@ -12,24 +10,19 @@ import {GameMap} from '../classes/gameMap';
               providedIn: 'root'
             })
 export class DisplayService {
-  private _display: Display;
-  private _scheduler: Scheduler = null;
+  private _fontSize = 16;
+  private _display: Display = new Display();
 
   maxVisiblesCols = 20;
   maxVisiblesRows = 20;
   cameraStartPosition: { col: number, row: number } = {col: 0, row: 0};
-  cameraEndPosition: { col: number, row: number } = {col: this.maxVisiblesCols, row: this.maxVisiblesRows};
-  viewport: GameMap;
 
   get display(): Display {
     return this._display;
   }
 
-  get scheduler(): Scheduler {
-    return this._scheduler;
-  }
-
   set options(options: Partial<DisplayOptions>) {
+    this._fontSize = this._fontSize || options.fontSize;
     this.display.setOptions(options);
   }
 
@@ -39,47 +32,41 @@ export class DisplayService {
 
   constructor(private mapEngine: MapEngine,
               private entitiesService: EntitiesService) {
-    this._display = new Display();
   }
 
-  setMaxBound(width: number, height: number) {
+  computeBounds() {
+    const [width, height] = (this.display.computeSize(this.container.offsetWidth, this.container.offsetHeight));
     this.maxVisiblesCols = width;
-    this.maxVisiblesRows = height;
+    this.maxVisiblesRows = height - 1;
   }
 
-  drawMap() {
-    for (let j = 0; j < this.viewport.content.length; j++) {
-      for (let i = 0; i < this.viewport.content[0].length; i++) {
-        this.display.draw(i, j, this.viewport.content[j][i], 'gray', null);
+  draw() {
+    const gameMap = Object.assign(this.mapEngine.map);
+    const viewport: GameMap = this._computeViewport(gameMap);
+    this._putEntities(viewport);
+    this._drawViewPort(viewport);
+  }
+
+  private _drawViewPort(viewport: GameMap) {
+    for (let j = 0; j < viewport.content.length; j++) {
+      for (let i = 0; i < viewport.content[0].length; i++) {
+        this.display.draw(i, j, viewport.content[j][i], 'gray', null);
       }
     }
   }
 
-  drawEntities() {
+  private _putEntities(gameMap: GameMap) {
     for (const actor of this.entitiesService.entities) {
-      const newTranslatedPosition = this._translatePosition(actor.position);
-      this.display.draw(newTranslatedPosition.x, newTranslatedPosition.y, actor.character, 'white', null);
+      gameMap.content[actor.position.y][actor.position.x] = actor.character;
     }
   }
 
   centerCameraOnPosition(cameraPosition: Position) {
-    this.cameraStartPosition.col = cameraPosition.x - (this.maxVisiblesCols / 2);
-    this.cameraStartPosition.row = cameraPosition.y - (this.maxVisiblesRows / 2);
-    if (this.cameraStartPosition.col < 0) {
-      this.cameraStartPosition.col = 0;
-    }
-    if (this.cameraStartPosition.row < 0) {
-      this.cameraStartPosition.row = 0;
-    }
-    this._computeViewport();
+    this.cameraStartPosition.col = cameraPosition.x - Math.round(this.maxVisiblesCols / 2);
+    this.cameraStartPosition.row = cameraPosition.y - Math.round(this.maxVisiblesRows / 2);
   }
 
-  private _computeViewport() {
-    const currentMap: GameMap = this.mapEngine.map;
-    this.viewport = currentMap.extract(this.cameraStartPosition.col, this.cameraStartPosition.row, this.maxVisiblesCols, this.maxVisiblesRows);
-  }
-
-  private _translatePosition(position: Position): Position {
-    return new Position(position.x - this.cameraStartPosition.col, position.y - this.cameraStartPosition.row);
+  private _computeViewport(currentMap: GameMap): GameMap {
+    return currentMap.extract(this.cameraStartPosition.col, this.cameraStartPosition.row, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

@@ -11,8 +11,6 @@ import {GameEngineService} from '../../services/game-engine.service';
 export class MainMapComponent implements OnInit, OnDestroy {
   @ViewChild('refMap') refMap: ElementRef;
   @Input('map') map: Array<string> = [];
-  display: Display;
-  canvasContainer: HTMLElement;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyEvent(keyboardEvent: KeyboardEvent) {
@@ -27,12 +25,11 @@ export class MainMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.display = this._displayService.display;
-    this._displayService.options = {height: window.innerHeight};
-    this.canvasContainer = this._displayService.container;
-    this.refMap.nativeElement.appendChild(this.canvasContainer);
-    const [width, height] = (this.display.computeSize(this.canvasContainer.offsetWidth, this.canvasContainer.offsetHeight));
-    this._displayService.setMaxBound(width, height);
+    const fontsize = 16;
+    const maxHeight = Math.round(window.innerHeight / fontsize) - 1;
+    this._displayService.options = {height: maxHeight, fontSize: fontsize};
+    this.refMap.nativeElement.appendChild(this._displayService.container);
+    this._displayService.computeBounds();
   }
 
   ngOnDestroy() {

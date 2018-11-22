@@ -5,23 +5,31 @@ import {IEntity} from '../interfaces/ientity';
               providedIn: 'root'
             })
 export class EntitiesService {
-  entities: Array<IEntity> = [];
-  private _player: IEntity;
+  private _entities: Array<IEntity> = [];
+  private _player: IEntity = null;
 
-  get player(): IEntity {
+  get entities(): Array<IEntity> {
+    return this._entities;
+  }
+
+  set entities(value: Array<IEntity>) {
+    this._entities = value;
+  }
+
+  get player(): IEntity | null {
     return this._player;
   }
 
   set player(actor: IEntity) {
     this._player = actor;
-    this.entities.push(this._player);
+    this._entities.push(this._player);
   }
 
   constructor() {
   }
 
   addEntity(actor: IEntity) {
-    this.entities.push(actor);
+    this._entities.push(actor);
   }
 
 }
