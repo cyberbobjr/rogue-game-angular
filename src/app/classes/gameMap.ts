@@ -1,4 +1,4 @@
-export class GameMap<T> {
+export class GameMap<T extends object> {
   private _data: T[][];
 
   set content(data: T[][]) {
@@ -51,7 +51,7 @@ export class GameMap<T> {
     let x = 0;
     for (let j = startY; j < startY + height; j++) {
       for (let i = startX; i < startX + width; i++) {
-        arrayExtracted[y][x] = this._data[j][i];
+        arrayExtracted[y][x] = Object.create(this._data[j][i] as object) as T;
         x++;
       }
       y++;
