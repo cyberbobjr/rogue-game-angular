@@ -1,6 +1,5 @@
 export enum TileType {
-  PLAYER = 0,
-  FLOOR,
+  FLOOR = 0,
   WALL,
   DOOR
 }

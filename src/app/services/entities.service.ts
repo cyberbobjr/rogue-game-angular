@@ -1,26 +1,27 @@
 import {Injectable} from '@angular/core';
 import {IEntity} from '../interfaces/ientity';
+import {Entity} from '../classes/entity';
 
 @Injectable({
               providedIn: 'root'
             })
 export class EntitiesService {
-  private _entities: Array<IEntity> = [];
-  private _player: IEntity = null;
+  private _entities: Array<Entity> = [];
+  private _player: Entity = null;
 
-  get entities(): Array<IEntity> {
+  get entities(): Array<Entity> {
     return this._entities;
   }
 
-  set entities(value: Array<IEntity>) {
+  set entities(value: Array<Entity>) {
     this._entities = value;
   }
 
-  get player(): IEntity | null {
+  get player(): Entity | null {
     return this._player;
   }
 
-  set player(actor: IEntity) {
+  set player(actor: Entity) {
     this._player = actor;
     this._entities.push(this._player);
   }
@@ -28,7 +29,7 @@ export class EntitiesService {
   constructor() {
   }
 
-  addEntity(actor: IEntity) {
+  addEntity(actor: Entity) {
     this._entities.push(actor);
   }
 

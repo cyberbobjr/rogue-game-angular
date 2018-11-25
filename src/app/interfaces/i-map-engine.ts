@@ -1,6 +1,6 @@
 import {GameMap} from '../classes/gameMap';
-import {Tile} from '../classes/tile';
+import {IEntity} from './ientity';
 
 export interface IMapEngine {
-  generateNewMap(width: number, height: number): GameMap<Tile>;
+  generateNewMap(width: number, height: number): GameMap<IEntity>;
 }

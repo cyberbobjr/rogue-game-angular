@@ -1,13 +1,6 @@
-import {Position} from '../classes/position';
-import {Iaction} from './iaction';
-import {Tile} from '../classes/tile';
+import {Sprite} from '../classes/sprite';
 
 export interface IEntity {
-  position: Position;
   name: string;
-  character: Tile;
-
-  getAction(): Iaction | null;
-
-  setNextAction(action: Iaction);
+  sprite: Sprite;
 }

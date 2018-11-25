@@ -1,23 +1,38 @@
 import {Entity} from './entity';
+import {IEntity} from '../interfaces/ientity';
+import {Position} from './position';
+import {Sprite} from './sprite';
 
-export class Tile {
-  private _character: string;
-  private _color = 'gray';
+export class Tile implements IEntity {
+  protected _name: string;
+  protected _position: Position;
+  protected _sprite: Sprite;
 
-  get color(): string {
-    return this._color;
+  get name(): string {
+    return this._name;
   }
 
-  set color(value: string) {
-    this._color = value;
+  set name(value: string) {
+    this._name = value;
   }
 
-  get character(): string {
-    return this._character;
+  get position(): Position {
+    return this._position;
   }
 
-  set character(value: string) {
-    this._character = value;
+  set position(value: Position) {
+    this._position = value;
+  }
+
+  get sprite(): Sprite {
+    return this._sprite;
+  }
+
+  set sprite(value: Sprite) {
+    this._sprite = value;
+  }
+
+  constructor() {
   }
 
   isWalkable(): boolean {

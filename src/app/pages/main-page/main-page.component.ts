@@ -5,6 +5,7 @@ import {DisplayService} from '../../services/display.service';
 import {EntitiesService} from '../../services/entities.service';
 import {GameMap} from '../../classes/gameMap';
 import {Tile} from '../../classes/tile';
+import {IEntity} from '../../interfaces/ientity';
 
 @Component({
              selector: 'app-main-page',
@@ -13,7 +14,7 @@ import {Tile} from '../../classes/tile';
            })
 export class MainPageComponent implements OnInit, OnDestroy {
   private _gameloop: any = null;
-  map: GameMap<Tile> = null;
+  map: GameMap<IEntity> = null;
 
   constructor(private _rotMapService: MapEngine,
               private _gameEngineService: GameEngineService) {

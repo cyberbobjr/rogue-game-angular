@@ -1,6 +1,6 @@
 import {EntityType} from '../enums/entity-type.enum';
-import {Entity} from '../classes/entity';
 import {Player} from '../classes/player';
+import {Entity} from '../classes/entity';
 
 export class EntitiesFactory {
   constructor() {

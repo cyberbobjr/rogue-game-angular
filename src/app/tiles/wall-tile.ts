@@ -1,10 +1,10 @@
 import {Tile} from '../classes/tile';
+import {Sprite} from '../classes/sprite';
 
 export class WallTile extends Tile {
   constructor() {
     super();
-    this.character = '#';
-    this.color = 'red';
+    this.sprite = new Sprite('#', 'red');
   }
 
   isWalkable(): boolean {

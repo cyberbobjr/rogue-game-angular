@@ -1,4 +1,4 @@
 export enum EntityType {
-  PLAYER = 1,
+  PLAYER = 0,
   ORC
 }

@@ -2,16 +2,24 @@ import {IEntity} from '../interfaces/ientity';
 import {Position} from './position';
 import {Injectable} from '@angular/core';
 import {Iaction} from '../interfaces/iaction';
-import {Tile} from './tile';
+import {Sprite} from './sprite';
 
 @Injectable({
               providedIn: 'root'
             })
 export class Entity implements IEntity {
-  protected _character: Tile;
   protected _position: Position;
   protected _name: string;
   protected _currentAction: Iaction = null;
+  protected _sprite: Sprite = null;
+
+  get sprite(): Sprite {
+    return this._sprite;
+  }
+
+  set sprite(value: Sprite) {
+    this._sprite = value;
+  }
 
   get name(): string {
     return this._name;
@@ -28,15 +36,6 @@ export class Entity implements IEntity {
   set position(value: Position) {
     this._position = value;
   }
-
-  get character(): Tile {
-    return this._character;
-  }
-
-  set character(value: Tile) {
-    this._character = value;
-  }
-
   constructor(name: string, position?: Position) {
     this._name = name;
     if (position) {

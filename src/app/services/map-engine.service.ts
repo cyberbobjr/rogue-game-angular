@@ -2,7 +2,8 @@ import {Injectable} from '@angular/core';
 import {IMapEngine} from '../interfaces/i-map-engine';
 import Arena from 'rot-js/lib/map/arena';
 import {GameMap} from '../classes/gameMap';
-import {Tile} from '../classes/tile';
+import {Entity} from '../classes/entity';
+import {IEntity} from '../interfaces/ientity';
 import {TilesFactory} from '../factories/tiles-factory';
 import {TileType} from '../enums/tile-type.enum';
 
@@ -12,8 +13,7 @@ import {TileType} from '../enums/tile-type.enum';
 export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
-  private _map: GameMap<Tile> = null;
-  private _tileFactory: TilesFactory = new TilesFactory();
+  private _map: GameMap<IEntity> = null;
 
   get width(): number {
     return this._width;
@@ -31,18 +31,18 @@ export class MapEngine implements IMapEngine {
     this._height = value;
   }
 
-  get map(): GameMap<Tile> {
+  get map(): GameMap<IEntity> {
     return this._map;
   }
 
-  set map(value: GameMap<Tile>) {
+  set map(value: GameMap<IEntity>) {
     this._map = value;
   }
 
   constructor() {
   }
 
-  generateNewMap(width: number, height: number): GameMap<Tile> {
+  generateNewMap(width: number, height: number): GameMap<IEntity> {
     this._width = width;
     this._height = height;
     this._createMap(width, height);
@@ -50,10 +50,10 @@ export class MapEngine implements IMapEngine {
   }
 
   private _createMap(width: number, height: number) {
-    this._map = new GameMap<Tile>(width, height);
+    this._map = new GameMap<Entity>(width, height);
     const arena = new Arena(width, height);
     arena.create((y: number, x: number, value: number) => {
-      this._map.content[y][x] = this._tileFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
+      this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
     });
   }
 }
