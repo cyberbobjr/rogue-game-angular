@@ -9,7 +9,7 @@ export class EntitiesFactory {
   static createEntity(type: EntityType): Entity | null {
     switch (type) {
       case EntityType.PLAYER:
-        return new Player('player', '@');
+        return new Player('player');
       default:
         return null;
     }

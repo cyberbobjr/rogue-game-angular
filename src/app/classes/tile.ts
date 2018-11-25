@@ -1,5 +1,16 @@
+import {Entity} from './entity';
+
 export class Tile {
   private _character: string;
+  private _color = 'gray';
+
+  get color(): string {
+    return this._color;
+  }
+
+  set color(value: string) {
+    this._color = value;
+  }
 
   get character(): string {
     return this._character;
@@ -9,7 +20,15 @@ export class Tile {
     this._character = value;
   }
 
-  constructor(character: string) {
-    this.character = character;
+  isWalkable(): boolean {
+    return false;
+  }
+
+  onWalk(actor: Entity): void {
+
+  }
+
+  onHit(actor: Entity): void {
+
   }
 }

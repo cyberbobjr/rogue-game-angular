@@ -1,5 +1,8 @@
 import {TileType} from '../enums/tile-type.enum';
 import {Tile} from '../classes/tile';
+import {WallTile} from '../tiles/wall-tile';
+import {FloorTile} from '../tiles/floor-tile';
+import {PlayerTile} from '../tiles/player-tile';
 
 export class TilesFactory {
   constructor() {
@@ -8,11 +11,11 @@ export class TilesFactory {
   createTile(type: TileType): Tile | null {
     switch (type) {
       case TileType.PLAYER:
-        return new Tile('@');
+        return new PlayerTile();
       case TileType.WALL:
-        return new Tile('#');
+        return new WallTile();
       case TileType.FLOOR:
-        return new Tile('.');
+        return new FloorTile();
       default:
         return null;
     }

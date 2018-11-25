@@ -75,6 +75,6 @@ export class GameEngineService {
 
   private moveActor(direction: Direction) {
     const player = this._entitiesService.player;
-    player.setNextAction(new WalkAction(direction, this._mapEngine));
+    player.setNextAction(new WalkAction(direction, this._mapEngine.map));
   }
 }

@@ -1,19 +1,20 @@
 import {Iaction} from '../interfaces/iaction';
 import {IEntity} from '../interfaces/ientity';
-import {MapEngine} from '../services/map-engine.service';
 import {Direction} from '../enums/direction.enum';
-import {Position} from './position';
+import {GameMap} from './gameMap';
+import {Tile} from './tile';
 
 export class WalkAction implements Iaction {
   private _info = '';
 
   constructor(private _direction: Direction,
-              private _mapEngine: MapEngine) {
+              private _map: GameMap<Tile>) {
   }
 
   perform(actor: IEntity): boolean {
     const destPosition = actor.position.computeDestination(this._direction);
-    if (this._mapEngine.isWalkable(destPosition)) {
+    const tile: Tile = this._map.content[destPosition.y][destPosition.x];
+    if (tile.isWalkable()) {
       actor.position = destPosition;
       actor.setNextAction(null);
       this._info = 'Move';

@@ -8,8 +8,8 @@ import {GameMap} from '../classes/gameMap';
 import {Tile} from '../classes/tile';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class DisplayService {
   private _fontSize = 16;
   private _display: Display = new Display();
@@ -58,14 +58,14 @@ export class DisplayService {
   private drawViewPort(viewport: GameMap<Tile>) {
     for (let j = 0; j < viewport.content.length; j++) {
       for (let i = 0; i < viewport.content[0].length; i++) {
-        this.display.draw(i, j, viewport.content[j][i].character, 'gray', null);
+        this.display.draw(i, j, viewport.content[j][i].character, viewport.content[j][i].color, null);
       }
     }
   }
 
   private putEntitiesOn(gameMap: GameMap<Tile>): GameMap<Tile> {
     for (const actor of this.entitiesService.entities) {
-      gameMap.content[actor.position.y][actor.position.x].character = actor.character;
+      gameMap.content[actor.position.y][actor.position.x] = actor.character;
     }
     return gameMap;
   }

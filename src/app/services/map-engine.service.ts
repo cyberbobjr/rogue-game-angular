@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {IMapEngine} from '../interfaces/i-map-engine';
 import Arena from 'rot-js/lib/map/arena';
-import {Position} from '../classes/position';
 import {GameMap} from '../classes/gameMap';
 import {Tile} from '../classes/tile';
 import {TilesFactory} from '../factories/tiles-factory';
@@ -56,10 +55,5 @@ export class MapEngine implements IMapEngine {
     arena.create((y: number, x: number, value: number) => {
       this._map.content[y][x] = this._tileFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
     });
-  }
-
-  isWalkable(position: Position): boolean {
-    //return (this._map.content[position.y][position.x].character !== TileType.WALL);
-    return true;
   }
 }
