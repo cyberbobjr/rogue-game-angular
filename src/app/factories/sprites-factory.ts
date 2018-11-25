@@ -1,4 +1,4 @@
-import {Sprite} from '../classes/sprite';
+import {Sprite} from '../classes/base/sprite';
 import {SpriteType} from '../enums/sprite-type.enum';
 
 export class SpritesFactory {

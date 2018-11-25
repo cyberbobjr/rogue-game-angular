@@ -1,6 +1,6 @@
 import {Entity} from './entity';
-import {IEntity} from '../interfaces/ientity';
-import {Position} from './position';
+import {IEntity} from '../../interfaces/ientity';
+import {Position} from '../position';
 import {Sprite} from './sprite';
 
 export class Tile implements IEntity {

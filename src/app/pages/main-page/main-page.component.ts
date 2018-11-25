@@ -4,7 +4,7 @@ import {GameEngineService} from '../../services/game-engine.service';
 import {DisplayService} from '../../services/display.service';
 import {EntitiesService} from '../../services/entities.service';
 import {GameMap} from '../../classes/gameMap';
-import {Tile} from '../../classes/tile';
+import {Tile} from '../../classes/base/tile';
 import {IEntity} from '../../interfaces/ientity';
 
 @Component({

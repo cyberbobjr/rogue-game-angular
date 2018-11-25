@@ -1,4 +1,4 @@
-import {Sprite} from '../classes/sprite';
+import {Sprite} from '../classes/base/sprite';
 
 export interface IEntity {
   name: string;

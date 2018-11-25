@@ -1,5 +1,5 @@
-import {Tile} from '../classes/tile';
-import {Sprite} from '../classes/sprite';
+import {Tile} from '../base/tile';
+import {Sprite} from '../base/sprite';
 
 export class TrapTile extends Tile {
   constructor() {

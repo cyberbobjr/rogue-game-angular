@@ -1,7 +1,7 @@
 import {TileType} from '../enums/tile-type.enum';
-import {Tile} from '../classes/tile';
-import {WallTile} from '../tiles/wall-tile';
-import {FloorTile} from '../tiles/floor-tile';
+import {Tile} from '../classes/base/tile';
+import {WallTile} from '../classes/tiles/wall-tile';
+import {FloorTile} from '../classes/tiles/floor-tile';
 
 export class TilesFactory {
   constructor() {

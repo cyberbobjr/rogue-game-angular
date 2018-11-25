@@ -1,7 +1,7 @@
-import {IEntity} from '../interfaces/ientity';
-import {Position} from './position';
+import {IEntity} from '../../interfaces/ientity';
+import {Position} from '../position';
 import {Injectable} from '@angular/core';
-import {Iaction} from '../interfaces/iaction';
+import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
 
 @Injectable({

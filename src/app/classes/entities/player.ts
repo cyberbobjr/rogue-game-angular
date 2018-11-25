@@ -1,5 +1,5 @@
-import {Entity} from './entity';
-import {Sprite} from './sprite';
+import {Entity} from '../base/entity';
+import {Sprite} from '../base/sprite';
 
 export class Player extends Entity {
   constructor(props) {

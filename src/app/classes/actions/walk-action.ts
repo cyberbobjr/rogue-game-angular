@@ -1,9 +1,9 @@
-import {Iaction} from '../interfaces/iaction';
-import {IEntity} from '../interfaces/ientity';
-import {Direction} from '../enums/direction.enum';
-import {GameMap} from './gameMap';
-import {Tile} from './tile';
-import {Entity} from './entity';
+import {Iaction} from '../../interfaces/iaction';
+import {IEntity} from '../../interfaces/ientity';
+import {Direction} from '../../enums/direction.enum';
+import {GameMap} from '../gameMap';
+import {Tile} from '../base/tile';
+import {Entity} from '../base/entity';
 
 export class WalkAction implements Iaction {
   private _info = '';

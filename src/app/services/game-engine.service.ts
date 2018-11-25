@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {EntitiesService} from './entities.service';
-import {WalkAction} from '../classes/walk-action';
+import {WalkAction} from '../classes/actions/walk-action';
 import {Direction} from '../enums/direction.enum';
 import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';

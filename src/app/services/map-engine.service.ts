@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {IMapEngine} from '../interfaces/i-map-engine';
 import Arena from 'rot-js/lib/map/arena';
 import {GameMap} from '../classes/gameMap';
-import {Entity} from '../classes/entity';
+import {Entity} from '../classes/base/entity';
 import {IEntity} from '../interfaces/ientity';
 import {TilesFactory} from '../factories/tiles-factory';
 import {TileType} from '../enums/tile-type.enum';

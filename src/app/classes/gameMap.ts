@@ -1,5 +1,3 @@
-import {Position} from './position';
-
 export class GameMap<T extends object> {
   private _data: T[][];
 
