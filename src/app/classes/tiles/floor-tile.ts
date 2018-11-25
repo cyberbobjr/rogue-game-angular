@@ -4,7 +4,7 @@ import {Sprite} from '../base/sprite';
 export class FloorTile extends Tile {
   constructor() {
     super();
-    this.sprite = new Sprite('.', 'gray');
+    this.sprite = new Sprite('.', 'grey');
   }
 
   isWalkable(): boolean {
