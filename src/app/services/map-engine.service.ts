@@ -99,6 +99,8 @@ export class MapEngine implements IMapEngine {
     arena.create((y: number, x: number, value: number) => {
       this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
     });
+    arena.connect((x, y) => {
+    });
   }
 
   private _createFovMap() {
