@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {IMapEngine} from '../interfaces/i-map-engine';
-import Arena from 'rot-js/lib/map/arena';
 import {GameMap} from '../classes/gameMap';
 import {Entity} from '../classes/base/entity';
 import {IEntity} from '../interfaces/ientity';
@@ -9,19 +8,21 @@ import {TileType} from '../enums/tile-type.enum';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {Tile} from '../classes/base/tile';
 import {Position} from '../classes/position';
-import Cellular from 'rot-js/lib/map/cellular';
 import {Sprite} from '../classes/base/sprite';
-import {FOV} from 'rot-js/lib';
+import {FOV, Util} from 'rot-js/lib';
+import Digger from 'rot-js/lib/map/digger';
+import {Room} from 'rot-js/lib/map/features';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
   private _map: GameMap<IEntity> = null;
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _mainActor: Entity = null;
+  private _rotMap: any;
 
   get mainActor(): Entity {
     return this._mainActor;
@@ -61,8 +62,10 @@ export class MapEngine implements IMapEngine {
   generateMap(width: number, height: number): GameMap<IEntity> {
     this._width = width;
     this._height = height;
-    this._createMap(width, height);
+    this._rotMap = this._createMap(width, height);
+    this._createDoor(this._rotMap);
     this._createFovMap();
+    console.log(this._map);
     return this._map;
   }
 
@@ -83,6 +86,14 @@ export class MapEngine implements IMapEngine {
     });
   }
 
+  getStartPosition(): Position {
+    const rooms: Array<Room> = this._rotMap.getRooms();
+    const room: Room = rooms[0];
+    const x = room.getLeft() + Math.round((room.getRight() - room.getLeft()) / 2);
+    const y = room.getTop() + Math.round((room.getBottom() - room.getTop()) / 2);
+    return new Position(x, y);
+  }
+
   private _resetLightMap() {
     for (let j = 0; j < this._map.content.length; j++) {
       for (let i = 0; i < this._map.content[0].length; i++) {
@@ -94,13 +105,27 @@ export class MapEngine implements IMapEngine {
 
   private _createMap(width: number, height: number) {
     this._map = new GameMap<Entity>(width, height);
-    const arena = new Cellular(width, height);
-    arena.randomize(0.5);
-    arena.create((y: number, x: number, value: number) => {
+    const rotMap = new Digger(width, height);
+    rotMap.create((x: number, y: number, value: number) => {
       this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
     });
-    arena.connect((x, y) => {
-    });
+    return rotMap;
+  }
+
+  private _createDoor(rotMap: Digger) {
+    const rooms: Array<Room> = rotMap.getRooms();
+    let room: Room = null;
+    for (let i = 0; i < rooms.length; i++) {
+      room = rooms[i];
+      console.log(Util.format('Room #%s: [%s, %s] => [%s, %s]',
+        (i + 1),
+        room.getLeft(), room.getTop(),
+        room.getRight(), room.getBottom()));
+      room.getDoors((x: number, y: number) => {
+        console.log(Util.format('Door : %s, %s', x, y));
+        this._map.content[y][x] = TilesFactory.createTile(TileType.DOOR);
+      });
+    }
   }
 
   private _createFovMap() {

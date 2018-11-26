@@ -8,12 +8,11 @@ import {DisplayService} from './display.service';
 import {EntitiesFactory} from '../factories/entities-factory';
 import {EntityType} from '../enums/entity-type.enum';
 import {Position} from '../classes/position';
-import {Player} from '../classes/entities/player';
 import {Entity} from '../classes/base/entity';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class GameEngineService {
   private _currentActorIndex = 0;
 
@@ -30,9 +29,9 @@ export class GameEngineService {
     }, 250);
   }
 
-  createPlayer(): Entity {
+  createPlayer(position?: Position): Entity {
     this._entitiesService.player = EntitiesFactory.createEntity(EntityType.PLAYER);
-    this._entitiesService.player.position = new Position(10, 10);
+    this._entitiesService.player.position = position || new Position(10, 10);
     return this._entitiesService.player;
   }
 
