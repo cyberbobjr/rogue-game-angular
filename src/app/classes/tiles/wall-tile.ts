@@ -5,6 +5,7 @@ export class WallTile extends Tile {
   constructor() {
     super();
     this.sprite = new Sprite('#', 'red');
+    this._opaque = true;
   }
 
   isWalkable(): boolean {

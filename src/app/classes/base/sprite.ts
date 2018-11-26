@@ -1,4 +1,14 @@
 export class Sprite {
+  protected _light: boolean;
+
+  get light(): boolean {
+    return this._light;
+  }
+
+  set light(value: boolean) {
+    this._light = value;
+  }
+
   get character(): string {
     return this._character;
   }
@@ -16,6 +26,6 @@ export class Sprite {
   }
 
   constructor(private _character: string, private _color: string = 'grey') {
-
+    this._light = false;
   }
 }

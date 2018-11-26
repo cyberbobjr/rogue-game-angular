@@ -52,10 +52,11 @@ export class GameEngineService {
         this.moveActor(Direction.E);
         break;
     }
+    this.refreshMap();
   }
 
   private refreshMap() {
-    this._displayService.centerCameraOnPosition(this._entitiesService.player.position);
+    this._displayService.cameraPosition = this._entitiesService.player.position;
     this._displayService.draw();
   }
 

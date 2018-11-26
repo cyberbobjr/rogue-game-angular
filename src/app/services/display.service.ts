@@ -8,15 +8,24 @@ import {GameMap} from '../classes/gameMap';
 import {IEntity} from '../interfaces/ientity';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class DisplayService {
   private _fontSize = 16;
   private _display: Display = new Display();
-
+  private _cameraPosition: Position;
   maxVisiblesCols = 20;
   maxVisiblesRows = 20;
   cameraStartPosition: { col: number, row: number } = {col: 0, row: 0};
+
+  get cameraPosition(): Position {
+    return this._cameraPosition;
+  }
+
+  set cameraPosition(value: Position) {
+    this._cameraPosition = value;
+    this._centerCameraOnPosition(value);
+  }
 
   get display(): Display {
     return this._display;
@@ -46,11 +55,17 @@ export class DisplayService {
     let gameMap = this.mapEngine.map.clone();
     gameMap = this.putEntitiesOn(gameMap);
     const viewport: GameMap<IEntity> = this.computeViewport(gameMap);
-    this.display.clear();
+    this._clear();
+    this.mapEngine.computeFov(this.cameraPosition);
     this.drawViewPort(viewport);
   }
 
-  centerCameraOnPosition(cameraPosition: Position) {
+  private _clear() {
+    this.display.clear();
+    this.mapEngine.resetLightMap();
+  }
+
+  private _centerCameraOnPosition(cameraPosition: Position) {
     this.cameraStartPosition.col = cameraPosition.x - Math.round(this.maxVisiblesCols / 2);
     this.cameraStartPosition.row = cameraPosition.y - Math.round(this.maxVisiblesRows / 2);
   }
@@ -58,7 +73,10 @@ export class DisplayService {
   private drawViewPort(viewport: GameMap<IEntity>) {
     for (let j = 0; j < viewport.content.length; j++) {
       for (let i = 0; i < viewport.content[0].length; i++) {
-        this.display.draw(i, j, viewport.content[j][i].sprite.character, viewport.content[j][i].sprite.color, null);
+        const sprite = viewport.content[j][i].sprite;
+        if (sprite.light) {
+          this.display.draw(i, j, sprite.character, sprite.color, null);
+        }
       }
     }
   }

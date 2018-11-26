@@ -5,5 +5,6 @@ export class TrapTile extends Tile {
   constructor() {
     super();
     this.sprite = new Sprite('.');
+    this._opaque = false;
   }
 }

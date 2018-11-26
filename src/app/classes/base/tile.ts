@@ -7,6 +7,15 @@ export class Tile implements IEntity {
   protected _name: string;
   protected _position: Position;
   protected _sprite: Sprite;
+  protected _opaque: boolean;
+
+  get opaque(): boolean {
+    return this._opaque;
+  }
+
+  set opaque(value: boolean) {
+    this._opaque = value;
+  }
 
   get name(): string {
     return this._name;

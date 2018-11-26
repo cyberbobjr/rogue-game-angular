@@ -5,6 +5,7 @@ export class FloorTile extends Tile {
   constructor() {
     super();
     this.sprite = new Sprite('.', 'grey');
+    this._opaque = false;
   }
 
   isWalkable(): boolean {
