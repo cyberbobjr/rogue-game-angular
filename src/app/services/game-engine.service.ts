@@ -38,19 +38,31 @@ export class GameEngineService {
   handleKeyEvent(key: KeyboardEvent) {
     switch (key.code) {
       case 'ArrowUp':
-      case 'u':
+      case 'KeyU':
         this.moveActor(Direction.N);
         break;
+      case 'KeyY':
+        this.moveActor(Direction.NW);
+        break;
+      case 'KeyI':
+        this.moveActor(Direction.NE);
+        break;
+      case 'KeyB':
+        this.moveActor(Direction.SW);
+        break;
+      case 'KeyM':
+        this.moveActor(Direction.SE);
+        break;
       case 'ArrowLeft':
-      case 'h':
+      case 'KeyH':
         this.moveActor(Direction.W);
         break;
       case 'ArrowDown':
-      case 'j':
+      case 'KeyN':
         this.moveActor(Direction.S);
         break;
       case 'ArrowRight':
-      case 'k':
+      case 'KeyK':
         this.moveActor(Direction.E);
         break;
     }

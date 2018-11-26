@@ -65,7 +65,6 @@ export class MapEngine implements IMapEngine {
     this._rotMap = this._createMap(width, height);
     this._createDoor(this._rotMap);
     this._createFovMap();
-    console.log(this._map);
     return this._map;
   }
 
@@ -117,12 +116,7 @@ export class MapEngine implements IMapEngine {
     let room: Room = null;
     for (let i = 0; i < rooms.length; i++) {
       room = rooms[i];
-      console.log(Util.format('Room #%s: [%s, %s] => [%s, %s]',
-        (i + 1),
-        room.getLeft(), room.getTop(),
-        room.getRight(), room.getBottom()));
       room.getDoors((x: number, y: number) => {
-        console.log(Util.format('Door : %s, %s', x, y));
         this._map.content[y][x] = TilesFactory.createTile(TileType.DOOR);
       });
     }

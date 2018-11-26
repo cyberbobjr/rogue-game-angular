@@ -1,10 +1,11 @@
 import {Tile} from '../base/tile';
-import {Sprite} from '../base/sprite';
+import {SpritesFactory} from '../../factories/sprites-factory';
+import {SpriteType} from '../../enums/sprite-type.enum';
 
 export class FloorTile extends Tile {
   constructor() {
     super();
-    this.sprite = new Sprite('.', '#f7ff0f');
+    this.sprite = SpritesFactory.createSprite(SpriteType.FLOOR);
     this._opaque = false;
   }
 

@@ -8,11 +8,15 @@ export class SpritesFactory {
   static createSprite(type: SpriteType): Sprite | null {
     switch (type) {
       case SpriteType.PLAYER:
-        return new Sprite('@', 'red');
+        return new Sprite('@', '#ffffff');
       case SpriteType.WALL:
-        return new Sprite('#', 'grey');
+        return new Sprite('#', '#f95757');
       case SpriteType.FLOOR:
-        return new Sprite('.', 'grey');
+        return new Sprite('.', '#f7ff0f');
+      case SpriteType.CLOSEDOOR:
+        return new Sprite('I', '#f95757');
+      case SpriteType.OPENDOOR:
+        return new Sprite('=', '#f95757');
       default:
         return null;
     }

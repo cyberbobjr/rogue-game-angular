@@ -18,6 +18,7 @@ export class WalkAction implements Iaction {
     if (tile.isWalkable()) {
       actor.position = destPosition;
       actor.setNextAction(null);
+      tile.onWalk(actor);
       this._info = 'Move';
       return true;
     }
