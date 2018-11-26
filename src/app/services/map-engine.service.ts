@@ -20,7 +20,16 @@ export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
   private _map: GameMap<IEntity> = null;
-  private preciseShadowcasting: PreciseShadowcasting = null;
+  private _preciseShadowcasting: PreciseShadowcasting = null;
+  private _mainActor: Entity = null;
+
+  get mainActor(): Entity {
+    return this._mainActor;
+  }
+
+  set mainActor(value: Entity) {
+    this._mainActor = value;
+  }
 
   get width(): number {
     return this._width;
@@ -49,7 +58,7 @@ export class MapEngine implements IMapEngine {
   constructor() {
   }
 
-  generateNewMap(width: number, height: number): GameMap<IEntity> {
+  generateMap(width: number, height: number): GameMap<IEntity> {
     this._width = width;
     this._height = height;
     this._createMap(width, height);
@@ -57,7 +66,24 @@ export class MapEngine implements IMapEngine {
     return this._map;
   }
 
-  resetLightMap() {
+  computeFov(position: Position) {
+    if (!this._mainActor) {
+      return;
+    }
+    this._resetLightMap();
+    const lightRadius: number = this._mainActor.lightRadius;
+    const lightPower: number = this._mainActor.ligthPower;
+    this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
+      try {
+        const sprite = <Sprite>this._map.content[y][x].sprite;
+        sprite.light = true;
+        sprite.visibility = R / lightPower;
+      } catch (e) {
+      }
+    });
+  }
+
+  private _resetLightMap() {
     for (let j = 0; j < this._map.content.length; j++) {
       for (let i = 0; i < this._map.content[0].length; i++) {
         const sprite = this._map.content[j][i].sprite;
@@ -76,7 +102,7 @@ export class MapEngine implements IMapEngine {
   }
 
   private _createFovMap() {
-    this.preciseShadowcasting = new FOV.PreciseShadowcasting((x: number, y: number) => {
+    this._preciseShadowcasting = new FOV.PreciseShadowcasting((x: number, y: number) => {
       try {
         const info = <Tile>this.map.content[y][x];
         return !info.opaque;
@@ -84,15 +110,5 @@ export class MapEngine implements IMapEngine {
         return false;
       }
     }, {topology: 8});
-  }
-
-  computeFov(position: Position) {
-    this.preciseShadowcasting.compute(position.x, position.y, 5, (x: number, y: number, R: number, visibility) => {
-      try {
-        const sprite = <Sprite>this._map.content[y][x].sprite;
-        sprite.light = true;
-      } catch (e) {
-      }
-    });
   }
 }

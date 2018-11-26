@@ -6,6 +6,7 @@ import {Position} from '../classes/position';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {GameMap} from '../classes/gameMap';
 import {IEntity} from '../interfaces/ientity';
+import {Sprite} from '../classes/base/sprite';
 
 @Injectable({
               providedIn: 'root'
@@ -16,7 +17,7 @@ export class DisplayService {
   private _cameraPosition: Position;
   maxVisiblesCols = 20;
   maxVisiblesRows = 20;
-  cameraStartPosition: { col: number, row: number } = {col: 0, row: 0};
+  cameraStartPosition: Position;
 
   get cameraPosition(): Position {
     return this._cameraPosition;
@@ -24,7 +25,7 @@ export class DisplayService {
 
   set cameraPosition(value: Position) {
     this._cameraPosition = value;
-    this._centerCameraOnPosition(value);
+    this.cameraStartPosition = this._getStartViewPortOfPosition(value);
   }
 
   get display(): Display {
@@ -52,28 +53,23 @@ export class DisplayService {
   }
 
   draw() {
-    let gameMap = this.mapEngine.map.clone();
-    gameMap = this.putEntitiesOn(gameMap);
+    const gameMap = this.putEntitiesOn(this.mapEngine.map.clone());
     const viewport: GameMap<IEntity> = this.computeViewport(gameMap);
-    this._clear();
     this.mapEngine.computeFov(this.cameraPosition);
     this.drawViewPort(viewport);
   }
 
-  private _clear() {
-    this.display.clear();
-    this.mapEngine.resetLightMap();
-  }
-
-  private _centerCameraOnPosition(cameraPosition: Position) {
-    this.cameraStartPosition.col = cameraPosition.x - Math.round(this.maxVisiblesCols / 2);
-    this.cameraStartPosition.row = cameraPosition.y - Math.round(this.maxVisiblesRows / 2);
+  private _getStartViewPortOfPosition(cameraPosition: Position) {
+    const x = cameraPosition.x - Math.round(this.maxVisiblesCols / 2);
+    const y = cameraPosition.y - Math.round(this.maxVisiblesRows / 2);
+    return new Position(x, y);
   }
 
   private drawViewPort(viewport: GameMap<IEntity>) {
+    this.display.clear();
     for (let j = 0; j < viewport.content.length; j++) {
       for (let i = 0; i < viewport.content[0].length; i++) {
-        const sprite = viewport.content[j][i].sprite;
+        const sprite: Sprite = viewport.content[j][i].sprite;
         if (sprite.light) {
           this.display.draw(i, j, sprite.character, sprite.color, null);
         }
@@ -89,6 +85,6 @@ export class DisplayService {
   }
 
   private computeViewport(currentMap: GameMap<IEntity>): GameMap<IEntity> {
-    return currentMap.extract(this.cameraStartPosition.col, this.cameraStartPosition.row, this.maxVisiblesCols, this.maxVisiblesRows);
+    return currentMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

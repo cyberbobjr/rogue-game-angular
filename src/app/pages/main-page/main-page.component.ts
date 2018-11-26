@@ -6,6 +6,7 @@ import {EntitiesService} from '../../services/entities.service';
 import {GameMap} from '../../classes/gameMap';
 import {Tile} from '../../classes/base/tile';
 import {IEntity} from '../../interfaces/ientity';
+import {Entity} from '../../classes/base/entity';
 
 @Component({
              selector: 'app-main-page',
@@ -16,13 +17,13 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private _gameloop: any = null;
   map: GameMap<IEntity> = null;
 
-  constructor(private _rotMapService: MapEngine,
+  constructor(private _mapEngine: MapEngine,
               private _gameEngineService: GameEngineService) {
   }
 
   ngOnInit() {
-    this.map = this._rotMapService.generateNewMap(80, 80);
-    this._gameEngineService.createPlayer();
+    this._mapEngine.mainActor = this._gameEngineService.createPlayer();;
+    this.map = this._mapEngine.generateMap(80, 80);
     this._gameloop = this._gameEngineService.startGameLoop();
   }
 

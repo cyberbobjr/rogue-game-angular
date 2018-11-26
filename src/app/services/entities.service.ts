@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IEntity} from '../interfaces/ientity';
 import {Entity} from '../classes/base/entity';
+import {Player} from '../classes/entities/player';
 
 @Injectable({
               providedIn: 'root'

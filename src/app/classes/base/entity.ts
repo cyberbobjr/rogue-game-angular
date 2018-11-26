@@ -12,6 +12,8 @@ export class Entity implements IEntity {
   protected _name: string;
   protected _currentAction: Iaction = null;
   protected _sprite: Sprite = null;
+  lightRadius = 10;
+  ligthPower = 5; // max is lighter
 
   get sprite(): Sprite {
     return this._sprite;
@@ -36,6 +38,7 @@ export class Entity implements IEntity {
   set position(value: Position) {
     this._position = value;
   }
+
   constructor(name: string, position?: Position) {
     this._name = name;
     if (position) {
