@@ -7,7 +7,7 @@ export class OpendoorAction implements Iaction {
   constructor() {
   }
 
-  perform(actor: Entity): boolean {
+  execute(actor: Entity): boolean {
     this._info = 'Open Door';
     return true;
   }

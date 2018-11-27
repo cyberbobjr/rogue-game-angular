@@ -1,7 +1,7 @@
 import {IEntity} from './ientity';
 
 export interface Iaction {
-  perform(actor: IEntity): boolean;
+  execute(actor: IEntity): boolean;
 
   getInfo(): string;
 }

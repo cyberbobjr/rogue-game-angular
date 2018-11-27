@@ -12,7 +12,7 @@ export class WalkAction implements Iaction {
               private _map: GameMap<IEntity>) {
   }
 
-  perform(actor: Entity): boolean {
+  execute(actor: Entity): boolean {
     const destPosition = actor.position.computeDestination(this._direction);
     const tile: Tile = <Tile>this._map.content[destPosition.y][destPosition.x];
     if (tile.isWalkable()) {

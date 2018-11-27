@@ -1,25 +1,25 @@
 import {Injectable} from '@angular/core';
 import {EntitiesService} from './entities.service';
-import {WalkAction} from '../classes/actions/walk-action';
-import {Direction} from '../enums/direction.enum';
 import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';
 import {DisplayService} from './display.service';
-import {EntitiesFactory} from '../factories/entities-factory';
-import {EntityType} from '../enums/entity-type.enum';
-import {Position} from '../classes/position';
-import {Entity} from '../classes/base/entity';
+import {CommandsService} from './commands.service';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class GameEngineService {
   private _currentActorIndex = 0;
+
+  get mapEngine(): MapEngine {
+    return this._mapEngine;
+  }
 
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine,
               private _logService: LoggingService,
-              private _displayService: DisplayService) {
+              private _displayService: DisplayService,
+              private _commandService: CommandsService) {
   }
 
   startGameLoop() {
@@ -29,41 +29,45 @@ export class GameEngineService {
     }, 250);
   }
 
-  createPlayer(position?: Position): Entity {
-    this._entitiesService.player = EntitiesFactory.createEntity(EntityType.PLAYER);
-    this._entitiesService.player.position = position || new Position(10, 10);
-    return this._entitiesService.player;
-  }
-
   handleKeyEvent(key: KeyboardEvent) {
+    const player = this._entitiesService.player;
+
     switch (key.code) {
       case 'ArrowUp':
-      case 'KeyU':
-        this.moveActor(Direction.N);
-        break;
-      case 'KeyY':
-        this.moveActor(Direction.NW);
-        break;
-      case 'KeyI':
-        this.moveActor(Direction.NE);
-        break;
-      case 'KeyB':
-        this.moveActor(Direction.SW);
-        break;
-      case 'KeyM':
-        this.moveActor(Direction.SE);
+        this._commandService.ArrowUp.execute(player, this);
         break;
       case 'ArrowLeft':
-      case 'KeyH':
-        this.moveActor(Direction.W);
+        this._commandService.ArrowLeft.execute(player, this);
         break;
       case 'ArrowDown':
-      case 'KeyN':
-        this.moveActor(Direction.S);
+        this._commandService.ArrowDown.execute(player, this);
         break;
       case 'ArrowRight':
+        this._commandService.ArrowRight.execute(player, this);
+        break;
+      case 'KeyH':
+        this._commandService.KeyH.execute(player, this);
+        break;
+      case 'KeyU':
+        this._commandService.KeyU.execute(player, this);
+        break;
+      case 'KeyY':
+        this._commandService.KeyY.execute(player, this);
+        break;
+      case 'KeyI':
+        this._commandService.KeyI.execute(player, this);
+        break;
+      case 'KeyB':
+        this._commandService.KeyB.execute(player, this);
+        break;
+      case 'KeyM':
+        this._commandService.KeyM.execute(player, this);
+        break;
+      case 'KeyN':
+        this._commandService.KeyN.execute(player, this);
+        break;
       case 'KeyK':
-        this.moveActor(Direction.E);
+        this._commandService.KeyK.execute(player, this);
         break;
     }
   }
@@ -76,7 +80,7 @@ export class GameEngineService {
   private processAction() {
     const currentActor = this._entitiesService.entities[this._currentActorIndex];
     const actorAction = currentActor.getAction();
-    if (actorAction === null || !actorAction.perform(currentActor)) {
+    if (actorAction === null || !actorAction.execute(currentActor)) {
       if (actorAction) {
         this._logService.text.next(actorAction.getInfo());
       }
@@ -85,10 +89,5 @@ export class GameEngineService {
       this._logService.text.next(actorAction.getInfo());
     }
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
-  }
-
-  private moveActor(direction: Direction) {
-    const player = this._entitiesService.player;
-    player.setNextAction(new WalkAction(direction, this._mapEngine.map));
   }
 }
