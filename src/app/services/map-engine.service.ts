@@ -9,7 +9,6 @@ import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {Tile} from '../classes/base/tile';
 import {Position} from '../classes/position';
 import {Sprite} from '../classes/base/sprite';
-import {FOV, Util} from 'rot-js/lib';
 import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
 
@@ -123,7 +122,7 @@ export class MapEngine implements IMapEngine {
   }
 
   private _createFovMap() {
-    this._preciseShadowcasting = new FOV.PreciseShadowcasting((x: number, y: number) => {
+    this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info = <Tile>this.map.content[y][x];
         return !info.opaque;

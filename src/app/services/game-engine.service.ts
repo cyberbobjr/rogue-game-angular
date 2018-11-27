@@ -4,6 +4,7 @@ import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';
 import {DisplayService} from './display.service';
 import {CommandsService} from './commands.service';
+import {ActionResult} from '../classes/actions/action-result';
 
 @Injectable({
               providedIn: 'root'
@@ -80,14 +81,15 @@ export class GameEngineService {
   private processAction() {
     const currentActor = this._entitiesService.entities[this._currentActorIndex];
     const actorAction = currentActor.getAction();
-    if (actorAction === null || !actorAction.execute(currentActor)) {
-      if (actorAction) {
-        this._logService.put(actorAction.getInfo());
-      }
+    if (actorAction === null) {
       return;
-    } else {
-      this._logService.put(actorAction.getInfo());
     }
+    const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
+    if (resultAction.alternative) {
+      currentActor.setNextAction(resultAction.alternative);
+      return;
+    }
+
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }
 }

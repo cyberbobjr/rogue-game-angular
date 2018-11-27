@@ -2,6 +2,7 @@ import {Entity} from './entity';
 import {IEntity} from '../../interfaces/ientity';
 import {Position} from '../position';
 import {Sprite} from './sprite';
+import {Iaction} from '../../interfaces/iaction';
 
 export class Tile implements IEntity {
   protected _name: string;
@@ -48,11 +49,11 @@ export class Tile implements IEntity {
     return false;
   }
 
-  onWalk(actor: Entity): void {
-
+  onWalk(actor: Entity): Iaction | null {
+    return null;
   }
 
-  onHit(actor: Entity): void {
-
+  onHit(actor: Entity): Iaction | null {
+    return null;
   }
 }

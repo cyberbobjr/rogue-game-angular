@@ -26,8 +26,8 @@ export class CommandsService {
   private _initCommand() {
     this.ArrowUp = new MoveN();
     this.ArrowDown = new MoveS();
-    this.ArrowLeft = new MoveE();
-    this.ArrowRight = new MoveW();
+    this.ArrowLeft = new MoveW();
+    this.ArrowRight = new MoveE();
     this.KeyB = new MoveSW();
     this.KeyH = new MoveW();
     this.KeyI = new MoveNE();

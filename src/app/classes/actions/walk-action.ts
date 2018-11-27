@@ -1,33 +1,50 @@
 import {Iaction} from '../../interfaces/iaction';
-import {IEntity} from '../../interfaces/ientity';
 import {Direction} from '../../enums/direction.enum';
-import {GameMap} from '../gameMap';
 import {Tile} from '../base/tile';
 import {Entity} from '../base/entity';
+import {MapEngine} from '../../services/map-engine.service';
+import {ActionResult} from './action-result';
 
 export class WalkAction implements Iaction {
   private _info = '';
+  private _alternate: Iaction = null;
 
-  constructor(private _direction: Direction,
-              private _map: GameMap<IEntity>) {
+  get alternate(): Iaction {
+    return this._alternate;
   }
 
-  execute(actor: Entity): boolean {
+  set alternate(value: Iaction) {
+    this._alternate = value;
+  }
+
+  constructor(private _direction: Direction,
+              private _mapEngine: MapEngine) {
+  }
+
+  execute(actor: Entity): ActionResult {
     const destPosition = actor.position.computeDestination(this._direction);
-    const tile: Tile = <Tile>this._map.content[destPosition.y][destPosition.x];
+    const tile: Tile = <Tile>this._mapEngine.map.content[destPosition.y][destPosition.x];
+
     if (tile.isWalkable()) {
       actor.position = destPosition;
       actor.setNextAction(null);
       tile.onWalk(actor);
       this._info = 'Move';
-      return true;
+      return ActionResult.SUCCESS;
+    } else {
+      this._info = 'You can\'t walk !';
+      const hitAction = tile.onHit(actor);
+      const result = ActionResult.FAILURE;
+      if (hitAction) {
+        result.alternative = hitAction;
+      }
+      return result;
     }
-    this._info = 'You can\'t walk !';
-    actor.setNextAction(null);
-    return false;
   }
 
   getInfo(): string {
     return this._info;
   }
+
+
 }

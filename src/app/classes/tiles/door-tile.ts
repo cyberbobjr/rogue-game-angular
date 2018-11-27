@@ -3,6 +3,7 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from '../base/entity';
 import {OpendoorAction} from '../actions/opendoor-action';
+import {Iaction} from '../../interfaces/iaction';
 
 export class DoorTile extends Tile {
 
@@ -16,11 +17,15 @@ export class DoorTile extends Tile {
     return true;
   }
 
-  onWalk(actor: Entity) {
-    actor.setNextAction(new OpendoorAction());
-    if (this._isClosed) {
-      this.openDoor();
+  onWalk(actor: Entity): Iaction | null {
+    if (!this._isClosed) {
+      return new OpendoorAction(this);
     }
+    return null;
+  }
+
+  onHit(actor: Entity): Iaction | null {
+    return null;
   }
 
   openDoor() {
