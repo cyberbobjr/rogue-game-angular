@@ -5,9 +5,12 @@ import {BehaviorSubject} from 'rxjs';
               providedIn: 'root'
             })
 export class LoggingService {
-  text: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  public displayText: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
   constructor() {
   }
 
+  put(text: string) {
+    this.displayText.next(text);
+  }
 }

@@ -82,11 +82,11 @@ export class GameEngineService {
     const actorAction = currentActor.getAction();
     if (actorAction === null || !actorAction.execute(currentActor)) {
       if (actorAction) {
-        this._logService.text.next(actorAction.getInfo());
+        this._logService.put(actorAction.getInfo());
       }
       return;
     } else {
-      this._logService.text.next(actorAction.getInfo());
+      this._logService.put(actorAction.getInfo());
     }
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }

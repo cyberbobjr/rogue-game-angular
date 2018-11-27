@@ -10,7 +10,7 @@ export class InfoPageComponent implements OnInit {
   info = '';
 
   constructor(private _loggingService: LoggingService) {
-    this._loggingService.text.subscribe((text: string) => {
+    this._loggingService.displayText.subscribe((text: string) => {
       this.info = text;
     });
   }
