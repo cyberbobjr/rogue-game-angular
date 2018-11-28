@@ -4,13 +4,15 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from '../base/entity';
 import {OpendoorAction} from '../actions/opendoor-action';
 import {Iaction} from '../../interfaces/iaction';
+import {Position} from '../position';
 
 export class DoorTile extends Tile {
 
-  constructor(private _isClosed = true) {
+  constructor(private _isClosed = true, position ?: Position) {
     super();
     this._opaque = this._isClosed;
     this._setSprite();
+    this.position = position;
   }
 
   isWalkable(): boolean {
@@ -29,7 +31,7 @@ export class DoorTile extends Tile {
   }
 
   openDoor() {
-    this._isClosed = this._opaque = false;
+    this._isClosed = this._opaque = !this._isClosed;
     this._setSprite();
   }
 

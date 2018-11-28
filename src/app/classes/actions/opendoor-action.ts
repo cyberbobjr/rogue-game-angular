@@ -11,7 +11,7 @@ export class OpendoorAction implements Iaction {
   }
 
   execute(actor: Entity, mapEngine: MapEngine): ActionResult {
-    console.log('open door success');
+    console.log('open door action');
     this._tile.openDoor();
     return ActionResult.SUCCESS;
   }

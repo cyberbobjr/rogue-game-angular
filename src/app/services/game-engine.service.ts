@@ -32,7 +32,6 @@ export class GameEngineService {
 
   handleKeyEvent(key: KeyboardEvent) {
     const player = this._entitiesService.player;
-
     switch (key.code) {
       case 'ArrowUp':
         this._commandService.ArrowUp.execute(player, this);
@@ -70,6 +69,9 @@ export class GameEngineService {
       case 'KeyK':
         this._commandService.KeyK.execute(player, this);
         break;
+      case 'KeyO':
+        this._commandService.KeyO.execute(player, this);
+        break;
     }
   }
 
@@ -95,6 +97,8 @@ export class GameEngineService {
       actorAction = Object.create(resultAction.alternative);
       resultAction.alternative = null;
     }
+    currentActor.setNextAction(null);
+
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }
 }

@@ -42,7 +42,7 @@ export class GameMap<T extends object> {
 
     const arrayExtracted: T[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
 
-    return new GameMap(finalWidth, finalHeight, arrayExtracted);
+    return new GameMap<T>(finalWidth, finalHeight, arrayExtracted);
   }
 
   private _getRawData(startX, startY, width, height): T[][] {
@@ -51,7 +51,7 @@ export class GameMap<T extends object> {
     let x = 0;
     for (let j = startY; j < startY + height; j++) {
       for (let i = startX; i < startX + width; i++) {
-        arrayExtracted[y][x] = Object.create(this._data[j][i] as object) as T;
+        arrayExtracted[y][x] = Object.create(this._data[j][i]) as T;
         x++;
       }
       y++;

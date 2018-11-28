@@ -15,8 +15,7 @@ export class WalkAction implements Iaction {
   execute(actor: Entity): ActionResult {
     const destPosition = actor.position.computeDestination(this._direction);
     const tile: Tile = <Tile>this._mapEngine.map.content[destPosition.y][destPosition.x];
-    actor.setNextAction(null);
-
+    console.log('walk action');
     if (tile.isWalkable()) {
       actor.position = destPosition;
       tile.onWalk(actor);
@@ -31,6 +30,4 @@ export class WalkAction implements Iaction {
   getInfo(): string {
     return this._info;
   }
-
-
 }

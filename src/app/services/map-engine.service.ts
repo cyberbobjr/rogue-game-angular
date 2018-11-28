@@ -13,8 +13,8 @@ import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
@@ -92,6 +92,15 @@ export class MapEngine implements IMapEngine {
     return new Position(x, y);
   }
 
+  getTilesAround(position: Position): Array<Array<IEntity>> {
+    const test = (this.map.extract(position.x - 1, position.y - 1, 3, 3));
+    return (test).content;
+  }
+
+  getTileAt(position: Position): Tile {
+    return <Tile>this.map.content[position.y][position.x];
+  }
+
   private _resetLightMap() {
     for (let j = 0; j < this._map.content.length; j++) {
       for (let i = 0; i < this._map.content[0].length; i++) {
@@ -105,7 +114,7 @@ export class MapEngine implements IMapEngine {
     this._map = new GameMap<Entity>(width, height);
     const rotMap = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {
-      this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
+      this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
     });
     return rotMap;
   }
@@ -116,7 +125,7 @@ export class MapEngine implements IMapEngine {
     for (let i = 0; i < rooms.length; i++) {
       room = rooms[i];
       room.getDoors((x: number, y: number) => {
-        this._map.content[y][x] = TilesFactory.createTile(TileType.DOOR);
+        this._map.content[y][x] = TilesFactory.createTile(TileType.DOOR, new Position(x, y));
       });
     }
   }

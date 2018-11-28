@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Command} from '../classes/commands/command';
 import {MoveE, MoveN, MoveNE, MoveNW, MoveS, MoveSE, MoveSW, MoveW} from '../classes/commands/move';
+import {OpenDoor} from '../classes/commands/open-door';
 
 @Injectable({
               providedIn: 'root'
@@ -18,6 +19,7 @@ export class CommandsService {
   KeyM: Command;
   KeyN: Command;
   KeyK: Command;
+  KeyO: Command;
 
   constructor() {
     this._initCommand();
@@ -36,5 +38,6 @@ export class CommandsService {
     this.KeyN = new MoveS();
     this.KeyU = new MoveN();
     this.KeyY = new MoveNW();
+    this.KeyO = new OpenDoor();
   }
 }
