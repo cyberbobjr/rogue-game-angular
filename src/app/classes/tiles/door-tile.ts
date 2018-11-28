@@ -14,17 +14,17 @@ export class DoorTile extends Tile {
   }
 
   isWalkable(): boolean {
-    return true;
+    return !this._isClosed;
   }
 
   onWalk(actor: Entity): Iaction | null {
-    if (!this._isClosed) {
-      return new OpendoorAction(this);
-    }
     return null;
   }
 
   onHit(actor: Entity): Iaction | null {
+    if (this._isClosed) {
+      return new OpendoorAction(this);
+    }
     return null;
   }
 

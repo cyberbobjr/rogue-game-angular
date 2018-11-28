@@ -2,25 +2,17 @@ import {Iaction} from '../../interfaces/iaction';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {MapEngine} from '../../services/map-engine.service';
-import {Tile} from '../base/tile';
+import {DoorTile} from '../tiles/door-tile';
 
 export class OpendoorAction implements Iaction {
   private _info = '';
-  private _alternate: Iaction = null;
 
-  get alternate(): Iaction {
-    return this._alternate;
-  }
-
-  set alternate(value: Iaction) {
-    this._alternate = value;
-  }
-
-  constructor(tile: Tile) {
+  constructor(private _tile: DoorTile) {
   }
 
   execute(actor: Entity, mapEngine: MapEngine): ActionResult {
-    this._info = 'Open Door';
+    console.log('open door success');
+    this._tile.openDoor();
     return ActionResult.SUCCESS;
   }
 

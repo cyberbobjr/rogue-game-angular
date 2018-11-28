@@ -80,16 +80,21 @@ export class GameEngineService {
 
   private processAction() {
     const currentActor = this._entitiesService.entities[this._currentActorIndex];
-    const actorAction = currentActor.getAction();
+    let actorAction = currentActor.getAction();
     if (actorAction === null) {
       return;
     }
-    const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
-    if (resultAction.alternative) {
-      currentActor.setNextAction(resultAction.alternative);
-      return;
+    while (true) {
+      const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
+      if (resultAction.succeeded) {
+        break;
+      }
+      if (!resultAction.alternative) {
+        return;
+      }
+      actorAction = Object.create(resultAction.alternative);
+      resultAction.alternative = null;
     }
-
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }
 }

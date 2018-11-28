@@ -3,8 +3,6 @@ import {ActionResult} from '../classes/actions/action-result';
 import {MapEngine} from '../services/map-engine.service';
 
 export interface Iaction {
-  alternate: Iaction;
-
   execute(actor: IEntity, mapEngine: MapEngine): ActionResult;
 
   getInfo(): string;

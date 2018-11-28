@@ -18,7 +18,7 @@ export class ActionResult {
   }
 
 
-  constructor(private _succeeded: boolean) {
+  constructor(private _succeeded: boolean = true) {
 
   }
 }
