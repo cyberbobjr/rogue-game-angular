@@ -3,6 +3,7 @@ import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {MapEngine} from '../../services/map-engine.service';
 import {DoorTile} from '../tiles/door-tile';
+import {EventLog} from '../event-log';
 
 export class OpendoorAction implements Iaction {
   private _info = '';
@@ -11,7 +12,7 @@ export class OpendoorAction implements Iaction {
   }
 
   execute(actor: Entity, mapEngine: MapEngine): ActionResult {
-    console.log('open door action');
+    EventLog.getInstance().message = 'You trying to open door';
     this._tile.flipDoor();
     return ActionResult.SUCCESS;
   }

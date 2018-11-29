@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {LoggingService} from '../../services/logging.service';
+import {EventLog} from '../../classes/event-log';
 
 @Component({
              selector: 'app-info-page',
@@ -7,15 +7,17 @@ import {LoggingService} from '../../services/logging.service';
              styleUrls: ['./info-page.component.css']
            })
 export class InfoPageComponent implements OnInit {
-  info = '';
+  message: string = null;
 
-  constructor(private _loggingService: LoggingService) {
-    this._loggingService.displayText.subscribe((text: string) => {
-      this.info = text;
-    });
+  constructor() {
   }
 
   ngOnInit() {
+    EventLog.getInstance()
+            .message$
+            .subscribe((message: string) => {
+              this.message = message;
+            });
   }
 
 }

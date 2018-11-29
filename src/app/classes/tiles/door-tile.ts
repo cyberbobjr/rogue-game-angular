@@ -5,6 +5,7 @@ import {Entity} from '../base/entity';
 import {OpendoorAction} from '../actions/opendoor-action';
 import {Iaction} from '../../interfaces/iaction';
 import {Position} from '../position';
+import {EventLog} from '../event-log';
 
 export class DoorTile extends Tile {
 
@@ -33,16 +34,23 @@ export class DoorTile extends Tile {
   openDoor() {
     this._isClosed = this._opaque = false;
     this._setSprite();
+    this._writeStatut();
   }
 
   closeDoor() {
     this._isClosed = this._opaque = true;
     this._setSprite();
+    this._writeStatut();
   }
 
   flipDoor() {
     this._isClosed = this._opaque = !this._isClosed;
     this._setSprite();
+    this._writeStatut();
+  }
+
+  private _writeStatut() {
+    EventLog.getInstance().message = 'The door is ' + (this._isClosed ? 'close' : 'open');
   }
 
   private _setSprite() {
