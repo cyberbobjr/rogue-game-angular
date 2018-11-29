@@ -10,7 +10,7 @@ export class SpritesFactory {
       case SpriteType.PLAYER:
         return new Sprite('@', '#ffffff');
       case SpriteType.WALL:
-        return new Sprite('#', '#f95757');
+        return new Sprite('#', '#f95757', '#282828');
       case SpriteType.FLOOR:
         return new Sprite('.', '#f7ff0f');
       case SpriteType.CLOSEDOOR:

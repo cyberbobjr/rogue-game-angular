@@ -71,7 +71,7 @@ export class DisplayService {
       for (let i = 0; i < viewport.content[0].length; i++) {
         const sprite: Sprite = viewport.content[j][i].sprite;
         if (sprite.light) {
-          this.display.draw(i, j, sprite.character, sprite.color, null);
+          this.display.draw(i, j, sprite.character, sprite.color, sprite.bgColor);
         }
       }
     }

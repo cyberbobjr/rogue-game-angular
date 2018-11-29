@@ -38,7 +38,13 @@ export class Sprite {
     this._color = value;
   }
 
-  constructor(private _character: string, private _color: string = '#afafaf') {
+  get bgColor(): string {
+    return Color(this._bgColor)
+      .darken(this._visibility)
+      .hex();
+  }
+
+  constructor(private _character: string, private _color: string = '#afafaf', private _bgColor: string = '#000000') {
     this._light = false;
   }
 
