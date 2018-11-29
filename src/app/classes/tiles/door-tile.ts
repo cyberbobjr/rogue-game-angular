@@ -31,12 +31,17 @@ export class DoorTile extends Tile {
   }
 
   openDoor() {
-    this._isClosed = this._opaque = !this._isClosed;
+    this._isClosed = this._opaque = false;
     this._setSprite();
   }
 
   closeDoor() {
     this._isClosed = this._opaque = true;
+    this._setSprite();
+  }
+
+  flipDoor() {
+    this._isClosed = this._opaque = !this._isClosed;
     this._setSprite();
   }
 

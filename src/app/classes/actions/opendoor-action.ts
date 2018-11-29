@@ -12,7 +12,7 @@ export class OpendoorAction implements Iaction {
 
   execute(actor: Entity, mapEngine: MapEngine): ActionResult {
     console.log('open door action');
-    this._tile.openDoor();
+    this._tile.flipDoor();
     return ActionResult.SUCCESS;
   }
 
