@@ -12,6 +12,7 @@ import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js/lib';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
+import {EntitiesService} from './entities.service';
 
 @Injectable({
   providedIn: 'root'
@@ -56,7 +57,7 @@ export class MapEngine implements IMapEngine {
     this._map = value;
   }
 
-  constructor() {
+  constructor(private entitiesService: EntitiesService) {
   }
 
   generateMap(width: number, height: number): GameMap<IEntity> {
@@ -68,21 +69,23 @@ export class MapEngine implements IMapEngine {
     return this._map;
   }
 
-  computeFov(position: Position) {
+  computeFov(position: Position): GameMap<IEntity> {
     if (!this._mainActor) {
       return;
     }
-    this._resetLightMap();
+    const map: GameMap<IEntity> = this._putEntitiesOn(this._map.clone());
+    this._resetLightMap(map);
     const lightRadius: number = this._mainActor.lightRadius;
     const lightPower: number = this._mainActor.ligthPower;
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        const sprite = <Sprite>this._map.content[y][x].sprite;
+        const sprite = <Sprite>map.content[y][x].sprite;
         sprite.light = true;
         sprite.visibility = R / lightPower;
       } catch (e) {
       }
     });
+    return map;
   }
 
   getStartPosition(): Position {
@@ -117,10 +120,10 @@ export class MapEngine implements IMapEngine {
     return new Position(center[0], center[1]);
   }
 
-  private _resetLightMap() {
-    for (let j = 0; j < this._map.content.length; j++) {
-      for (let i = 0; i < this._map.content[0].length; i++) {
-        const sprite = this._map.content[j][i].sprite;
+  private _resetLightMap(gameMap: GameMap<IEntity>) {
+    for (let j = 0; j < gameMap.content.length; j++) {
+      for (let i = 0; i < gameMap.content[0].length; i++) {
+        const sprite = gameMap.content[j][i].sprite;
         sprite.light = false;
       }
     }
@@ -155,5 +158,12 @@ export class MapEngine implements IMapEngine {
         return false;
       }
     }, {topology: 8});
+  }
+
+  private _putEntitiesOn(gameMap: GameMap<IEntity>): GameMap<IEntity> {
+    for (const actor of this.entitiesService.entities) {
+      gameMap.content[actor.position.y][actor.position.x] = actor;
+    }
+    return gameMap;
   }
 }

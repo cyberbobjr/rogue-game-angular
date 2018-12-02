@@ -11,7 +11,6 @@ import {ActionResult} from '../classes/actions/action-result';
 })
 export class GameEngineService {
   private _currentActorIndex = 0;
-  private _gameLoop: any = null;
 
   get mapEngine(): MapEngine {
     return this._mapEngine;
@@ -25,15 +24,11 @@ export class GameEngineService {
   }
 
   startGameLoop() {
-    console.log('Game loop start');
-    this._gameLoop = setInterval(() => {
-      this.processAction();
-      this.refreshMap();
-    }, 250);
+    console.log('Game start');
+    this.refreshMap();
   }
 
   endGameLoop() {
-    clearInterval(this._gameLoop);
   }
 
   handleKeyEvent(key: KeyboardEvent) {
@@ -79,6 +74,8 @@ export class GameEngineService {
         this._commandService.KeyO.execute(player, this);
         break;
     }
+    this.processAction();
+    this.refreshMap();
   }
 
   private refreshMap() {
@@ -87,19 +84,21 @@ export class GameEngineService {
   }
 
   private processAction() {
-    const currentActor = this._entitiesService.entities[this._currentActorIndex];
-    let actorAction = currentActor.getAction();
-    if (actorAction) {
-      while (true) {
-        const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
-        if (resultAction.succeeded) {
-          break;
+    for (let currentActorIndex = 0; currentActorIndex < this._entitiesService.entities.length; currentActorIndex++) {
+      const currentActor = this._entitiesService.entities[currentActorIndex];
+      let actorAction = currentActor.getAction();
+      if (actorAction) {
+        while (true) {
+          const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
+          if (resultAction.succeeded) {
+            break;
+          }
+          if (!resultAction.alternative) {
+            return;
+          }
+          actorAction = Object.create(resultAction.alternative);
+          resultAction.alternative = null;
         }
-        if (!resultAction.alternative) {
-          return;
-        }
-        actorAction = Object.create(resultAction.alternative);
-        resultAction.alternative = null;
       }
     }
 

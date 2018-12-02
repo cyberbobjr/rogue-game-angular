@@ -9,8 +9,8 @@ import {Sprite} from '../classes/base/sprite';
 import {Display} from 'rot-js/lib';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class DisplayService {
   private _fontSize = 16;
   private _display: Display = new Display();
@@ -53,9 +53,8 @@ export class DisplayService {
   }
 
   draw() {
-    const gameMap = this.putEntitiesOn(this.mapEngine.map.clone());
+    const gameMap: GameMap<IEntity> = this.mapEngine.computeFov(this.cameraPosition);
     const viewport: GameMap<IEntity> = this.computeViewport(gameMap);
-    this.mapEngine.computeFov(this.cameraPosition);
     this.drawViewPort(viewport);
   }
 
@@ -75,13 +74,6 @@ export class DisplayService {
         }
       }
     }
-  }
-
-  private putEntitiesOn(gameMap: GameMap<IEntity>): GameMap<IEntity> {
-    for (const actor of this.entitiesService.entities) {
-      gameMap.content[actor.position.y][actor.position.x] = actor;
-    }
-    return gameMap;
   }
 
   private computeViewport(currentMap: GameMap<IEntity>): GameMap<IEntity> {

@@ -26,7 +26,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
     this.map = this._mapEngine.generateMap(80, 80);
     this._createMonsters();
     this._createPlayer();
-    this._gameEngineService.startGameLoop();
   }
 
   ngOnDestroy() {

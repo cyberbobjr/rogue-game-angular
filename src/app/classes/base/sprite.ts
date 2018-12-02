@@ -47,23 +47,4 @@ export class Sprite {
   constructor(private _character: string, private _color: string = '#afafaf', private _bgColor: string = '#000000') {
     this._light = false;
   }
-
-  ColorLuminance() {
-    // validate hex string
-    let hex = String(this._color)
-      .replace(/[^0-9a-f]/gi, '');
-    if (hex.length < 6) {
-      hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-    }
-
-    // convert to decimal and change luminosity
-    let rgb = '#', c, i;
-    for (i = 0; i < 3; i++) {
-      c = parseInt(hex.substr(i * 2, 2), 16);
-      c = Math.round(Math.min(Math.max(0, c + (c * this._visibility)), 255))
-              .toString(16);
-      rgb += ('00' + c).substr(c.length);
-    }
-    return rgb;
-  }
 }
