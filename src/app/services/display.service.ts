@@ -42,8 +42,7 @@ export class DisplayService {
     return this.display.getContainer();
   }
 
-  constructor(private mapEngine: MapEngine,
-              private entitiesService: EntitiesService) {
+  constructor(private mapEngine: MapEngine) {
   }
 
   computeBounds() {

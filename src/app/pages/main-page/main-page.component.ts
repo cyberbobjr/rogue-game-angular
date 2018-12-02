@@ -14,7 +14,6 @@ import {Room} from 'rot-js/lib/map/features';
   styleUrls: ['./main-page.component.css']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
-  map: GameMap<IEntity> = null;
 
   constructor(private _mapEngine: MapEngine,
               private _gameEngineService: GameEngineService,
@@ -23,7 +22,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('Main page init');
-    this.map = this._mapEngine.generateMap(80, 80);
+    this._mapEngine.generateMap(80, 80);
     this._createMonsters();
     this._createPlayer();
   }

@@ -20,10 +20,11 @@ import {EntitiesService} from './entities.service';
 export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
-  private _map: GameMap<IEntity> = null;
+  private _rotEngine: any = null;
+  private _gameMap: GameMap<IEntity> = null;
+  private _baseMap: GameMap<IEntity> = null;
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _mainActor: Entity = null;
-  private _rotMap: any;
 
   get mainActor(): Entity {
     return this._mainActor;
@@ -49,12 +50,16 @@ export class MapEngine implements IMapEngine {
     this._height = value;
   }
 
-  get map(): GameMap<IEntity> {
-    return this._map;
+  get baseMap(): GameMap<IEntity> {
+    return this._baseMap;
   }
 
-  set map(value: GameMap<IEntity>) {
-    this._map = value;
+  get gameMap(): GameMap<IEntity> {
+    return this._gameMap;
+  }
+
+  set gameMap(value: GameMap<IEntity>) {
+    this._gameMap = value;
   }
 
   constructor(private entitiesService: EntitiesService) {
@@ -63,29 +68,29 @@ export class MapEngine implements IMapEngine {
   generateMap(width: number, height: number): GameMap<IEntity> {
     this._width = width;
     this._height = height;
-    this._rotMap = this._createMap(width, height);
-    this._createDoor(this._rotMap);
+    this._rotEngine = this._createMap(width, height);
+    this._createDoor(this._rotEngine);
     this._createFovMap();
-    return this._map;
+    return this._baseMap;
   }
 
   computeFov(position: Position): GameMap<IEntity> {
     if (!this._mainActor) {
       return;
     }
-    const map: GameMap<IEntity> = this._putEntitiesOn(this._map.clone());
-    this._resetLightMap(map);
+    this._gameMap = this._putEntitiesOn(this._baseMap.clone());
+    this._resetLightMap(this._gameMap);
     const lightRadius: number = this._mainActor.lightRadius;
     const lightPower: number = this._mainActor.ligthPower;
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        const sprite = <Sprite>map.content[y][x].sprite;
+        const sprite = <Sprite>this._gameMap.content[y][x].sprite;
         sprite.light = true;
         sprite.visibility = R / lightPower;
       } catch (e) {
       }
     });
-    return map;
+    return this._gameMap;
   }
 
   getStartPosition(): Position {
@@ -97,12 +102,12 @@ export class MapEngine implements IMapEngine {
   }
 
   getTilesAround(position: Position): Array<Array<IEntity>> {
-    const test = (this.map.extract(position.x - 1, position.y - 1, 3, 3));
+    const test = (this.gameMap.extract(position.x - 1, position.y - 1, 3, 3));
     return (test).content;
   }
 
   getTileAt(position: Position): Tile {
-    return <Tile>this.map.content[position.y][position.x];
+    return <Tile>this.gameMap.content[position.y][position.x];
   }
 
   getRandomPosition(): Position {
@@ -112,7 +117,7 @@ export class MapEngine implements IMapEngine {
   }
 
   getRooms(): Array<Room> {
-    return this._rotMap.getRooms();
+    return this._rotEngine.getRooms();
   }
 
   getRoomCenter(room: Room): Position {
@@ -129,11 +134,11 @@ export class MapEngine implements IMapEngine {
     }
   }
 
-  private _createMap(width: number, height: number) {
-    this._map = new GameMap<Entity>(width, height);
+  private _createMap(width: number, height: number): any {
+    this._baseMap = new GameMap<Entity>(width, height);
     const rotMap = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {
-      this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
+      this._baseMap.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
     });
     return rotMap;
   }
@@ -144,7 +149,7 @@ export class MapEngine implements IMapEngine {
     for (let i = 0; i < rooms.length; i++) {
       room = rooms[i];
       room.getDoors((x: number, y: number) => {
-        this._map.content[y][x] = TilesFactory.createTile(TileType.DOOR, new Position(x, y));
+        this._baseMap.content[y][x] = TilesFactory.createTile(TileType.DOOR, new Position(x, y));
       });
     }
   }
@@ -152,7 +157,7 @@ export class MapEngine implements IMapEngine {
   private _createFovMap() {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
-        const info = <Tile>this.map.content[y][x];
+        const info = <Tile>this.gameMap.content[y][x];
         return !info.opaque;
       } catch (e) {
         return false;

@@ -1,5 +1,4 @@
 import {Component, ElementRef, HostListener, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import Display from 'rot-js/lib/display/display';
 import {DisplayService} from '../../services/display.service';
 import {GameEngineService} from '../../services/game-engine.service';
 
@@ -10,7 +9,6 @@ import {GameEngineService} from '../../services/game-engine.service';
            })
 export class MainMapComponent implements OnInit, OnDestroy {
   @ViewChild('refMap') refMap: ElementRef;
-  @Input('map') map: Array<string> = [];
 
   @HostListener('document:keydown', ['$event'])
   handleKeyEvent(keyboardEvent: KeyboardEvent) {
