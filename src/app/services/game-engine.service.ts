@@ -7,10 +7,11 @@ import {CommandsService} from './commands.service';
 import {ActionResult} from '../classes/actions/action-result';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class GameEngineService {
   private _currentActorIndex = 0;
+  private _gameLoop: any = null;
 
   get mapEngine(): MapEngine {
     return this._mapEngine;
@@ -24,10 +25,15 @@ export class GameEngineService {
   }
 
   startGameLoop() {
-    return setInterval(() => {
+    console.log('Game loop start');
+    this._gameLoop = setInterval(() => {
       this.processAction();
       this.refreshMap();
     }, 250);
+  }
+
+  endGameLoop() {
+    clearInterval(this._gameLoop);
   }
 
   handleKeyEvent(key: KeyboardEvent) {
@@ -83,21 +89,19 @@ export class GameEngineService {
   private processAction() {
     const currentActor = this._entitiesService.entities[this._currentActorIndex];
     let actorAction = currentActor.getAction();
-    if (actorAction === null) {
-      return;
-    }
-    while (true) {
-      const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
-      if (resultAction.succeeded) {
-        break;
+    if (actorAction) {
+      while (true) {
+        const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
+        if (resultAction.succeeded) {
+          break;
+        }
+        if (!resultAction.alternative) {
+          return;
+        }
+        actorAction = Object.create(resultAction.alternative);
+        resultAction.alternative = null;
       }
-      if (!resultAction.alternative) {
-        return;
-      }
-      actorAction = Object.create(resultAction.alternative);
-      resultAction.alternative = null;
     }
-    currentActor.setNextAction(null);
 
     this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }

@@ -1,6 +1,9 @@
 import {EntityType} from '../enums/entity-type.enum';
 import {Player} from '../classes/entities/player';
 import {Entity} from '../classes/base/entity';
+import {Monster} from '../classes/entities/monster';
+import {SpritesFactory} from './sprites-factory';
+import {SpriteType} from '../enums/sprite-type.enum';
 
 export class EntitiesFactory {
   constructor() {
@@ -10,6 +13,10 @@ export class EntitiesFactory {
     switch (type) {
       case EntityType.PLAYER:
         return new Player('player');
+      case EntityType.ORC:
+        const monster: Entity = new Monster('monster');
+        monster.sprite = SpritesFactory.createSprite(SpriteType.ORC);
+        return monster;
       default:
         return null;
     }

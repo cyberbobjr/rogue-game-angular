@@ -20,6 +20,7 @@ export class WalkAction implements Iaction {
     if (tile.isWalkable()) {
       actor.position = destPosition;
       tile.onWalk(actor);
+      actor.setNextAction(null);
       return ActionResult.SUCCESS;
     } else {
       const result = ActionResult.FAILURE;

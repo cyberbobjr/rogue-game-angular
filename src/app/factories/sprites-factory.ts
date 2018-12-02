@@ -17,6 +17,8 @@ export class SpritesFactory {
         return new Sprite('I', '#f95757');
       case SpriteType.OPENDOOR:
         return new Sprite('=', '#f95757');
+      case SpriteType.ORC:
+        return new Sprite('O', '#4286f4');
       default:
         return null;
     }

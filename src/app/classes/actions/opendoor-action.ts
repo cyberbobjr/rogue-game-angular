@@ -14,6 +14,7 @@ export class OpendoorAction implements Iaction {
   execute(actor: Entity, mapEngine: MapEngine): ActionResult {
     EventLog.getInstance().message = 'You trying to open door';
     this._tile.flipDoor();
+    actor.setNextAction(null);
     return ActionResult.SUCCESS;
   }
 

@@ -3,5 +3,6 @@ export enum SpriteType {
   WALL,
   OPENDOOR,
   CLOSEDOOR,
-  FLOOR
+  FLOOR,
+  ORC
 }

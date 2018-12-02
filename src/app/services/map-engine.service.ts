@@ -5,16 +5,17 @@ import {Entity} from '../classes/base/entity';
 import {IEntity} from '../interfaces/ientity';
 import {TilesFactory} from '../factories/tiles-factory';
 import {TileType} from '../enums/tile-type.enum';
-import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {Tile} from '../classes/base/tile';
 import {Position} from '../classes/position';
 import {Sprite} from '../classes/base/sprite';
 import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
+import {RNG} from 'rot-js/lib';
+import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
@@ -85,11 +86,11 @@ export class MapEngine implements IMapEngine {
   }
 
   getStartPosition(): Position {
-    const rooms: Array<Room> = this._rotMap.getRooms();
+    const rooms: Array<Room> = this.getRooms();
     const room: Room = rooms[0];
     const x = room.getLeft() + Math.round((room.getRight() - room.getLeft()) / 2);
     const y = room.getTop() + Math.round((room.getBottom() - room.getTop()) / 2);
-    return new Position(x, y);
+    return this.getRoomCenter(room);
   }
 
   getTilesAround(position: Position): Array<Array<IEntity>> {
@@ -99,6 +100,21 @@ export class MapEngine implements IMapEngine {
 
   getTileAt(position: Position): Tile {
     return <Tile>this.map.content[position.y][position.x];
+  }
+
+  getRandomPosition(): Position {
+    const rooms: Array<Room> = this.getRooms();
+    const room: Room = RNG.getItem(rooms);
+    return this.getRoomCenter(room);
+  }
+
+  getRooms(): Array<Room> {
+    return this._rotMap.getRooms();
+  }
+
+  getRoomCenter(room: Room): Position {
+    const center: number[] = room.getCenter();
+    return new Position(center[0], center[1]);
   }
 
   private _resetLightMap() {
