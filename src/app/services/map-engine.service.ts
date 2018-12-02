@@ -10,7 +10,6 @@ import {Position} from '../classes/position';
 import {Sprite} from '../classes/base/sprite';
 import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
-import {RNG} from 'rot-js/lib';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {EntitiesService} from './entities.service';
 
@@ -22,7 +21,7 @@ export class MapEngine implements IMapEngine {
   private _height: number;
   private _rotEngine: any = null;
   private _gameMap: GameMap<IEntity> = null;
-  private _baseMap: GameMap<IEntity> = null;
+  private _map: GameMap<IEntity> = null;
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _mainActor: Entity = null;
 
@@ -50,8 +49,8 @@ export class MapEngine implements IMapEngine {
     this._height = value;
   }
 
-  get baseMap(): GameMap<IEntity> {
-    return this._baseMap;
+  get map(): GameMap<IEntity> {
+    return this._map;
   }
 
   get gameMap(): GameMap<IEntity> {
@@ -62,23 +61,23 @@ export class MapEngine implements IMapEngine {
     this._gameMap = value;
   }
 
-  constructor(private entitiesService: EntitiesService) {
+  constructor(private _entitiesService: EntitiesService) {
   }
 
   generateMap(width: number, height: number): GameMap<IEntity> {
     this._width = width;
     this._height = height;
-    this._rotEngine = this._createMap(width, height);
+    this._createMap(width, height);
     this._createDoor(this._rotEngine);
-    this._createFovMap();
-    return this._baseMap;
+    this._createFovCasting();
+    return this._map;
   }
 
   computeFov(position: Position): GameMap<IEntity> {
     if (!this._mainActor) {
       return;
     }
-    this._gameMap = this._putEntitiesOn(this._baseMap.clone());
+    this._gameMap = this._putEntitiesOn(this._map.clone());
     this._resetLightMap(this._gameMap);
     const lightRadius: number = this._mainActor.lightRadius;
     const lightPower: number = this._mainActor.ligthPower;
@@ -106,14 +105,12 @@ export class MapEngine implements IMapEngine {
     return (test).content;
   }
 
-  getTileAt(position: Position): Tile {
-    return <Tile>this.gameMap.content[position.y][position.x];
-  }
-
-  getRandomPosition(): Position {
-    const rooms: Array<Room> = this.getRooms();
-    const room: Room = RNG.getItem(rooms);
-    return this.getRoomCenter(room);
+  getTileAt(position: Position): IEntity {
+    const monster: IEntity = this._entitiesService.getEntityAt(position);
+    if (monster) {
+      return monster;
+    }
+    return <IEntity>this._map.content[position.y][position.x];
   }
 
   getRooms(): Array<Room> {
@@ -134,13 +131,13 @@ export class MapEngine implements IMapEngine {
     }
   }
 
-  private _createMap(width: number, height: number): any {
-    this._baseMap = new GameMap<Entity>(width, height);
+  private _createMap(width: number, height: number) {
+    this._map = new GameMap<Entity>(width, height);
     const rotMap = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {
-      this._baseMap.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
+      this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
     });
-    return rotMap;
+    this._rotEngine = rotMap;
   }
 
   private _createDoor(rotMap: Digger) {
@@ -149,12 +146,12 @@ export class MapEngine implements IMapEngine {
     for (let i = 0; i < rooms.length; i++) {
       room = rooms[i];
       room.getDoors((x: number, y: number) => {
-        this._baseMap.content[y][x] = TilesFactory.createTile(TileType.DOOR, new Position(x, y));
+        this._map.content[y][x] = TilesFactory.createTile(TileType.DOOR, new Position(x, y));
       });
     }
   }
 
-  private _createFovMap() {
+  private _createFovCasting() {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info = <Tile>this.gameMap.content[y][x];
@@ -166,7 +163,7 @@ export class MapEngine implements IMapEngine {
   }
 
   private _putEntitiesOn(gameMap: GameMap<IEntity>): GameMap<IEntity> {
-    for (const actor of this.entitiesService.entities) {
+    for (const actor of this._entitiesService.entities) {
       gameMap.content[actor.position.y][actor.position.x] = actor;
     }
     return gameMap;

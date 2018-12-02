@@ -47,4 +47,8 @@ export class Position {
         return new Position(this._x, this._y);
     }
   }
+
+  equal(position: Position): boolean {
+    return (position.x === this._x && position.y === this.y);
+  }
 }

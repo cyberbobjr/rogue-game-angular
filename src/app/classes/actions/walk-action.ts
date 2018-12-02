@@ -15,8 +15,8 @@ export class WalkAction implements Iaction {
 
   execute(actor: Entity): ActionResult {
     const destPosition = actor.position.computeDestination(this._direction);
-    const tile: Tile = <Tile>this._mapEngine.baseMap.content[destPosition.y][destPosition.x];
-    EventLog.getInstance().message  = 'You walk';
+    const tile: Tile = <Tile>this._mapEngine.getTileAt(destPosition);
+    EventLog.getInstance().message = 'You walk';
     if (tile.isWalkable()) {
       actor.position = destPosition;
       tile.onWalk(actor);
@@ -24,6 +24,7 @@ export class WalkAction implements Iaction {
       return ActionResult.SUCCESS;
     } else {
       const result = ActionResult.FAILURE;
+      EventLog.getInstance().message = 'You hit ' + tile.name;
       result.alternative = tile.onHit(actor);
       return result;
     }

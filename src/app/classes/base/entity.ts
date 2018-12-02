@@ -12,8 +12,8 @@ export class Entity implements IEntity {
   protected _name: string;
   protected _currentAction: Iaction = null;
   protected _sprite: Sprite = null;
-  lightRadius = 10;
-  ligthPower = 5; // max is lighter
+  lightRadius = 20;
+  ligthPower = 7; // max is lighter
 
   get sprite(): Sprite {
     return this._sprite;

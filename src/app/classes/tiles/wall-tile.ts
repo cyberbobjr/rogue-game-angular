@@ -4,6 +4,8 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {Position} from '../position';
 
 export class WallTile extends Tile {
+  name = 'wall';
+
   constructor(position?: Position) {
     super();
     this.sprite = SpritesFactory.createSprite(SpriteType.WALL);

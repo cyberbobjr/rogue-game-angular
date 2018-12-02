@@ -8,6 +8,7 @@ import {Position} from '../position';
 import {EventLog} from '../event-log';
 
 export class DoorTile extends Tile {
+  name = 'door';
 
   constructor(private _isClosed = true, position ?: Position) {
     super();
