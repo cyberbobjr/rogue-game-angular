@@ -12,10 +12,9 @@ import {Room} from 'rot-js/lib/map/features';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {EntitiesService} from './entities.service';
 import {IObject} from '../interfaces/IObject';
-import {Path} from 'rot-js/lib';
+import {Path, RNG} from 'rot-js/lib';
 import AStar from 'rot-js/lib/path/astar';
 import {Player} from '../classes/entities/player';
-import {StorageService} from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +87,7 @@ export class MapEngine implements IMapEngine {
     this._createMap(width, height);
     this._createDoor(this._rotEngine);
     this._createFovCasting();
+    this.saveMap();
     return this._map;
   }
 
@@ -198,6 +198,7 @@ export class MapEngine implements IMapEngine {
   }
 
   private _createMap(width: number, height: number) {
+    RNG.setSeed(this._seed);
     this._map = new GameMap<Entity>(width, height);
     const rotMap: Digger = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {

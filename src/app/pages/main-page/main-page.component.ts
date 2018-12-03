@@ -49,12 +49,12 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   private _initPlayer() {
     this._entitiesService.player = new Player('player');
-    Object.assign(this._entitiesService.player, this._storage.loadPlayer());
+    this._storage.loadPlayer();
     if (!this._entitiesService.player) {
       this._entitiesService.player = EntitiesFactory.createEntity(EntityType.PLAYER);
+      this._entitiesService.player.position = this._mapEngine.getStartPosition();
     }
     this._mapEngine.mainActor = this._entitiesService.player;
-    this._entitiesService.player.position = this._mapEngine.getStartPosition();
   }
 
   private _initMap() {

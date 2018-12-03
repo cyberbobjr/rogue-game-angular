@@ -16,7 +16,7 @@ export class StorageService {
   loadPlayer(): Player | null {
     const json: string = window.localStorage.getItem('player');
     if (json) {
-      return JSON.parse(json) as Player;
+      Object.assign(this._entitiesService.player, JSON.parse(json) as Player);
     }
     return null;
   }
