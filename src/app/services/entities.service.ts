@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Entity} from '../classes/base/entity';
 import {Position} from '../classes/position';
 import {IObject} from '../interfaces/IObject';
+import {EventLog} from '../classes/event-log';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +46,12 @@ export class EntitiesService {
   }
 
   tick() {
-    this._entities.forEach((value: Entity, index: number) => {
-      value.tick();
+    this._entities.forEach((entity: Entity, index: number) => {
+      entity.tick();
+      if (entity.hp <= 0) {
+        EventLog.getInstance().message = entity.name + ' is dead';
+        this._entities.splice(index, 1);
+      }
     });
   }
 }

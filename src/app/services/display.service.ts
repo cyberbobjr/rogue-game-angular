@@ -67,7 +67,7 @@ export class DisplayService {
     for (let j = 0; j < viewport.content.length; j++) {
       for (let i = 0; i < viewport.content[0].length; i++) {
         const sprite: Sprite = viewport.content[j][i].sprite;
-        if (sprite.light) {
+        if (sprite && sprite.light) {
           this.display.draw(i, j, sprite.character, sprite.color, sprite.bgColor);
         }
       }
