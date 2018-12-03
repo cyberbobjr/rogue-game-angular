@@ -17,7 +17,7 @@ export class GameMap<T extends object> {
     return this._height;
   }
 
-  constructor(private _width: number, private _height: number, data?: T[][]) {
+  constructor(private _width?: number, private _height?: number, data?: T[][]) {
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
   }
 

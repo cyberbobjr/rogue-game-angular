@@ -25,7 +25,7 @@ export class EntitiesService {
 
   set player(actor: Entity) {
     this._player = actor;
-    this._entities.push(this._player);
+    this._entities[0] = this._player;
   }
 
   constructor() {

@@ -28,7 +28,6 @@ export class MainMapComponent implements OnInit, OnDestroy {
     this._displayService.options = {height: maxHeight, fontSize: fontsize};
     this.refMap.nativeElement.appendChild(this._displayService.container);
     this._displayService.computeBounds();
-    this._gameEngineService.startGameLoop();
   }
 
   ngOnDestroy() {

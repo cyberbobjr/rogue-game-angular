@@ -7,6 +7,8 @@ import {EntitiesService} from '../../services/entities.service';
 import {Room} from 'rot-js/lib/map/features';
 import {IdleAction} from '../../classes/actions/idle-action';
 import {Entity} from '../../classes/base/entity';
+import {StorageService} from '../../services/storage.service';
+import {Player} from '../../classes/entities/player';
 
 @Component({
   selector: 'app-main-page',
@@ -17,14 +19,16 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(private _mapEngine: MapEngine,
               private _gameEngineService: GameEngineService,
-              private _entitiesService: EntitiesService) {
+              private _entitiesService: EntitiesService,
+              private _storage: StorageService) {
   }
 
   ngOnInit() {
     console.log('Main page init');
-    this._mapEngine.generateMap(80, 80);
-    this._createMonsters();
-    this._createPlayer();
+    //this._createMonsters();
+    this._initMap();
+    this._initPlayer();
+    this._gameEngineService.startGameLoop();
   }
 
   ngOnDestroy() {
@@ -43,10 +47,19 @@ export class MainPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private _createPlayer() {
-    this._entitiesService.player = EntitiesFactory.createEntity(EntityType.PLAYER);
+  private _initPlayer() {
+    this._entitiesService.player = new Player('player');
+    Object.assign(this._entitiesService.player, this._storage.loadPlayer());
+    if (!this._entitiesService.player) {
+      this._entitiesService.player = EntitiesFactory.createEntity(EntityType.PLAYER);
+    }
     this._mapEngine.mainActor = this._entitiesService.player;
     this._entitiesService.player.position = this._mapEngine.getStartPosition();
   }
 
+  private _initMap() {
+    if (!this._storage.loadMap()) {
+      this._mapEngine.generateMap(80, 80);
+    }
+  }
 }

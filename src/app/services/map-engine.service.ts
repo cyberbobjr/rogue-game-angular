@@ -14,6 +14,8 @@ import {EntitiesService} from './entities.service';
 import {IObject} from '../interfaces/IObject';
 import {Path} from 'rot-js/lib';
 import AStar from 'rot-js/lib/path/astar';
+import {Player} from '../classes/entities/player';
+import {StorageService} from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +23,12 @@ import AStar from 'rot-js/lib/path/astar';
 export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
-  private _rotEngine: any = null;
+  private _rotEngine: Digger = null;
   private _gameMap: GameMap<IObject> = null;
   private _map: GameMap<IObject> = null;
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _mainActor: Entity = null;
+  private _seed: number;
 
   get mainActor(): Entity {
     return this._mainActor;
@@ -55,8 +58,20 @@ export class MapEngine implements IMapEngine {
     return this._map;
   }
 
+  set map(gameMap: GameMap<IObject>) {
+    this._map = gameMap;
+  }
+
   get gameMap(): GameMap<IObject> {
     return this._gameMap;
+  }
+
+  get rotEngine(): Digger {
+    return this._rotEngine;
+  }
+
+  set rotEngine(mapGen: Digger) {
+    this._rotEngine = mapGen;
   }
 
   set gameMap(value: GameMap<IObject>) {
@@ -66,13 +81,36 @@ export class MapEngine implements IMapEngine {
   constructor(private _entitiesService: EntitiesService) {
   }
 
-  generateMap(width: number, height: number): GameMap<IObject> {
+  generateMap(width: number, height: number, seed = 1324): GameMap<IObject> {
+    this._seed = seed;
     this._width = width;
     this._height = height;
     this._createMap(width, height);
     this._createDoor(this._rotEngine);
     this._createFovCasting();
     return this._map;
+  }
+
+  saveMap() {
+    window.localStorage.setItem('seed', JSON.stringify(this._seed));
+  }
+
+  loadMap(/*loadMap: { width: number, height: number, _data: Array<any> }*/) {
+    this._createFovCasting();
+    /*let map: GameMap<IObject> = new GameMap<IObject>(loadMap.width, loadMap.height);
+    loadMap._data.forEach((data: {
+      _name: string,
+      _opaque: boolean,
+      _position: { _x: number, _y: number },
+      _sprite: {
+        _bgColor: string, _character: string,
+        _color: string,
+        _light: boolean,
+        _visibility: number
+      }
+    }, index: number) => {
+
+    });*/
   }
 
   computeFov(position: Position): GameMap<IObject> {
@@ -125,7 +163,8 @@ export class MapEngine implements IMapEngine {
   }
 
   getDirectionToPlayer(originPosition: Position): Position | null {
-    const astar: AStar = new Path.AStar(this._entitiesService.player.position.x, this._entitiesService.player.position.y, (x: number, y: number) => {
+    const player: Player = this._entitiesService.player;
+    const astar: AStar = new Path.AStar(player.position.x, player.position.y, (x: number, y: number) => {
       const info: IObject = this.getTileAt(new Position(x, y));
       if (info instanceof Entity) {
         return true;
@@ -160,7 +199,7 @@ export class MapEngine implements IMapEngine {
 
   private _createMap(width: number, height: number) {
     this._map = new GameMap<Entity>(width, height);
-    const rotMap = new Digger(width, height);
+    const rotMap: Digger = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {
       this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
     });

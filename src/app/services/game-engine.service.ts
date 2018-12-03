@@ -5,6 +5,7 @@ import {LoggingService} from './logging.service';
 import {DisplayService} from './display.service';
 import {CommandsService} from './commands.service';
 import {ActionResult} from '../classes/actions/action-result';
+import {StorageService} from './storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,8 @@ export class GameEngineService {
               private _mapEngine: MapEngine,
               private _logService: LoggingService,
               private _displayService: DisplayService,
-              private _commandService: CommandsService) {
+              private _commandService: CommandsService,
+              private _storage: StorageService) {
   }
 
   startGameLoop() {
@@ -78,7 +80,6 @@ export class GameEngineService {
         break;
     }
     this.processAction();
-    this.refreshMap();
   }
 
   private refreshMap() {
@@ -105,5 +106,6 @@ export class GameEngineService {
         }
       }
     }
+    this._storage.saveGameState();
   }
 }
