@@ -1,6 +1,6 @@
 import {Sprite} from '../classes/base/sprite';
 
-export interface IEntity {
+export interface IObject {
   name: string;
   sprite: Sprite;
 }

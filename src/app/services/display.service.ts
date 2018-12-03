@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
 import {MapEngine} from './map-engine.service';
-import {EntitiesService} from './entities.service';
 import {Position} from '../classes/position';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {GameMap} from '../classes/gameMap';
-import {IEntity} from '../interfaces/ientity';
 import {Sprite} from '../classes/base/sprite';
 import {Display} from 'rot-js/lib';
+import {IObject} from '../interfaces/IObject';
 
 @Injectable({
   providedIn: 'root'
@@ -52,8 +51,8 @@ export class DisplayService {
   }
 
   draw() {
-    const gameMap: GameMap<IEntity> = this.mapEngine.computeFov(this.cameraPosition);
-    const viewport: GameMap<IEntity> = this.computeViewport(gameMap);
+    const gameMap: GameMap<IObject> = this.mapEngine.computeFov(this.cameraPosition);
+    const viewport: GameMap<IObject> = this.computeViewport(gameMap);
     this.drawViewPort(viewport);
   }
 
@@ -63,7 +62,7 @@ export class DisplayService {
     return new Position(x, y);
   }
 
-  private drawViewPort(viewport: GameMap<IEntity>) {
+  private drawViewPort(viewport: GameMap<IObject>) {
     this.display.clear();
     for (let j = 0; j < viewport.content.length; j++) {
       for (let i = 0; i < viewport.content[0].length; i++) {
@@ -75,7 +74,7 @@ export class DisplayService {
     }
   }
 
-  private computeViewport(currentMap: GameMap<IEntity>): GameMap<IEntity> {
+  private computeViewport(currentMap: GameMap<IObject>): GameMap<IObject> {
     return currentMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

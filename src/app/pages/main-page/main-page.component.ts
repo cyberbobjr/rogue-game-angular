@@ -1,8 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MapEngine} from '../../services/map-engine.service';
 import {GameEngineService} from '../../services/game-engine.service';
-import {GameMap} from '../../classes/gameMap';
-import {IEntity} from '../../interfaces/ientity';
 import {EntitiesFactory} from '../../factories/entities-factory';
 import {EntityType} from '../../enums/entity-type.enum';
 import {EntitiesService} from '../../services/entities.service';

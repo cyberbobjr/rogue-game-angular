@@ -1,13 +1,13 @@
-import {IEntity} from '../../interfaces/ientity';
 import {Position} from '../position';
 import {Injectable} from '@angular/core';
 import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
+import {IObject} from '../../interfaces/IObject';
 
 @Injectable({
               providedIn: 'root'
             })
-export class Entity implements IEntity {
+export class Entity implements IObject {
   protected _position: Position;
   protected _name: string;
   protected _currentAction: Iaction = null;

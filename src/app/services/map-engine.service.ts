@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {IMapEngine} from '../interfaces/i-map-engine';
 import {GameMap} from '../classes/gameMap';
 import {Entity} from '../classes/base/entity';
-import {IEntity} from '../interfaces/ientity';
 import {TilesFactory} from '../factories/tiles-factory';
 import {TileType} from '../enums/tile-type.enum';
 import {Tile} from '../classes/base/tile';
@@ -12,6 +11,7 @@ import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {EntitiesService} from './entities.service';
+import {IObject} from '../interfaces/IObject';
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +20,8 @@ export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
   private _rotEngine: any = null;
-  private _gameMap: GameMap<IEntity> = null;
-  private _map: GameMap<IEntity> = null;
+  private _gameMap: GameMap<IObject> = null;
+  private _map: GameMap<IObject> = null;
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _mainActor: Entity = null;
 
@@ -49,22 +49,22 @@ export class MapEngine implements IMapEngine {
     this._height = value;
   }
 
-  get map(): GameMap<IEntity> {
+  get map(): GameMap<IObject> {
     return this._map;
   }
 
-  get gameMap(): GameMap<IEntity> {
+  get gameMap(): GameMap<IObject> {
     return this._gameMap;
   }
 
-  set gameMap(value: GameMap<IEntity>) {
+  set gameMap(value: GameMap<IObject>) {
     this._gameMap = value;
   }
 
   constructor(private _entitiesService: EntitiesService) {
   }
 
-  generateMap(width: number, height: number): GameMap<IEntity> {
+  generateMap(width: number, height: number): GameMap<IObject> {
     this._width = width;
     this._height = height;
     this._createMap(width, height);
@@ -73,7 +73,7 @@ export class MapEngine implements IMapEngine {
     return this._map;
   }
 
-  computeFov(position: Position): GameMap<IEntity> {
+  computeFov(position: Position): GameMap<IObject> {
     if (!this._mainActor) {
       return;
     }
@@ -100,17 +100,17 @@ export class MapEngine implements IMapEngine {
     return this.getRoomCenter(room);
   }
 
-  getTilesAround(position: Position): Array<Array<IEntity>> {
+  getTilesAround(position: Position): Array<Array<IObject>> {
     const test = (this.gameMap.extract(position.x - 1, position.y - 1, 3, 3));
     return (test).content;
   }
 
-  getTileAt(position: Position): IEntity {
-    const monster: IEntity = this._entitiesService.getEntityAt(position);
+  getTileAt(position: Position): IObject {
+    const monster: IObject = this._entitiesService.getEntityAt(position);
     if (monster) {
       return monster;
     }
-    return <IEntity>this._map.content[position.y][position.x];
+    return <IObject>this._map.content[position.y][position.x];
   }
 
   getRooms(): Array<Room> {
@@ -122,7 +122,7 @@ export class MapEngine implements IMapEngine {
     return new Position(center[0], center[1]);
   }
 
-  private _resetLightMap(gameMap: GameMap<IEntity>) {
+  private _resetLightMap(gameMap: GameMap<IObject>) {
     for (let j = 0; j < gameMap.content.length; j++) {
       for (let i = 0; i < gameMap.content[0].length; i++) {
         const sprite = gameMap.content[j][i].sprite;
@@ -162,7 +162,7 @@ export class MapEngine implements IMapEngine {
     }, {topology: 8});
   }
 
-  private _putEntitiesOn(gameMap: GameMap<IEntity>): GameMap<IEntity> {
+  private _putEntitiesOn(gameMap: GameMap<IObject>): GameMap<IObject> {
     for (const actor of this._entitiesService.entities) {
       gameMap.content[actor.position.y][actor.position.x] = actor;
     }

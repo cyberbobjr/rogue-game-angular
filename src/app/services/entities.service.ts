@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Entity} from '../classes/base/entity';
 import {Position} from '../classes/position';
-import {IEntity} from '../interfaces/ientity';
+import {IObject} from '../interfaces/IObject';
 
 @Injectable({
   providedIn: 'root'
@@ -34,8 +34,8 @@ export class EntitiesService {
     this._entities.push(actor);
   }
 
-  getEntityAt(position: Position): IEntity | null {
-    let monster: IEntity = null;
+  getEntityAt(position: Position): IObject | null {
+    let monster: IObject = null;
     this._entities.forEach((value: Entity, index: number) => {
       if (value.position.equal(position)) {
         monster = value;
