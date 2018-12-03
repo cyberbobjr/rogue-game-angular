@@ -4,6 +4,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
 import {IObject} from '../../interfaces/IObject';
 import {IEntity} from '../../interfaces/ientity';
+import {EventLog} from '../event-log';
 
 @Injectable({
   providedIn: 'root'

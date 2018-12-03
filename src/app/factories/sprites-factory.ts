@@ -19,6 +19,8 @@ export class SpritesFactory {
         return new Sprite('=', '#f95757');
       case SpriteType.ORC:
         return new Sprite('O', '#4286f4');
+      case SpriteType.HITMONSTER:
+        return new Sprite('*', '#f95757');
       default:
         return null;
     }

@@ -126,7 +126,9 @@ export class MapEngine implements IMapEngine {
     for (let j = 0; j < gameMap.content.length; j++) {
       for (let i = 0; i < gameMap.content[0].length; i++) {
         const sprite = gameMap.content[j][i].sprite;
-        sprite.light = false;
+        if (sprite) {
+          sprite.light = false;
+        }
       }
     }
   }

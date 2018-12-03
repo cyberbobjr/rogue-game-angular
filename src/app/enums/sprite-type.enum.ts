@@ -4,5 +4,6 @@ export enum SpriteType {
   OPENDOOR,
   CLOSEDOOR,
   FLOOR,
-  ORC
+  ORC,
+  HITMONSTER
 }
