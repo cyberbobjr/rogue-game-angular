@@ -12,6 +12,8 @@ import {Room} from 'rot-js/lib/map/features';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {EntitiesService} from './entities.service';
 import {IObject} from '../interfaces/IObject';
+import {Path} from 'rot-js/lib';
+import AStar from 'rot-js/lib/path/astar';
 
 @Injectable({
   providedIn: 'root'
@@ -120,6 +122,29 @@ export class MapEngine implements IMapEngine {
   getRoomCenter(room: Room): Position {
     const center: number[] = room.getCenter();
     return new Position(center[0], center[1]);
+  }
+
+  getDirectionToPlayer(originPosition: Position): Position | null {
+    const astar: AStar = new Path.AStar(this._entitiesService.player.position.x, this._entitiesService.player.position.y, (x: number, y: number) => {
+      const info: IObject = this.getTileAt(new Position(x, y));
+      if (info instanceof Entity) {
+        return true;
+      }
+      if (info instanceof Tile) {
+        return info.isWalkable();
+      }
+      return false;
+    });
+    let target: Position = null;
+    let count = 0;
+    astar.compute(originPosition.x, originPosition.y, (x: number, y: number) => {
+      count++;
+      if (count !== 2) {
+        return;
+      }
+      target = new Position(x, y);
+    });
+    return target;
   }
 
   private _resetLightMap(gameMap: GameMap<IObject>) {

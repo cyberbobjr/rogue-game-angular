@@ -13,10 +13,6 @@ export class Monster extends Entity {
     super(props);
   }
 
-  isWalkable(): boolean {
-    return false;
-  }
-
   onWalk(actor: Entity): Iaction | null {
     console.log('monster onWalk');
     return null;

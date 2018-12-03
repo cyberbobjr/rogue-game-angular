@@ -5,6 +5,8 @@ import {EntitiesFactory} from '../../factories/entities-factory';
 import {EntityType} from '../../enums/entity-type.enum';
 import {EntitiesService} from '../../services/entities.service';
 import {Room} from 'rot-js/lib/map/features';
+import {IdleAction} from '../../classes/actions/idle-action';
+import {Entity} from '../../classes/base/entity';
 
 @Component({
   selector: 'app-main-page',
@@ -33,8 +35,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
     const rooms: Array<Room> = this._mapEngine.getRooms();
     const nbRooms: number = rooms.length;
     for (let nb = 1; nb < nbRooms - 2; nb++) {
-      const orc = EntitiesFactory.createEntity(EntityType.ORC);
+      const orc: Entity = EntitiesFactory.createEntity(EntityType.ORC);
       orc.position = this._mapEngine.getRoomCenter(rooms[nb]);
+      orc.mapEngine = this._mapEngine;
+      orc.setNextAction(new IdleAction(this._mapEngine, orc));
       this._entitiesService.addEntity(orc);
     }
   }

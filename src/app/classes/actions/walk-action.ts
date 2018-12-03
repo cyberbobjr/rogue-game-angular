@@ -5,6 +5,7 @@ import {Entity} from '../base/entity';
 import {MapEngine} from '../../services/map-engine.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
+import {Position} from '../position';
 
 export class WalkAction implements Iaction {
   private _info = '';
@@ -14,10 +15,10 @@ export class WalkAction implements Iaction {
   }
 
   execute(actor: Entity): ActionResult {
-    const destPosition = actor.position.computeDestination(this._direction);
+    const destPosition: Position = actor.position.computeDestination(this._direction);
     const tile: Tile = <Tile>this._mapEngine.getTileAt(destPosition);
-    EventLog.getInstance().message = 'You walk';
-    if (tile.isWalkable()) {
+    if (tile instanceof Tile && tile.isWalkable()) {
+      EventLog.getInstance().message = 'You walk';
       actor.position = destPosition;
       tile.onWalk(actor);
       actor.setNextAction(null);

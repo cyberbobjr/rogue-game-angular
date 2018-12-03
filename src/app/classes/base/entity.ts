@@ -4,7 +4,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
 import {IObject} from '../../interfaces/IObject';
 import {IEntity} from '../../interfaces/ientity';
-import {EventLog} from '../event-log';
+import {MapEngine} from '../../services/map-engine.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,17 @@ export class Entity implements IObject, IEntity {
   protected _currentAction: Iaction = null;
   protected _sprite: Sprite = null;
   protected _hp: number;
+  protected _mapEngine: MapEngine = null;
   lightRadius = 20;
   ligthPower = 7; // max is lighter
+
+  get mapEngine(): MapEngine {
+    return this._mapEngine;
+  }
+
+  set mapEngine(value: MapEngine) {
+    this._mapEngine = value;
+  }
 
   get hp(): number {
     return this._hp;
@@ -67,5 +76,9 @@ export class Entity implements IObject, IEntity {
 
   tick() {
 
+  }
+
+  onHit(attacker: Entity): Iaction | null {
+    return null;
   }
 }

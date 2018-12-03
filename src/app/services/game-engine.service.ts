@@ -10,7 +10,6 @@ import {ActionResult} from '../classes/actions/action-result';
   providedIn: 'root'
 })
 export class GameEngineService {
-  private _currentActorIndex = 0;
   private _gameLoop: any = null;
 
   get mapEngine(): MapEngine {
@@ -106,7 +105,5 @@ export class GameEngineService {
         }
       }
     }
-
-    this._currentActorIndex = (this._currentActorIndex + 1) % this._entitiesService.entities.length;
   }
 }
