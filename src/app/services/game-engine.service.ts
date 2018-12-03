@@ -11,6 +11,7 @@ import {ActionResult} from '../classes/actions/action-result';
 })
 export class GameEngineService {
   private _currentActorIndex = 0;
+  private _gameLoop: any = null;
 
   get mapEngine(): MapEngine {
     return this._mapEngine;
@@ -25,10 +26,13 @@ export class GameEngineService {
 
   startGameLoop() {
     console.log('Game start');
-    this.refreshMap();
+    this._gameLoop = setInterval(() => {
+      this.refreshMap();
+    }, 250);
   }
 
   endGameLoop() {
+    clearInterval(this._gameLoop);
   }
 
   handleKeyEvent(key: KeyboardEvent) {
@@ -80,6 +84,7 @@ export class GameEngineService {
 
   private refreshMap() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
+    this._entitiesService.tick();
     this._displayService.draw();
   }
 

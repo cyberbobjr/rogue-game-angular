@@ -43,4 +43,10 @@ export class EntitiesService {
     });
     return monster;
   }
+
+  tick() {
+    this._entities.forEach((value: Entity, index: number) => {
+      value.tick();
+    });
+  }
 }

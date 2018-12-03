@@ -3,17 +3,27 @@ import {Injectable} from '@angular/core';
 import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
 import {IObject} from '../../interfaces/IObject';
+import {IEntity} from '../../interfaces/ientity';
 
 @Injectable({
-              providedIn: 'root'
-            })
-export class Entity implements IObject {
+  providedIn: 'root'
+})
+export class Entity implements IObject, IEntity {
   protected _position: Position;
   protected _name: string;
   protected _currentAction: Iaction = null;
   protected _sprite: Sprite = null;
+  protected _hp: number;
   lightRadius = 20;
   ligthPower = 7; // max is lighter
+
+  get hp(): number {
+    return this._hp;
+  }
+
+  set hp(hp: number) {
+    this._hp = hp;
+  }
 
   get sprite(): Sprite {
     return this._sprite;
@@ -52,5 +62,9 @@ export class Entity implements IObject {
 
   setNextAction(action: Iaction) {
     this._currentAction = action;
+  }
+
+  tick() {
+
   }
 }

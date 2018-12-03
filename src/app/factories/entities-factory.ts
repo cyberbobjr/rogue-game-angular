@@ -16,6 +16,7 @@ export class EntitiesFactory {
       case EntityType.ORC:
         const monster: Entity = new Monster('orc');
         monster.sprite = SpritesFactory.createSprite(SpriteType.ORC);
+        monster.hp = 10;
         return monster;
       default:
         return null;
