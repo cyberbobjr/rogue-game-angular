@@ -10,27 +10,16 @@ export class Monster extends Entity {
   protected _backupSprite: Sprite = null;
   protected _timeDisplaySprite: number;
 
-  static fromJson(name: string, position: Position, sprite: Sprite): Monster {
-    let monster: Monster = new this(name, position, sprite);
-    Object.entries(monster)
-          .forEach((entry) => {
-            console.log(entry);
-          });
+  static fromJson(name: string, position: Position, sprite: Sprite, jsonData: any): Monster {
+    const {type, hp} = jsonData;
+    const monster: Monster = new this(name, position, sprite);
+    monster.hp = hp;
+    monster.type = type;
     return monster;
   }
 
-  toJSON(): string {
-    return JSON.stringify({hp: this._hp});
-  }
-
-  constructor(props, position?: Position, sprite?: Sprite) {
-    super(props);
-    if (position) {
-      this.position = position;
-    }
-    if (sprite) {
-      this.sprite = sprite;
-    }
+  toJSON(): any {
+    return {type: this.type, hp: this._hp, name: this._name, position: this._position, sprite: this._sprite};
   }
 
   onWalk(actor: Entity): Iaction | null {

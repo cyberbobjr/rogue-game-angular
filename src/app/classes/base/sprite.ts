@@ -44,6 +44,11 @@ export class Sprite {
       .hex();
   }
 
+  static fromJson(jsonData: any): Sprite {
+    const {_character, _color, _bgColor} = jsonData;
+    return new this(_character, _color, _bgColor);
+  }
+
   constructor(private _character: string, private _color: string = '#afafaf', private _bgColor: string = '#000000') {
     this._light = false;
   }

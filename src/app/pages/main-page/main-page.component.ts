@@ -11,10 +11,10 @@ import {StorageService} from '../../services/storage.service';
 import {Player} from '../../classes/entities/player';
 
 @Component({
-             selector: 'app-main-page',
-             templateUrl: './main-page.component.html',
-             styleUrls: ['./main-page.component.css']
-           })
+  selector: 'app-main-page',
+  templateUrl: './main-page.component.html',
+  styleUrls: ['./main-page.component.css']
+})
 export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(private _mapEngine: MapEngine,
@@ -36,18 +36,19 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   private _initMonsters() {
-    const rooms: Array<Room> = this._mapEngine.getRooms();
-    const nbRooms: number = rooms.length;
-    for (let nb = 1; nb < nbRooms - 2; nb++) {
-      const orc: Entity = EntitiesFactory.createEntity(EntityType.ORC);
-      orc.position = this._mapEngine.getRoomCenter(rooms[nb]);
-      orc.setNextAction(new IdleAction(this._mapEngine, orc));
-      this._entitiesService.addEntity(orc);
+    if (!this._storage.loadEntities()) {
+      const rooms: Array<Room> = this._mapEngine.getRooms();
+      const nbRooms: number = rooms.length;
+      for (let nb = 1; nb < nbRooms - 2; nb++) {
+        const orc: Entity = EntitiesFactory.createEntity(EntityType.ORC);
+        orc.position = this._mapEngine.getRoomCenter(rooms[nb]);
+        orc.setNextAction(new IdleAction(this._mapEngine, orc));
+        this._entitiesService.addEntity(orc);
+      }
     }
   }
 
   private _initPlayer() {
-    this._entitiesService.player = new Player('player');
     const playerLoaded: Player = this._storage.loadPlayer();
     this._entitiesService.player = playerLoaded ? playerLoaded : EntitiesFactory.createEntity(EntityType.PLAYER, this._mapEngine.getStartPosition());
     this._mapEngine.mainActor = this._entitiesService.player;

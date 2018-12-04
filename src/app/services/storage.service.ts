@@ -2,11 +2,13 @@ import {Injectable} from '@angular/core';
 import {Player} from '../classes/entities/player';
 import {EntitiesService} from './entities.service';
 import {MapEngine} from './map-engine.service';
-import {Entity} from '../classes/base/entity';
 import {TilesFactory} from '../factories/tiles-factory';
 import {TileType} from '../enums/tile-type.enum';
 import {Position} from '../classes/position';
 import {Tile} from '../classes/base/tile';
+import {EntitiesFactory} from '../factories/entities-factory';
+import {Entity} from '../classes/base/entity';
+import {IdleAction} from '../classes/actions/idle-action';
 
 export interface JsonSprite {
   _color: string;
@@ -38,9 +40,17 @@ export interface JsonMap {
   _width: number;
 }
 
+export interface JsonEntity {
+  hp: number;
+  name: string;
+  position: JsonPosition;
+  sprite: JsonSprite;
+  type: number;
+}
+
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class StorageService {
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine) {
@@ -66,7 +76,21 @@ export class StorageService {
       }
       return false;
     } catch (e) {
-      debugger;
+      console.log(e);
+      return false;
+    }
+  }
+
+  loadEntities(): boolean {
+    try {
+      const json = JSON.parse(window.localStorage.getItem('entities'));
+      json.forEach((entity: JsonEntity) => {
+        const monster: Entity = EntitiesFactory.createJsonEntity(entity.type, entity);
+        monster.setNextAction(new IdleAction(this._mapEngine, monster));
+        this._entitiesService.addEntity(monster);
+      });
+      return true;
+    } catch (e) {
       console.log(e);
       return false;
     }
@@ -98,9 +122,9 @@ export class StorageService {
   }
 
   private _saveEntities() {
-    let entities: Array<Entity> = Object.create(this._entitiesService.entities);
-    console.log(entities);
-    entities = entities.splice(1, 1);
+    const entities: Array<Entity> = [];
+    Object.assign(entities, this._entitiesService.entities);
+    entities.shift();
     window.localStorage.setItem('entities', JSON.stringify(entities));
   }
 }

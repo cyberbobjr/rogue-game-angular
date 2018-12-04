@@ -1,4 +1,5 @@
 import {Direction} from '../enums/direction.enum';
+import {JsonPosition} from '../services/storage.service';
 
 export class Position {
   private _x: number;
@@ -18,6 +19,10 @@ export class Position {
 
   set y(value: number) {
     this._y = value;
+  }
+
+  static fromJson(jsonData: JsonPosition): Position {
+    return new this(jsonData._x, jsonData._y);
   }
 
   constructor(posX: number, posY: number) {

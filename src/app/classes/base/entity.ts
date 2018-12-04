@@ -4,18 +4,25 @@ import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
 import {IObject} from '../../interfaces/IObject';
 import {IEntity} from '../../interfaces/ientity';
-import {MapEngine} from '../../services/map-engine.service';
+import {EntityType} from '../../enums/entity-type.enum';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export abstract class Entity implements IObject, IEntity {
-  protected _name: string;
   protected _currentAction: Iaction = null;
   protected _hp: number;
-
+  protected _type: EntityType;
   lightRadius = 20;
   ligthPower = 7; // max is lighter
+
+  get type(): EntityType {
+    return this._type;
+  }
+
+  set type(value: EntityType) {
+    this._type = value;
+  }
 
   get hp(): number {
     return this._hp;
@@ -49,8 +56,7 @@ export abstract class Entity implements IObject, IEntity {
     this._position = value;
   }
 
-  constructor(name: string, protected _position?: Position, protected _sprite?: Sprite) {
-    this._name = name;
+  constructor(protected _name: string, protected _position?: Position, protected _sprite?: Sprite) {
   }
 
   getAction(): Iaction | null {
@@ -62,7 +68,6 @@ export abstract class Entity implements IObject, IEntity {
   }
 
   tick() {
-
   }
 
   abstract onHit(attacker: Entity): Iaction | null;

@@ -5,6 +5,8 @@ import {Monster} from '../classes/entities/monster';
 import {SpritesFactory} from './sprites-factory';
 import {SpriteType} from '../enums/sprite-type.enum';
 import {Position} from '../classes/position';
+import {Sprite} from '../classes/base/sprite';
+import {JsonEntity} from '../services/storage.service';
 
 export class EntitiesFactory {
   constructor() {
@@ -17,17 +19,17 @@ export class EntitiesFactory {
       case EntityType.ORC:
         const monster: Entity = new Monster('orc', position, SpritesFactory.createSprite(SpriteType.ORC));
         monster.hp = 5;
+        monster.type = EntityType.ORC;
         return monster;
       default:
         return null;
     }
   }
-  static createJsonEntity(type: EntityType, position?: Position): Entity | null {
+
+  static createJsonEntity(type: EntityType, jsonData: JsonEntity): Entity | null {
     switch (type) {
       case EntityType.ORC:
-        const monster: Entity = new Monster('orc', position, SpritesFactory.createSprite(SpriteType.ORC));
-        monster.hp = 5;
-        return monster;
+        return Monster.fromJson('orc', Position.fromJson(jsonData.position), Sprite.fromJson(jsonData.sprite), jsonData);
       default:
         return null;
     }

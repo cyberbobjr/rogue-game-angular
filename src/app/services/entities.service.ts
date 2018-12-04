@@ -11,7 +11,7 @@ export class EntitiesService {
   private _entities: Array<Entity> = [];
   private _player: Entity = null;
 
-  get entities(): Array<Entity> {
+  get entities(): Entity[] {
     return this._entities;
   }
 
