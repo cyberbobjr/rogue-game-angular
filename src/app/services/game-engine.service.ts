@@ -80,6 +80,7 @@ export class GameEngineService {
         break;
     }
     this.processAction();
+    this._storage.saveGameState();
   }
 
   private refreshMap() {
@@ -106,6 +107,5 @@ export class GameEngineService {
         }
       }
     }
-    this._storage.saveGameState();
   }
 }
