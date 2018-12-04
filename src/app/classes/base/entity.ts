@@ -7,25 +7,15 @@ import {IEntity} from '../../interfaces/ientity';
 import {MapEngine} from '../../services/map-engine.service';
 
 @Injectable({
-  providedIn: 'root'
-})
-export class Entity implements IObject, IEntity {
-  protected _position: Position;
+              providedIn: 'root'
+            })
+export abstract class Entity implements IObject, IEntity {
   protected _name: string;
   protected _currentAction: Iaction = null;
-  protected _sprite: Sprite = null;
   protected _hp: number;
-  protected _mapEngine: MapEngine = null;
+
   lightRadius = 20;
   ligthPower = 7; // max is lighter
-
-  get mapEngine(): MapEngine {
-    return this._mapEngine;
-  }
-
-  set mapEngine(value: MapEngine) {
-    this._mapEngine = value;
-  }
 
   get hp(): number {
     return this._hp;
@@ -59,11 +49,8 @@ export class Entity implements IObject, IEntity {
     this._position = value;
   }
 
-  constructor(name: string, position?: Position) {
+  constructor(name: string, protected _position?: Position, protected _sprite?: Sprite) {
     this._name = name;
-    if (position) {
-      this._position = position;
-    }
   }
 
   getAction(): Iaction | null {
@@ -78,7 +65,6 @@ export class Entity implements IObject, IEntity {
 
   }
 
-  onHit(attacker: Entity): Iaction | null {
-    return null;
-  }
+  abstract onHit(attacker: Entity): Iaction | null;
 }
+

@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {MapEngine} from './map-engine.service';
 import {Position} from '../classes/position';
-import {DisplayOptions} from 'rot-js/lib/display/types';
 import {GameMap} from '../classes/gameMap';
 import {Sprite} from '../classes/base/sprite';
-import {Display} from 'rot-js/lib';
 import {IObject} from '../interfaces/IObject';
+import {DisplayOptions} from 'rot-js/lib/display/types';
+import {Display} from 'rot-js/lib';
 
 @Injectable({
   providedIn: 'root'

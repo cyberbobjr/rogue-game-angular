@@ -4,13 +4,33 @@ import {EventLog} from '../event-log';
 import {Sprite} from '../base/sprite';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
+import {Position} from '../position';
 
 export class Monster extends Entity {
   protected _backupSprite: Sprite = null;
   protected _timeDisplaySprite: number;
 
-  constructor(props) {
+  static fromJson(name: string, position: Position, sprite: Sprite): Monster {
+    let monster: Monster = new this(name, position, sprite);
+    Object.entries(monster)
+          .forEach((entry) => {
+            console.log(entry);
+          });
+    return monster;
+  }
+
+  toJSON(): string {
+    return JSON.stringify({hp: this._hp});
+  }
+
+  constructor(props, position?: Position, sprite?: Sprite) {
     super(props);
+    if (position) {
+      this.position = position;
+    }
+    if (sprite) {
+      this.sprite = sprite;
+    }
   }
 
   onWalk(actor: Entity): Iaction | null {

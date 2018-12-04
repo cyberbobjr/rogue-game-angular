@@ -17,8 +17,8 @@ import AStar from 'rot-js/lib/path/astar';
 import {Player} from '../classes/entities/player';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class MapEngine implements IMapEngine {
   private _width: number;
   private _height: number;
@@ -28,6 +28,10 @@ export class MapEngine implements IMapEngine {
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _mainActor: Entity = null;
   private _seed: number;
+
+  get seed(): number {
+    return this._seed;
+  }
 
   get mainActor(): Entity {
     return this._mainActor;
@@ -80,37 +84,18 @@ export class MapEngine implements IMapEngine {
   constructor(private _entitiesService: EntitiesService) {
   }
 
-  generateMap(width: number, height: number, seed = 1324): GameMap<IObject> {
+  generateMap(width: number, height: number, seed = 511): GameMap<IObject> {
     this._seed = seed;
     this._width = width;
     this._height = height;
     this._createMap(width, height);
     this._createDoor(this._rotEngine);
     this._createFovCasting();
-    this.saveMap();
     return this._map;
   }
 
-  saveMap() {
-    window.localStorage.setItem('seed', JSON.stringify(this._seed));
-  }
-
-  loadMap(/*loadMap: { width: number, height: number, _data: Array<any> }*/) {
+  loadMap() {
     this._createFovCasting();
-    /*let map: GameMap<IObject> = new GameMap<IObject>(loadMap.width, loadMap.height);
-    loadMap._data.forEach((data: {
-      _name: string,
-      _opaque: boolean,
-      _position: { _x: number, _y: number },
-      _sprite: {
-        _bgColor: string, _character: string,
-        _color: string,
-        _light: boolean,
-        _visibility: number
-      }
-    }, index: number) => {
-
-    });*/
   }
 
   computeFov(position: Position): GameMap<IObject> {

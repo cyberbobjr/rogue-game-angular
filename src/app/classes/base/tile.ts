@@ -3,10 +3,11 @@ import {Position} from '../position';
 import {Sprite} from './sprite';
 import {Iaction} from '../../interfaces/iaction';
 import {IObject} from '../../interfaces/IObject';
+import {TileType} from '../../enums/tile-type.enum';
 
 export class Tile implements IObject {
+  protected _type: TileType;
   protected _name: string;
-  protected _position: Position;
   protected _sprite: Sprite;
   protected _opaque: boolean;
 
@@ -42,7 +43,11 @@ export class Tile implements IObject {
     this._sprite = value;
   }
 
-  constructor() {
+  static fromJSON(json: any, position?: Position): Tile {
+    return new this(position);
+  }
+
+  constructor(protected _position?: Position) {
   }
 
   isWalkable(): boolean {

@@ -6,15 +6,24 @@ import {OpendoorAction} from '../actions/opendoor-action';
 import {Iaction} from '../../interfaces/iaction';
 import {Position} from '../position';
 import {EventLog} from '../event-log';
+import {TileType} from '../../enums/tile-type.enum';
 
 export class DoorTile extends Tile {
-  name = 'door';
+  _type = TileType.DOOR;
+  name = 'DoorTile';
 
-  constructor(private _isClosed = true, position ?: Position) {
+  static fromJSON(json: any, position?: Position): DoorTile {
+    const {_isClosed} = json;
+    return new this(position, _isClosed);
+  }
+
+  constructor(position?: Position, private _isClosed = true) {
     super();
     this._opaque = this._isClosed;
     this._setSprite();
-    this.position = position;
+    if (position) {
+      this.position = position;
+    }
   }
 
   isWalkable(): boolean {

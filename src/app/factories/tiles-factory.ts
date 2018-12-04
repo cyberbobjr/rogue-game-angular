@@ -16,9 +16,23 @@ export class TilesFactory {
       case TileType.FLOOR:
         return new FloorTile(position);
       case TileType.DOOR:
-        return new DoorTile(true, position);
+        return new DoorTile(position, true);
       default:
         return null;
     }
+  }
+
+  static createJsonTile(type: TileType, position: Position, jsonData: any): Tile | null {
+    switch (type) {
+      case TileType.WALL:
+        return WallTile.fromJSON(jsonData, position);
+      case TileType.FLOOR:
+        return FloorTile.fromJSON(jsonData, position);
+      case TileType.DOOR:
+        return DoorTile.fromJSON(jsonData, position);
+      default:
+        return null;
+    }
+
   }
 }

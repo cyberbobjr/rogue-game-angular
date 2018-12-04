@@ -11,10 +11,10 @@ import {StorageService} from '../../services/storage.service';
 import {Player} from '../../classes/entities/player';
 
 @Component({
-  selector: 'app-main-page',
-  templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css']
-})
+             selector: 'app-main-page',
+             templateUrl: './main-page.component.html',
+             styleUrls: ['./main-page.component.css']
+           })
 export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(private _mapEngine: MapEngine,
@@ -25,9 +25,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('Main page init');
-    //this._createMonsters();
     this._initMap();
     this._initPlayer();
+    this._initMonsters();
     this._gameEngineService.startGameLoop();
   }
 
@@ -35,13 +35,12 @@ export class MainPageComponent implements OnInit, OnDestroy {
     this._gameEngineService.endGameLoop();
   }
 
-  private _createMonsters() {
+  private _initMonsters() {
     const rooms: Array<Room> = this._mapEngine.getRooms();
     const nbRooms: number = rooms.length;
     for (let nb = 1; nb < nbRooms - 2; nb++) {
       const orc: Entity = EntitiesFactory.createEntity(EntityType.ORC);
       orc.position = this._mapEngine.getRoomCenter(rooms[nb]);
-      orc.mapEngine = this._mapEngine;
       orc.setNextAction(new IdleAction(this._mapEngine, orc));
       this._entitiesService.addEntity(orc);
     }
@@ -49,11 +48,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   private _initPlayer() {
     this._entitiesService.player = new Player('player');
-    this._storage.loadPlayer();
-    if (!this._entitiesService.player) {
-      this._entitiesService.player = EntitiesFactory.createEntity(EntityType.PLAYER);
-      this._entitiesService.player.position = this._mapEngine.getStartPosition();
-    }
+    const playerLoaded: Player = this._storage.loadPlayer();
+    this._entitiesService.player = playerLoaded ? playerLoaded : EntitiesFactory.createEntity(EntityType.PLAYER, this._mapEngine.getStartPosition());
     this._mapEngine.mainActor = this._entitiesService.player;
   }
 
