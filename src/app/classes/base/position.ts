@@ -1,5 +1,5 @@
-import {Direction} from '../enums/direction.enum';
-import {JsonPosition} from '../services/storage.service';
+import {JsonPosition} from '../../services/storage.service';
+import {Direction} from '../../enums/direction.enum';
 
 export class Position {
   private _x: number;

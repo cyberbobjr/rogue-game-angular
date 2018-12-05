@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Command} from '../classes/commands/command';
 import {MoveE, MoveN, MoveNE, MoveNW, MoveS, MoveSE, MoveSW, MoveW} from '../classes/commands/move';
-import {OpenDoor} from '../classes/commands/open-door';
+import {SaveCommand} from '../classes/commands/save-command';
+import {OpenDoorCommand} from '../classes/commands/open-door-command';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class CommandsService {
   ArrowUp: Command;
   ArrowDown: Command;
@@ -20,6 +21,7 @@ export class CommandsService {
   KeyN: Command;
   KeyK: Command;
   KeyO: Command;
+  KeyS: Command;
 
   constructor() {
     this._initCommand();
@@ -38,6 +40,7 @@ export class CommandsService {
     this.KeyN = new MoveS();
     this.KeyU = new MoveN();
     this.KeyY = new MoveNW();
-    this.KeyO = new OpenDoor();
+    this.KeyO = new OpenDoorCommand();
+    this.KeyS = new SaveCommand();
   }
 }

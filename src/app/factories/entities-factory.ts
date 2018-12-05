@@ -4,7 +4,7 @@ import {Entity} from '../classes/base/entity';
 import {Monster} from '../classes/entities/monster';
 import {SpritesFactory} from './sprites-factory';
 import {SpriteType} from '../enums/sprite-type.enum';
-import {Position} from '../classes/position';
+import {Position} from '../classes/base/position';
 import {Sprite} from '../classes/base/sprite';
 import {JsonEntity} from '../services/storage.service';
 

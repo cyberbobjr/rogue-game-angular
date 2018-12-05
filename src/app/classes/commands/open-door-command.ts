@@ -5,7 +5,7 @@ import {Tile} from '../base/tile';
 import {DoorTile} from '../tiles/door-tile';
 import {OpendoorAction} from '../actions/opendoor-action';
 
-export class OpenDoor implements Command {
+export class OpenDoorCommand implements Command {
   execute(actor: Entity, gameEngine: GameEngineService) {
     const tiles: Array<Array<Tile>> = <Array<Array<Tile>>>gameEngine.mapEngine.getTilesAround(actor.position);
     for (const row of tiles) {

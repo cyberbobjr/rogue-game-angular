@@ -4,7 +4,7 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from '../base/entity';
 import {OpendoorAction} from '../actions/opendoor-action';
 import {Iaction} from '../../interfaces/iaction';
-import {Position} from '../position';
+import {Position} from '../base/position';
 import {EventLog} from '../event-log';
 import {TileType} from '../../enums/tile-type.enum';
 

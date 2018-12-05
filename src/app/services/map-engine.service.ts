@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {IMapEngine} from '../interfaces/i-map-engine';
-import {GameMap} from '../classes/gameMap';
+import {GameMap} from '../classes/base/gameMap';
 import {Entity} from '../classes/base/entity';
 import {TilesFactory} from '../factories/tiles-factory';
 import {TileType} from '../enums/tile-type.enum';
 import {Tile} from '../classes/base/tile';
-import {Position} from '../classes/position';
+import {Position} from '../classes/base/position';
 import {Sprite} from '../classes/base/sprite';
 import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
@@ -148,7 +148,7 @@ export class MapEngine implements IMapEngine {
   }
 
   getDirectionToPlayer(originPosition: Position): Position | null {
-    const player: Player = this._entitiesService.player;
+    const player: Entity = this._entitiesService.player;
     const astar: AStar = new Path.AStar(player.position.x, player.position.y, (x: number, y: number) => {
       const info: IObject = this.getTileAt(new Position(x, y));
       if (info instanceof Entity) {

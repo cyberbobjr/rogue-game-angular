@@ -3,7 +3,7 @@ import {Tile} from '../classes/base/tile';
 import {WallTile} from '../classes/tiles/wall-tile';
 import {FloorTile} from '../classes/tiles/floor-tile';
 import {DoorTile} from '../classes/tiles/door-tile';
-import {Position} from '../classes/position';
+import {Position} from '../classes/base/position';
 
 export class TilesFactory {
   constructor() {

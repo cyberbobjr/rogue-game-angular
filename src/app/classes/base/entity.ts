@@ -1,4 +1,4 @@
-import {Position} from '../position';
+import {Position} from './position';
 import {Injectable} from '@angular/core';
 import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
@@ -10,6 +10,7 @@ import {EntityType} from '../../enums/entity-type.enum';
   providedIn: 'root'
 })
 export abstract class Entity implements IObject, IEntity {
+  protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
   protected _hp: number;
   protected _type: EntityType;
@@ -57,6 +58,7 @@ export abstract class Entity implements IObject, IEntity {
   }
 
   constructor(protected _name: string, protected _position?: Position, protected _sprite?: Sprite) {
+    this._backupSprite = _sprite;
   }
 
   getAction(): Iaction | null {

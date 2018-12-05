@@ -4,16 +4,17 @@ import {EntitiesService} from './entities.service';
 import {MapEngine} from './map-engine.service';
 import {TilesFactory} from '../factories/tiles-factory';
 import {TileType} from '../enums/tile-type.enum';
-import {Position} from '../classes/position';
-import {Tile} from '../classes/base/tile';
-import {EntitiesFactory} from '../factories/entities-factory';
+import {Position} from '../classes/base/position';
 import {Entity} from '../classes/base/entity';
 import {IdleAction} from '../classes/actions/idle-action';
+import {EntitiesFactory} from '../factories/entities-factory';
 
 export interface JsonSprite {
   _color: string;
   _character: string;
   _bgColor: string;
+  _light: boolean;
+  _visibility: number;
 }
 
 export interface JsonPosition {
@@ -54,6 +55,12 @@ export interface JsonEntity {
 export class StorageService {
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine) {
+  }
+
+  saveGameState() {
+    this._savePlayer();
+    this._saveMap();
+    this._saveEntities();
   }
 
   loadPlayer(): Player | null {
@@ -97,12 +104,6 @@ export class StorageService {
       console.log(e);
       return false;
     }
-  }
-
-  saveGameState() {
-    this._savePlayer();
-    this._saveMap();
-    this._saveEntities();
   }
 
   private _loadTile(mapJson: JsonMap) {

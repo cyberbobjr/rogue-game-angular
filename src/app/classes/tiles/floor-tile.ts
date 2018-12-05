@@ -1,7 +1,7 @@
 import {Tile} from '../base/tile';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
-import {Position} from '../position';
+import {Position} from '../base/position';
 import {TileType} from '../../enums/tile-type.enum';
 
 export class FloorTile extends Tile {

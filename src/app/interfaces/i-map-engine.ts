@@ -1,4 +1,4 @@
-import {GameMap} from '../classes/gameMap';
+import {GameMap} from '../classes/base/gameMap';
 import {IObject} from './IObject';
 
 export interface IMapEngine {

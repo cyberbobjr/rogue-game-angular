@@ -1,4 +1,5 @@
 import * as Color from 'color';
+import {JsonSprite} from '../../services/storage.service';
 
 export class Sprite {
   protected _light: boolean;
@@ -44,9 +45,12 @@ export class Sprite {
       .hex();
   }
 
-  static fromJson(jsonData: any): Sprite {
-    const {_character, _color, _bgColor} = jsonData;
-    return new this(_character, _color, _bgColor);
+  static fromJson(jsonData: JsonSprite): Sprite {
+    const {_character, _color, _bgColor, _light, _visibility} = jsonData;
+    const sprite: Sprite = new this(_character, _color, _bgColor);
+    sprite.light = _light;
+    sprite.visibility = _visibility;
+    return sprite;
   }
 
   constructor(private _character: string, private _color: string = '#afafaf', private _bgColor: string = '#000000') {

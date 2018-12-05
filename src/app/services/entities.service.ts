@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Entity} from '../classes/base/entity';
-import {Position} from '../classes/position';
+import {Position} from '../classes/base/position';
 import {IObject} from '../interfaces/IObject';
 import {EventLog} from '../classes/event-log';
 

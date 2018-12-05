@@ -5,7 +5,7 @@ import {Entity} from '../base/entity';
 import {MapEngine} from '../../services/map-engine.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
-import {Position} from '../position';
+import {Position} from '../base/position';
 
 export class WalkAction implements Iaction {
   private _info = '';

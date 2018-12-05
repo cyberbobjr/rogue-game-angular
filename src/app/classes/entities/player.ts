@@ -4,14 +4,17 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 import {JsonPlayer} from '../../services/storage.service';
-import {Position} from '../position';
+import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
 
 export class Player extends Entity {
   static fromJSON(json: JsonPlayer): Player {
-    const position = json._position;
-    const sprite = json._sprite;
-    return new this('player', new Position(position._x, position._y), new Sprite(sprite._character, sprite._color, sprite._bgColor));
+    const {_position, _sprite} = json;
+    return new this('player', new Position(_position._x, _position._y), new Sprite(_sprite._character, _sprite._color, _sprite._bgColor));
+  }
+
+  toJSON(): any {
+    return {name: this._name, _position: this._position, _sprite: this._sprite};
   }
 
   constructor(props, position?: Position, sprite?: Sprite) {

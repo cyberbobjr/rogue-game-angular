@@ -3,7 +3,7 @@ import {MapEngine} from '../../services/map-engine.service';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
-import {Position} from '../position';
+import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
 

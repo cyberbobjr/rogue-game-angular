@@ -17,12 +17,16 @@ export class GameEngineService {
     return this._mapEngine;
   }
 
+  get storageEngine(): StorageService {
+    return this._storageService;
+  }
+
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine,
               private _logService: LoggingService,
               private _displayService: DisplayService,
               private _commandService: CommandsService,
-              private _storage: StorageService) {
+              private _storageService: StorageService) {
   }
 
   startGameLoop() {
@@ -78,9 +82,11 @@ export class GameEngineService {
       case 'KeyO':
         this._commandService.KeyO.execute(player, this);
         break;
+      case 'KeyS':
+        this._commandService.KeyS.execute(player, this);
+        break;
     }
     this.processAction();
-    this._storage.saveGameState();
   }
 
   private refreshMap() {

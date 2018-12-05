@@ -1,5 +1,5 @@
 import {Entity} from './entity';
-import {Position} from '../position';
+import {Position} from './position';
 import {Sprite} from './sprite';
 import {Iaction} from '../../interfaces/iaction';
 import {IObject} from '../../interfaces/IObject';
