@@ -38,7 +38,7 @@ export class Monster extends Entity {
   tick() {
     const delta: number = (performance.now() - this._timeDisplaySprite);
     if (this._backupSprite && (delta / 1000) > 0.25) {
-      Object.assign(this._sprite, this._backupSprite);
+      this._sprite = Object.assign(this._sprite, this._backupSprite);
       this._backupSprite = null;
     }
   }

@@ -125,8 +125,8 @@ export class StorageService {
   }
 
   private _saveEntities() {
-    const entities: Array<Entity> = [];
-    Object.assign(entities, this._entitiesService.entities);
+    let entities: Array<Entity> = [];
+    entities = Object.assign(entities, this._entitiesService.entities);
     entities.shift();
     window.localStorage.setItem('entities', JSON.stringify(entities));
   }
