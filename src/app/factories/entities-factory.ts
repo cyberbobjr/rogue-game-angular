@@ -7,6 +7,7 @@ import {SpriteType} from '../enums/sprite-type.enum';
 import {Position} from '../classes/base/position';
 import {Sprite} from '../classes/base/sprite';
 import {JsonEntity} from '../services/storage.service';
+import {Utility} from '../classes/utility';
 
 export class EntitiesFactory {
   constructor() {
@@ -15,10 +16,14 @@ export class EntitiesFactory {
   static createEntity(type: EntityType, position?: Position): Entity | null {
     switch (type) {
       case EntityType.PLAYER:
-        return new Player('player', position);
+        const player: Player = new Player('player', position);
+        player.hp = Utility.rolldice(12);
+        player.strength = Utility.rolldice(10) + 1;
+        return player;
       case EntityType.ORC:
         const monster: Entity = new Monster('orc', position, SpritesFactory.createSprite(SpriteType.ORC));
-        monster.hp = 5;
+        monster.hp = Utility.rolldice(8) + 1;
+        monster.strength = 17;
         monster.type = EntityType.ORC;
         return monster;
       default:

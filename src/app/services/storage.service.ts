@@ -22,11 +22,6 @@ export interface JsonPosition {
   _y: number;
 }
 
-export interface JsonPlayer {
-  _position: JsonPosition;
-  _sprite: JsonSprite;
-}
-
 export interface JSonCell {
   _type: number;
   _name: string;
@@ -47,6 +42,8 @@ export interface JsonEntity {
   position: JsonPosition;
   sprite: JsonSprite;
   type: number;
+  strength: number;
+  ac: number;
 }
 
 @Injectable({
@@ -68,7 +65,7 @@ export class StorageService {
     if (!json) {
       return null;
     }
-    const playerLoaded: JsonPlayer = JSON.parse(json) as JsonPlayer;
+    const playerLoaded: JsonEntity = JSON.parse(json) as JsonEntity;
     return Player.fromJSON(playerLoaded);
   }
 

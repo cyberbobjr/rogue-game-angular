@@ -7,18 +7,14 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Position} from '../base/position';
 
 export class Monster extends Entity {
-  protected _timeDisplaySprite: number;
 
   static fromJson(name: string, position: Position, sprite: Sprite, jsonData: any): Monster {
-    const {type, hp} = jsonData;
+    const {type, hp, strength} = jsonData;
     const monster: Monster = new this(name, position, sprite);
     monster.hp = hp;
     monster.type = type;
+    monster.strength = strength;
     return monster;
-  }
-
-  toJSON(): any {
-    return {type: this.type, hp: this._hp, name: this._name, position: this._position, sprite: this._sprite};
   }
 
   onWalk(actor: Entity): Iaction | null {
@@ -33,13 +29,5 @@ export class Monster extends Entity {
     this._sprite = SpritesFactory.createSprite(SpriteType.HITMONSTER);
     this._timeDisplaySprite = performance.now();
     return null;
-  }
-
-  tick() {
-    const delta: number = (performance.now() - this._timeDisplaySprite);
-    if (this._backupSprite && (delta / 1000) > 0.25) {
-      this._sprite = Object.assign(this._sprite, this._backupSprite);
-      this._backupSprite = null;
-    }
   }
 }
