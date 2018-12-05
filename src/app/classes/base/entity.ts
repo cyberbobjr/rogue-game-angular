@@ -12,11 +12,12 @@ import {EntityType} from '../../enums/entity-type.enum';
 export abstract class Entity implements IObject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
-  protected _hp: number;
   protected _type: EntityType;
-  protected _strength: number;
-  protected _ac: number;
   protected _timeDisplaySprite: number;
+
+  protected _strength: number;
+  protected _hp: number;
+  protected _ac: number;
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
