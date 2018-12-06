@@ -44,11 +44,18 @@ export interface JsonEntity {
   type: number;
   strength: number;
   ac: number;
+  xp: number;
+  hitDice: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
+  wisdom: number;
+  charisma: number;
 }
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class StorageService {
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine) {

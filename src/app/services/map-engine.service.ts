@@ -7,14 +7,13 @@ import {TileType} from '../enums/tile-type.enum';
 import {Tile} from '../classes/base/tile';
 import {Position} from '../classes/base/position';
 import {Sprite} from '../classes/base/sprite';
-import Digger from 'rot-js/lib/map/digger';
-import {Room} from 'rot-js/lib/map/features';
-import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {EntitiesService} from './entities.service';
 import {IObject} from '../interfaces/IObject';
 import {Path, RNG} from 'rot-js/lib';
 import AStar from 'rot-js/lib/path/astar';
-import {Player} from '../classes/entities/player';
+import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
+import Digger from 'rot-js/lib/map/digger';
+import {Room} from 'rot-js/lib/map/features';
 
 @Injectable({
               providedIn: 'root'

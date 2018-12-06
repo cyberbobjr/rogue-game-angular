@@ -7,8 +7,8 @@ import {IEntity} from '../../interfaces/ientity';
 import {EntityType} from '../../enums/entity-type.enum';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export abstract class Entity implements IObject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
@@ -16,11 +16,56 @@ export abstract class Entity implements IObject, IEntity {
   protected _timeDisplaySprite: number;
 
   protected _strength: number;
+  protected _dexterity: number;
+  protected _constitution: number;
+  protected _intelligence: number;
+  protected _wisdom: number;
+  protected _charisma: number;
   protected _hp: number;
   protected _ac: number;
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
+
+  get constitution(): number {
+    return this._constitution;
+  }
+
+  set constitution(value: number) {
+    this._constitution = value;
+  }
+
+  get intelligence(): number {
+    return this._intelligence;
+  }
+
+  set intelligence(value: number) {
+    this._intelligence = value;
+  }
+
+  get wisdom(): number {
+    return this._wisdom;
+  }
+
+  set wisdom(value: number) {
+    this._wisdom = value;
+  }
+
+  get charisma(): number {
+    return this._charisma;
+  }
+
+  set charisma(value: number) {
+    this._charisma = value;
+  }
+
+  get dexterity(): number {
+    return this._dexterity;
+  }
+
+  set dexterity(value: number) {
+    this._dexterity = value;
+  }
 
   get ac(): number {
     return this._ac;
