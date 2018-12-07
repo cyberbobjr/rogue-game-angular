@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {IScore} from '../../interface/idice';
 
 @Component({
-  selector: 'app-roll-dice',
+  selector: 'app-ability',
   templateUrl: './ability.component.html',
   styleUrls: ['./ability.component.css']
 })
@@ -16,6 +17,6 @@ export class AbilityComponent implements OnInit {
   }
 
   drop(event: DragEvent) {
-    this.value = +event.dataTransfer.getData('diceValue');
+    this.value = (JSON.parse(event.dataTransfer.getData('diceValue')) as IScore).value;
   }
 }

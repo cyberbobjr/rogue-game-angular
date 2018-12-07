@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {DiceService} from '../../services/dice.service';
 
 @Component({
   selector: 'app-dices',
@@ -6,15 +7,13 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./dices.component.css']
 })
 export class DicesComponent implements OnInit {
-  @Input('diceValue') diceValue: number;
-
-  constructor() {
+  constructor(private _diceService: DiceService) {
   }
 
   ngOnInit() {
   }
 
-  dragStart(event: DragEvent) {
-    event.dataTransfer.setData('diceValue', this.diceValue.toString());
+  dragStart(event: DragEvent, index: number) {
+    event.dataTransfer.setData('diceValue', JSON.stringify(this._diceService.abilityScore[index]));
   }
 }

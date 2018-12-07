@@ -1,4 +1,5 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {IDice} from '../../interface/idice';
 
 @Component({
   selector: 'app-roll-dices',
@@ -6,7 +7,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
   styleUrls: ['./roll-dices.component.css']
 })
 export class RollDicesComponent implements OnInit {
-  @Input('dices') dices: Array<number>;
+  @Input('dices') dices: Array<IDice>;
 
   constructor() {
   }
