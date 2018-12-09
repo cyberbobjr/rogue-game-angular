@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {IScore} from '../../interface/idice';
+import {DiceService} from '../../services/dice.service';
 
 @Component({
   selector: 'app-ability',
@@ -10,13 +11,15 @@ export class AbilityComponent implements OnInit {
   @Input('ability') ability: string;
   value: number;
 
-  constructor() {
+  constructor(private _diceService: DiceService) {
   }
 
   ngOnInit() {
   }
 
   drop(event: DragEvent) {
-    this.value = (JSON.parse(event.dataTransfer.getData('diceValue')) as IScore).value;
+    const diceScore: IScore = (JSON.parse(event.dataTransfer.getData('diceValue')) as IScore);
+    this._diceService.removeScoreById(diceScore.id);
+    this.value = diceScore.value;
   }
 }

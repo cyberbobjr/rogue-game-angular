@@ -38,7 +38,11 @@ export class Player extends Entity {
 
   static fromJSON(json: JsonEntity): Player {
     const {position, sprite, hp, xp, hitDice, strength, constitution, charisma, wisdom, intelligence, dexterity, level} = json;
-    const player: Player = new this('player', new Position(position._x, position._y), new Sprite(sprite._character, sprite._color, sprite._bgColor));
+    const player: Player = new this('player');
+    player.sprite = new Sprite(sprite._character, sprite._color, sprite._bgColor);
+    if (position) {
+      player.position = new Position(position._x, position._y);
+    }
     player.hp = hp;
     player.strength = strength;
     player.constitution = constitution;

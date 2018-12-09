@@ -1,6 +1,8 @@
 <div *ngFor="let ability of _diceService.abilityScore; let i = index">
-  <div class="ui-inputgroup" pDraggable="diceValue" (onDragStart)="dragStart($event, i)">
-    <input type="text" pInputText [value]="ability.value" disabled>
-    <button pButton type="button" class="ui-button-info" icon="fas fa-arrows-alt"></button>
+  <div class="ui-g-8">
+    <div class="ui-inputgroup" pDraggable="diceValue" (onDragStart)="dragStart($event, i)">
+      <input type="text" pInputText [value]="ability.value" disabled>
+      <button pButton type="button" class="ui-button-info" icon="fas fa-arrows-alt"></button>
+    </div>
   </div>
 </div>

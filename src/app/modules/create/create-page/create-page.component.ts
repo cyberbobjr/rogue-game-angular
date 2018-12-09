@@ -1,6 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {Utility} from '../../../core/classes/utility';
 import {DiceService} from '../services/dice.service';
+import {EntitiesFactory} from '../../../core/factories/entities-factory';
+import {EntityType} from '../../../core/enums/entity-type.enum';
+import {Barbarian} from '../../../core/rules/barbarian';
+import {Player} from '../../../core/classes/entities/player';
+import {StorageService} from '../../game/services/storage.service';
+import {Entity} from '../../../core/classes/base/entity';
+import {MapEngine} from '../../game/services/map-engine.service';
 
 @Component({
   selector: 'app-create-page',
@@ -10,7 +17,7 @@ import {DiceService} from '../services/dice.service';
 export class CreatePageComponent implements OnInit {
   nbDices = 4;
 
-  constructor(private _diceService: DiceService) {
+  constructor(private _diceService: DiceService, private _storageService: StorageService, private _mapEngine: MapEngine) {
   }
 
   ngOnInit() {
@@ -27,5 +34,12 @@ export class CreatePageComponent implements OnInit {
       totalScore += this._diceService.dicesScore[i].value;
     }
     this._diceService.abilityScore.push({id: this._diceService.abilityScore.length + 1, value: totalScore});
+  }
+
+  onSave() {
+    const player: Player = <Player>EntitiesFactory.createEntity(EntityType.PLAYER);
+    player.hitDice = Barbarian.getHitDice();
+    player.position = this._mapEngine.getStartPosition();
+    this._storageService.savePlayer(<Entity>player);
   }
 }

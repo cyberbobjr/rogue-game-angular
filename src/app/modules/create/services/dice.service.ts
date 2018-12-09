@@ -10,4 +10,12 @@ export class DiceService {
 
   constructor() {
   }
+
+  removeScoreById(id: number) {
+    this.abilityScore.forEach((score: IScore, index: number) => {
+      if (score.id === id) {
+        this.abilityScore.splice(index, 1);
+      }
+    });
+  }
 }

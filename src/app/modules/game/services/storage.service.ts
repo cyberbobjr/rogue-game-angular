@@ -51,19 +51,19 @@ export interface JsonEntity {
   intelligence: number;
   wisdom: number;
   charisma: number;
-  level:number;
+  level: number;
 }
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class StorageService {
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine) {
   }
 
   saveGameState() {
-    this._savePlayer();
+    this.savePlayer(this._entitiesService.player);
     this._saveMap();
     this._saveEntities();
   }
@@ -111,6 +111,10 @@ export class StorageService {
     }
   }
 
+  savePlayer(player: Entity) {
+    window.localStorage.setItem('player', JSON.stringify(player));
+  }
+
   private _loadTile(mapJson: JsonMap) {
     mapJson._data.forEach((cells: Array<JSonCell>) => {
       cells.forEach((cell: JSonCell) => {
@@ -118,10 +122,6 @@ export class StorageService {
         this._mapEngine.map.content[cell._position._y][cell._position._x] = TilesFactory.createJsonTile(<TileType>cell._type, position, cell);
       });
     });
-  }
-
-  private _savePlayer() {
-    window.localStorage.setItem('player', JSON.stringify(this._entitiesService.player));
   }
 
   private _saveMap() {

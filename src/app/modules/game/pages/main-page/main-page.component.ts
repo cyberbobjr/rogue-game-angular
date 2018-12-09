@@ -50,6 +50,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   private _initPlayer() {
     const playerLoaded: Player = this._storage.loadPlayer();
+    if (playerLoaded && !playerLoaded.position) {
+      playerLoaded.position = this._mapEngine.getStartPosition();
+    }
     this._entitiesService.player = playerLoaded ? playerLoaded : EntitiesFactory.createEntity(EntityType.PLAYER, this._mapEngine.getStartPosition());
     this._mapEngine.mainActor = this._entitiesService.player;
   }
