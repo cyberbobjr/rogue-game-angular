@@ -49,7 +49,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   private _initPlayer() {
-    const playerLoaded: Player = this._storage.loadPlayer();
+    const playerLoaded: Player = StorageService.loadPlayer();
     if (playerLoaded && !playerLoaded.position) {
       playerLoaded.position = this._mapEngine.getStartPosition();
     }

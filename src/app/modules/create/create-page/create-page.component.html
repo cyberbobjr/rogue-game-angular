@@ -8,10 +8,10 @@
     <app-ability ability="intelligence"></app-ability>
     <app-ability ability="dexterity"></app-ability>
   </div>
-  <div class="ui-g-12 ui-md-1">
+  <div class="ui-g-12 ui-md-2">
         <app-dices></app-dices>
   </div>
-  <div class="ui-g-3 ui-md-2" *ngIf="_diceService.abilityScore.length <= 5">
+  <div class="ui-g-3 ui-md-2" *ngIf="_diceService.dicesScore.length <= 5">
     <button pButton icon="fas fa-dice" class="ui-button-success" (click)="onDice()"></button>
     <app-roll-dices [dices]="dicesScore"></app-roll-dices>
   </div>

@@ -55,9 +55,18 @@ export interface JsonEntity {
 }
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class StorageService {
+  static loadPlayer(): Player | null {
+    const json: string = window.localStorage.getItem('player');
+    if (!json) {
+      return null;
+    }
+    const playerLoaded: JsonEntity = JSON.parse(json) as JsonEntity;
+    return Player.fromJSON(playerLoaded);
+  }
+
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine) {
   }
@@ -66,15 +75,6 @@ export class StorageService {
     this.savePlayer(this._entitiesService.player);
     this._saveMap();
     this._saveEntities();
-  }
-
-  loadPlayer(): Player | null {
-    const json: string = window.localStorage.getItem('player');
-    if (!json) {
-      return null;
-    }
-    const playerLoaded: JsonEntity = JSON.parse(json) as JsonEntity;
-    return Player.fromJSON(playerLoaded);
   }
 
   loadMap(): boolean {

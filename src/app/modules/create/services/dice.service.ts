@@ -12,9 +12,9 @@ export class DiceService {
   }
 
   removeScoreById(id: number) {
-    this.abilityScore.forEach((score: IScore, index: number) => {
+    this.dicesScore.forEach((score: IDice, index: number) => {
       if (score.id === id) {
-        this.abilityScore.splice(index, 1);
+        this.dicesScore.splice(index, 1);
       }
     });
   }

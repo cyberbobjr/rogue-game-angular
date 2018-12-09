@@ -1,4 +1,4 @@
-<div *ngFor="let ability of _diceService.abilityScore; let i = index">
+<div *ngFor="let ability of _diceService.dicesScore; let i = index">
   <div class="ui-g-8">
     <div class="ui-inputgroup" pDraggable="diceValue" (onDragStart)="dragStart($event, i)">
       <input type="text" pInputText [value]="ability.value" disabled>

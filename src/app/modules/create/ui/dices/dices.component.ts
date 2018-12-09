@@ -14,6 +14,6 @@ export class DicesComponent implements OnInit {
   }
 
   dragStart(event: DragEvent, index: number) {
-    event.dataTransfer.setData('diceValue', JSON.stringify(this._diceService.abilityScore[index]));
+    event.dataTransfer.setData('diceValue', JSON.stringify(this._diceService.dicesScore[index]));
   }
 }
