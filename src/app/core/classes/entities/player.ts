@@ -16,6 +16,10 @@ export class Player extends Entity {
   private _gameClass: IGameClass;
   private _race: IRace;
 
+  get gameClass(): IGameClass {
+    return this._gameClass;
+  }
+
   get ca(): number {
     return 10 + this.attributes.get('dexterity');
   }
@@ -45,13 +49,14 @@ export class Player extends Entity {
   }
 
   static fromJSON(json: JsonEntity): Player {
-    const {position, sprite, hp, xp, hitDice, strength, constitution, charisma, wisdom, intelligence, dexterity, level} = json;
+    const {gp, position, sprite, hp, xp, hitDice, strength, constitution, charisma, wisdom, intelligence, dexterity, level} = json;
     const player: Player = new this('player');
     player.sprite = new Sprite(sprite._character, sprite._color, sprite._bgColor);
     if (position) {
       player.position = new Position(position._x, position._y);
     }
     player.hp = hp;
+    player.gp = gp;
     player.strength = strength;
     player.constitution = constitution;
     player.charisma = charisma;
@@ -70,6 +75,7 @@ export class Player extends Entity {
       sprite: this.sprite,
       hp: this.hp,
       xp: this.xp,
+      gp: this.gp,
       hitDice: this.hitDice,
       strength: this.strength,
       constitution: this.constitution,

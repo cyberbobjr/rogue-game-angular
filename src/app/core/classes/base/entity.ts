@@ -17,11 +17,20 @@ export abstract class Entity implements IObject, IEntity {
 
   protected _hp: number;
   protected _ac: number;
+  protected _gp: number;
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  get gp(): number {
+    return this._gp;
+  }
+
+  set gp(value: number) {
+    this._gp = value;
+  }
 
   get constitution(): number {
     return this.attributes.get('constitution');
@@ -117,10 +126,6 @@ export abstract class Entity implements IObject, IEntity {
 
   set position(value: Position) {
     this._position = value;
-  }
-
-  toJSON(): any {
-    return {type: this.type, strength: this.strength, hp: this.hp, name: this.name, position: this.position, sprite: this.sprite};
   }
 
   constructor(protected _name: string, protected _position?: Position, protected _sprite?: Sprite) {

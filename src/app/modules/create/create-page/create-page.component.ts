@@ -11,6 +11,7 @@ import {ClassType} from '../../../core/enums/class-type.enum';
 import {GameClassFactory} from '../../../core/factories/game-class-factory';
 import {RaceFactory} from '../../../core/factories/race-factory';
 import {RaceType} from '../../../core/enums/race-type.enum';
+import {IGameClass} from '../../../core/interfaces/i-game-class';
 
 @Component({
              selector: 'app-create-page',
@@ -45,12 +46,14 @@ export class CreatePageComponent implements OnInit {
   }
 
   onSave() {
+    const gameClass: IGameClass = GameClassFactory.createGameClass(ClassType.BARBARIAN);
     const player: Player = (<Player>EntitiesFactory.createEntity(EntityType.PLAYER))
-      .setClass(GameClassFactory.createGameClass(ClassType.BARBARIAN))
+      .setClass(gameClass)
       .setRace(RaceFactory.createRace(RaceType.HUMAN));
 
     player.attributes = this._diceService.abilityScore;
     player.hp = player.hitDice + player.constitution;
+    player.gp = gameClass.getGp();
 
     this._storageService.savePlayer(<Entity>player);
   }

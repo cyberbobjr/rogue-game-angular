@@ -16,15 +16,18 @@ export class EntitiesFactory {
   static createEntity(type: EntityType, position?: Position): Entity | null {
     switch (type) {
       case EntityType.PLAYER:
-        const player: Player = new Player('player', position);
-        player.hp = Utility.rolldice(12);
-        player.strength = Utility.rolldice(10) + 1;
-        return player;
+        return new Player('player', position);
       case EntityType.ORC:
         const monster: Entity = new Monster('orc', position, SpritesFactory.createSprite(SpriteType.ORC));
-        monster.hp = Utility.rolldice(8) + 1;
-        monster.strength = 17;
+        monster.hp = 2 * Utility.rolldice(8) + 6;
+        monster.strength = 16;
+        monster.dexterity = 12;
+        monster.constitution = 16;
+        monster.intelligence = 7;
+        monster.wisdom = 11;
+        monster.charisma = 10;
         monster.type = EntityType.ORC;
+        monster.ac = 13;
         return monster;
       default:
         return null;

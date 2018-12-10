@@ -37,6 +37,7 @@ export interface JsonMap {
 }
 
 export interface JsonEntity {
+  gp: number;
   hp: number;
   name: string;
   position: JsonPosition;

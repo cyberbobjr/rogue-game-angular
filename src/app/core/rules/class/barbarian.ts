@@ -27,4 +27,8 @@ export class Barbarian implements IGameClass {
   getModifier(ability: string): number {
     return Barbarian.modifiers.get(ability);
   }
+
+  getGp(): number {
+    return 5 * Utility.rolldice(4) * 10;
+  }
 }
