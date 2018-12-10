@@ -1,19 +1,14 @@
 <h3>{{'Create character'|translate}}</h3>
 <div class="ui-g ui-fluid">
   <div class="ui-g-12 ui-md-4">
-    <app-ability ability="strength"></app-ability>
-    <app-ability ability="constitution"></app-ability>
-    <app-ability ability="charisma"></app-ability>
-    <app-ability ability="wisdom"></app-ability>
-    <app-ability ability="intelligence"></app-ability>
-    <app-ability ability="dexterity"></app-ability>
+    <app-ability *ngFor="let ability of attributesKeys" ability="{{ability}}"></app-ability>
   </div>
   <div class="ui-g-12 ui-md-2">
-        <app-dices></app-dices>
+    <app-dices></app-dices>
   </div>
   <div class="ui-g-3 ui-md-2" *ngIf="_diceService.dicesScore.length <= 5">
     <button pButton icon="fas fa-dice" class="ui-button-success" (click)="onDice()"></button>
     <app-roll-dices [dices]="dicesScore"></app-roll-dices>
   </div>
 </div>
-<button pButton label="save" class="ui-button-success" (click)="onSave()"> </button>
+<button pButton label="save" class="ui-button-success" (click)="onSave()"></button>

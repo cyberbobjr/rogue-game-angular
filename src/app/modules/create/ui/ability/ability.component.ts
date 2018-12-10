@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {IDice, IScore} from '../../interface/idice';
+import {IDice} from '../../interface/idice';
 import {DiceService} from '../../services/dice.service';
 
 @Component({
@@ -9,7 +9,7 @@ import {DiceService} from '../../services/dice.service';
            })
 export class AbilityComponent implements OnInit {
   @Input('ability') ability: string;
-  value: number;
+  value: number = null;
 
   constructor(private _diceService: DiceService) {
   }
@@ -19,8 +19,11 @@ export class AbilityComponent implements OnInit {
 
   drop(event: DragEvent) {
     const diceScore: IDice = (JSON.parse(event.dataTransfer.getData('diceValue')) as IDice);
-    this._diceService.removeScoreById(diceScore.id);
+    if (this.value) {
+      this._diceService.addDiceScore(this.value);
+    }
+    this._diceService.removeDiceScoreById(diceScore.id);
     this.value = diceScore.value;
-    this._diceService.abilityScore[this.ability] = this.value;
+    this._diceService.abilityScore.set(this.ability, this.value);
   }
 }

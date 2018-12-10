@@ -6,11 +6,15 @@ import {EventLog} from '../event-log';
 import {JsonEntity} from '../../../modules/game/services/storage.service';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
+import {IGameClass} from '../../interfaces/i-game-class';
+import {IRace} from '../../interfaces/i-race';
 
 export class Player extends Entity {
   private _xp = 0;
   private _hitDice: number;
   private _level = 1;
+  private _gameClass: IGameClass;
+  private _race: IRace;
 
   get level(): number {
     return this._level;
@@ -91,5 +95,16 @@ export class Player extends Entity {
   onHit(attacker: Entity): Iaction | null {
     EventLog.getInstance().message = 'You get hit!';
     return null;
+  }
+
+  setRace(race: IRace): Player {
+    this._race = race;
+    return this;
+  }
+
+  setClass(gameClass: IGameClass): Player {
+    this._gameClass = gameClass;
+    this._hitDice = gameClass.getHitDice();
+    return this;
   }
 }

@@ -1,7 +1,6 @@
 export interface IDice {
-  id: number;
+  id: string;
   value: number;
-  type: number;
 }
 
 export interface IScore {

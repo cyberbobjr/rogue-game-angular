@@ -15,56 +15,60 @@ export abstract class Entity implements IObject, IEntity {
   protected _type: EntityType;
   protected _timeDisplaySprite: number;
 
-  protected _strength: number;
-  protected _dexterity: number;
-  protected _constitution: number;
-  protected _intelligence: number;
-  protected _wisdom: number;
-  protected _charisma: number;
   protected _hp: number;
   protected _ac: number;
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
 
+  attributes: Map<string, number> = new Map<string, number>();
+
   get constitution(): number {
-    return this._constitution;
+    return this.attributes.get('constitution');
   }
 
   set constitution(value: number) {
-    this._constitution = value;
+    this.attributes.set('constitution', value);
   }
 
   get intelligence(): number {
-    return this._intelligence;
+    return this.attributes.get('intelligence');
   }
 
   set intelligence(value: number) {
-    this._intelligence = value;
+    this.attributes.set('intelligence', value);
   }
 
   get wisdom(): number {
-    return this._wisdom;
+    return this.attributes.get('wisdom');
   }
 
   set wisdom(value: number) {
-    this._wisdom = value;
+    this.attributes.set('wisdom', value);
   }
 
   get charisma(): number {
-    return this._charisma;
+    return this.attributes.get('charisma');
   }
 
   set charisma(value: number) {
-    this._charisma = value;
+    this.attributes.set('charisma', value);
   }
 
   get dexterity(): number {
-    return this._dexterity;
+    return this.attributes.get('dexterity');
   }
 
   set dexterity(value: number) {
-    this._dexterity = value;
+    this.attributes.set('dexterity', value);
+  }
+
+  get strength(): number {
+    return this.attributes.get('strength');
+  }
+
+  set strength(value: number) {
+    this.attributes.set('strength', value);
   }
 
   get ac(): number {
@@ -73,14 +77,6 @@ export abstract class Entity implements IObject, IEntity {
 
   set ac(_ac: number) {
     this._ac = _ac;
-  }
-
-  get strength(): number {
-    return this._strength;
-  }
-
-  set strength(value: number) {
-    this._strength = value;
   }
 
   get type(): EntityType {
