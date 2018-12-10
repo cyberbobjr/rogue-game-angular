@@ -16,6 +16,10 @@ export class Player extends Entity {
   private _gameClass: IGameClass;
   private _race: IRace;
 
+  get ca(): number {
+    return 10 + this.attributes.get('dexterity');
+  }
+
   get level(): number {
     return this._level;
   }
