@@ -6,6 +6,7 @@ import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
+import {AttackAction} from './attack-action';
 
 export class WalkAction implements Iaction {
   private _info = '';
@@ -25,8 +26,12 @@ export class WalkAction implements Iaction {
       return ActionResult.SUCCESS;
     } else {
       const result = ActionResult.FAILURE;
-      EventLog.getInstance().message = 'You hit ' + tile.name;
-      result.alternative = tile.onHit(actor);
+      if (tile instanceof Entity) {
+        EventLog.getInstance().message = 'You hit ' + tile.name;
+        result.alternative = new AttackAction(this._mapEngine, tile as Entity);
+      } else {
+        result.alternative = tile.onHit(actor);
+      }
       return result;
     }
   }

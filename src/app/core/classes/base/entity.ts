@@ -5,6 +5,7 @@ import {Sprite} from './sprite';
 import {IObject} from '../../interfaces/IObject';
 import {IEntity} from '../../interfaces/ientity';
 import {EntityType} from '../../enums/entity-type.enum';
+import {AttributesFactory} from '../../factories/attributes-factory';
 
 @Injectable({
               providedIn: 'root'
@@ -23,6 +24,10 @@ export abstract class Entity implements IObject, IEntity {
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  getWeaponDamageDice(): number {
+    return 1 + AttributesFactory.getModifier(this.strength);
+  }
 
   get gp(): number {
     return this._gp;
