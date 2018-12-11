@@ -155,7 +155,7 @@ export abstract class Entity implements IObject, IEntity {
     this._backupSprite = _sprite;
   }
 
-  toJson() {
+  toJSON() {
     return {
       name: this.name,
       position: this.position,

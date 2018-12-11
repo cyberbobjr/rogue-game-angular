@@ -55,7 +55,7 @@ export class Player extends Entity {
 
   toJSON(): any {
     return {
-      ...super.toJson(),
+      ...super.toJSON(),
       ...{
         xp: this.xp,
         level: this.level,
