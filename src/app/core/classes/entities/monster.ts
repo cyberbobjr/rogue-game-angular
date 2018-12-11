@@ -1,10 +1,8 @@
 import {Entity} from '../base/entity';
 import {Iaction} from '../../interfaces/iaction';
-import {EventLog} from '../event-log';
 import {Sprite} from '../base/sprite';
-import {SpritesFactory} from '../../factories/sprites-factory';
-import {SpriteType} from '../../enums/sprite-type.enum';
 import {Position} from '../base/position';
+import {MapEngine} from '../../../modules/game/services/map-engine.service';
 
 export class Monster extends Entity {
 
@@ -46,12 +44,8 @@ export class Monster extends Entity {
     return null;
   }
 
-  onHit(actor: Entity, damage: number): Iaction | null {
-    EventLog.getInstance().message = `${actor.name} take ${damage} points of damage`;
-    this.hp--;
-    this._backupSprite = this._sprite;
-    this._sprite = SpritesFactory.createSprite(SpriteType.HITMONSTER);
-    this._timeDisplaySprite = performance.now();
-    return null;
+  onDead(_mapEngine: MapEngine): void {
+    // drop gold
+
   }
 }

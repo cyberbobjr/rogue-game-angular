@@ -8,6 +8,7 @@ import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
 import {IGameClass} from '../../interfaces/i-game-class';
 import {IRace} from '../../interfaces/i-race';
+import {MapEngine} from '../../../modules/game/services/map-engine.service';
 
 export class Player extends Entity {
   private _xp = 0;
@@ -102,11 +103,6 @@ export class Player extends Entity {
     this.sprite.light = true;
   }
 
-  onHit(attacker: Entity, damage: number): Iaction | null {
-    EventLog.getInstance().message = `You take ${damage} point of damage`;
-    return null;
-  }
-
   setRace(race: IRace): Player {
     this._race = race;
     return this;
@@ -116,5 +112,13 @@ export class Player extends Entity {
     this._gameClass = gameClass;
     this._hitDice = gameClass.getHitDice();
     return this;
+  }
+
+  onHit(attacker: Entity, damage: number): Iaction | null {
+    EventLog.getInstance().message = `You take ${damage} point of damage`;
+    return null;
+  }
+
+  onDead(_mapEngine: MapEngine): void {
   }
 }

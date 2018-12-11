@@ -6,6 +6,10 @@ import {IObject} from '../../interfaces/IObject';
 import {IEntity} from '../../interfaces/ientity';
 import {EntityType} from '../../enums/entity-type.enum';
 import {AttributesFactory} from '../../factories/attributes-factory';
+import {EventLog} from '../event-log';
+import {SpritesFactory} from '../../factories/sprites-factory';
+import {SpriteType} from '../../enums/sprite-type.enum';
+import {MapEngine} from '../../../modules/game/services/map-engine.service';
 
 @Injectable({
               providedIn: 'root'
@@ -153,6 +157,15 @@ export abstract class Entity implements IObject, IEntity {
     }
   }
 
-  abstract onHit(attacker: Entity, damage: number): Iaction | null;
+  onHit(actor: Entity, damage: number): Iaction | null {
+    EventLog.getInstance().message = `${this.name} take ${damage} points of damage`;
+    this.hp -= damage;
+    this._backupSprite = this._sprite;
+    this._sprite = SpritesFactory.createSprite(SpriteType.HITMONSTER);
+    this._timeDisplaySprite = performance.now();
+    return null;
+  }
+
+  abstract onDead(_mapEngine: MapEngine): void;
 }
 

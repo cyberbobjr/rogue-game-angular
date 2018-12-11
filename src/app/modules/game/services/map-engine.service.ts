@@ -215,7 +215,8 @@ export class MapEngine implements IMapEngine {
 
   private _putEntitiesOn(gameMap: GameMap<IObject>): GameMap<IObject> {
     for (const actor of this._entitiesService.entities) {
-      gameMap.content[actor.position.y][actor.position.x] = actor;
+      const position: Position = (actor as Entity).position;
+      gameMap.content[position.y][position.x] = actor;
     }
     return gameMap;
   }

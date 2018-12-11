@@ -5,17 +5,17 @@ import {IObject} from '../../../core/interfaces/IObject';
 import {EventLog} from '../../../core/classes/event-log';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class EntitiesService {
-  private _entities: Array<Entity> = [];
+  private _entities: Array<IObject> = [];
   private _player: Entity = null;
 
-  get entities(): Entity[] {
+  get entities(): IObject[] {
     return this._entities;
   }
 
-  set entities(value: Array<Entity>) {
+  set entities(value: Array<IObject>) {
     this._entities = value;
   }
 
@@ -45,11 +45,15 @@ export class EntitiesService {
     return monster;
   }
 
+  getEntityAtIndex(index: number): IObject {
+    return this.entities[index];
+  }
+
   tick() {
     this._entities.forEach((entity: Entity, index: number) => {
       entity.tick();
       if (entity.hp <= 0) {
-        EventLog.getInstance().message = entity.name + ' is dead';
+        EventLog.getInstance().message = `${entity.name} is dead`;
         this._entities.splice(index, 1);
       }
     });

@@ -13,9 +13,8 @@ export class IdleAction implements Iaction {
   }
 
   execute(actor: Entity, mapEngine: MapEngine): ActionResult {
-    EventLog.getInstance().message = this._actor.name + ' waiting';
     if (actor.sprite.light) {
-      console.log('Player in sight !');
+      EventLog.getInstance().message = 'Player in sight !';
       actor.setNextAction(new ChaseAction(mapEngine, actor));
     }
     return ActionResult.SUCCESS;

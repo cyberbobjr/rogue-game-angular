@@ -6,12 +6,18 @@ import {DisplayService} from './display.service';
 import {CommandsService} from './commands.service';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {StorageService} from './storage.service';
+import {Entity} from '../../../core/classes/base/entity';
+import {IObject} from '../../../core/interfaces/IObject';
+
+window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class GameEngineService {
   private _gameLoop: any = null;
+  private _timeStart: any = null;
 
   get mapEngine(): MapEngine {
     return this._mapEngine;
@@ -27,17 +33,30 @@ export class GameEngineService {
               private _displayService: DisplayService,
               private _commandService: CommandsService,
               private _storageService: StorageService) {
+    console.log('Game engine created');
   }
 
   startGameLoop() {
-    console.log('Game start');
-    this._gameLoop = setInterval(() => {
-      this.refreshMap();
-    }, 250);
+    console.log('Game loop started');
+    this._timeStart = performance.now();
+    window.requestAnimationFrame((timestamp: any) => {
+      this.gameLoop(timestamp);
+    });
+  }
+
+  gameLoop(timestamp: any) {
+    if (timestamp - this._timeStart > 2) {
+      this._updateGame();
+      this._drawMap();
+      this._timeStart = performance.now();
+    }
+    window.requestAnimationFrame((timestamp: any) => {
+      this.gameLoop(timestamp);
+    });
   }
 
   endGameLoop() {
-    clearInterval(this._gameLoop);
+    window.cancelAnimationFrame(this._gameLoop);
   }
 
   handleKeyEvent(key: KeyboardEvent) {
@@ -89,15 +108,22 @@ export class GameEngineService {
     this.processAction();
   }
 
-  private refreshMap() {
+  private _updateGame() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
     this._entitiesService.tick();
+  }
+
+  private _drawMap() {
     this._displayService.draw();
   }
 
   private processAction() {
     for (let currentActorIndex = 0; currentActorIndex < this._entitiesService.entities.length; currentActorIndex++) {
-      const currentActor = this._entitiesService.entities[currentActorIndex];
+
+      const currentActor: IObject = this._entitiesService.getEntityAtIndex(currentActorIndex);
+      if (!(currentActor instanceof Entity)) {
+        return;
+      }
       let actorAction = currentActor.getAction();
       if (actorAction) {
         while (true) {
