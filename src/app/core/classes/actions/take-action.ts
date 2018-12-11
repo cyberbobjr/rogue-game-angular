@@ -17,12 +17,14 @@ export class TakeAction implements Iaction {
     const tile: Tile = this._mapEngine.getTileAt(actor.position) as Tile;
     if (this._parseTile(tile, actor)) {
       this._mapEngine.setTileAt(actor.position, TilesFactory.createTile(TileType.FLOOR));
+      EventLog.getInstance().message = 'Take object';
     }
-    EventLog.getInstance().message = 'Take object';
     return ActionResult.SUCCESS;
   }
 
   private _parseTile(tile: Tile, actor: Entity) {
+    console.log(tile);
+    console.log(tile instanceof GoldTile);
     if (tile instanceof GoldTile) {
       actor.gp += tile.amount;
       return true;

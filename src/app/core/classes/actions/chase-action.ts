@@ -33,7 +33,7 @@ export class ChaseAction implements Iaction {
   }
 
   private _moveActor(destPosition: Position): ActionResult {
-    const info = this._mapEngine.getTileAt(destPosition);
+    const info = this._mapEngine.getTileOrEntityAt(destPosition);
     if (info instanceof Tile && info.isWalkable()) {
       info.onWalk(this._actor);
       this._actor.position = destPosition;

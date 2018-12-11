@@ -129,11 +129,15 @@ export class MapEngine implements IMapEngine {
     return (test).content;
   }
 
-  getTileAt(position: Position): IObject {
+  getTileOrEntityAt(position: Position): IObject {
     const monster: IObject = this._entitiesService.getEntityAt(position);
     if (monster) {
       return monster;
     }
+    return <IObject>this._map.content[position.y][position.x];
+  }
+
+  getTileAt(position: Position): IObject {
     return <IObject>this._map.content[position.y][position.x];
   }
 
@@ -154,7 +158,7 @@ export class MapEngine implements IMapEngine {
   getDirectionToPlayer(originPosition: Position): Position | null {
     const player: Entity = this._entitiesService.player;
     const astar: AStar = new Path.AStar(player.position.x, player.position.y, (x: number, y: number) => {
-      const info: IObject = this.getTileAt(new Position(x, y));
+      const info: IObject = this.getTileOrEntityAt(new Position(x, y));
       if (info instanceof Entity) {
         return true;
       }
