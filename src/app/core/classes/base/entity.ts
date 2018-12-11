@@ -149,7 +149,7 @@ export abstract class Entity implements IObject, IEntity {
     this._currentAction = action;
   }
 
-  tick() {
+  update() {
     const delta: number = (performance.now() - this._timeDisplaySprite);
     if (this._backupSprite && (delta / 1000) > 0.25) {
       this._sprite = Object.assign(this._sprite, this._backupSprite);

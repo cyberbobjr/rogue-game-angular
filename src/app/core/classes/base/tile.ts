@@ -50,6 +50,10 @@ export class Tile implements IObject {
   constructor(protected _position?: Position) {
   }
 
+  getInfo(): string {
+    return '';
+  }
+
   isWalkable(): boolean {
     return false;
   }

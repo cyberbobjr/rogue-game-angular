@@ -1,21 +1,21 @@
 import {Injectable} from '@angular/core';
 import {Entity} from '../../../core/classes/base/entity';
 import {Position} from '../../../core/classes/base/position';
-import {IObject} from '../../../core/interfaces/IObject';
 import {EventLog} from '../../../core/classes/event-log';
+import {MapEngine} from './map-engine.service';
 
 @Injectable({
               providedIn: 'root'
             })
 export class EntitiesService {
-  private _entities: Array<IObject> = [];
+  private _entities: Array<Entity> = [];
   private _player: Entity = null;
 
-  get entities(): IObject[] {
+  get entities(): Entity[] {
     return this._entities;
   }
 
-  set entities(value: Array<IObject>) {
+  set entities(value: Array<Entity>) {
     this._entities = value;
   }
 
@@ -35,8 +35,8 @@ export class EntitiesService {
     this._entities.push(actor);
   }
 
-  getEntityAt(position: Position): IObject | null {
-    let monster: IObject = null;
+  getEntityAt(position: Position): Entity | null {
+    let monster: Entity = null;
     this._entities.forEach((value: Entity, index: number) => {
       if (value.position.equal(position)) {
         monster = value;
@@ -45,15 +45,16 @@ export class EntitiesService {
     return monster;
   }
 
-  getEntityAtIndex(index: number): IObject {
+  getEntityAtIndex(index: number): Entity {
     return this.entities[index];
   }
 
-  tick() {
+  update(_mapEngine: MapEngine) {
     this._entities.forEach((entity: Entity, index: number) => {
-      entity.tick();
+      entity.update();
       if (entity.hp <= 0) {
         EventLog.getInstance().message = `${entity.name} is dead`;
+        entity.onDead(_mapEngine);
         this._entities.splice(index, 1);
       }
     });

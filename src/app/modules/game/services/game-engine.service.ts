@@ -50,8 +50,8 @@ export class GameEngineService {
       this._drawMap();
       this._timeStart = performance.now();
     }
-    window.requestAnimationFrame((timestamp: any) => {
-      this.gameLoop(timestamp);
+    window.requestAnimationFrame((timestamp2: any) => {
+      this.gameLoop(timestamp2);
     });
   }
 
@@ -110,7 +110,7 @@ export class GameEngineService {
 
   private _updateGame() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
-    this._entitiesService.tick();
+    this._entitiesService.update(this._mapEngine);
   }
 
   private _drawMap() {
@@ -120,10 +120,7 @@ export class GameEngineService {
   private processAction() {
     for (let currentActorIndex = 0; currentActorIndex < this._entitiesService.entities.length; currentActorIndex++) {
 
-      const currentActor: IObject = this._entitiesService.getEntityAtIndex(currentActorIndex);
-      if (!(currentActor instanceof Entity)) {
-        return;
-      }
+      const currentActor: Entity = this._entitiesService.getEntityAtIndex(currentActorIndex);
       let actorAction = currentActor.getAction();
       if (actorAction) {
         while (true) {

@@ -5,5 +5,6 @@ export enum SpriteType {
   CLOSEDOOR,
   FLOOR,
   ORC,
-  HITMONSTER
+  HITMONSTER,
+  GOLD
 }

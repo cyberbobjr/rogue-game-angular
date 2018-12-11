@@ -12,7 +12,7 @@ export class SpritesFactory {
       case SpriteType.WALL:
         return new Sprite('#', '#f95757', '#282828');
       case SpriteType.FLOOR:
-        return new Sprite('.', '#f7ff0f');
+        return new Sprite('.', '#ffffff');
       case SpriteType.CLOSEDOOR:
         return new Sprite('I', '#f95757');
       case SpriteType.OPENDOOR:
@@ -21,6 +21,8 @@ export class SpritesFactory {
         return new Sprite('O', '#4286f4');
       case SpriteType.HITMONSTER:
         return new Sprite('*', '#f95757');
+      case SpriteType.GOLD:
+        return new Sprite('g', '#f7ff0f');
       default:
         return null;
     }

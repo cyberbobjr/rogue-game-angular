@@ -120,7 +120,7 @@ export class StorageService {
     mapJson._data.forEach((cells: Array<JSonCell>) => {
       cells.forEach((cell: JSonCell) => {
         const position: Position = new Position(cell._position._x, cell._position._y);
-        this._mapEngine.map.content[cell._position._y][cell._position._x] = TilesFactory.createJsonTile(<TileType>cell._type, position, cell);
+        this._mapEngine.setTileAt(position, TilesFactory.createJsonTile(<TileType>cell._type, cell));
       });
     });
   }

@@ -137,6 +137,11 @@ export class MapEngine implements IMapEngine {
     return <IObject>this._map.content[position.y][position.x];
   }
 
+  setTileAt(position: Position, tile: Tile) {
+    this._map.content[position.y][position.x] = tile;
+    tile.position = position;
+  }
+
   getRooms(): Array<Room> {
     return this._rotEngine.getRooms();
   }
@@ -186,7 +191,8 @@ export class MapEngine implements IMapEngine {
     this._map = new GameMap<Entity>(width, height);
     const rotMap: Digger = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {
-      this._map.content[y][x] = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
+      const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
+      this.setTileAt(new Position(x, y), tile);
     });
     this._rotEngine = rotMap;
   }
@@ -197,7 +203,8 @@ export class MapEngine implements IMapEngine {
     for (let i = 0; i < rooms.length; i++) {
       room = rooms[i];
       room.getDoors((x: number, y: number) => {
-        this._map.content[y][x] = TilesFactory.createTile(TileType.DOOR, new Position(x, y));
+        const tile: Tile = TilesFactory.createTile(TileType.DOOR);
+        this.setTileAt(new Position(x, y), tile);
       });
     }
   }

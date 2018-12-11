@@ -28,7 +28,7 @@ export class EntitiesFactory {
         monster.charisma = 10;
         monster.type = EntityType.ORC;
         monster.ac = 13;
-        monster.gp = +Utility.rolldice(10);
+        monster.gp = Utility.rolldice(10);
         return monster;
       default:
         return null;

@@ -56,4 +56,8 @@ export class Position {
   equal(position: Position): boolean {
     return (position.x === this._x && position.y === this.y);
   }
+
+  clone(): Position {
+    return new Position(this.x, this.y);
+  }
 }

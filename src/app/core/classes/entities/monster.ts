@@ -1,8 +1,10 @@
 import {Entity} from '../base/entity';
-import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from '../base/sprite';
 import {Position} from '../base/position';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {TilesFactory} from '../../factories/tiles-factory';
+import {TileType} from '../../enums/tile-type.enum';
+import {GoldTile} from '../tiles/gold-tile';
 
 export class Monster extends Entity {
 
@@ -40,12 +42,10 @@ export class Monster extends Entity {
     };
   }
 
-  onWalk(actor: Entity): Iaction | null {
-    return null;
-  }
-
-  onDead(_mapEngine: MapEngine): void {
+  onDead(mapEngine: MapEngine): void {
     // drop gold
-
+    const goldTile: GoldTile = TilesFactory.createTile(TileType.GOLD) as GoldTile;
+    goldTile.amount = this.gp;
+    mapEngine.setTileAt(this.position.clone(), goldTile);
   }
 }
