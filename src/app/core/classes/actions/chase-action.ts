@@ -6,6 +6,7 @@ import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
+import {AttackAction} from './attack-action';
 
 export class ChaseAction implements Iaction {
   private _info = '';
@@ -15,10 +16,10 @@ export class ChaseAction implements Iaction {
   }
 
   execute(actor: Entity, mapEngine: MapEngine): ActionResult {
-    EventLog.getInstance().message = this._actor.name + ' chasing';
+    EventLog.getInstance().message = `${this._actor.name} chasing`;
     const destPosition: Position = this._getPathToPlayer(actor);
     if (destPosition) {
-      this._moveActor(destPosition);
+      return this._moveActor(destPosition);
     }
     return ActionResult.SUCCESS;
   }
@@ -31,15 +32,17 @@ export class ChaseAction implements Iaction {
     return this._mapEngine.getDirectionToPlayer(actor.position);
   }
 
-  private _moveActor(destPosition: Position) {
-    const tile: Tile = <Tile>this._mapEngine.map.content[destPosition.y][destPosition.x];
+  private _moveActor(destPosition: Position): ActionResult {
     const info = this._mapEngine.getTileAt(destPosition);
     if (info instanceof Tile && info.isWalkable()) {
-      tile.onWalk(this._actor);
+      info.onWalk(this._actor);
       this._actor.position = destPosition;
+      return ActionResult.SUCCESS;
     }
     if (info instanceof Player) {
-      info.onHit(this._actor);
+      const result = ActionResult.FAILURE;
+      result.alternative = new AttackAction(this._mapEngine, info);
+      return result;
     }
   }
 }

@@ -5,7 +5,6 @@ import {Sprite} from '../base/sprite';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Position} from '../base/position';
-import {EntityType} from '../../enums/entity-type.enum';
 
 export class Monster extends Entity {
 
@@ -47,8 +46,8 @@ export class Monster extends Entity {
     return null;
   }
 
-  onHit(actor: Entity): Iaction | null {
-    EventLog.getInstance().message = this.name + ' hitted';
+  onHit(actor: Entity, damage: number): Iaction | null {
+    EventLog.getInstance().message = `${actor.name} take ${damage} points of damage`;
     this.hp--;
     this._backupSprite = this._sprite;
     this._sprite = SpritesFactory.createSprite(SpriteType.HITMONSTER);

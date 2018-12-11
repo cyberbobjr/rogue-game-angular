@@ -153,6 +153,6 @@ export abstract class Entity implements IObject, IEntity {
     }
   }
 
-  abstract onHit(attacker: Entity): Iaction | null;
+  abstract onHit(attacker: Entity, damage: number): Iaction | null;
 }
 

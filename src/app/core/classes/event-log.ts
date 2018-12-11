@@ -9,6 +9,7 @@ export class EventLog {
   }
 
   set message(value: string) {
+    console.log(value);
     this._messageSubject$.next(value);
   }
 

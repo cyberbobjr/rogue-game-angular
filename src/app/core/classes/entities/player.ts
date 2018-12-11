@@ -102,8 +102,8 @@ export class Player extends Entity {
     this.sprite.light = true;
   }
 
-  onHit(attacker: Entity): Iaction | null {
-    EventLog.getInstance().message = 'You get hit!';
+  onHit(attacker: Entity, damage: number): Iaction | null {
+    EventLog.getInstance().message = `You take ${damage} point of damage`;
     return null;
   }
 
