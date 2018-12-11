@@ -6,20 +6,11 @@ import {EventLog} from '../event-log';
 import {JsonEntity} from '../../../modules/game/services/storage.service';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {IGameClass} from '../../interfaces/i-game-class';
-import {IRace} from '../../interfaces/i-race';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 
 export class Player extends Entity {
   private _xp = 0;
-  private _hitDice: number;
   private _level = 1;
-  private _gameClass: IGameClass;
-  private _race: IRace;
-
-  get gameClass(): IGameClass {
-    return this._gameClass;
-  }
 
   get ca(): number {
     return 10 + this.attributes.get('dexterity');
@@ -31,14 +22,6 @@ export class Player extends Entity {
 
   set level(value: number) {
     this._level = value;
-  }
-
-  get hitDice(): number {
-    return this._hitDice;
-  }
-
-  set hitDice(value: number) {
-    this._hitDice = value;
   }
 
   get xp(): number {
@@ -75,7 +58,6 @@ export class Player extends Entity {
       ...super.toJson(),
       ...{
         xp: this.xp,
-        hitDice: this.hitDice,
         level: this.level,
       }
     };
@@ -94,22 +76,12 @@ export class Player extends Entity {
     this.sprite.light = true;
   }
 
-  setRace(race: IRace): Player {
-    this._race = race;
-    return this;
-  }
-
-  setClass(gameClass: IGameClass): Player {
-    this._gameClass = gameClass;
-    this._hitDice = gameClass.getHitDice();
-    return this;
-  }
-
   onHit(attacker: Entity, damage: number): Iaction | null {
     EventLog.getInstance().message = `You take ${damage} point of damage`;
     return null;
   }
 
   onDead(_mapEngine: MapEngine): void {
+    super.onDead(_mapEngine);
   }
 }

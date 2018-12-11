@@ -28,7 +28,7 @@ export class WalkAction implements Iaction {
       const result = ActionResult.FAILURE;
       if (tile instanceof Entity) {
         EventLog.getInstance().message = 'You hit ' + tile.name;
-        result.alternative = new AttackAction(this._mapEngine, tile as Entity);
+        result.alternative = new AttackAction(tile as Entity, this._mapEngine);
       } else {
         result.alternative = tile.onHit(actor);
       }

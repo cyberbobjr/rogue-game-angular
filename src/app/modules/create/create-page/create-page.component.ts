@@ -47,7 +47,7 @@ export class CreatePageComponent implements OnInit {
 
   onSave() {
     const gameClass: IGameClass = GameClassFactory.createGameClass(ClassType.BARBARIAN);
-    const player: Player = (<Player>EntitiesFactory.createEntity(EntityType.PLAYER))
+    const player: Entity = (<Entity>EntitiesFactory.createEntity(EntityType.PLAYER))
       .setClass(gameClass)
       .setRace(RaceFactory.createRace(RaceType.HUMAN));
 

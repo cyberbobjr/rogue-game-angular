@@ -8,14 +8,14 @@ import {ChaseAction} from './chase-action';
 export class IdleAction implements Iaction {
   private _info = '';
 
-  constructor(private _mapEngine: MapEngine,
-              private _actor: Entity) {
+  constructor(private _actor: Entity,
+              private _mapEngine: MapEngine) {
   }
 
-  execute(actor: Entity, mapEngine: MapEngine): ActionResult {
+  execute(actor: Entity): ActionResult {
     if (actor.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      actor.setNextAction(new ChaseAction(mapEngine, actor));
+      actor.setNextAction(new ChaseAction(this._mapEngine, actor));
     }
     return ActionResult.SUCCESS;
   }

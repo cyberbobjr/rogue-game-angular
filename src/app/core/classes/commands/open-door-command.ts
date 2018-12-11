@@ -11,7 +11,7 @@ export class OpenDoorCommand implements Command {
     for (const row of tiles) {
       for (const tile of row) {
         if (tile instanceof DoorTile) {
-          actor.setNextAction(new OpendoorAction(<DoorTile>gameEngine.mapEngine.getTileAt(tile.position)));
+          actor.setNextAction(new OpendoorAction(<DoorTile>gameEngine.mapEngine.getTileAt(tile.position), gameEngine.mapEngine));
           return;
         }
       }

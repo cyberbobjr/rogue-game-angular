@@ -8,8 +8,8 @@ import {CombatResolver} from '../../rules/combat/combat-resolver';
 export class AttackAction implements Iaction {
   private _info = '';
 
-  constructor(private _mapEngine: MapEngine,
-              private _target: Entity) {
+  constructor(private _target: Entity,
+              private _mapEngine: MapEngine) {
   }
 
   execute(actor: Entity): ActionResult {

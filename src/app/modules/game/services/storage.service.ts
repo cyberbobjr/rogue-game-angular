@@ -102,7 +102,7 @@ export class StorageService {
     try {
       json.forEach((entity: JsonEntity) => {
         const monster: Entity = EntitiesFactory.createJsonEntity(entity.type, entity);
-        monster.setNextAction(new IdleAction(this._mapEngine, monster));
+        monster.setNextAction(new IdleAction(monster, this._mapEngine));
         this._entitiesService.addEntity(monster);
       });
       return true;

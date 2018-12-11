@@ -53,7 +53,6 @@ export class EntitiesService {
     this._entities.forEach((entity: Entity, index: number) => {
       entity.update();
       if (entity.hp <= 0) {
-        EventLog.getInstance().message = `${entity.name} is dead`;
         entity.onDead(_mapEngine);
         this._entities.splice(index, 1);
       }

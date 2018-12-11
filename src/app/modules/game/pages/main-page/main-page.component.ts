@@ -11,10 +11,10 @@ import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 
 @Component({
-  selector: 'app-main-page',
-  templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css']
-})
+             selector: 'app-main-page',
+             templateUrl: './main-page.component.html',
+             styleUrls: ['./main-page.component.css']
+           })
 export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(private _mapEngine: MapEngine,
@@ -42,7 +42,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
       for (let nb = 1; nb < nbRooms - 2; nb++) {
         const orc: Entity = EntitiesFactory.createEntity(EntityType.ORC);
         orc.position = this._mapEngine.getRoomCenter(rooms[nb]);
-        orc.setNextAction(new IdleAction(this._mapEngine, orc));
+        orc.setNextAction(new IdleAction(orc, this._mapEngine));
         this._entitiesService.addEntity(orc);
       }
     }

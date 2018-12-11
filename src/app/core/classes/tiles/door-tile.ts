@@ -36,7 +36,7 @@ export class DoorTile extends Tile {
 
   onHit(actor: Entity): Iaction | null {
     if (this._isClosed) {
-      return new OpendoorAction(this);
+      this.openDoor();
     }
     return null;
   }

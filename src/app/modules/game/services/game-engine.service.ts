@@ -7,7 +7,6 @@ import {CommandsService} from './commands.service';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {StorageService} from './storage.service';
 import {Entity} from '../../../core/classes/base/entity';
-import {IObject} from '../../../core/interfaces/IObject';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -124,7 +123,7 @@ export class GameEngineService {
       let actorAction = currentActor.getAction();
       if (actorAction) {
         while (true) {
-          const resultAction: ActionResult = actorAction.execute(currentActor, this._mapEngine);
+          const resultAction: ActionResult = actorAction.execute(currentActor);
           if (resultAction.succeeded) {
             break;
           }

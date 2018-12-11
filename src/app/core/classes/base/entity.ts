@@ -10,6 +10,9 @@ import {EventLog} from '../event-log';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {IGameClass} from '../../interfaces/i-game-class';
+import {IRace} from '../../interfaces/i-race';
+import {JsonEntity} from '../../../modules/game/services/storage.service';
 
 @Injectable({
               providedIn: 'root'
@@ -24,10 +27,26 @@ export abstract class Entity implements IObject, IEntity {
   protected _ac: number;
   protected _gp: number;
 
+  protected _gameClass: IGameClass;
+  protected _race: IRace;
+  protected _hitDice: number;
+
   lightRadius = 20;
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  get hitDice(): number {
+    return this._hitDice;
+  }
+
+  set hitDice(value: number) {
+    this._hitDice = value;
+  }
+
+  get gameClass(): IGameClass {
+    return this._gameClass;
+  }
 
   get gp(): number {
     return this._gp;
@@ -133,6 +152,10 @@ export abstract class Entity implements IObject, IEntity {
     this._position = value;
   }
 
+  constructor(protected _name: string, protected _position?: Position, protected _sprite?: Sprite) {
+    this._backupSprite = _sprite;
+  }
+
   toJson() {
     return {
       name: this.name,
@@ -147,16 +170,24 @@ export abstract class Entity implements IObject, IEntity {
       ac: this.ac,
       hp: this.hp,
       gp: this.gp,
-      type: this.type
+      type: this.type,
+      hitDice: this.hitDice
     };
-  }
-
-  constructor(protected _name: string, protected _position?: Position, protected _sprite?: Sprite) {
-    this._backupSprite = _sprite;
   }
 
   getWeaponDamageDice(): number {
     return 1 + AttributesFactory.getModifier(this.strength);
+  }
+
+  setRace(race: IRace): Entity {
+    this._race = race;
+    return this;
+  }
+
+  setClass(gameClass: IGameClass): Entity {
+    this._gameClass = gameClass;
+    this._hitDice = gameClass.getHitDice();
+    return this;
   }
 
   getAction(): Iaction | null {
@@ -184,6 +215,8 @@ export abstract class Entity implements IObject, IEntity {
     return null;
   }
 
-  abstract onDead(_mapEngine: MapEngine): void;
+  onDead(_mapEngine: MapEngine): void {
+    EventLog.getInstance().message = `${this.name} is dead`;
+  }
 }
 

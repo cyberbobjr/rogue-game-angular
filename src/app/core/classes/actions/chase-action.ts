@@ -15,7 +15,7 @@ export class ChaseAction implements Iaction {
               private _actor: Entity) {
   }
 
-  execute(actor: Entity, mapEngine: MapEngine): ActionResult {
+  execute(actor: Entity): ActionResult {
     EventLog.getInstance().message = `${this._actor.name} chasing`;
     const destPosition: Position = this._getPathToPlayer(actor);
     if (destPosition) {
@@ -41,7 +41,7 @@ export class ChaseAction implements Iaction {
     }
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
-      result.alternative = new AttackAction(this._mapEngine, info);
+      result.alternative = new AttackAction(info, this._mapEngine);
       return result;
     }
   }
