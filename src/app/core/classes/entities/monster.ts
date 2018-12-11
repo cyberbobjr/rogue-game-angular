@@ -24,24 +24,6 @@ export class Monster extends Entity {
     return monster;
   }
 
-  toJSON(): any {
-    return {
-      name: this.name,
-      position: this.position,
-      sprite: this.sprite,
-      strength: this.strength,
-      dexterity: this.dexterity,
-      constitution: this.constitution,
-      intelligence: this.intelligence,
-      wisdom: this.wisdom,
-      charisma: this.charisma,
-      ac: this.ac,
-      hp: this.hp,
-      gp: this.gp,
-      type: this.type
-    };
-  }
-
   onDead(mapEngine: MapEngine): void {
     // drop gold
     const goldTile: GoldTile = TilesFactory.createTile(TileType.GOLD) as GoldTile;

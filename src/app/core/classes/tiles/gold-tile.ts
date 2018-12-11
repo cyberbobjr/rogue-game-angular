@@ -2,10 +2,21 @@ import {Tile} from '../base/tile';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {TileType} from '../../enums/tile-type.enum';
+import {Entity} from '../base/entity';
+import {Iaction} from '../../interfaces/iaction';
+import {EventLog} from '../event-log';
+import {Position} from '../base/position';
 
 export class GoldTile extends Tile {
-  _type = TileType.GOLD;
-  private _amount: number;
+  protected _type = TileType.GOLD;
+  protected _amount: number;
+
+  static fromJSON(json: any, position?: Position): Tile {
+    const {_amount} = json;
+    const tile: GoldTile = new this(position);
+    tile.amount = _amount;
+    return tile;
+  }
 
   get amount(): number {
     return this._amount;
@@ -27,7 +38,12 @@ export class GoldTile extends Tile {
   }
 
   getInfo(): string {
-    return `${this._amount} gold pieces`;
+    return `${this._amount} gold pieces on floor`;
+  }
+
+  onWalk(actor: Entity): Iaction | null {
+    EventLog.getInstance().message = this.getInfo();
+    return null;
   }
 }
 

@@ -72,21 +72,12 @@ export class Player extends Entity {
 
   toJSON(): any {
     return {
-      position: this.position,
-      sprite: this.sprite,
-      hp: this.hp,
-      xp: this.xp,
-      gp: this.gp,
-      hitDice: this.hitDice,
-      strength: this.strength,
-      constitution: this.constitution,
-      charisma: this.charisma,
-      wisdom: this.wisdom,
-      intelligence: this.intelligence,
-      dexterity: this.dexterity,
-      level: this.level,
-      type: this.type,
-      name: this.name,
+      ...super.toJson(),
+      ...{
+        xp: this.xp,
+        hitDice: this.hitDice,
+        level: this.level,
+      }
     };
   }
 

@@ -29,10 +29,6 @@ export abstract class Entity implements IObject, IEntity {
 
   attributes: Map<string, number> = new Map<string, number>();
 
-  getWeaponDamageDice(): number {
-    return 1 + AttributesFactory.getModifier(this.strength);
-  }
-
   get gp(): number {
     return this._gp;
   }
@@ -137,8 +133,30 @@ export abstract class Entity implements IObject, IEntity {
     this._position = value;
   }
 
+  toJson() {
+    return {
+      name: this.name,
+      position: this.position,
+      sprite: this.sprite,
+      strength: this.strength,
+      dexterity: this.dexterity,
+      constitution: this.constitution,
+      intelligence: this.intelligence,
+      wisdom: this.wisdom,
+      charisma: this.charisma,
+      ac: this.ac,
+      hp: this.hp,
+      gp: this.gp,
+      type: this.type
+    };
+  }
+
   constructor(protected _name: string, protected _position?: Position, protected _sprite?: Sprite) {
     this._backupSprite = _sprite;
+  }
+
+  getWeaponDamageDice(): number {
+    return 1 + AttributesFactory.getModifier(this.strength);
   }
 
   getAction(): Iaction | null {
