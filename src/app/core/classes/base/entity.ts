@@ -12,7 +12,6 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {IGameClass} from '../../interfaces/i-game-class';
 import {IRace} from '../../interfaces/i-race';
-import {JsonEntity} from '../../../modules/game/services/storage.service';
 
 @Injectable({
               providedIn: 'root'

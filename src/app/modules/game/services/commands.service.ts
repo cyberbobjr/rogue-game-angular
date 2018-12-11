@@ -3,10 +3,11 @@ import {Command} from '../../../core/classes/commands/command';
 import {MoveE, MoveN, MoveNE, MoveNW, MoveS, MoveSE, MoveSW, MoveW} from '../../../core/classes/commands/move';
 import {SaveCommand} from '../../../core/classes/commands/save-command';
 import {OpenDoorCommand} from '../../../core/classes/commands/open-door-command';
+import {TakeCommand} from '../../../core/classes/commands/take-command';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class CommandsService {
   ArrowUp: Command;
   ArrowDown: Command;
@@ -22,6 +23,7 @@ export class CommandsService {
   KeyK: Command;
   KeyO: Command;
   KeyS: Command;
+  KeyT: Command;
 
   constructor() {
     this._initCommand();
@@ -42,5 +44,6 @@ export class CommandsService {
     this.KeyY = new MoveNW();
     this.KeyO = new OpenDoorCommand();
     this.KeyS = new SaveCommand();
+    this.KeyT = new TakeCommand();
   }
 }

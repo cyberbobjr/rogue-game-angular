@@ -103,6 +103,9 @@ export class GameEngineService {
       case 'KeyS':
         this._commandService.KeyS.execute(player, this);
         break;
+      case 'KeyT':
+        this._commandService.KeyT.execute(player, this);
+        break;
     }
     this.processAction();
   }

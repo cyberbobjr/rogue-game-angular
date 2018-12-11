@@ -15,7 +15,7 @@ export class IdleAction implements Iaction {
   execute(actor: Entity): ActionResult {
     if (actor.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      actor.setNextAction(new ChaseAction(this._mapEngine, actor));
+      actor.setNextAction(new ChaseAction(actor, this._mapEngine));
     }
     return ActionResult.SUCCESS;
   }

@@ -11,8 +11,8 @@ import {AttackAction} from './attack-action';
 export class ChaseAction implements Iaction {
   private _info = '';
 
-  constructor(private _mapEngine: MapEngine,
-              private _actor: Entity) {
+  constructor(private _actor: Entity,
+              private _mapEngine: MapEngine) {
   }
 
   execute(actor: Entity): ActionResult {

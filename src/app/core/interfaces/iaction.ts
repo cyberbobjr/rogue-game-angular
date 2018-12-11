@@ -1,9 +1,8 @@
 import {ActionResult} from '../classes/actions/action-result';
-import {MapEngine} from '../../modules/game/services/map-engine.service';
-import {IObject} from './IObject';
+import {Entity} from '../classes/base/entity';
 
 export interface Iaction {
-  execute(actor: IObject): ActionResult;
+  execute(actor: Entity): ActionResult;
 
   getInfo(): string;
 }
