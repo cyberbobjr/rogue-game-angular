@@ -11,6 +11,10 @@ export class Tile implements IObject {
   protected _sprite: Sprite;
   protected _opaque: boolean;
 
+  get type(): TileType {
+    return this._type;
+  }
+
   get opaque(): boolean {
     return this._opaque;
   }

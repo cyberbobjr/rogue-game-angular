@@ -10,12 +10,21 @@ import {Position} from '../base/position';
 export class GoldTile extends Tile {
   protected _type = TileType.GOLD;
   protected _amount: number;
+  private _underTile: TileType;
 
   static fromJSON(json: any, position?: Position): Tile {
     const {_amount} = json;
     const tile: GoldTile = new this(position);
     tile.amount = _amount;
     return tile;
+  }
+
+  get underTile(): TileType {
+    return this._underTile;
+  }
+
+  set underTile(value: TileType) {
+    this._underTile = value;
   }
 
   get amount(): number {

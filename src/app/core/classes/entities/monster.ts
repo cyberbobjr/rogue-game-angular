@@ -5,6 +5,7 @@ import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {TilesFactory} from '../../factories/tiles-factory';
 import {TileType} from '../../enums/tile-type.enum';
 import {GoldTile} from '../tiles/gold-tile';
+import {Tile} from '../base/tile';
 
 export class Monster extends Entity {
 
@@ -28,6 +29,7 @@ export class Monster extends Entity {
     // drop gold
     const goldTile: GoldTile = TilesFactory.createTile(TileType.GOLD) as GoldTile;
     goldTile.amount = this.gp;
+    goldTile.underTile = (mapEngine.getTileAt(this.position) as Tile).type;
     mapEngine.setTileAt(this.position.clone(), goldTile);
   }
 }
