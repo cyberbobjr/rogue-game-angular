@@ -1,10 +1,10 @@
+import {MainPageComponent} from './pages/main-page/main-page.component';
 import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {CommonModule} from '@angular/common';
-import {CreatePageComponent} from '../create-page/create-page.component';
-import {Routes, RouterModule} from '@angular/router';
 
 const secondaryRoutes: Routes = [
-  {path: '', component: CreatePageComponent}
+  {path: '', component: MainPageComponent}
 ];
 
 @NgModule({
@@ -15,5 +15,5 @@ const secondaryRoutes: Routes = [
             ],
             exports: [RouterModule]
           })
-export class CreateRoutingModule {
+export class GameRoutingModule {
 }

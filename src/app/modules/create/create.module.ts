@@ -15,7 +15,6 @@ import {CreateRoutingModule} from './create-routing/create-routing.module';
     RollDicesComponent
   ],
   imports: [
-    CommonModule,
     SharedModule,
     CreateRoutingModule
   ]
