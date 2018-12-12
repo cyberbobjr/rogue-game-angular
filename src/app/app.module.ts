@@ -9,6 +9,7 @@ import {InfoPageComponent} from './modules/game/pages/info-page/info-page.compon
 import {CreateModule} from './modules/create/create.module';
 import {SharedModule} from './modules/shared/shared.module';
 import {CreateRoutingModule} from './modules/create/create-routing/create-routing.module';
+import {MainMenuModule} from './modules/main-menu/main-menu.module';
 
 @NgModule({
             declarations: [
