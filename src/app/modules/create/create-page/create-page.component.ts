@@ -57,4 +57,8 @@ export class CreatePageComponent implements OnInit {
 
     this._storageService.savePlayer(<Entity>player);
   }
+
+  onPlay() {
+
+  }
 }

@@ -11,4 +11,11 @@
     <app-roll-dices [dices]="dicesScore"></app-roll-dices>
   </div>
 </div>
-<button pButton label="save" class="ui-button-success" (click)="onSave()"></button>
+<div class="ui-g ui-fluid">
+  <div class="ui-g-12 ui-md-2">
+    <button pButton label="save" class="ui-button-success" (click)="onSave()"></button>
+  </div>
+  <div class="ui-g-12 ui-md-2">
+    <a pButton label="play" class="ui-button-info" routerLink="/main"></a>
+  </div>
+</div>
