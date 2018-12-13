@@ -4,8 +4,6 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {FormsModule} from '@angular/forms';
-import {ButtonModule} from 'primeng/button';
-import {DragDropModule, InputTextModule} from 'primeng/primeng';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -17,9 +15,6 @@ export function HttpLoaderFactory(http: HttpClient) {
               CommonModule,
               FormsModule,
               HttpClientModule,
-              ButtonModule,
-              InputTextModule,
-              DragDropModule,
               TranslateModule.forRoot({
                                         loader: {
                                           provide: TranslateLoader,
@@ -32,10 +27,7 @@ export function HttpLoaderFactory(http: HttpClient) {
               CommonModule,
               TranslateModule,
               FormsModule,
-              HttpClientModule,
-              ButtonModule,
-              InputTextModule,
-              DragDropModule]
+              HttpClientModule]
           })
 export class SharedModule {
 }

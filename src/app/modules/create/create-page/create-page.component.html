@@ -1,21 +1,34 @@
-<h3>{{'Create character'|translate}}</h3>
-<div class="ui-g ui-fluid">
-  <div class="ui-g-12 ui-md-4">
-    <app-ability *ngFor="let ability of attributesKeys" ability="{{ability}}"></app-ability>
-  </div>
-  <div class="ui-g-12 ui-md-2">
-    <app-dices></app-dices>
-  </div>
-  <div class="ui-g-3 ui-md-2" *ngIf="_diceService.dicesScore.length <= 5">
-    <button pButton icon="fas fa-dice" class="ui-button-success" (click)="onDice()"></button>
-    <app-roll-dices [dices]="dicesScore"></app-roll-dices>
+<div class="row">
+  <div class="span8 offset5 text-center">
+    <h3>{{'Create character'|translate}}</h3>
   </div>
 </div>
-<div class="ui-g ui-fluid">
-  <div class="ui-g-12 ui-md-2">
-    <button pButton label="save" class="ui-button-success" (click)="onSave()"></button>
+<div class="row">
+  <div class="span12 offset3 text-center">
+    <form class="form-horizontal">
+      <div class="row">
+        <div class="span6">
+          <app-ability *ngFor="let ability of attributesKeys" ability="{{ability}}"></app-ability>
+        </div>
+        <div class="span3">
+          <app-dices></app-dices>
+        </div>
+        <div class="span2">
+          <div class="row">
+            <button *ngIf="_diceService.dicesScore.length <= 5" class="btn" (click)="onDice()">
+              <i class="fas fa-dice"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
-  <div class="ui-g-12 ui-md-2">
-    <a pButton label="play" class="ui-button-info" routerLink="/main"></a>
+</div>
+<div class="row">
+  <div class="span8 offset5">
+    <button class="btn btn-primary btn-block" (click)="onSave()">Save character</button>
+  </div>
+  <div class="span8 offset5">
+    <a class="btn btn-block" routerLink="/main">Back to main menu</a>
   </div>
 </div>

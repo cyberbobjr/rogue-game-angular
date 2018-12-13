@@ -1,0 +1,11 @@
+input, label {
+  margin-bottom: 25px;
+}
+
+input, .btn {
+  padding: 5px;
+}
+
+input:active, input:focus, input:hover {
+  background-color: yellow;
+}

@@ -1,9 +1,5 @@
-<div class="ui-g-4">
-  {{ability}}
-</div>
-<div class="ui-g-8">
-  <div class="ui-inputgroup" pDroppable="diceValue" (onDrop)="drop($event)">
-    <input type="text" pInputText placeholder="{{ability}}" id="{{ability}}" [ngModel]="value">
-    <button pButton type="button" class="ui-button-danger" icon="far fa-trash-alt"></button>
-  </div>
+<div class="control-group">
+  <label class="control-label">{{ability}}</label>
+  <input type="number" placeholder="{{ability}}" id="{{ability}}" [ngModel]="value">
+  <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
 </div>
