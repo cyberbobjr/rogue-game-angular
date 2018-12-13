@@ -23,7 +23,10 @@ export class DiceService {
 
   addDiceScore(value: number) {
     this.dicesScore.push({
-                           id: (new Date()).getMilliseconds().toString(), value: value
+                           id: (new Date()).getMilliseconds()
+                                           .toString(),
+                           value: value,
+                           used: false
                          });
   }
 }

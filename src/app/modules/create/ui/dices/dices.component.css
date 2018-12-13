@@ -13,3 +13,7 @@ input:active, input:focus, input:hover {
 ul {
   margin: 0px 0px 0px 0px;
 }
+
+.used {
+  color: red;
+}

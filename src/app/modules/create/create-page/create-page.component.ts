@@ -12,6 +12,7 @@ import {GameClassFactory} from '../../../core/factories/game-class-factory';
 import {RaceFactory} from '../../../core/factories/race-factory';
 import {RaceType} from '../../../core/enums/race-type.enum';
 import {IGameClass} from '../../../core/interfaces/i-game-class';
+import {Router} from '@angular/router';
 
 @Component({
              selector: 'app-create-page',
@@ -23,7 +24,8 @@ export class CreatePageComponent implements OnInit {
   attributesKeys: Array<string> = [];
 
   constructor(private _diceService: DiceService,
-              private _storageService: StorageService) {
+              private _storageService: StorageService,
+              private _router: Router) {
   }
 
   ngOnInit() {
@@ -45,6 +47,7 @@ export class CreatePageComponent implements OnInit {
       }
       this._diceService.addDiceScore(totalScore);
     }
+    this._diceService.dicesScore.sort((v1: IDice, v2: IDice) => v2.value - v1.value);
   }
 
   onSave() {
@@ -58,9 +61,6 @@ export class CreatePageComponent implements OnInit {
     player.gp = gameClass.getGp();
 
     this._storageService.savePlayer(<Entity>player);
-  }
-
-  onPlay() {
-
+    this._router.navigateByUrl('main');
   }
 }

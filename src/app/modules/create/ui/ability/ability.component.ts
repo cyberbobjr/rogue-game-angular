@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {IDice} from '../../interface/idice';
 import {DiceService} from '../../services/dice.service';
 
 @Component({
@@ -17,14 +16,7 @@ export class AbilityComponent implements OnInit {
   ngOnInit() {
   }
 
-  drop(event: DragEvent) {
-    console.log(event);
-    const diceScore: IDice = (JSON.parse(event.dataTransfer.getData('diceValue')) as IDice);
-    if (this.value) {
-      this._diceService.addDiceScore(this.value);
-    }
-    this._diceService.removeDiceScoreById(diceScore.id);
-    this.value = diceScore.value;
+  onBlur() {
     this._diceService.abilityScore.set(this.ability, this.value);
   }
 }
