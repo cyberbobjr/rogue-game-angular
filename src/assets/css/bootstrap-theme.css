@@ -249,6 +249,7 @@
   border-bottom: solid yellow;
   margin: 0 -15px 0px -15px;
   padding-bottom: 10px;
+  text-align: center;
 }
 
 .panel-heading > .dropdown .dropdown-toggle {

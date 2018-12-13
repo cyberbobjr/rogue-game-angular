@@ -1,1 +1,9 @@
-<p>{{message}}</p>
+<div class="container-fluid">
+  <div class="panel">
+    <div class="panel-heading">Player Info</div>
+    <div class="panel-body">
+      <div *ngFor="let attribute of attributes">{{attribute}} :</div><br/>
+    </div>
+  </div>
+  <p>{{message}}</p>
+</div>
