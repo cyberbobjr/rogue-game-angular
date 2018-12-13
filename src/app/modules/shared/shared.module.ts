@@ -27,7 +27,8 @@ export function HttpLoaderFactory(http: HttpClient) {
               CommonModule,
               TranslateModule,
               FormsModule,
-              HttpClientModule]
+              HttpClientModule
+            ]
           })
 export class SharedModule {
 }

@@ -18,6 +18,7 @@ export class AbilityComponent implements OnInit {
   }
 
   drop(event: DragEvent) {
+    console.log(event);
     const diceScore: IDice = (JSON.parse(event.dataTransfer.getData('diceValue')) as IDice);
     if (this.value) {
       this._diceService.addDiceScore(this.value);

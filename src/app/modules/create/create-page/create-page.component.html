@@ -7,7 +7,7 @@
   <div class="span12 offset3 text-center">
     <form class="form-horizontal">
       <div class="row">
-        <div class="span6">
+        <div class="span7">
           <app-ability *ngFor="let ability of attributesKeys" ability="{{ability}}"></app-ability>
         </div>
         <div class="span3">
@@ -15,9 +15,9 @@
         </div>
         <div class="span2">
           <div class="row">
-            <button *ngIf="_diceService.dicesScore.length <= 5" class="btn" (click)="onDice()">
-              <i class="fas fa-dice"></i>
-            </button>
+              <button *ngIf="_diceService.dicesScore.length <= 5" class="btn" (click)="onDice()">
+                <i class="fas fa-dice"></i>
+              </button>
           </div>
         </div>
       </div>

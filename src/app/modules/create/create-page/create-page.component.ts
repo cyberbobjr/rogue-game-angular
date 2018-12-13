@@ -33,16 +33,18 @@ export class CreatePageComponent implements OnInit {
   }
 
   onDice() {
-    let totalScore = 0;
-    let dicesScore: Array<number> = [];
-    for (let i = 0; i < this.nbDices; i++) {
-      dicesScore.push(Utility.rolldice(6));
+    for (let jet = 0; jet < 6; jet++) {
+      let totalScore = 0;
+      let dicesScore: Array<number> = [];
+      for (let i = 0; i < this.nbDices; i++) {
+        dicesScore.push(Utility.rolldice(6));
+      }
+      dicesScore = dicesScore.sort((v1, v2) => v2 - v1);
+      for (let i = 0; i < 3; i++) {
+        totalScore += dicesScore[i];
+      }
+      this._diceService.addDiceScore(totalScore);
     }
-    dicesScore = dicesScore.sort((v1, v2) => v2 - v1);
-    for (let i = 0; i < 3; i++) {
-      totalScore += dicesScore[i];
-    }
-    this._diceService.addDiceScore(totalScore);
   }
 
   onSave() {

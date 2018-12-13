@@ -1,6 +1,12 @@
-<div *ngFor="let ability of _diceService.dicesScore; let i = index" class="row">
-    <div class="control-group" pDraggable="diceValue" (onDragStart)="dragStart($event, i)">
-      <input type="number"  [value]="ability.value" disabled class="span2">
-      <button type="button" class="btn btn-info"><i class="fas fa-arrows-alt"></i></button>
+<div class="panel">
+  <div class="panel-heading">
+    Dice results :
+  </div>
+  <div class="panel-body">
+    <ul>
+      <li *ngFor="let ability of _diceService.dicesScore; let i = index">
+        {{ability.value}}
+      </li>
+    </ul>
   </div>
 </div>

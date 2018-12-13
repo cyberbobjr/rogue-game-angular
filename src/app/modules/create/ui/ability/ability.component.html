@@ -1,5 +1,5 @@
-<div class="control-group">
+<div class="control-group" (dropped)="drop($event)">
   <label class="control-label">{{ability}}</label>
-  <input type="number" placeholder="{{ability}}" id="{{ability}}" [ngModel]="value">
+  <input type="number" placeholder="{{ability}}" [ngModel]="value">
   <button type="button" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
 </div>

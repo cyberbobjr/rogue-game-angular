@@ -12,8 +12,4 @@ export class DicesComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  dragStart(event: DragEvent, index: number) {
-    event.dataTransfer.setData('diceValue', JSON.stringify(this._diceService.dicesScore[index]));
-  }
 }

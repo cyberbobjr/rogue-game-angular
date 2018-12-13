@@ -3,7 +3,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CommonModule} from '@angular/common';
 
-const secondaryRoutes: Routes = [
+const gameRoutes: Routes = [
   {path: '', component: MainPageComponent}
 ];
 
@@ -11,7 +11,7 @@ const secondaryRoutes: Routes = [
             declarations: [],
             imports: [
               CommonModule,
-              RouterModule.forChild(secondaryRoutes)
+              RouterModule.forChild(gameRoutes)
             ],
             exports: [RouterModule]
           })
