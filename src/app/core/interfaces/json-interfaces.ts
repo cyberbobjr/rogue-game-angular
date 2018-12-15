@@ -43,3 +43,21 @@ export interface JsonEntity {
   charisma: number;
   level: number;
 }
+
+export interface JsonWeapon {
+  id: string;
+  name: string;
+  cost: {
+    unit: string,
+    value: number
+  };
+  damage: {
+    type: string,
+    dice: number,
+    mul: number
+  };
+  weight: number;
+  properties: [
+    string
+    ];
+}

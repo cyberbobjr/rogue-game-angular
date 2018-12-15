@@ -1,5 +1,6 @@
 [
   {
+    "id": "club",
     "name": "club",
     "cost": {
       "unit": "sp",
@@ -8,7 +9,7 @@
     "damage": {
       "type": "bludgeoning",
       "dice": 4,
-      "unit": 1
+      "mul": 1
     },
     "weight": 2,
     "properties": [
