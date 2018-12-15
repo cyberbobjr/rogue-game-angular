@@ -3,7 +3,7 @@ import {MapEngine} from './map-engine.service';
 import {Position} from '../../../core/classes/base/position';
 import {GameMap} from '../../../core/classes/base/gameMap';
 import {Sprite} from '../../../core/classes/base/sprite';
-import {IObject} from '../../../core/interfaces/IObject';
+import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
 
@@ -51,8 +51,8 @@ export class DisplayService {
   }
 
   draw() {
-    const gameMap: GameMap<IObject> = this.mapEngine.computeFov(this.cameraPosition);
-    const viewport: GameMap<IObject> = this.computeViewport(gameMap);
+    const gameMap: GameMap<Iobject> = this.mapEngine.computeFov(this.cameraPosition);
+    const viewport: GameMap<Iobject> = this.computeViewport(gameMap);
     this.drawViewPort(viewport);
   }
 
@@ -62,7 +62,7 @@ export class DisplayService {
     return new Position(x, y);
   }
 
-  private drawViewPort(viewport: GameMap<IObject>) {
+  private drawViewPort(viewport: GameMap<Iobject>) {
     this.display.clear();
     for (let j = 0; j < viewport.content.length; j++) {
       for (let i = 0; i < viewport.content[0].length; i++) {
@@ -74,7 +74,7 @@ export class DisplayService {
     }
   }
 
-  private computeViewport(currentMap: GameMap<IObject>): GameMap<IObject> {
+  private computeViewport(currentMap: GameMap<Iobject>): GameMap<Iobject> {
     return currentMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

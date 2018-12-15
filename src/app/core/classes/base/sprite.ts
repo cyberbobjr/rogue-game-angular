@@ -1,5 +1,5 @@
 import * as Color from 'color';
-import {JsonSprite} from '../../../modules/game/services/storage.service';
+import {JsonSprite} from '../../interfaces/json-interfaces';
 
 export class Sprite {
   protected _light: boolean;

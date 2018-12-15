@@ -1,5 +1,5 @@
-import {JsonPosition} from '../../../modules/game/services/storage.service';
 import {Direction} from '../../enums/direction.enum';
+import {JsonPosition} from '../../interfaces/json-interfaces';
 
 export class Position {
   private _x: number;

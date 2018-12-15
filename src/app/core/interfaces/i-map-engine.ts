@@ -1,6 +1,6 @@
 import {GameMap} from '../classes/base/gameMap';
-import {IObject} from './IObject';
+import {Iobject} from './iobject';
 
 export interface IMapEngine {
-  generateMap(width: number, height: number): GameMap<IObject>;
+  generateMap(width: number, height: number): GameMap<Iobject>;
 }

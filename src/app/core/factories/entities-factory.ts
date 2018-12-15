@@ -6,8 +6,8 @@ import {SpritesFactory} from './sprites-factory';
 import {SpriteType} from '../enums/sprite-type.enum';
 import {Position} from '../classes/base/position';
 import {Sprite} from '../classes/base/sprite';
-import {JsonEntity} from '../../modules/game/services/storage.service';
 import {Utility} from '../classes/utility';
+import {JsonEntity} from '../interfaces/json-interfaces';
 
 export class EntitiesFactory {
   constructor() {

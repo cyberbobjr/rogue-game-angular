@@ -2,7 +2,7 @@ import {Position} from './position';
 import {Injectable} from '@angular/core';
 import {Iaction} from '../../interfaces/iaction';
 import {Sprite} from './sprite';
-import {IObject} from '../../interfaces/IObject';
+import {Iobject} from '../../interfaces/iobject';
 import {IEntity} from '../../interfaces/ientity';
 import {EntityType} from '../../enums/entity-type.enum';
 import {AttributesFactory} from '../../factories/attributes-factory';
@@ -16,7 +16,7 @@ import {IRace} from '../../interfaces/i-race';
 @Injectable({
               providedIn: 'root'
             })
-export abstract class Entity implements IObject, IEntity {
+export abstract class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
   protected _type: EntityType;

@@ -2,10 +2,10 @@ import {Entity} from './entity';
 import {Position} from './position';
 import {Sprite} from './sprite';
 import {Iaction} from '../../interfaces/iaction';
-import {IObject} from '../../interfaces/IObject';
+import {Iobject} from '../../interfaces/iobject';
 import {TileType} from '../../enums/tile-type.enum';
 
-export class Tile implements IObject {
+export class Tile implements Iobject {
   protected _type: TileType;
   protected _name: string;
   protected _sprite: Sprite;

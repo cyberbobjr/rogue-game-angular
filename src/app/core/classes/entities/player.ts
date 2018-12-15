@@ -3,10 +3,10 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
-import {JsonEntity} from '../../../modules/game/services/storage.service';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {JsonEntity} from '../../interfaces/json-interfaces';
 
 export class Player extends Entity {
   private _xp = 0;

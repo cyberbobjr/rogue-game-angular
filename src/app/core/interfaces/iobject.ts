@@ -1,7 +1,7 @@
 import {Sprite} from '../classes/base/sprite';
 import {Position} from '../classes/base/position';
 
-export interface IObject {
+export interface Iobject {
   name: string;
   sprite: Sprite;
   position: Position;
