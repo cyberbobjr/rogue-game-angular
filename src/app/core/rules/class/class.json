@@ -1,0 +1,25 @@
+[
+  {
+    "id": "BARBARIAN",
+    "name": "Barbarian",
+    "hitDice": 12,
+    "AC": 14,
+    "modifiers": {
+      "strength": 3,
+      "dexterity": 2,
+      "constitution": 2,
+      "intelligence": -1,
+      "wisdom": 1,
+      "charisma": 0
+    },
+    "gp": {
+      "dice": 4,
+      "mul": 5,
+      "bonus": 10
+    },
+    "sprite": {
+      "character": "O",
+      "color": "#FFFFFF"
+    }
+  }
+]

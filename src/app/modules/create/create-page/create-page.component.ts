@@ -13,6 +13,7 @@ import {RaceFactory} from '../../../core/factories/race-factory';
 import {RaceType} from '../../../core/enums/race-type.enum';
 import {IGameClass} from '../../../core/interfaces/i-game-class';
 import {Router} from '@angular/router';
+import {GameClass} from '../../../core/classes/base/game-class';
 
 @Component({
              selector: 'app-create-page',
@@ -51,7 +52,9 @@ export class CreatePageComponent implements OnInit {
   }
 
   onSave() {
-    const gameClass: IGameClass = GameClassFactory.createGameClass(ClassType.BARBARIAN);
+    const gameClass: GameClass = GameClassFactory.getInstance()
+                                                  .createGameClass(ClassType.BARBARIAN);
+    console.log(gameClass);
     const player: Entity = (<Entity>EntitiesFactory.createEntity(EntityType.PLAYER))
       .setClass(gameClass)
       .setRace(RaceFactory.createRace(RaceType.HUMAN));

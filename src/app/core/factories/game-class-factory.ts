@@ -1,14 +1,32 @@
+import * as gameclasses from '../rules/class/class.json';
 import {ClassType} from '../enums/class-type.enum';
-import {IGameClass} from '../interfaces/i-game-class';
-import {Barbarian} from '../rules/class/barbarian';
+import {GameClass} from '../classes/base/game-class';
 
 export class GameClassFactory {
-  static createGameClass(classType: ClassType): IGameClass | null {
+  private static instance: GameClassFactory;
+  private _gameClasses: Map<string, GameClass> = new Map<string, GameClass>();
+
+  static getInstance() {
+    if (!GameClassFactory.instance) {
+      GameClassFactory.instance = new GameClassFactory();
+    }
+    return GameClassFactory.instance;
+  }
+
+  createGameClass(classType: ClassType): GameClass | null {
     switch (classType) {
       case ClassType.BARBARIAN:
-        return new Barbarian();
+        return this._gameClasses.get('BARBARIAN');
       default:
         return null;
     }
+  }
+
+  constructor() {
+    console.log('GameClassFactory created');
+    for (const key of Object.keys(gameclasses.default)) {
+      this._gameClasses.set(gameclasses.default[key].id, new GameClass(gameclasses.default[key]));
+    }
+    console.log(this._gameClasses);
   }
 }
