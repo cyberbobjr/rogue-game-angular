@@ -1,0 +1,27 @@
+[
+  {
+    "id": "ORC",
+    "name": "Orc",
+    "hp": {
+      "dice": 4,
+      "mul": 2,
+      "bonus": 6
+    },
+    "abilities": {
+      "strength": 16,
+      "dexterity": 12,
+      "constitution": 16,
+      "intelligence": 7,
+      "wisdom": 11,
+      "charisma": 10
+    },
+    "ac": 13,
+    "gp": {
+      "dice": 10
+    },
+    "sprite": {
+      "character": "O",
+      "color": "#4286f4"
+    }
+  }
+]

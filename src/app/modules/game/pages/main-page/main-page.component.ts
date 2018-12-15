@@ -40,7 +40,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
       const rooms: Array<Room> = this._mapEngine.getRooms();
       const nbRooms: number = rooms.length;
       for (let nb = 1; nb < nbRooms - 2; nb++) {
-        const orc: Entity = EntitiesFactory.createEntity(EntityType.ORC);
+        const orc: Entity = EntitiesFactory.getInstance()
+                                           .createEntity(EntityType.ORC);
         orc.position = this._mapEngine.getRoomCenter(rooms[nb]);
         orc.setNextAction(new IdleAction(orc, this._mapEngine));
         this._entitiesService.addEntity(orc);
@@ -53,7 +54,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
     if (playerLoaded && !playerLoaded.position) {
       playerLoaded.position = this._mapEngine.getStartPosition();
     }
-    this._entitiesService.player = playerLoaded ? playerLoaded : EntitiesFactory.createEntity(EntityType.PLAYER, this._mapEngine.getStartPosition());
+    this._entitiesService.player = playerLoaded ? playerLoaded : EntitiesFactory.getInstance()
+                                                                                .createEntity(EntityType.PLAYER, this._mapEngine.getStartPosition());
     this._mapEngine.mainActor = this._entitiesService.player;
   }
 

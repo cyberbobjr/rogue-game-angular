@@ -64,7 +64,7 @@ export class Player extends Entity {
   }
 
   constructor(props, position?: Position, sprite?: Sprite) {
-    super(props);
+    super();
     if (position) {
       this.position = position;
     }

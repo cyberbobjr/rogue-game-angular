@@ -21,6 +21,9 @@ export abstract class Entity implements Iobject, IEntity {
   protected _currentAction: Iaction = null;
   protected _type: EntityType;
   protected _timeDisplaySprite: number;
+  protected _position?: Position;
+  protected _name: string;
+  protected _sprite?: Sprite;
 
   protected _hp: number;
   protected _ac: number;
@@ -29,11 +32,20 @@ export abstract class Entity implements Iobject, IEntity {
   protected _gameClass: IGameClass;
   protected _race: IRace;
   protected _hitDice: number;
+  protected _id: string;
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  get id(): string {
+    return this._id;
+  }
+
+  set id(value: string) {
+    this._id = value;
+  }
 
   get hitDice(): number {
     return this._hitDice;
@@ -151,13 +163,10 @@ export abstract class Entity implements Iobject, IEntity {
     this._position = value;
   }
 
-  constructor(protected _name: string, protected _position?: Position, protected _sprite?: Sprite) {
-    this._backupSprite = _sprite;
-  }
-
   toJSON() {
     return {
       name: this.name,
+      id: this.id,
       position: this.position,
       sprite: this.sprite,
       strength: this.strength,
@@ -169,7 +178,6 @@ export abstract class Entity implements Iobject, IEntity {
       ac: this.ac,
       hp: this.hp,
       gp: this.gp,
-      type: this.type,
       hitDice: this.hitDice
     };
   }

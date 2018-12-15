@@ -57,7 +57,7 @@ export class StorageService {
     }
     try {
       json.forEach((entity: JsonEntity) => {
-        const monster: Entity = EntitiesFactory.createJsonEntity(entity.type, entity);
+        const monster: Entity = EntitiesFactory.createJsonEntity(entity);
         monster.setNextAction(new IdleAction(monster, this._mapEngine));
         this._entitiesService.addEntity(monster);
       });
@@ -68,7 +68,7 @@ export class StorageService {
     }
   }
 
-  savePlayer(player: Entity) {
+  savePlayer(player: Entity): void {
     window.localStorage.setItem('player', JSON.stringify(player));
   }
 

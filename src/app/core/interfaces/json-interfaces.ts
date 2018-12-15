@@ -26,6 +26,7 @@ export interface JsonMap {
 }
 
 export interface JsonEntity {
+  id: string;
   gp: number;
   hp: number;
   name: string;
@@ -66,7 +67,7 @@ export interface JsonGameClass {
   id: string;
   name: string;
   hitDice: number;
-  AC: number;
+  ac: number;
   modifiers: {
     strength: number;
     dexterity: number;
@@ -79,6 +80,32 @@ export interface JsonGameClass {
     dice: number;
     mul: number;
     bonus: number;
+  };
+  sprite: {
+    character: string;
+    color: string;
+  };
+}
+
+export interface JsonMonster {
+  id: string;
+  name: string;
+  hp: {
+    dice: number;
+    mul: number;
+    bonus: number;
+  };
+  abilities: {
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    wisdom: number;
+    charisma: number;
+  };
+  ac: number;
+  gp: {
+    dice: number;
   };
   sprite: {
     character: string;

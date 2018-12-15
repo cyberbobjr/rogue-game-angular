@@ -8,7 +8,7 @@ export class GameClass implements IGameClass {
   }
 
   getAC(): number {
-    return this._jsonData.AC;
+    return this._jsonData.ac;
   }
 
   getGp(): number {

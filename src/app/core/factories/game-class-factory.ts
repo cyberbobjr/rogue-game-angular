@@ -27,6 +27,5 @@ export class GameClassFactory {
     for (const key of Object.keys(gameclasses.default)) {
       this._gameClasses.set(gameclasses.default[key].id, new GameClass(gameclasses.default[key]));
     }
-    console.log(this._gameClasses);
   }
 }

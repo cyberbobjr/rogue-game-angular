@@ -55,7 +55,7 @@ export class CreatePageComponent implements OnInit {
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                   .createGameClass(ClassType.BARBARIAN);
     console.log(gameClass);
-    const player: Entity = (<Entity>EntitiesFactory.createEntity(EntityType.PLAYER))
+    const player: Entity = (<Entity>EntitiesFactory.getInstance().createEntity(EntityType.PLAYER))
       .setClass(gameClass)
       .setRace(RaceFactory.createRace(RaceType.HUMAN));
 
