@@ -7,6 +7,7 @@ import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
 import {AttackAction} from './attack-action';
+import {Monster} from '../entities/monster';
 
 export class ChaseAction implements Iaction {
   private _info = '';
@@ -43,6 +44,9 @@ export class ChaseAction implements Iaction {
       const result = ActionResult.FAILURE;
       result.alternative = new AttackAction(info, this._mapEngine);
       return result;
+    }
+    if (info instanceof Monster) {
+      return ActionResult.SUCCESS;
     }
   }
 }
