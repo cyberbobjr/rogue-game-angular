@@ -6,12 +6,12 @@ import {Gold} from '../classes/base/gold';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
-  private _weapons: Array<Weapon> = [];
+  private _weapons: Map<string, Weapon> = new Map<string, Weapon>();
 
   constructor() {
     console.log('GameObjectFactory created');
     for (const key of Object.keys(weapons.default)) {
-      this._weapons.push(new Weapon(weapons.default[key]));
+      this._weapons.set(weapons.default[key]['name'], new Weapon(weapons.default[key]));
     }
   }
 
@@ -27,19 +27,16 @@ export class GameObjectFactory {
       case 'GOLD' :
         return new Gold(jsonData['_amount']);
       default:
-        break;
+        return this._weapons.get(jsonData['name']);
     }
-    return null;
   }
 
   getRandomWeapon(): Weapon {
-    const randomNumber = Utility.rolldice(this._weapons.length);
+    const randomNumber = Utility.rolldice(this._weapons.size);
     return this._weapons[randomNumber];
   }
 
   getWeaponByName(weaponName: string): Weapon | null {
-    return this._weapons.find((weapon: Weapon) => {
-      return weapon.name === weaponName;
-    });
+    return this._weapons.get(weaponName);
   }
 }

@@ -80,7 +80,7 @@ export class Tile implements Iobject {
     this._contents.push(gameObject);
   }
 
-  onTake(actor: Entity) {
+  onTake(actor: Entity): void {
 
   }
 }

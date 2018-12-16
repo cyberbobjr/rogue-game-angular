@@ -2,7 +2,6 @@ import {Tile} from '../base/tile';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from '../base/entity';
-import {OpendoorAction} from '../actions/opendoor-action';
 import {Iaction} from '../../interfaces/iaction';
 import {Position} from '../base/position';
 import {EventLog} from '../event-log';
