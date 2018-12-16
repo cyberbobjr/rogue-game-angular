@@ -31,22 +31,13 @@ export class FloorTile extends Tile {
     return true;
   }
 
-  onTake(actor: Entity) {
-    this._contents.forEach((gameObject: GameObject, index: number) => {
-      gameObject.onTake(actor);
-      this._contents.splice(index, 1);
-    });
-  }
-
   onWalk(actor: Entity): Iaction | null {
     EventLog.getInstance().message = 'You walk on ' + this.getInfo();
     return null;
   }
 
   getInfo(): string {
-    if (this._contents.length > 0) {
-      return this._contents[0].getInfo();
-    }
-    return 'floor tile';
+    const info = 'floor tile';
+    return info + super.getInfo();
   }
 }

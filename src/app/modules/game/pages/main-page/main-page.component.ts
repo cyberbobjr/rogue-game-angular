@@ -9,6 +9,7 @@ import {IdleAction} from '../../../../core/classes/actions/idle-action';
 import {Entity} from '../../../../core/classes/base/entity';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
+import {Monster} from '../../../../core/classes/entities/monster';
 
 @Component({
              selector: 'app-main-page',
@@ -40,10 +41,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
       const rooms: Array<Room> = this._mapEngine.getRooms();
       const nbRooms: number = rooms.length;
       for (let nb = 1; nb < nbRooms - 2; nb++) {
-        const orc: Entity = EntitiesFactory.getInstance()
-                                           .createEntity(EntityType.ORC);
-        orc.position = this._mapEngine.getRoomCenter(rooms[nb]);
+        const orc: Monster = EntitiesFactory.getInstance()
+                                            .createEntity(EntityType.ORC, this._mapEngine.getRoomCenter(rooms[nb])) as Monster;
         orc.setNextAction(new IdleAction(orc, this._mapEngine));
+        console.log(orc);
         this._entitiesService.addEntity(orc);
       }
     }

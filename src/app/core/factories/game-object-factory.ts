@@ -1,6 +1,5 @@
 import * as weapons from '../rules/object/weapons.json';
 import {Weapon} from '../classes/base/weapon';
-import {Utility} from '../classes/utility';
 import {GameObject} from '../classes/base/game-object';
 import {Gold} from '../classes/base/gold';
 
@@ -11,7 +10,7 @@ export class GameObjectFactory {
   constructor() {
     console.log('GameObjectFactory created');
     for (const key of Object.keys(weapons.default)) {
-      this._weapons.set(weapons.default[key]['name'], new Weapon(weapons.default[key]));
+      this._weapons.set(weapons.default[key]['id'], new Weapon(weapons.default[key]));
     }
   }
 
@@ -23,20 +22,20 @@ export class GameObjectFactory {
   }
 
   createFromJson(jsonData: any): GameObject | null {
-    switch (jsonData['name']) {
+    switch (jsonData['id']) {
       case 'GOLD' :
         return new Gold(jsonData['_amount']);
       default:
-        return this._weapons.get(jsonData['name']);
+        return this._weapons.get(jsonData['id']);
     }
   }
 
-  getRandomWeapon(): Weapon {
-    const randomNumber = Utility.rolldice(this._weapons.size);
-    return this._weapons[randomNumber];
+  getRandomWeapon(): Weapon | null {
+    const weaponArray = Array.from(this._weapons);
+    return weaponArray[Math.floor(Math.random() * weaponArray.length)][1];
   }
 
-  getWeaponByName(weaponName: string): Weapon | null {
-    return this._weapons.get(weaponName);
+  getWeaponById(weaponId: string): Weapon | null {
+    return this._weapons.get(weaponId);
   }
 }

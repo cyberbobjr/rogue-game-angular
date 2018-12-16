@@ -12,6 +12,7 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {IGameClass} from '../../interfaces/i-game-class';
 import {IRace} from '../../interfaces/i-race';
+import {Weapon} from './weapon';
 
 @Injectable({
               providedIn: 'root'
@@ -34,10 +35,20 @@ export abstract class Entity implements Iobject, IEntity {
   protected _hitDice: number;
   protected _id: string;
 
+  protected _weapons: Array<Weapon> = [];
+
   lightRadius = 20;
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  get weapons(): Array<Weapon> {
+    return this._weapons;
+  }
+
+  set weapons(value: Array<Weapon>) {
+    this._weapons = value;
+  }
 
   get id(): string {
     return this._id;
@@ -178,7 +189,8 @@ export abstract class Entity implements Iobject, IEntity {
       ac: this.ac,
       hp: this.hp,
       gp: this.gp,
-      hitDice: this.hitDice
+      hitDice: this.hitDice,
+      weapons: this._weapons
     };
   }
 

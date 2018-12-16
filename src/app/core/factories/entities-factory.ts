@@ -34,9 +34,8 @@ export class EntitiesFactory {
       case EntityType.PLAYER:
         return new Player('player', position);
       case EntityType.ORC:
-        const monster: Monster = Monster.fromMonsterClass(this._monstersClass.get('ORC'));
-        monster.position = position;
-        return monster;
+        return Monster.fromMonsterClass(this._monstersClass.get('ORC'))
+                      .setPosition(position);
       default:
         return null;
     }

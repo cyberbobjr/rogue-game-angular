@@ -54,7 +54,7 @@ export class StorageService {
   }
 
   loadEntities(): boolean {
-    const json = JSON.parse(window.localStorage.getItem('entities'));
+    const json: Array<JsonEntity> = JSON.parse(window.localStorage.getItem('entities'));
     if (!json) {
       return false;
     }

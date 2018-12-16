@@ -46,6 +46,7 @@ export interface JsonEntity {
   wisdom: number;
   charisma: number;
   level: number;
+  weapons: [{ id: string, _jsonData: JsonWeapon }];
 }
 
 export interface JsonWeapon {
@@ -64,6 +65,14 @@ export interface JsonWeapon {
   properties: [
     string
     ];
+  thrown?: {
+    normal: number;
+    long: number;
+  };
+  sprite: {
+    character: string;
+    color: string;
+  };
 }
 
 export interface JsonGameClass {
@@ -98,6 +107,8 @@ export interface JsonMonster {
     mul: number;
     bonus: number;
   };
+  speed: number;
+  size: string;
   abilities: {
     strength: number;
     dexterity: number;
@@ -114,4 +125,5 @@ export interface JsonMonster {
     character: string;
     color: string;
   };
+  weapons: [string];
 }

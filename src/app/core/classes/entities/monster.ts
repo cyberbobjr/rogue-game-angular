@@ -4,11 +4,14 @@ import {Position} from '../base/position';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
-import {JsonEntity} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {Gold} from '../base/gold';
 import {GameObject} from '../base/game-object';
+import {Weapon} from '../base/weapon';
+import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class Monster extends Entity {
+
   static fromJson(jsonData: JsonEntity): Monster {
     const {name, id, type, gp, hp, strength, constitution, charisma, wisdom, intelligence, dexterity, ac} = jsonData;
     const monster: Monster = new this();
@@ -27,6 +30,13 @@ export class Monster extends Entity {
     monster.hp = hp;
     monster.gp = gp;
     monster.type = type;
+
+    const weaponArray: Array<Weapon> = [];
+    jsonData.weapons.forEach((data: { id: string, _jsonData: JsonWeapon }) => {
+      monster.weapons.push(GameObjectFactory.getInstance()
+                                        .createFromJson(data._jsonData) as Weapon);
+    });
+
     return monster;
   }
 
@@ -45,14 +55,25 @@ export class Monster extends Entity {
     monster.charisma = monsterClass.charisma;
     monster.ac = monsterClass.ac;
     monster.gp = monsterClass.gp;
+    monster.weapons = monsterClass.weapons;
     return monster;
   }
+
 
   onDead(mapEngine: MapEngine): void {
     // drop gold
     const goldObject: GameObject = new Gold(this.gp);
     const tile: Tile = mapEngine.getTileAt(this.position);
     tile.dropOn(goldObject);
+    // drop weapon
+    this._weapons.forEach((weapon: Weapon) => {
+      tile.dropOn(weapon);
+    });
+  }
+
+  setPosition(position: Position): Monster {
+    this.position = position;
+    return this;
   }
 
   constructor() {

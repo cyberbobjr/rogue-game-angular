@@ -14,6 +14,57 @@
     "weight": 2,
     "properties": [
       "light"
-    ]
+    ],
+    "sprite": {
+      "character": "%",
+      "color": "white"
+    }
+  },
+  {
+    "id": "handaxe",
+    "name": "Handaxe",
+    "cost": {
+      "unit": "gp",
+      "value": 5
+    },
+    "damage": {
+      "type": "slashing",
+      "dice": 6,
+      "mul": 1
+    },
+    "weight": 2,
+    "properties": [
+      "light"
+    ],
+    "thrown": {
+      "normal": 20,
+      "long": 60
+    },
+    "sprite": {
+      "character": "%",
+      "color": "white"
+    }
+  },
+  {
+    "id": "greataxe",
+    "name": "Greataxe",
+    "cost": {
+      "unit": "gp",
+      "value": 30
+    },
+    "damage": {
+      "type": "slashing",
+      "dice": 12,
+      "mul": 1
+    },
+    "weight": 6,
+    "properties": [
+      "heavy",
+      "two-handed"
+    ],
+    "sprite": {
+      "character": "%",
+      "color": "white"
+    }
   }
 ]

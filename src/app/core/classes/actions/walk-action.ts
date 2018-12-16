@@ -23,16 +23,15 @@ export class WalkAction implements Iaction {
       tile.onWalk(actor);
       actor.setNextAction(null);
       return ActionResult.SUCCESS;
-    } else {
-      const result = ActionResult.FAILURE;
-      if (tile instanceof Entity) {
-        EventLog.getInstance().message = 'You hit ' + tile.name;
-        result.alternative = new AttackAction(tile as Entity, this._mapEngine);
-      } else {
-        result.alternative = tile.onHit(actor);
-      }
+    }
+    const result = ActionResult.FAILURE;
+    if (tile instanceof Entity) {
+      EventLog.getInstance().message = 'You hit ' + tile.name;
+      result.alternative = new AttackAction(tile as Entity, this._mapEngine);
       return result;
     }
+    result.alternative = tile.onHit(actor);
+    return result;
   }
 
   getInfo(): string {

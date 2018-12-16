@@ -30,6 +30,7 @@ export class DoorTile extends Tile {
   }
 
   onWalk(actor: Entity): Iaction | null {
+    EventLog.getInstance().message = 'You walk on ' + this.getInfo();
     return null;
   }
 
@@ -64,6 +65,11 @@ export class DoorTile extends Tile {
 
   private _setSprite() {
     this.sprite = SpritesFactory.createSprite(this._isClosed ? SpriteType.CLOSEDOOR : SpriteType.OPENDOOR);
+  }
+
+  getInfo(): string {
+    const info = 'door tile';
+    return info + super.getInfo();
   }
 
 }

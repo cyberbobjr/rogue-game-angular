@@ -1,8 +1,19 @@
 import {JsonMonster} from '../../interfaces/json-interfaces';
 import {Utility} from '../utility';
 import {Sprite} from './sprite';
+import {Weapon} from './weapon';
+import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class GameMonsterClass {
+
+  get weapons(): Array<Weapon> {
+    const weapons: Array<Weapon> = [];
+    this._jsonData.weapons.forEach((weaponId: string) => {
+      weapons.push(GameObjectFactory.getInstance()
+                                    .getWeaponById(weaponId));
+    });
+    return weapons;
+  }
 
   get id(): string {
     return this._jsonData.id;

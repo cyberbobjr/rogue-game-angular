@@ -61,7 +61,11 @@ export class Tile implements Iobject {
   }
 
   getInfo(): string {
-    return '';
+    let info = '';
+    this._contents.forEach((gameObject: GameObject) => {
+      info += `, ${gameObject.getInfo()}`;
+    });
+    return info;
   }
 
   isWalkable(): boolean {
@@ -80,7 +84,10 @@ export class Tile implements Iobject {
     this._contents.push(gameObject);
   }
 
-  onTake(actor: Entity): void {
-
+  onTake(actor: Entity) {
+    this._contents.forEach((gameObject: GameObject, index: number) => {
+      gameObject.onTake(actor);
+      this._contents.splice(index, 1);
+    });
   }
 }
