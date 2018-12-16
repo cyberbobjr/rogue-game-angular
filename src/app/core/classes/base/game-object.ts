@@ -1,13 +1,13 @@
-import {Iobject} from '../../interfaces/iobject';
 import {Sprite} from './sprite';
 import {Position} from './position';
+import {Entity} from './entity';
 
-export class GameObject implements Iobject {
+export abstract class GameObject {
   name: string;
   position: Position;
   sprite: Sprite;
 
-  getInfo(): string {
-    return '';
-  }
+  abstract getInfo(): string ;
+
+  abstract onTake(actor: Entity): void ;
 }

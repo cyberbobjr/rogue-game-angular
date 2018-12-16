@@ -9,6 +9,9 @@ import {Entity} from '../../../core/classes/base/entity';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {JSonCell, JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
+import {Tile} from '../../../core/classes/base/tile';
+import {GameObjectFactory} from '../../../core/factories/game-object-factory';
+import {GameObject} from '../../../core/classes/base/game-object';
 
 
 @Injectable({
@@ -76,8 +79,20 @@ export class StorageService {
     mapJson._data.forEach((cells: Array<JSonCell>) => {
       cells.forEach((cell: JSonCell) => {
         const position: Position = new Position(cell._position._x, cell._position._y);
-        this._mapEngine.setTileAt(position, TilesFactory.createJsonTile(<TileType>cell._type, cell));
+        const tile: Tile = TilesFactory.createJsonTile(<TileType>cell._type, cell);
+        this._loadContents(tile, cell._contents);
+        this._mapEngine.setTileAt(position, tile);
       });
+    });
+  }
+
+  private _loadContents(tile: Tile, jsonContent: Array<any>) {
+    jsonContent.forEach((content: any) => {
+      const gameObject: GameObject = GameObjectFactory.getInstance()
+                                                      .createFromJson(content);
+      if (gameObject) {
+        tile.dropOn(gameObject);
+      }
     });
   }
 

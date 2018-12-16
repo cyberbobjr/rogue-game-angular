@@ -2,14 +2,11 @@ import {Entity} from '../base/entity';
 import {Sprite} from '../base/sprite';
 import {Position} from '../base/position';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {TilesFactory} from '../../factories/tiles-factory';
-import {TileType} from '../../enums/tile-type.enum';
-import {GoldTile} from '../tiles/gold-tile';
 import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
 import {JsonEntity} from '../../interfaces/json-interfaces';
 import {Gold} from '../base/gold';
-import {Iobject} from '../../interfaces/iobject';
+import {GameObject} from '../base/game-object';
 
 export class Monster extends Entity {
   static fromJson(jsonData: JsonEntity): Monster {
@@ -53,7 +50,7 @@ export class Monster extends Entity {
 
   onDead(mapEngine: MapEngine): void {
     // drop gold
-    const goldObject: Iobject = new Gold(this.gp);
+    const goldObject: GameObject = new Gold(this.gp);
     const tile: Tile = mapEngine.getTileAt(this.position);
     tile.dropOn(goldObject);
   }

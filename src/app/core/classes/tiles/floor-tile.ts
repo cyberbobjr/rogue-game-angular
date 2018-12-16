@@ -3,8 +3,8 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Position} from '../base/position';
 import {TileType} from '../../enums/tile-type.enum';
-import {Iobject} from '../../interfaces/iobject';
-import {Sprite} from '../base/sprite';
+import {Entity} from '../base/entity';
+import {GameObject} from '../base/game-object';
 
 export class FloorTile extends Tile {
   protected _type = TileType.FLOOR;
@@ -29,4 +29,10 @@ export class FloorTile extends Tile {
     return true;
   }
 
+  onTake(actor: Entity) {
+    this._contents.forEach((gameObject: GameObject, index: number) => {
+      gameObject.onTake(actor);
+      this._contents.splice(index, 1);
+    });
+  }
 }

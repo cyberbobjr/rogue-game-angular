@@ -1,3 +1,5 @@
+import {GameObject} from '../classes/base/game-object';
+
 export interface JsonSprite {
   _color: string;
   _character: string;
@@ -17,6 +19,7 @@ export interface JSonCell {
   _opaque: boolean;
   _position: JsonPosition;
   _sprite: JsonSprite;
+  _contents: Array<GameObject>;
 }
 
 export interface JsonMap {

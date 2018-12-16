@@ -4,17 +4,14 @@ import {Sprite} from './sprite';
 import {Iaction} from '../../interfaces/iaction';
 import {Iobject} from '../../interfaces/iobject';
 import {TileType} from '../../enums/tile-type.enum';
+import {GameObject} from './game-object';
 
 export class Tile implements Iobject {
   protected _type: TileType;
   protected _name: string;
   protected _sprite: Sprite;
   protected _opaque: boolean;
-  protected _contents: Array<Iobject> = [];
-
-  get contents(): Array<Iobject> {
-    return this._contents;
-  }
+  protected _contents: Array<GameObject> = [];
 
   get type(): TileType {
     return this._type;
@@ -46,7 +43,7 @@ export class Tile implements Iobject {
 
   get sprite(): Sprite {
     if (this._contents.length > 0) {
-      const object: Iobject = this._contents[0];
+      const object: GameObject = this._contents[0];
       return object.sprite;
     }
     return this._sprite;
@@ -79,7 +76,11 @@ export class Tile implements Iobject {
     return null;
   }
 
-  dropOn(gameObject: Iobject) {
+  dropOn(gameObject: GameObject) {
     this._contents.push(gameObject);
+  }
+
+  onTake(actor: Entity) {
+
   }
 }

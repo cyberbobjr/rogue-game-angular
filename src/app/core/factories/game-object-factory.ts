@@ -1,6 +1,8 @@
 import * as weapons from '../rules/object/weapons.json';
 import {Weapon} from '../classes/base/weapon';
 import {Utility} from '../classes/utility';
+import {GameObject} from '../classes/base/game-object';
+import {Gold} from '../classes/base/gold';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -18,6 +20,16 @@ export class GameObjectFactory {
       GameObjectFactory.instance = new GameObjectFactory();
     }
     return GameObjectFactory.instance;
+  }
+
+  createFromJson(jsonData: any): GameObject | null {
+    switch (jsonData['name']) {
+      case 'GOLD' :
+        return new Gold(jsonData['_amount']);
+      default:
+        break;
+    }
+    return null;
   }
 
   getRandomWeapon(): Weapon {
