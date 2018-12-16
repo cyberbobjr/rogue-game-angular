@@ -10,6 +10,11 @@ export class Tile implements Iobject {
   protected _name: string;
   protected _sprite: Sprite;
   protected _opaque: boolean;
+  protected _contents: Array<Iobject> = [];
+
+  get contents(): Array<Iobject> {
+    return this._contents;
+  }
 
   get type(): TileType {
     return this._type;
@@ -40,6 +45,10 @@ export class Tile implements Iobject {
   }
 
   get sprite(): Sprite {
+    if (this._contents.length > 0) {
+      const object: Iobject = this._contents[0];
+      return object.sprite;
+    }
     return this._sprite;
   }
 
@@ -68,5 +77,9 @@ export class Tile implements Iobject {
 
   onHit(actor: Entity): Iaction | null {
     return null;
+  }
+
+  dropOn(gameObject: Iobject) {
+    this._contents.push(gameObject);
   }
 }

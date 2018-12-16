@@ -8,6 +8,8 @@ import {GoldTile} from '../tiles/gold-tile';
 import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
 import {JsonEntity} from '../../interfaces/json-interfaces';
+import {Gold} from '../base/gold';
+import {Iobject} from '../../interfaces/iobject';
 
 export class Monster extends Entity {
   static fromJson(jsonData: JsonEntity): Monster {
@@ -51,10 +53,9 @@ export class Monster extends Entity {
 
   onDead(mapEngine: MapEngine): void {
     // drop gold
-    const goldTile: GoldTile = TilesFactory.createTile(TileType.GOLD) as GoldTile;
-    goldTile.amount = this.gp;
-    goldTile.underTile = (mapEngine.getTileAt(this.position) as Tile).type;
-    mapEngine.setTileAt(this.position.clone(), goldTile);
+    const goldObject: Iobject = new Gold(this.gp);
+    const tile: Tile = mapEngine.getTileAt(this.position);
+    tile.dropOn(goldObject);
   }
 
   constructor() {

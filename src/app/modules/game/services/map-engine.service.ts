@@ -137,8 +137,8 @@ export class MapEngine implements IMapEngine {
     return <Iobject>this._map.content[position.y][position.x];
   }
 
-  getTileAt(position: Position): Iobject {
-    return <Iobject>this._map.content[position.y][position.x];
+  getTileAt(position: Position): Tile {
+    return <Tile>this._map.content[position.y][position.x];
   }
 
   setTileAt(position: Position, tile: Tile) {

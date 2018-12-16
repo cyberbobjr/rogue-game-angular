@@ -11,7 +11,7 @@ export class EntitiesFactory {
   private static instance: EntitiesFactory;
   private _monstersClass: Map<string, GameMonsterClass> = new Map<string, GameMonsterClass>();
 
-  static getInstance() {
+  static getInstance(): EntitiesFactory {
     if (!EntitiesFactory.instance) {
       EntitiesFactory.instance = new EntitiesFactory();
     }

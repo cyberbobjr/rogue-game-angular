@@ -11,4 +11,8 @@ export class Weapon implements Iobject {
   constructor(private _jsonData: JsonWeapon) {
     this.name = _jsonData.name;
   }
+
+  getInfo(): string {
+    return `${this.name}`;
+  }
 }

@@ -5,4 +5,6 @@ export interface Iobject {
   name: string;
   sprite: Sprite;
   position: Position;
+
+  getInfo(): string;
 }

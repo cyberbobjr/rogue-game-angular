@@ -201,6 +201,10 @@ export abstract class Entity implements Iobject, IEntity {
     return (this._currentAction) ? this._currentAction : null;
   }
 
+  getInfo(): string {
+    return '';
+  }
+
   setNextAction(action: Iaction) {
     this._currentAction = action;
   }
