@@ -1,10 +1,7 @@
-<div class="container-fluid">
-  <div class="panel">
-    <div class="panel-heading">Player Info</div>
-    <div class="panel-body">
-      <div *ngFor="let attribute of attributes">{{attribute}} : {{_player?.attributes.get(attribute)}}</div>
-      <br/>
-    </div>
+<div class="panel">
+  <div class="panel-heading">Player Info</div>
+  <div class="panel-body">
+    <div *ngFor="let attribute of attributes">{{attribute}} : {{_player?.attributes.get(attribute)}}</div>
+    <br/>
   </div>
-  <p>{{message}}</p>
 </div>

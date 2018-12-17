@@ -3,7 +3,6 @@ import {EventLog} from '../../../../core/classes/event-log';
 import {AttributesFactory} from '../../../../core/factories/attributes-factory';
 import {EntitiesService} from '../../services/entities.service';
 import {Player} from '../../../../core/classes/entities/player';
-import {GameObjectFactory} from '../../../../core/factories/game-object-factory';
 
 @Component({
              selector: 'app-info-page',
@@ -16,7 +15,6 @@ export class InfoPageComponent implements OnInit {
   private _player: Player = null;
 
   constructor(private _entitiesService: EntitiesService) {
-    const test = new GameObjectFactory();
   }
 
   ngOnInit() {
@@ -24,12 +22,6 @@ export class InfoPageComponent implements OnInit {
     for (const [attribute, value] of AttributesFactory.getAttributes()) {
       this.attributes.push(attribute);
     }
-
-    EventLog.getInstance()
-            .message$
-            .subscribe((message: string) => {
-              this.message = message;
-            });
   }
 
 }
