@@ -5,7 +5,7 @@ import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
 
-export class AttackAction implements Iaction {
+export class AttackMeleeAction implements Iaction {
   private _info = '';
 
   constructor(private _target: Entity,

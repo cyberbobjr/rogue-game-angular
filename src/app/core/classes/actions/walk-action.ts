@@ -6,7 +6,7 @@ import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
-import {AttackAction} from './attack-action';
+import {AttackMeleeAction} from './attack-melee-action';
 
 export class WalkAction implements Iaction {
   private _info = '';
@@ -27,7 +27,7 @@ export class WalkAction implements Iaction {
     const result = ActionResult.FAILURE;
     if (tile instanceof Entity) {
       EventLog.getInstance().message = 'You hit ' + tile.name;
-      result.alternative = new AttackAction(tile as Entity, this._mapEngine);
+      result.alternative = new AttackMeleeAction(tile as Entity, this._mapEngine);
       return result;
     }
     result.alternative = tile.onHit(actor);

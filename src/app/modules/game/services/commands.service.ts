@@ -4,6 +4,7 @@ import {MoveE, MoveN, MoveNE, MoveNW, MoveS, MoveSE, MoveSW, MoveW} from '../../
 import {SaveCommand} from '../../../core/classes/commands/save-command';
 import {OpenDoorCommand} from '../../../core/classes/commands/open-door-command';
 import {TakeCommand} from '../../../core/classes/commands/take-command';
+import {AttackDistance} from '../../../core/classes/commands/attack-distance';
 
 @Injectable({
               providedIn: 'root'
@@ -24,6 +25,7 @@ export class CommandsService {
   KeyO: Command;
   KeyS: Command;
   KeyT: Command;
+  KeyF: Command;
 
   constructor() {
     this._initCommand();
@@ -45,5 +47,6 @@ export class CommandsService {
     this.KeyO = new OpenDoorCommand();
     this.KeyS = new SaveCommand();
     this.KeyT = new TakeCommand();
+    this.KeyF = new AttackDistance();
   }
 }

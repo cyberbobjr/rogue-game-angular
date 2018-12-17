@@ -6,7 +6,7 @@ import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
-import {AttackAction} from './attack-action';
+import {AttackMeleeAction} from './attack-melee-action';
 import {Monster} from '../entities/monster';
 
 export class ChaseAction implements Iaction {
@@ -42,7 +42,7 @@ export class ChaseAction implements Iaction {
     }
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
-      result.alternative = new AttackAction(info, this._mapEngine);
+      result.alternative = new AttackMeleeAction(info, this._mapEngine);
       return result;
     }
     if (info instanceof Monster) {

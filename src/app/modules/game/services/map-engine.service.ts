@@ -14,6 +14,7 @@ import AStar from 'rot-js/lib/path/astar';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
+import {Monster} from '../../../core/classes/entities/monster';
 
 @Injectable({
               providedIn: 'root'
@@ -27,6 +28,11 @@ export class MapEngine implements IMapEngine {
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _mainActor: Entity = null;
   private _seed: number;
+  private _entitiesVisibles: Array<Entity> = [];
+
+  get entitiesVisibles(): Array<Entity> {
+    return this._entitiesVisibles;
+  }
 
   get seed(): number {
     return this._seed;
@@ -105,11 +111,16 @@ export class MapEngine implements IMapEngine {
     this._resetLightMap(this._gameMap);
     const lightRadius: number = this._mainActor.lightRadius;
     const lightPower: number = this._mainActor.ligthPower;
+    this._entitiesVisibles.splice(0);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        const sprite = <Sprite>this._gameMap.content[y][x].sprite;
+        const tile: Tile = <Tile>this._gameMap.content[y][x];
+        const sprite = tile.sprite;
         sprite.light = true;
         sprite.visibility = R / lightPower;
+        if (tile instanceof Monster && sprite.visibility > 0) {
+          this._entitiesVisibles.push(<Entity>this._gameMap.content[y][x]);
+        }
       } catch (e) {
       }
     });

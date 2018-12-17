@@ -12,7 +12,8 @@ export class MainMapComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyEvent(keyboardEvent: KeyboardEvent) {
-    this._gameEngineService.handleKeyEvent(keyboardEvent);
+    const handleKeyEvent = this._gameEngineService.handleKeyEvent;
+    handleKeyEvent(keyboardEvent);
     keyboardEvent.preventDefault();
     keyboardEvent.stopPropagation();
     return false;

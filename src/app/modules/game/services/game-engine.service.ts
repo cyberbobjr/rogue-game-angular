@@ -17,6 +17,15 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
 export class GameEngineService {
   private _gameLoop: any = null;
   private _timeStart: any = null;
+  private _handleKeyEvent: (key: KeyboardEvent) => void = null;
+
+  get handleKeyEvent(): (key: KeyboardEvent) => void {
+    return this._handleKeyEvent.bind(this);
+  }
+
+  set handleKeyEvent(value: (key: KeyboardEvent) => void) {
+    this._handleKeyEvent = value;
+  }
 
   get mapEngine(): MapEngine {
     return this._mapEngine;
@@ -33,6 +42,7 @@ export class GameEngineService {
               private _commandService: CommandsService,
               private _storageService: StorageService) {
     console.log('Game engine created');
+    this._handleKeyEvent = this.handleActionKeyEvent;
   }
 
   startGameLoop() {
@@ -58,7 +68,7 @@ export class GameEngineService {
     window.cancelAnimationFrame(this._gameLoop);
   }
 
-  handleKeyEvent(key: KeyboardEvent) {
+  handleActionKeyEvent(key: KeyboardEvent): void {
     const player = this._entitiesService.player;
     switch (key.code) {
       case 'ArrowUp':
@@ -105,6 +115,9 @@ export class GameEngineService {
         break;
       case 'KeyT':
         this._commandService.KeyT.execute(player, this);
+        break;
+      case 'KeyF':
+        this._commandService.KeyF.execute(player, this);
         break;
     }
     this.processAction();

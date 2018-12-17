@@ -39,6 +39,10 @@ export class Sprite {
     this._color = value;
   }
 
+  set bgColor(value: string) {
+    this._bgColor = value;
+  }
+
   get bgColor(): string {
     return Color(this._bgColor)
       .darken(this._visibility)
