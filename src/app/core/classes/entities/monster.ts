@@ -13,28 +13,15 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 export class Monster extends Entity {
 
   static fromJson(jsonData: JsonEntity): Monster {
-    const {name, id, type, gp, hp, strength, constitution, charisma, wisdom, intelligence, dexterity, ac} = jsonData;
     const monster: Monster = new this();
 
-    monster.id = id;
-    monster.name = name;
+    Object.assign(monster, jsonData);
     monster.position = new Position(jsonData.position._x, jsonData.position._y);
     monster.sprite = new Sprite(jsonData.sprite._character, jsonData.sprite._color);
-    monster.strength = strength;
-    monster.dexterity = dexterity;
-    monster.constitution = constitution;
-    monster.intelligence = intelligence;
-    monster.wisdom = wisdom;
-    monster.charisma = charisma;
-    monster.ac = ac;
-    monster.hp = hp;
-    monster.gp = gp;
-    monster.type = type;
 
-    const weaponArray: Array<Weapon> = [];
     jsonData.weapons.forEach((data: { id: string, _jsonData: JsonWeapon }) => {
       monster.weapons.push(GameObjectFactory.getInstance()
-                                        .createFromJson(data._jsonData) as Weapon);
+                                            .createFromJson(data._jsonData) as Weapon);
     });
 
     return monster;
@@ -59,6 +46,9 @@ export class Monster extends Entity {
     return monster;
   }
 
+  constructor() {
+    super();
+  }
 
   onDead(mapEngine: MapEngine): void {
     // drop gold
@@ -74,9 +64,5 @@ export class Monster extends Entity {
   setPosition(position: Position): Monster {
     this.position = position;
     return this;
-  }
-
-  constructor() {
-    super();
   }
 }

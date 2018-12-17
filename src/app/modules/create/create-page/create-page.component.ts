@@ -53,14 +53,13 @@ export class CreatePageComponent implements OnInit {
 
   onSave() {
     const gameClass: GameClass = GameClassFactory.getInstance()
-                                                  .createGameClass(ClassType.BARBARIAN);
-    console.log(gameClass);
-    const player: Entity = (<Entity>EntitiesFactory.getInstance().createEntity(EntityType.PLAYER))
-      .setClass(gameClass)
+                                                 .createGameClass(ClassType.BARBARIAN);
+    const player: Entity = (<Entity>EntitiesFactory.getInstance()
+                                                   .createEntity(EntityType.PLAYER))
       .setRace(RaceFactory.createRace(RaceType.HUMAN));
 
     player.attributes = this._diceService.abilityScore;
-    player.hp = player.hitDice + player.constitution;
+    player.hp = gameClass.getHitDice() + player.constitution;
     player.gp = gameClass.getGp();
 
     this._storageService.savePlayer(<Entity>player);

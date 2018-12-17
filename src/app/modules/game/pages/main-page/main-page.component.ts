@@ -6,7 +6,6 @@ import {EntityType} from '../../../../core/enums/entity-type.enum';
 import {EntitiesService} from '../../services/entities.service';
 import {Room} from 'rot-js/lib/map/features';
 import {IdleAction} from '../../../../core/classes/actions/idle-action';
-import {Entity} from '../../../../core/classes/base/entity';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Monster} from '../../../../core/classes/entities/monster';
@@ -44,7 +43,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
         const orc: Monster = EntitiesFactory.getInstance()
                                             .createEntity(EntityType.ORC, this._mapEngine.getRoomCenter(rooms[nb])) as Monster;
         orc.setNextAction(new IdleAction(orc, this._mapEngine));
-        console.log(orc);
         this._entitiesService.addEntity(orc);
       }
     }

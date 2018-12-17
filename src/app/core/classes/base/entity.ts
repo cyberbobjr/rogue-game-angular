@@ -10,7 +10,6 @@ import {EventLog} from '../event-log';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {IGameClass} from '../../interfaces/i-game-class';
 import {IRace} from '../../interfaces/i-race';
 import {Weapon} from './weapon';
 
@@ -30,7 +29,6 @@ export abstract class Entity implements Iobject, IEntity {
   protected _ac: number;
   protected _gp: number;
 
-  protected _gameClass: IGameClass;
   protected _race: IRace;
   protected _hitDice: number;
   protected _id: string;
@@ -64,10 +62,6 @@ export abstract class Entity implements Iobject, IEntity {
 
   set hitDice(value: number) {
     this._hitDice = value;
-  }
-
-  get gameClass(): IGameClass {
-    return this._gameClass;
   }
 
   get gp(): number {
@@ -200,12 +194,6 @@ export abstract class Entity implements Iobject, IEntity {
 
   setRace(race: IRace): Entity {
     this._race = race;
-    return this;
-  }
-
-  setClass(gameClass: IGameClass): Entity {
-    this._gameClass = gameClass;
-    this._hitDice = gameClass.getHitDice();
     return this;
   }
 

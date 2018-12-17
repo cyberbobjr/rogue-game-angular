@@ -2,6 +2,7 @@
   {
     "id": "club",
     "name": "club",
+    "type" : "melee",
     "cost": {
       "unit": "sp",
       "value": 1
@@ -23,6 +24,7 @@
   {
     "id": "handaxe",
     "name": "Handaxe",
+    "type" : "melee",
     "cost": {
       "unit": "gp",
       "value": 5
@@ -48,6 +50,7 @@
   {
     "id": "greataxe",
     "name": "Greataxe",
+    "type" : "melee",
     "cost": {
       "unit": "gp",
       "value": 30

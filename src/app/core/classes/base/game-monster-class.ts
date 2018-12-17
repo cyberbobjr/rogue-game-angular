@@ -65,4 +65,8 @@ export class GameMonsterClass {
 
   constructor(private _jsonData: JsonMonster) {
   }
+
+  toJson(): any {
+    return this._jsonData;
+  }
 }

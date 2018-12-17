@@ -22,17 +22,14 @@ export class GameObjectFactory {
   }
 
   createFromJson(jsonData: any): GameObject | null {
-    switch (jsonData['id']) {
+    switch (jsonData['ObjectType']) {
       case 'GOLD' :
         return new Gold(jsonData['_amount']);
-      default:
+      case 'WEAPON' :
         return this._weapons.get(jsonData['id']);
+      default:
+        return null;
     }
-  }
-
-  getRandomWeapon(): Weapon | null {
-    const weaponArray = Array.from(this._weapons);
-    return weaponArray[Math.floor(Math.random() * weaponArray.length)][1];
   }
 
   getWeaponById(weaponId: string): Weapon | null {

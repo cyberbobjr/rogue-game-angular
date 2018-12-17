@@ -52,6 +52,7 @@ export interface JsonEntity {
 export interface JsonWeapon {
   id: string;
   name: string;
+  type: string;
   cost: {
     unit: string,
     value: number

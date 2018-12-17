@@ -1,14 +1,13 @@
 import {Sprite} from './sprite';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
-import {Position} from './position';
 import {Entity} from './entity';
 import {GameObject} from './game-object';
 
 export class Gold implements GameObject {
-  name = 'GOLD';
-  position: Position;
+  name = 'Gold';
   sprite: Sprite;
+  objectType = 'GOLD';
 
   get amount(): number {
     return this._amount;

@@ -1,5 +1,4 @@
 import {Sprite} from './sprite';
-import {Position} from './position';
 import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {Entity} from './entity';
@@ -7,8 +6,8 @@ import {Entity} from './entity';
 export class Weapon extends GameObject {
   id: string;
   name: string;
-  position: Position;
   sprite: Sprite;
+  objectType = 'WEAPON';
 
   static fromJson(_jsonData: JsonWeapon): Weapon {
     return new this(_jsonData);

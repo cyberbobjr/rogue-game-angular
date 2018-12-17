@@ -18,7 +18,7 @@ export class EntitiesFactory {
     return EntitiesFactory.instance;
   }
 
-  static createJsonEntity(jsonData: JsonEntity): Entity | null {
+  static createFromJson(jsonData: JsonEntity): Entity | null {
     return Monster.fromJson(jsonData);
   }
 
