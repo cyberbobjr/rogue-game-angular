@@ -12,7 +12,7 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class Monster extends Entity {
 
-  static fromJson(jsonData: JsonEntity): Monster {
+  static fromJson(jsonData: JsonEntity): Entity {
     const monster: Monster = new this();
 
     Object.assign(monster, jsonData);
