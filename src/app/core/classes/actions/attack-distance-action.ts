@@ -28,7 +28,7 @@ export class AttackDistanceAction implements Iaction {
     this._setTargetBgColor();
     this._handleKeyBackup = this._gameEngine.handleKeyEvent;
     this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
-    return ActionResult.FAILURE;
+    return ActionResult.WAIT;
   }
 
   getInfo(): string {
@@ -46,6 +46,7 @@ export class AttackDistanceAction implements Iaction {
       case 'KeyF':
         this._fire();
         this._restoreGameEngineKeyHandler();
+        this._gameEngine.processAction();
         break;
       default:
         this._restoreGameEngineKeyHandler();
@@ -95,6 +96,6 @@ export class AttackDistanceAction implements Iaction {
     const target: Entity = this._targets[this._currentTargetIndex];
     const damage: number = CombatResolver.DistanceAttack(this._actor, target);
     target.onHit(this._actor, damage);
-    return ActionResult.SUCCESS;
+    this._actor.setNextAction(null);
   }
 }
