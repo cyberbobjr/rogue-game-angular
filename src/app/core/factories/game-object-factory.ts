@@ -21,8 +21,8 @@ export class GameObjectFactory {
     return GameObjectFactory.instance;
   }
 
-  createFromJson(jsonData: any): GameObject | null {
-    switch (jsonData['ObjectType']) {
+  createFromJson(objectType: string, jsonData: any): GameObject | null {
+    switch (objectType) {
       case 'GOLD' :
         return new Gold(jsonData['_amount']);
       case 'WEAPON' :

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Entity} from '../../../core/classes/base/entity';
 import {Position} from '../../../core/classes/base/position';
-import {EventLog} from '../../../core/classes/event-log';
 import {MapEngine} from './map-engine.service';
 
 @Injectable({
@@ -25,14 +24,10 @@ export class EntitiesService {
 
   set player(actor: Entity) {
     this._player = actor;
-    this._entities[0] = this._player;
+    this._entities.unshift(this._player);
   }
 
   constructor() {
-  }
-
-  addEntity(actor: Entity) {
-    this._entities.push(actor);
   }
 
   getEntityAt(position: Position): Entity | null {

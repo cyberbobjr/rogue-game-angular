@@ -7,7 +7,7 @@ import {TranslateService} from '@ngx-translate/core';
              styleUrls: ['./app.component.css']
            })
 export class AppComponent implements OnInit {
-  title = 'rotJs';
+  title = 'TsRogue';
 
   constructor(translate: TranslateService) {
     translate.setDefaultLang('en');
@@ -15,6 +15,5 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-
   }
 }

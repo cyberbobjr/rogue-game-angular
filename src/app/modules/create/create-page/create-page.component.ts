@@ -14,6 +14,7 @@ import {RaceType} from '../../../core/enums/race-type.enum';
 import {IGameClass} from '../../../core/interfaces/i-game-class';
 import {Router} from '@angular/router';
 import {GameClass} from '../../../core/classes/base/game-class';
+import {IRace} from '../../../core/interfaces/i-race';
 
 @Component({
              selector: 'app-create-page',
@@ -52,17 +53,19 @@ export class CreatePageComponent implements OnInit {
   }
 
   onSave() {
+    let player: Entity = <Entity>EntitiesFactory.getInstance()
+                                                .createEntity(EntityType.PLAYER);
+    player.attributes = this._diceService.abilityScore;
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                  .createGameClass(ClassType.BARBARIAN);
-    const player: Entity = (<Entity>EntitiesFactory.getInstance()
-                                                   .createEntity(EntityType.PLAYER))
-      .setRace(RaceFactory.createRace(RaceType.HUMAN));
+    const gameRace: IRace = RaceFactory.createRace(RaceType.HUMAN);
 
-    player.attributes = this._diceService.abilityScore;
-    player.hp = gameClass.getHitDice() + player.constitution;
-    player.gp = gameClass.getGp();
+    player = player.setRace(gameRace)
+                   .setGameClass(gameClass);
 
-    this._storageService.savePlayer(<Entity>player);
-    this._router.navigateByUrl('main');
+
+    console.log(player);
+    StorageService.savePlayer(<Entity>player);
+    //this._router.navigateByUrl('main');
   }
 }

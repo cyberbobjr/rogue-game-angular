@@ -12,6 +12,9 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {IRace} from '../../interfaces/i-race';
 import {Weapon} from './weapon';
+import {GameClass} from './game-class';
+import {JsonEntity} from '../../interfaces/json-interfaces';
+import {GameObjectFactory} from '../../factories/game-object-factory';
 
 @Injectable({
               providedIn: 'root'
@@ -184,7 +187,7 @@ export abstract class Entity implements Iobject, IEntity {
       hp: this.hp,
       gp: this.gp,
       hitDice: this.hitDice,
-      weapons: this._weapons
+      weapons: this.weapons
     };
   }
 
@@ -194,6 +197,13 @@ export abstract class Entity implements Iobject, IEntity {
 
   setRace(race: IRace): Entity {
     this._race = race;
+    return this;
+  }
+
+  setGameClass(gameClass: GameClass): Entity {
+    this._hitDice = gameClass.getHitDice();
+    this._hp = this._hitDice + this.constitution;
+    this._gp = gameClass.getGp();
     return this;
   }
 

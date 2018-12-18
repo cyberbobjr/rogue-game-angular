@@ -9,6 +9,8 @@ import {IdleAction} from '../../../../core/classes/actions/idle-action';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Monster} from '../../../../core/classes/entities/monster';
+import {Router} from '@angular/router';
+import {Entity} from '../../../../core/classes/base/entity';
 
 @Component({
              selector: 'app-main-page',
@@ -20,14 +22,15 @@ export class MainPageComponent implements OnInit, OnDestroy {
   constructor(private _mapEngine: MapEngine,
               private _gameEngineService: GameEngineService,
               private _entitiesService: EntitiesService,
-              private _storage: StorageService) {
+              private _storage: StorageService,
+              private _router: Router) {
   }
 
   ngOnInit() {
     console.log('Main page init');
     this._initMap();
-    this._initPlayer();
     this._initMonsters();
+    this._initPlayer();
     this._gameEngineService.startGameLoop();
   }
 
@@ -36,26 +39,22 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   private _initMonsters() {
-    if (!this._storage.loadEntities()) {
-      const rooms: Array<Room> = this._mapEngine.getRooms();
-      const nbRooms: number = rooms.length;
-      for (let nb = 1; nb < nbRooms - 2; nb++) {
-        const orc: Monster = EntitiesFactory.getInstance()
-                                            .createEntity(EntityType.ORC, this._mapEngine.getRoomCenter(rooms[nb])) as Monster;
-        orc.setNextAction(new IdleAction(orc, this._mapEngine));
-        this._entitiesService.addEntity(orc);
-      }
+    const monsters: Array<Entity> = this._storage.loadEntities();
+    if (!monsters) {
+      this._router.navigateByUrl('');
+    } else {
+      this._entitiesService.entities = monsters;
     }
   }
 
   private _initPlayer() {
     const playerLoaded: Player = StorageService.loadPlayer();
-    if (playerLoaded && !playerLoaded.position) {
-      playerLoaded.position = this._mapEngine.getStartPosition();
+    if (!playerLoaded || !playerLoaded.position) {
+      this._router.navigateByUrl('');
+    } else {
+      this._entitiesService.player = playerLoaded;
+      this._mapEngine.mainActor = this._entitiesService.player;
     }
-    this._entitiesService.player = playerLoaded ? playerLoaded : EntitiesFactory.getInstance()
-                                                                                .createEntity(EntityType.PLAYER, this._mapEngine.getStartPosition());
-    this._mapEngine.mainActor = this._entitiesService.player;
   }
 
   private _initMap() {

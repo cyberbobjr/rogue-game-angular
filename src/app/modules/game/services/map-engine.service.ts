@@ -6,7 +6,6 @@ import {TilesFactory} from '../../../core/factories/tiles-factory';
 import {TileType} from '../../../core/enums/tile-type.enum';
 import {Tile} from '../../../core/classes/base/tile';
 import {Position} from '../../../core/classes/base/position';
-import {Sprite} from '../../../core/classes/base/sprite';
 import {EntitiesService} from './entities.service';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {Path, RNG} from 'rot-js/lib';
@@ -15,6 +14,9 @@ import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
 import {Monster} from '../../../core/classes/entities/monster';
+import {EntitiesFactory} from '../../../core/factories/entities-factory';
+import {EntityType} from '../../../core/enums/entity-type.enum';
+import {IdleAction} from '../../../core/classes/actions/idle-action';
 
 @Injectable({
               providedIn: 'root'
@@ -99,6 +101,19 @@ export class MapEngine implements IMapEngine {
     return this._map;
   }
 
+  generateMonsters(): Array<Entity> {
+    const monsters: Array<Entity> = [];
+    const rooms: Array<Room> = this.getRooms();
+    const nbRooms: number = rooms.length;
+    for (let nb = 1; nb < nbRooms - 2; nb++) {
+      const orc: Monster = EntitiesFactory.getInstance()
+                                          .createEntity(EntityType.ORC, this.getRoomCenter(rooms[nb])) as Monster;
+      orc.setNextAction(new IdleAction(orc, this));
+      monsters.push(orc);
+    }
+    return monsters;
+  }
+
   loadMap() {
     this._createFovCasting();
   }
@@ -130,8 +145,6 @@ export class MapEngine implements IMapEngine {
   getStartPosition(): Position {
     const rooms: Array<Room> = this.getRooms();
     const room: Room = rooms[0];
-    const x = room.getLeft() + Math.round((room.getRight() - room.getLeft()) / 2);
-    const y = room.getTop() + Math.round((room.getBottom() - room.getTop()) / 2);
     return this.getRoomCenter(room);
   }
 

@@ -19,7 +19,7 @@ export class EntitiesFactory {
   }
 
   static createFromJson(jsonData: JsonEntity): Entity {
-    return Monster.fromJson(jsonData);
+    return Monster.fromJSON(jsonData);
   }
 
   constructor() {
@@ -32,7 +32,7 @@ export class EntitiesFactory {
   createEntity(type: EntityType, position?: Position): Entity | null {
     switch (type) {
       case EntityType.PLAYER:
-        return new Player('player', position);
+        return new Player(position);
       case EntityType.ORC:
         return Monster.fromMonsterClass(this._monstersClass.get('ORC'))
                       .setPosition(position);

@@ -27,12 +27,17 @@ export class StorageService {
     return Player.fromJSON(playerLoaded);
   }
 
+  static savePlayer(player: Entity): void {
+    window.localStorage.setItem('player', JSON.stringify(player));
+  }
+
+
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine) {
   }
 
   saveGameState() {
-    this.savePlayer(this._entitiesService.player);
+    StorageService.savePlayer(this._entitiesService.player);
     this._saveMap();
     this._saveEntities();
   }
@@ -53,26 +58,22 @@ export class StorageService {
     }
   }
 
-  loadEntities(): boolean {
+  loadEntities(): Array<Entity> | null {
+    const monsters: Array<Entity> = [];
     const json: Array<JsonEntity> = JSON.parse(window.localStorage.getItem('entities'));
     if (!json) {
-      return false;
+      return null;
     }
     try {
       json.forEach((entity: JsonEntity) => {
         const monster: Entity = EntitiesFactory.createFromJson(entity);
         monster.setNextAction(new IdleAction(monster, this._mapEngine));
-        this._entitiesService.addEntity(monster);
+        monsters.push(monster);
       });
-      return true;
     } catch (e) {
       console.log(e);
-      return false;
     }
-  }
-
-  savePlayer(player: Entity): void {
-    window.localStorage.setItem('player', JSON.stringify(player));
+    return monsters;
   }
 
   private _loadTile(mapJson: JsonMap) {
@@ -89,7 +90,7 @@ export class StorageService {
   private _loadContents(tile: Tile, jsonContent: Array<any>) {
     jsonContent.forEach((content: any) => {
       const gameObject: GameObject = GameObjectFactory.getInstance()
-                                                      .createFromJson(content);
+                                                      .createFromJson(content.objectType, content);
       if (gameObject) {
         tile.dropOn(gameObject);
       }
