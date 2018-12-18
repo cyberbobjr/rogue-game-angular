@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {EntitiesService} from '../../game/services/entities.service';
 import {Router} from '@angular/router';
 import {MapEngine} from '../../game/services/map-engine.service';
-import {Position} from '../../../core/classes/base/position';
 import {StorageService} from '../../game/services/storage.service';
 import {Player} from '../../../core/classes/entities/player';
 

@@ -42,7 +42,9 @@ export class Player extends Entity {
     const entity: Player = new this();
     const weapons: Array<Weapon> = [];
     Object.assign(entity, jsonData);
-    entity.position = new Position(jsonData.position._x, jsonData.position._y);
+    if (jsonData.position) {
+      entity.position = new Position(jsonData.position._x, jsonData.position._y);
+    }
     entity.sprite = new Sprite(jsonData.sprite._character, jsonData.sprite._color);
 
     jsonData.weapons.forEach(({id, objectType, _jsonData}) => {
