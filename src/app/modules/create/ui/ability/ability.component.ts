@@ -17,6 +17,6 @@ export class AbilityComponent implements OnInit {
   }
 
   onBlur() {
-    this._diceService.abilityScore.set(this.ability, this.value);
+    this._diceService.attributesScore.set(this.ability, this.value);
   }
 }

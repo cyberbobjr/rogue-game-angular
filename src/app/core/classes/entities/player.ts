@@ -6,15 +6,13 @@ import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
-import {IGameClass} from '../../interfaces/i-game-class';
+import {JsonEntity} from '../../interfaces/json-interfaces';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Weapon} from '../base/weapon';
 
 export class Player extends Entity {
   private _xp = 0;
   private _level = 1;
-  private _gameClass: IGameClass = null;
 
   get ac(): number {
     return 10 + this.attributes.get('dexterity');
@@ -72,12 +70,6 @@ export class Player extends Entity {
     }
     this.sprite = sprite ? sprite : SpritesFactory.createSprite(SpriteType.PLAYER);
     this.sprite.light = true;
-  }
-
-  setClass(gameClass: IGameClass): Entity {
-    this._gameClass = gameClass;
-    this._hitDice = gameClass.getHitDice();
-    return this;
   }
 
   onHit(attacker: Entity, damage: number): Iaction | null {

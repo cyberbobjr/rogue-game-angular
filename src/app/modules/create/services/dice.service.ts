@@ -7,18 +7,10 @@ import {AttributesFactory} from '../../../core/factories/attributes-factory';
             })
 export class DiceService {
   dicesScore: Array<IDice> = [];
-  abilityScore: Map<string, number> = null;
+  attributesScore: Map<string, number> = null;
 
   constructor() {
-    this.abilityScore = new Map<string, number>(AttributesFactory.getAttributes());
-  }
-
-  removeDiceScoreById(id: string) {
-    this.dicesScore.forEach((score: IDice, index: number) => {
-      if (score.id === id) {
-        this.dicesScore.splice(index, 1);
-      }
-    });
+    this.attributesScore = new Map<string, number>(AttributesFactory.getAttributes());
   }
 
   addDiceScore(value: number) {

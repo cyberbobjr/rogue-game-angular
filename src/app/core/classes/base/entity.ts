@@ -13,8 +13,6 @@ import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {IRace} from '../../interfaces/i-race';
 import {Weapon} from './weapon';
 import {GameClass} from './game-class';
-import {JsonEntity} from '../../interfaces/json-interfaces';
-import {GameObjectFactory} from '../../factories/game-object-factory';
 
 @Injectable({
               providedIn: 'root'

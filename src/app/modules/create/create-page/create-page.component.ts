@@ -31,7 +31,7 @@ export class CreatePageComponent implements OnInit {
   }
 
   ngOnInit() {
-    for (const attributes of this._diceService.abilityScore.keys()) {
+    for (const attributes of this._diceService.attributesScore.keys()) {
       this.attributesKeys.push(attributes);
     }
   }
@@ -55,17 +55,16 @@ export class CreatePageComponent implements OnInit {
   onSave() {
     let player: Entity = <Entity>EntitiesFactory.getInstance()
                                                 .createEntity(EntityType.PLAYER);
-    player.attributes = this._diceService.abilityScore;
+    player.attributes = this._diceService.attributesScore;
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                  .createGameClass(ClassType.BARBARIAN);
-    const gameRace: IRace = RaceFactory.createRace(RaceType.HUMAN);
+    const gameRace: IRace = RaceFactory.getInstance()
+                                       .createRace(RaceType.HUMAN);
 
     player = player.setRace(gameRace)
                    .setGameClass(gameClass);
 
-
-    console.log(player);
     StorageService.savePlayer(<Entity>player);
-    //this._router.navigateByUrl('main');
+    this._router.navigateByUrl('main');
   }
 }

@@ -129,3 +129,16 @@ export interface JsonMonster {
   };
   weapons: [string];
 }
+
+export interface JsonRace {
+  id: string;
+  name: string;
+  modifiers: {
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    wisdom: number;
+    charisma: number;
+  };
+}
