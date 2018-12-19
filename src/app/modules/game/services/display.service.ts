@@ -6,6 +6,7 @@ import {Sprite} from '../../../core/classes/base/sprite';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
+import {EffectEngine} from './effect-engine.service';
 
 @Injectable({
               providedIn: 'root'
@@ -41,7 +42,8 @@ export class DisplayService {
     return this.display.getContainer();
   }
 
-  constructor(private mapEngine: MapEngine) {
+  constructor(private _mapEngine: MapEngine,
+              private _effectEngine: EffectEngine) {
   }
 
   computeBounds() {
@@ -51,8 +53,9 @@ export class DisplayService {
   }
 
   draw() {
-    const gameMap: GameMap<Iobject> = this.mapEngine.computeFov(this.cameraPosition);
-    const viewport: GameMap<Iobject> = this.computeViewport(gameMap);
+    const gameMap: GameMap<Iobject> = this._mapEngine.computeFOV(this.cameraPosition);
+    const effectGameMap = this._effectEngine.drawEffects(gameMap.clone());
+    const viewport: GameMap<Iobject> = this.extractViewport(effectGameMap);
     this.drawViewPort(viewport);
   }
 
@@ -74,7 +77,7 @@ export class DisplayService {
     }
   }
 
-  private computeViewport(currentMap: GameMap<Iobject>): GameMap<Iobject> {
+  private extractViewport(currentMap: GameMap<Iobject>): GameMap<Iobject> {
     return currentMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

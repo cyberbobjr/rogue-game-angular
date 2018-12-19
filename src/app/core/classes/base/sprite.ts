@@ -1,8 +1,7 @@
 import * as Color from 'color';
 import {JsonSprite} from '../../interfaces/json-interfaces';
 
-export class Sprite {
-  protected _light: boolean;
+export class Sprite implements ISprite {
   protected _visibility = 0;
 
   get visibility(): number {
@@ -57,7 +56,13 @@ export class Sprite {
     return sprite;
   }
 
-  constructor(private _character: string, private _color: string = '#afafaf', private _bgColor: string = '#000000') {
-    this._light = false;
+  constructor(private _character: string,
+              private _color: string = '#afafaf',
+              private _bgColor: string = '#000000',
+              private _light = false) {
+  }
+
+  clone(): Sprite {
+    return new Sprite(this._character, this._color, this._bgColor, this._light);
   }
 }

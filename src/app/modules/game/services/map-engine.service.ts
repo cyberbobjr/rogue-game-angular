@@ -115,14 +115,14 @@ export class MapEngine implements IMapEngine {
     return monsters;
   }
 
-  computeFov(position: Position): GameMap<Iobject> {
+  computeFOV(position: Position): GameMap<Iobject> {
     if (!this._mainActor) {
       return;
     }
-    this._gameMap = this._putEntitiesOn(this._map.clone());
-    this._resetLightMap(this._gameMap);
     const lightRadius: number = this._mainActor.lightRadius;
     const lightPower: number = this._mainActor.ligthPower;
+    this._gameMap = this._putEntitiesOn(this._map.clone());
+    this._resetLightMap(this._gameMap);
     this._entitiesVisibles.splice(0);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {

@@ -7,6 +7,7 @@ import {CommandsService} from './commands.service';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {StorageService} from './storage.service';
 import {Entity} from '../../../core/classes/base/entity';
+import {EffectEngine} from './effect-engine.service';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -54,8 +55,10 @@ export class GameEngineService {
   }
 
   gameLoop(timestamp: any) {
-    if (timestamp - this._timeStart > 2) {
+    if (timestamp - this._timeStart > 50) {
       this._updateGame();
+      EffectEngine.getInstance()
+                  .tick(timestamp);
       this._drawMap();
       this._timeStart = performance.now();
     }
@@ -132,7 +135,7 @@ export class GameEngineService {
     this._displayService.draw();
   }
 
-   processAction() {
+  processAction() {
     for (let currentActorIndex = 0; currentActorIndex < this._entitiesService.entities.length; currentActorIndex++) {
 
       const currentActor: Entity = this._entitiesService.getEntityAtIndex(currentActorIndex);
