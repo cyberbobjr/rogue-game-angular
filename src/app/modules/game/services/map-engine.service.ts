@@ -115,10 +115,6 @@ export class MapEngine implements IMapEngine {
     return monsters;
   }
 
-  loadMap() {
-    this._createFovCasting();
-  }
-
   computeFov(position: Position): GameMap<Iobject> {
     if (!this._mainActor) {
       return;
