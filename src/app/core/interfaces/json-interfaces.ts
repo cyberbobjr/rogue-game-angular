@@ -48,7 +48,7 @@ export interface JsonEntity {
   wisdom: number;
   charisma: number;
   level: number;
-  weapons: [{ id: string, objectType: string, _jsonData: JsonWeapon }];
+  inventory: [{ id: string, objectType: string, _jsonData: JsonWeapon }];
 }
 
 export interface JsonWeapon {

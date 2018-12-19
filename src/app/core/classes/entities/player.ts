@@ -39,19 +39,19 @@ export class Player extends Entity {
   }
 
   static fromJSON(jsonData: JsonEntity): Player {
-    const entity: Player = new this();
-    const weapons: Array<Weapon> = [];
-    Object.assign(entity, jsonData);
+    let player: Player = new this();
+    const inventory: Array<Weapon> = [];
+    player = Object.assign(player, jsonData);
     if (jsonData.position) {
-      entity.position = new Position(jsonData.position._x, jsonData.position._y);
+      player.position = new Position(jsonData.position._x, jsonData.position._y);
     }
-    entity.sprite = new Sprite(jsonData.sprite._character, jsonData.sprite._color);
+    player.sprite = new Sprite(jsonData.sprite._character, jsonData.sprite._color);
 
-    jsonData.weapons.forEach(({id, objectType, _jsonData}) => {
-      weapons.push(GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon);
+    jsonData.inventory.forEach(({id, objectType, _jsonData}) => {
+      inventory.push(GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon);
     });
-    entity.weapons = weapons;
-    return entity;
+    player.inventory = inventory;
+    return player;
   }
 
   toJSON(): any {

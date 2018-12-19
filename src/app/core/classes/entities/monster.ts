@@ -13,15 +13,15 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Entity {
     const monster: Entity = new this();
-    const weapons: Array<Weapon> = [];
+    const inventory: Array<Weapon> = [];
     Object.assign(monster, jsonData);
     monster.position = new Position(jsonData.position._x, jsonData.position._y);
     monster.sprite = new Sprite(jsonData.sprite._character, jsonData.sprite._color);
 
-    jsonData.weapons.forEach(({id, objectType, _jsonData}) => {
-      weapons.push(GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon);
+    jsonData.inventory.forEach(({id, objectType, _jsonData}) => {
+      inventory.push(GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon);
     });
-    monster.weapons = weapons;
+    monster.inventory = inventory;
     return monster;
   }
 
@@ -42,7 +42,7 @@ export class Monster extends Entity {
     monster.charisma = monsterClass.charisma;
     monster.ac = monsterClass.ac;
     monster.gp = monsterClass.gp;
-    monster.weapons = monsterClass.weapons;
+    monster.inventory = monsterClass.weapons;
     return monster;
   }
 
@@ -56,7 +56,7 @@ export class Monster extends Entity {
     const tile: Tile = mapEngine.getTileAt(this.position);
     tile.dropOn(goldObject);
     // drop weapon
-    this._weapons.forEach((weapon: Weapon) => {
+    this._inventory.forEach((weapon: Weapon) => {
       tile.dropOn(weapon);
     });
   }

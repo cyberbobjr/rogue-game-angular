@@ -33,7 +33,6 @@ export class Weapon extends GameObject {
   }
 
   onTake(actor: Entity): void {
-    console.log(actor);
-    console.log(this);
+    actor.addToInventory(this);
   }
 }

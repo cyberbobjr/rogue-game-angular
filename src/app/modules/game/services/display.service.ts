@@ -42,8 +42,7 @@ export class DisplayService {
     return this.display.getContainer();
   }
 
-  constructor(private _mapEngine: MapEngine,
-              private _effectEngine: EffectEngine) {
+  constructor(private _mapEngine: MapEngine) {
   }
 
   computeBounds() {
@@ -54,8 +53,7 @@ export class DisplayService {
 
   draw() {
     const gameMap: GameMap<Iobject> = this._mapEngine.computeFOV(this.cameraPosition);
-    const effectGameMap = this._effectEngine.drawEffects(gameMap.clone());
-    const viewport: GameMap<Iobject> = this.extractViewport(effectGameMap);
+    const viewport: GameMap<Iobject> = this.extractViewport(gameMap);
     this.drawViewPort(viewport);
   }
 

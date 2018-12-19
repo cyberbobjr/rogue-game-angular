@@ -85,9 +85,9 @@ export class Tile implements Iobject {
   }
 
   onTake(actor: Entity) {
-    this._contents.forEach((gameObject: GameObject, index: number) => {
+    this._contents.forEach((gameObject: GameObject) => {
       gameObject.onTake(actor);
-      this._contents.splice(index, 1);
     });
+    this._contents.splice(0);
   }
 }

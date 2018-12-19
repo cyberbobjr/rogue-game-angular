@@ -13,6 +13,7 @@ import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {IRace} from '../../interfaces/i-race';
 import {Weapon} from './weapon';
 import {GameClass} from './game-class';
+import {GameObject} from './game-object';
 
 @Injectable({
               providedIn: 'root'
@@ -38,7 +39,7 @@ export abstract class Entity implements Iobject, IEntity {
 
   protected _ap = 0; // action points
 
-  protected _weapons: Array<Weapon> = [];
+  protected _inventory: Array<GameObject> = [];
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
@@ -70,11 +71,19 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   get weapons(): Array<Weapon> {
-    return this._weapons;
+    const filteredObjects: Array<Weapon> = [];
+    this._inventory.filter((gameObject: GameObject) => {
+      return (gameObject.objectType === 'WEAPON');
+    });
+    return filteredObjects;
   }
 
-  set weapons(value: Array<Weapon>) {
-    this._weapons = value;
+  get inventory(): Array<GameObject> {
+    return this._inventory;
+  }
+
+  set inventory(value: Array<GameObject>) {
+    this._inventory = value;
   }
 
   get id(): string {
@@ -213,7 +222,7 @@ export abstract class Entity implements Iobject, IEntity {
       hp: this.hp,
       gp: this.gp,
       hitDice: this.hitDice,
-      weapons: this.weapons,
+      inventory: this.inventory,
       speed: this.speed,
       size: this.size
     };
@@ -266,6 +275,10 @@ export abstract class Entity implements Iobject, IEntity {
 
   onDead(_mapEngine: MapEngine): void {
     EventLog.getInstance().message = `${this.name} is dead`;
+  }
+
+  addToInventory(gameObject: GameObject) {
+    this._inventory.push(gameObject);
   }
 }
 
