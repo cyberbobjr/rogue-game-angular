@@ -146,8 +146,8 @@ export class MapEngine implements IMapEngine {
   }
 
   getTilesAround(position: Position): Array<Array<Iobject>> {
-    const test = (this.gameMap.extract(position.x - 1, position.y - 1, 3, 3));
-    return (test).content;
+    const test: GameMap<Iobject> = this.gameMap.extract(position.x - 1, position.y - 1, 3, 3);
+    return test.content;
   }
 
   getTileOrEntityAt(position: Position): Iobject {
