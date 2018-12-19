@@ -4,7 +4,6 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Position} from '../base/position';
 import {TileType} from '../../enums/tile-type.enum';
 import {Entity} from '../base/entity';
-import {GameObject} from '../base/game-object';
 import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 
@@ -37,7 +36,7 @@ export class FloorTile extends Tile {
   }
 
   getInfo(): string {
-    const info = 'floor tile';
+    const info = 'floor';
     return info + super.getInfo();
   }
 }

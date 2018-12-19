@@ -68,7 +68,7 @@ export class DoorTile extends Tile {
   }
 
   getInfo(): string {
-    const info = 'door tile';
+    const info = 'door';
     return info + super.getInfo();
   }
 
