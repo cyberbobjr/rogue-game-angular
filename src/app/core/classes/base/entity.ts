@@ -33,6 +33,8 @@ export abstract class Entity implements Iobject, IEntity {
   protected _race: IRace;
   protected _hitDice: number;
   protected _id: string;
+  protected _speed: number;
+  protected _size: string;
 
   protected _weapons: Array<Weapon> = [];
 
@@ -40,6 +42,22 @@ export abstract class Entity implements Iobject, IEntity {
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  get speed(): number {
+    return this._speed;
+  }
+
+  set speed(value: number) {
+    this._speed = value;
+  }
+
+  get size(): string {
+    return this._size;
+  }
+
+  set size(value: string) {
+    this._size = value;
+  }
 
   get weapons(): Array<Weapon> {
     return this._weapons;
@@ -185,7 +203,9 @@ export abstract class Entity implements Iobject, IEntity {
       hp: this.hp,
       gp: this.gp,
       hitDice: this.hitDice,
-      weapons: this.weapons
+      weapons: this.weapons,
+      speed: this.speed,
+      size: this.size
     };
   }
 

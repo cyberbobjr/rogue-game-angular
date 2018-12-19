@@ -31,6 +31,8 @@ export class Monster extends Entity {
     monster.sprite = monsterClass.sprite;
     monster.id = monsterClass.id;
     monster.name = monsterClass.name;
+    monster.size = monsterClass.size;
+    monster.speed = monsterClass.speed;
     monster.hp = monsterClass.hp;
     monster.gp = monsterClass.gp;
     monster.strength = monsterClass.strength;

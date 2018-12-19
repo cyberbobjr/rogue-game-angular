@@ -2,6 +2,8 @@
   {
     "id": "HUMAN",
     "name": "Human",
+    "speed": 30,
+    "size": "m",
     "modifiers": {
       "strength": 1,
       "dexterity": 1,

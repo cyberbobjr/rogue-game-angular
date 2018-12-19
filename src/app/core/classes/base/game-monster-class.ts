@@ -63,6 +63,14 @@ export class GameMonsterClass {
     return new Sprite(this._jsonData.sprite.character, this._jsonData.sprite.color);
   }
 
+  get size(): string {
+    return this._jsonData.size;
+  }
+
+  get speed(): number {
+    return this._jsonData.speed;
+  }
+
   constructor(private _jsonData: JsonMonster) {
   }
 

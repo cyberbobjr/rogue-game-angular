@@ -33,6 +33,8 @@ export interface JsonEntity {
   gp: number;
   hp: number;
   name: string;
+  speed: number;
+  size: string;
   position: JsonPosition;
   sprite: JsonSprite;
   type: number;
@@ -133,6 +135,8 @@ export interface JsonMonster {
 export interface JsonRace {
   id: string;
   name: string;
+  speed: number;
+  size: string;
   modifiers: {
     strength: number;
     dexterity: number;
