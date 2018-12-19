@@ -17,6 +17,7 @@ import {Monster} from '../../../core/classes/entities/monster';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {EntityType} from '../../../core/enums/entity-type.enum';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
+import {Sprite} from '../../../core/classes/base/sprite';
 
 @Injectable({
               providedIn: 'root'
@@ -129,12 +130,12 @@ export class MapEngine implements IMapEngine {
     this._entitiesVisibles.splice(0);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        const tile: Tile = <Tile>this._gameMap.content[y][x];
+        const tile: Tile = <Tile>this._gameMap.getDataAt(x, y);
         const sprite = tile.sprite;
         sprite.light = true;
         sprite.visibility = R / lightPower;
         if (tile instanceof Monster && sprite.visibility > 0) {
-          this._entitiesVisibles.push(<Entity>this._gameMap.content[y][x]);
+          this._entitiesVisibles.push(<Entity>this._gameMap.getDataAt(x, y));
         }
       } catch (e) {
       }
@@ -158,11 +159,11 @@ export class MapEngine implements IMapEngine {
     if (monster) {
       return monster;
     }
-    return <Iobject>this._map.content[position.y][position.x];
+    return <Iobject>this._map.getDataAt(position.x, position.y);
   }
 
   getTileAt(position: Position): Tile {
-    return <Tile>this._map.content[position.y][position.x];
+    return <Tile>this._map.getDataAt(position.x, position.y);
   }
 
   setTileAt(position: Position, tile: Tile) {
@@ -204,9 +205,9 @@ export class MapEngine implements IMapEngine {
   }
 
   private _resetLightMap(gameMap: GameMap<Iobject>) {
-    for (let j = 0; j < gameMap.content.length; j++) {
-      for (let i = 0; i < gameMap.content[0].length; i++) {
-        const sprite = gameMap.content[j][i].sprite;
+    for (let j = 0; j < gameMap.height; j++) {
+      for (let i = 0; i < gameMap.width; i++) {
+        const sprite: Sprite = <Sprite>gameMap.getDataAt(i, j).sprite;
         if (sprite) {
           sprite.light = false;
         }
@@ -240,7 +241,7 @@ export class MapEngine implements IMapEngine {
   private _createFovCasting() {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
-        const info = <Tile>this.gameMap.content[y][x];
+        const info = <Tile>this.gameMap.getDataAt(x, y);
         return !info.opaque;
       } catch (e) {
         return false;

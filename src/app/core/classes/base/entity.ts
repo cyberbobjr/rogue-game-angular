@@ -36,12 +36,22 @@ export abstract class Entity implements Iobject, IEntity {
   protected _speed: number;
   protected _size: string;
 
+  protected _ap = 0; // action points
+
   protected _weapons: Array<Weapon> = [];
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  get ap(): number {
+    return this._ap;
+  }
+
+  set ap(value: number) {
+    this._ap = value;
+  }
 
   get speed(): number {
     return this._speed;

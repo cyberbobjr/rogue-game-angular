@@ -21,6 +21,10 @@ export class GameMap<T extends object> {
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
   }
 
+  getDataAt(x: number, y: number): T {
+    return <T>this._data[y][x];
+  }
+
   clone(): GameMap<T> {
     return this.extract(0, 0, this._width, this._height);
   }

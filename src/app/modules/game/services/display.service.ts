@@ -8,8 +8,8 @@ import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class DisplayService {
   private _fontSize = 16;
   private _display: Display = new Display();
@@ -64,9 +64,9 @@ export class DisplayService {
 
   private drawViewPort(viewport: GameMap<Iobject>) {
     this.display.clear();
-    for (let j = 0; j < viewport.content.length; j++) {
-      for (let i = 0; i < viewport.content[0].length; i++) {
-        const sprite: Sprite = viewport.content[j][i].sprite;
+    for (let j = 0; j < viewport.height; j++) {
+      for (let i = 0; i < viewport.width; i++) {
+        const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
         if (sprite && sprite.light) {
           this.display.draw(i, j, sprite.character, sprite.color, sprite.bgColor);
         }
