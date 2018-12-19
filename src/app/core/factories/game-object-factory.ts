@@ -21,12 +21,12 @@ export class GameObjectFactory {
     return GameObjectFactory.instance;
   }
 
-  createFromJson(objectType: string, jsonData: any): GameObject | null {
+  static createFromJson(objectType: string, jsonData: any): GameObject | null {
     switch (objectType) {
       case 'GOLD' :
         return new Gold(jsonData['_amount']);
       case 'WEAPON' :
-        return this._weapons.get(jsonData['id']);
+        return Weapon.fromJson(jsonData);
       default:
         return null;
     }

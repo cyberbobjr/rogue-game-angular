@@ -89,8 +89,7 @@ export class StorageService {
 
   private _loadContents(tile: Tile, jsonContent: Array<any>) {
     jsonContent.forEach((content: any) => {
-      const gameObject: GameObject = GameObjectFactory.getInstance()
-                                                      .createFromJson(content.objectType, content);
+      const gameObject: GameObject = GameObjectFactory.createFromJson(content.objectType, content);
       if (gameObject) {
         tile.dropOn(gameObject);
       }

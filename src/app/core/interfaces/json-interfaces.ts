@@ -74,8 +74,8 @@ export interface JsonWeapon {
     long: number;
   };
   sprite: {
-    character: string;
-    color: string;
+    _character: string;
+    _color: string;
   };
 }
 

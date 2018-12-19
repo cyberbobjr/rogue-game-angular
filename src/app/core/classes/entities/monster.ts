@@ -19,8 +19,7 @@ export class Monster extends Entity {
     monster.sprite = new Sprite(jsonData.sprite._character, jsonData.sprite._color);
 
     jsonData.weapons.forEach(({id, objectType, _jsonData}) => {
-      weapons.push(GameObjectFactory.getInstance()
-                                    .createFromJson(objectType, _jsonData) as Weapon);
+      weapons.push(GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon);
     });
     monster.weapons = weapons;
     return monster;
