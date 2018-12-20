@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {EventLog} from '../../../../core/classes/event-log';
 import {AttributesFactory} from '../../../../core/factories/attributes-factory';
 import {EntitiesService} from '../../services/entities.service';
 import {Player} from '../../../../core/classes/entities/player';
