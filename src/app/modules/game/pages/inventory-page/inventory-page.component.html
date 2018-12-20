@@ -2,6 +2,9 @@
   <div class="panel-heading">Inventory</div>
   <div class="panel-body">
     <ul>
+      <li *ngFor="let gameObject of _entitiesService.player.inventory; let i = index">
+        {{i+1}} - {{gameObject.name}}
+      </li>
     </ul>
   </div>
 </div>
