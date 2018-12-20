@@ -128,7 +128,7 @@ export class GameEngineService {
 
   private _updateGame() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
-    this._entitiesService.update(this._mapEngine);
+    this._entitiesService.updateEntities(this._mapEngine);
   }
 
   private _drawMap() {

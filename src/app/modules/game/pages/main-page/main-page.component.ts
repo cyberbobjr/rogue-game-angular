@@ -5,7 +5,6 @@ import {EntitiesService} from '../../services/entities.service';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
-import {Entity} from '../../../../core/classes/base/entity';
 
 @Component({
              selector: 'app-main-page',
@@ -23,9 +22,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('Main page init');
-    this._initMap();
-    this._initMonsters();
-    this._initPlayer();
+    const player: Player = this._initPlayer();
+    const level: number = player.level;
+    this._initMap(level);
+    this._entitiesService.player = player;
     this._gameEngineService.startGameLoop();
   }
 
@@ -33,27 +33,17 @@ export class MainPageComponent implements OnInit, OnDestroy {
     this._gameEngineService.endGameLoop();
   }
 
-  private _initMonsters() {
-    const monsters: Array<Entity> = this._storage.loadEntities();
-    if (!monsters) {
-      this._goBackToMenu();
-    } else {
-      this._entitiesService.entities = monsters;
-    }
-  }
-
-  private _initPlayer() {
+  private _initPlayer(): Player {
     const playerLoaded: Player = StorageService.loadPlayer();
     if (!playerLoaded || !playerLoaded.position) {
       this._goBackToMenu();
     } else {
-      this._entitiesService.player = playerLoaded;
-      this._mapEngine.mainActor = this._entitiesService.player;
+      return playerLoaded;
     }
   }
 
-  private _initMap() {
-    if (!this._storage.loadMap()) {
+  private _initMap(level: number) {
+    if (!this._storage.loadMap(level)) {
       this._goBackToMenu();
     }
   }

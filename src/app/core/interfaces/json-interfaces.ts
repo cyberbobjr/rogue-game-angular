@@ -23,9 +23,11 @@ export interface JSonCell {
 }
 
 export interface JsonMap {
+  _seed: number;
   _data: [[JSonCell]];
   _height: number;
   _width: number;
+  _entities: [JsonEntity];
 }
 
 export interface JsonEntity {

@@ -29,24 +29,10 @@ export class MapEngine implements IMapEngine {
   private _gameMap: GameMap<Iobject> = null;
   private _map: GameMap<Iobject> = null;
   private _preciseShadowcasting: PreciseShadowcasting = null;
-  private _mainActor: Entity = null;
-  private _seed: number;
   private _entitiesVisibles: Array<Entity> = [];
 
   get entitiesVisibles(): Array<Entity> {
     return this._entitiesVisibles;
-  }
-
-  get seed(): number {
-    return this._seed;
-  }
-
-  get mainActor(): Entity {
-    return this._mainActor;
-  }
-
-  set mainActor(value: Entity) {
-    this._mainActor = value;
   }
 
   get width(): number {
@@ -92,41 +78,43 @@ export class MapEngine implements IMapEngine {
   constructor(private _entitiesService: EntitiesService) {
   }
 
-  generateMap(width: number, height: number, seed = 511): GameMap<Iobject> {
-    this._seed = seed;
+  generateMap(width: number, height: number, seed = 511, level = 1): GameMap<Iobject> {
     this._width = width;
     this._height = height;
-    this._createMap(width, height);
+    this._createMap(width, height, seed, level);
     this._createDoor(this._rotEngine);
     this._createFovCasting();
     return this._map;
   }
 
-  generateMonsters(): Array<Entity> {
+  generateMonsters(excludeRooms: Array<number> = []): Array<Entity> {
     const monsters: Array<Entity> = [];
     const rooms: Array<Room> = this.getRooms();
     const nbRooms: number = rooms.length;
     for (let nb = 1; nb < nbRooms - 2; nb++) {
-      const orc: Monster = EntitiesFactory.getInstance()
-                                          .createEntity(EntityType.ORC, this.getRoomCenter(rooms[nb])) as Monster;
-      orc.setNextAction(new IdleAction(orc, this));
-      monsters.push(orc);
+      if (excludeRooms.indexOf(nb) !== 0) {
+        const orc: Monster = EntitiesFactory.getInstance()
+                                            .createEntity(EntityType.ORC, this.getRoomCenter(rooms[nb])) as Monster;
+        orc.setNextAction(new IdleAction(orc, this));
+        monsters.push(orc);
+      }
     }
     return monsters;
   }
 
   computeFOV(position: Position): GameMap<Iobject> {
-    if (!this._mainActor) {
+    const mainActor: Entity = this._entitiesService.player;
+    if (!mainActor) {
       return;
     }
-    const lightRadius: number = this._mainActor.lightRadius;
-    const lightPower: number = this._mainActor.ligthPower;
+    const lightRadius: number = mainActor.lightRadius;
+    const lightPower: number = mainActor.ligthPower;
     this._gameMap = this._putEntitiesOn(this._map.clone());
     this._resetLightMap(this._gameMap);
     this._entitiesVisibles.splice(0);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        const tile: Tile = <Tile>this._gameMap.getDataAt(x, y);
+        const tile: Iobject = <Iobject>this._gameMap.getDataAt(x, y);
         const sprite = tile.sprite;
         sprite.light = true;
         sprite.visibility = R / lightPower;
@@ -211,9 +199,10 @@ export class MapEngine implements IMapEngine {
     }
   }
 
-  private _createMap(width: number, height: number) {
-    RNG.setSeed(this._seed);
-    this._map = new GameMap<Entity>(width, height);
+  private _createMap(width: number, height: number, seed: number, level: number) {
+    RNG.setSeed(seed);
+    this._map = new GameMap<Entity>(width, height).setSeed(seed)
+                                                  .setLevel(level);
     const rotMap: Digger = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {
       const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);

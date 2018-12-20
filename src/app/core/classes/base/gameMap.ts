@@ -1,5 +1,23 @@
 export class GameMap<T extends object> {
   private _data: T[][];
+  private _seed: number;
+  private _level: number;
+
+  get level(): number {
+    return this._level;
+  }
+
+  set level(value: number) {
+    this._level = value;
+  }
+
+  get seed(): number {
+    return this._seed;
+  }
+
+  set seed(value: number) {
+    this._seed = value;
+  }
 
   set content(data: T[][]) {
     this._data = data;
@@ -19,6 +37,16 @@ export class GameMap<T extends object> {
 
   constructor(private _width?: number, private _height?: number, data?: T[][]) {
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
+  }
+
+  setSeed(seed: number): this {
+    this._seed = seed;
+    return this;
+  }
+
+  setLevel(level: number): this {
+    this._level = level;
+    return this;
   }
 
   getDataAt(x: number, y: number): T {

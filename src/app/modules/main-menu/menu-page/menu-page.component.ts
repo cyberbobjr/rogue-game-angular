@@ -29,9 +29,10 @@ export class MenuPageComponent implements OnInit {
   }
 
   startNewGame() {
-    this._mapEngine.generateMap(80, 80);
+    this._mapEngine.generateMap(80, 80, Math.round(Math.random() * 100), 1);
     this._player.position = this._mapEngine.getStartPosition();
-    this._entitiesServices.entities = this._mapEngine.generateMonsters();
+    this._player.level = 1;
+    this._entitiesServices.entities = this._mapEngine.generateMonsters([0]);
     this._entitiesServices.player = this._player;
 
     this._storageService.saveGameState();

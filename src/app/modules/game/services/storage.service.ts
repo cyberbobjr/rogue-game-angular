@@ -31,7 +31,6 @@ export class StorageService {
     window.localStorage.setItem('player', JSON.stringify(player));
   }
 
-
   constructor(private _entitiesService: EntitiesService,
               private _mapEngine: MapEngine) {
   }
@@ -39,16 +38,15 @@ export class StorageService {
   saveGameState() {
     StorageService.savePlayer(this._entitiesService.player);
     this._saveMap();
-    this._saveEntities();
   }
 
-  loadMap(): boolean {
+  loadMap(level = 1): boolean {
     try {
-      const map = JSON.parse(window.localStorage.getItem('map')) as JsonMap;
-      const seed = JSON.parse(window.localStorage.getItem('seed')) as number;
-      if (map && seed) {
-        this._mapEngine.generateMap(map._width, map._height, seed);
-        this._loadTile(map);
+      const jsonData = JSON.parse(window.localStorage.getItem('map_' + level)) as { map: JsonMap, _entities: Array<JsonEntity> };
+      if (jsonData) {
+        this._mapEngine.generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
+        this._createTiles(jsonData.map);
+        this._createEntities(jsonData._entities);
         return true;
       }
       return false;
@@ -58,25 +56,17 @@ export class StorageService {
     }
   }
 
-  loadEntities(): Array<Entity> | null {
+  private _createEntities(entities: Array<JsonEntity>): void {
     const monsters: Array<Entity> = [];
-    const json: Array<JsonEntity> = JSON.parse(window.localStorage.getItem('entities'));
-    if (!json) {
-      return null;
-    }
-    try {
-      json.forEach((entity: JsonEntity) => {
-        const monster: Entity = EntitiesFactory.createFromJson(entity);
-        monster.setNextAction(new IdleAction(monster, this._mapEngine));
-        monsters.push(monster);
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return monsters;
+    entities.forEach((entity: JsonEntity) => {
+      const monster: Entity = EntitiesFactory.createFromJson(entity);
+      monster.setNextAction(new IdleAction(monster, this._mapEngine));
+      monsters.push(monster);
+    });
+    this._entitiesService.entities = monsters;
   }
 
-  private _loadTile(mapJson: JsonMap) {
+  private _createTiles(mapJson: JsonMap) {
     mapJson._data.forEach((cells: Array<JSonCell>) => {
       cells.forEach((cell: JSonCell) => {
         const position: Position = new Position(cell._position._x, cell._position._y);
@@ -97,14 +87,10 @@ export class StorageService {
   }
 
   private _saveMap() {
-    window.localStorage.setItem('map', JSON.stringify(this._mapEngine.map));
-    window.localStorage.setItem('seed', JSON.stringify(this._mapEngine.seed));
-  }
-
-  private _saveEntities() {
+    const level: number = this._mapEngine.map.level;
     let entities: Array<Entity> = [];
     entities = Object.assign(entities, this._entitiesService.entities);
     entities.shift();
-    window.localStorage.setItem('entities', JSON.stringify(entities));
+    window.localStorage.setItem('map_' + level, JSON.stringify({map: this._mapEngine.map, _entities: entities}));
   }
 }

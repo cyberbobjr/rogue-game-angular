@@ -2,13 +2,14 @@ import {Injectable} from '@angular/core';
 import {Entity} from '../../../core/classes/base/entity';
 import {Position} from '../../../core/classes/base/position';
 import {MapEngine} from './map-engine.service';
+import {Player} from '../../../core/classes/entities/player';
 
 @Injectable({
               providedIn: 'root'
             })
 export class EntitiesService {
   private _entities: Array<Entity> = [];
-  private _player: Entity = null;
+  private _player: Player = null;
 
   get entities(): Entity[] {
     return this._entities;
@@ -18,11 +19,11 @@ export class EntitiesService {
     this._entities = value;
   }
 
-  get player(): Entity | null {
+  get player(): Player | null {
     return this._player;
   }
 
-  set player(actor: Entity) {
+  set player(actor: Player) {
     this._player = actor;
     this._entities.unshift(this._player);
   }
@@ -44,7 +45,7 @@ export class EntitiesService {
     return this.entities[index];
   }
 
-  update(_mapEngine: MapEngine) {
+  updateEntities(_mapEngine: MapEngine) {
     this._entities.forEach((entity: Entity, index: number) => {
       entity.update();
       if (entity.hp <= 0) {

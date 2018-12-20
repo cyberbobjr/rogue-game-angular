@@ -13,6 +13,15 @@ import {Weapon} from '../base/weapon';
 export class Player extends Entity {
   private _xp = 0;
   private _level = 1;
+  private _mapLevel = 1;
+
+  get mapLevel(): number {
+    return this._mapLevel;
+  }
+
+  set mapLevel(value: number) {
+    this._mapLevel = value;
+  }
 
   get ac(): number {
     return 10 + this.attributes.get('dexterity');
@@ -39,14 +48,17 @@ export class Player extends Entity {
   }
 
   static fromJSON(jsonData: JsonEntity): Player {
-    const entity: Player = new this();
-    return Object.assign(entity, jsonData, {
-      _position: new Position(jsonData.position._x, jsonData.position._y),
+    let entity: Player = new this();
+    entity = Object.assign(entity, jsonData, {
       _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color),
       _inventory: jsonData.inventory.map(({id, objectType, _jsonData}) => {
         return GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon;
       })
     });
+    if (jsonData.position) {
+      entity.position = new Position(jsonData.position._x, jsonData.position._y);
+    }
+    return entity;
   }
 
   toJSON(): any {
@@ -54,7 +66,7 @@ export class Player extends Entity {
       ...super.toJSON(),
       ...{
         xp: this.xp,
-        level: this.level,
+        level: this.level
       }
     };
   }
