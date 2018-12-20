@@ -12,17 +12,14 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Entity {
-    const monster: Entity = new this();
-    const inventory: Array<Weapon> = [];
-    Object.assign(monster, jsonData);
-    monster.position = new Position(jsonData.position._x, jsonData.position._y);
-    monster.sprite = new Sprite(jsonData.sprite._character, jsonData.sprite._color);
-
-    jsonData.inventory.forEach(({id, objectType, _jsonData}) => {
-      inventory.push(GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon);
+    const entity: Entity = new this();
+    return Object.assign(entity, jsonData, {
+      _position: new Position(jsonData.position._x, jsonData.position._y),
+      _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color),
+      _inventory: jsonData.inventory.map(({id, objectType, _jsonData}) => {
+        return GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon;
+      })
     });
-    monster.inventory = inventory;
-    return monster;
   }
 
   static fromMonsterClass(monsterClass: GameMonsterClass): Monster {
