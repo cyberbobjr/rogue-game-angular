@@ -247,9 +247,9 @@
 
 .panel-heading {
   border-bottom: solid yellow;
-  /*margin: 0 -15px 0px -15px;
-  padding-bottom: 10px;*/
   text-align: center;
+  font-weight: bold;
+  color: yellow;
 }
 
 .panel-heading > .dropdown .dropdown-toggle {
