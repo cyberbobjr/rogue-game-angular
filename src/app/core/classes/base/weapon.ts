@@ -2,6 +2,7 @@ import {Sprite} from './sprite';
 import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {Entity} from './entity';
+import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Weapon extends GameObject {
   private _id: string;
@@ -15,6 +16,10 @@ export class Weapon extends GameObject {
 
   get name(): string {
     return this._jsonData.name;
+  }
+
+  get properties(): Array<string> {
+    return this._jsonData.properties;
   }
 
   static fromJson(_jsonData: JsonWeapon): Weapon {
@@ -34,5 +39,9 @@ export class Weapon extends GameObject {
 
   onTake(actor: Entity): void {
     actor.addToInventory(this);
+  }
+
+  getSlots(): Array<SlotType> {
+    return [];
   }
 }

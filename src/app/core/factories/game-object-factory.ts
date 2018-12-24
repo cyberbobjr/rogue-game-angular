@@ -2,6 +2,7 @@ import * as weapons from '../rules/object/weapons.json';
 import {Weapon} from '../classes/base/weapon';
 import {GameObject} from '../classes/base/game-object';
 import {Gold} from '../classes/base/gold';
+import {SlotType} from '../enums/equiped-type.enum';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -12,6 +13,16 @@ export class GameObjectFactory {
     for (const key of Object.keys(weapons.default)) {
       this._weapons.set(weapons.default[key]['id'], new Weapon(weapons.default[key]));
     }
+  }
+
+  static canBeEquipped(where: SlotType, item: GameObject): boolean {
+    if (item instanceof Weapon && (where === SlotType.LEFTHAND || where === SlotType.RIGHTHAND)) {
+      return true;
+    }
+    if (item instanceof Gold) {
+      return false;
+    }
+    return false;
   }
 
   static getInstance() {

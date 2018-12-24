@@ -3,6 +3,7 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from './entity';
 import {GameObject} from './game-object';
+import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Gold implements GameObject {
   name = 'Gold';
@@ -23,5 +24,9 @@ export class Gold implements GameObject {
 
   onTake(actor: Entity): void {
     actor.gp += this.amount;
+  }
+
+  getSlots(): Array<SlotType> {
+    return [];
   }
 }

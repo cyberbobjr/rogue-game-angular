@@ -1,0 +1,11 @@
+export enum SlotType {
+  LEFTHAND,
+  RIGHTHAND,
+  HEAD,
+  CHEST,
+  LEGS,
+  BOOTS,
+  RINGRIGHT,
+  RINGLEFT,
+  NECKLACE
+}

@@ -9,11 +9,14 @@ import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {JsonEntity} from '../../interfaces/json-interfaces';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Weapon} from '../base/weapon';
+import {SlotType} from '../../enums/equiped-type.enum';
+import {GameObject} from '../base/game-object';
 
 export class Player extends Entity {
   private _xp = 0;
   private _level = 1;
   private _mapLevel = 1;
+  private _equippedItem: Map<SlotType, number> = new Map<SlotType, number>();
 
   get mapLevel(): number {
     return this._mapLevel;
@@ -61,6 +64,15 @@ export class Player extends Entity {
     return entity;
   }
 
+  constructor(position?: Position, sprite?: Sprite) {
+    super();
+    if (position) {
+      this.position = position;
+    }
+    this.sprite = sprite ? sprite : SpritesFactory.createSprite(SpriteType.PLAYER);
+    this.sprite.light = true;
+  }
+
   toJSON(): any {
     return {
       ...super.toJSON(),
@@ -71,15 +83,7 @@ export class Player extends Entity {
     };
   }
 
-  constructor(position?: Position, sprite?: Sprite) {
-    super();
-    if (position) {
-      this.position = position;
-    }
-    this.sprite = sprite ? sprite : SpritesFactory.createSprite(SpriteType.PLAYER);
-    this.sprite.light = true;
-  }
-
+  // region Events
   onHit(attacker: Entity, damage: number): Iaction | null {
     EventLog.getInstance().message = `You take ${damage} point of damage`;
     return null;
@@ -87,5 +91,13 @@ export class Player extends Entity {
 
   onDead(_mapEngine: MapEngine): void {
     super.onDead(_mapEngine);
+  }
+
+  // endregion
+
+  EquipItem(inventoryNumber: number) {
+    const gameObject: GameObject = this._inventory[inventoryNumber];
+    //const slots: Array<SlotType> = GameObjectFactory.getSlot(gameObject);
+
   }
 }

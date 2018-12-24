@@ -1,5 +1,6 @@
 import {Sprite} from './sprite';
 import {Entity} from './entity';
+import {SlotType} from '../../enums/equiped-type.enum';
 
 export abstract class GameObject {
   name: string;
@@ -9,4 +10,6 @@ export abstract class GameObject {
   abstract getInfo(): string ;
 
   abstract onTake(actor: Entity): void ;
+
+  abstract getSlots(): Array<SlotType>;
 }
