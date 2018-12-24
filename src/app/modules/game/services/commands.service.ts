@@ -5,6 +5,8 @@ import {SaveCommand} from '../../../core/classes/commands/save-command';
 import {OpenDoorCommand} from '../../../core/classes/commands/open-door-command';
 import {TakeCommand} from '../../../core/classes/commands/take-command';
 import {AttackDistance} from '../../../core/classes/commands/attack-distance';
+import {InventoryCommand} from '../../../core/classes/commands/inventory-command';
+import {NgxSmartModalService} from 'ngx-smart-modal';
 
 @Injectable({
               providedIn: 'root'
@@ -14,20 +16,21 @@ export class CommandsService {
   ArrowDown: Command;
   ArrowLeft: Command;
   ArrowRight: Command;
-  KeyH: Command;
-  KeyU: Command;
-  KeyY: Command;
-  KeyI: Command;
-  KeyB: Command;
-  KeyM: Command;
-  KeyN: Command;
-  KeyK: Command;
+  KeyQ: Command;
+  KeyZ: Command;
+  KeyA: Command;
+  KeyE: Command;
+  KeyW: Command;
+  KeyC: Command;
+  KeyX: Command;
+  KeyD: Command;
   KeyO: Command;
   KeyS: Command;
   KeyT: Command;
   KeyF: Command;
+  KeyI: Command;
 
-  constructor() {
+  constructor(private _modalService: NgxSmartModalService) {
     this._initCommand();
   }
 
@@ -36,17 +39,18 @@ export class CommandsService {
     this.ArrowDown = new MoveS();
     this.ArrowLeft = new MoveW();
     this.ArrowRight = new MoveE();
-    this.KeyB = new MoveSW();
-    this.KeyH = new MoveW();
-    this.KeyI = new MoveNE();
-    this.KeyK = new MoveE();
-    this.KeyM = new MoveSE();
-    this.KeyN = new MoveS();
-    this.KeyU = new MoveN();
-    this.KeyY = new MoveNW();
+    this.KeyW = new MoveSW();
+    this.KeyQ = new MoveW();
+    this.KeyE = new MoveNE();
+    this.KeyD = new MoveE();
+    this.KeyC = new MoveSE();
+    this.KeyX = new MoveS();
+    this.KeyZ = new MoveN();
+    this.KeyA = new MoveNW();
     this.KeyO = new OpenDoorCommand();
     this.KeyS = new SaveCommand();
     this.KeyT = new TakeCommand();
     this.KeyF = new AttackDistance();
+    this.KeyI = new InventoryCommand(this._modalService);
   }
 }

@@ -8,6 +8,7 @@ import {ActionResult} from '../../../core/classes/actions/action-result';
 import {StorageService} from './storage.service';
 import {Entity} from '../../../core/classes/base/entity';
 import {EffectEngine} from './effect-engine.service';
+import {NgxSmartModalService} from 'ngx-smart-modal';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -86,29 +87,29 @@ export class GameEngineService {
       case 'ArrowRight':
         this._commandService.ArrowRight.execute(player, this);
         break;
-      case 'KeyH':
-        this._commandService.KeyH.execute(player, this);
+      case 'KeyQ':
+        this._commandService.KeyQ.execute(player, this);
         break;
-      case 'KeyU':
-        this._commandService.KeyU.execute(player, this);
+      case 'KeyZ':
+        this._commandService.KeyZ.execute(player, this);
         break;
-      case 'KeyY':
-        this._commandService.KeyY.execute(player, this);
+      case 'KeyA':
+        this._commandService.KeyA.execute(player, this);
         break;
-      case 'KeyI':
-        this._commandService.KeyI.execute(player, this);
+      case 'KeyE':
+        this._commandService.KeyE.execute(player, this);
         break;
-      case 'KeyB':
-        this._commandService.KeyB.execute(player, this);
+      case 'KeyW':
+        this._commandService.KeyW.execute(player, this);
         break;
-      case 'KeyM':
-        this._commandService.KeyM.execute(player, this);
+      case 'KeyC':
+        this._commandService.KeyC.execute(player, this);
         break;
-      case 'KeyN':
-        this._commandService.KeyN.execute(player, this);
+      case 'KeyX':
+        this._commandService.KeyX.execute(player, this);
         break;
-      case 'KeyK':
-        this._commandService.KeyK.execute(player, this);
+      case 'KeyD':
+        this._commandService.KeyD.execute(player, this);
         break;
       case 'KeyO':
         this._commandService.KeyO.execute(player, this);
@@ -121,6 +122,9 @@ export class GameEngineService {
         break;
       case 'KeyF':
         this._commandService.KeyF.execute(player, this);
+        break;
+      case 'KeyI':
+        this._commandService.KeyI.execute(player, this);
         break;
     }
     this.processAction();
