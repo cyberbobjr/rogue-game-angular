@@ -56,6 +56,7 @@ export class Player extends Entity {
     entity = Object.assign(entity, jsonData, {
       _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color),
     });
+
     if (jsonData.inventory.length > 0) {
       jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }, index: number) => {
         entity.addToInventory(Weapon.fromJson(value._jsonData));
