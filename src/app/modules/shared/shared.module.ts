@@ -4,6 +4,7 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {FormsModule} from '@angular/forms';
+import {NgxSmartModalModule} from 'ngx-smart-modal';
 import {InventoryModule} from '../inventory/inventory.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -16,6 +17,7 @@ export function HttpLoaderFactory(http: HttpClient) {
               CommonModule,
               FormsModule,
               HttpClientModule,
+              NgxSmartModalModule.forRoot(),
               TranslateModule.forRoot({
                                         loader: {
                                           provide: TranslateLoader,
@@ -28,7 +30,8 @@ export function HttpLoaderFactory(http: HttpClient) {
               CommonModule,
               TranslateModule,
               FormsModule,
-              HttpClientModule
+              HttpClientModule,
+              NgxSmartModalModule
             ]
           })
 export class SharedModule {

@@ -7,11 +7,11 @@ import {EntitiesService} from '../../services/entities.service';
              styleUrls: ['./inventory-page.component.css']
            })
 export class InventoryPageComponent implements OnInit {
-
   constructor(private _entitiesService: EntitiesService) {
+
   }
 
   ngOnInit() {
-  }
 
+  }
 }
