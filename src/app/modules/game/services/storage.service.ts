@@ -11,7 +11,7 @@ import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {JSonCell, JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {Tile} from '../../../core/classes/base/tile';
 import {GameObjectFactory} from '../../../core/factories/game-object-factory';
-import {GameObject} from '../../../core/classes/base/game-object';
+import {GameObject} from '../../../core/classes/gameObjects/game-object';
 
 
 @Injectable({

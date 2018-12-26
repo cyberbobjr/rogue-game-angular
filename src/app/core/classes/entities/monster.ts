@@ -6,8 +6,8 @@ import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
 import {JsonEntity} from '../../interfaces/json-interfaces';
 import {Gold} from '../base/gold';
-import {GameObject} from '../base/game-object';
-import {Weapon} from '../base/weapon';
+import {GameObject} from '../gameObjects/game-object';
+import {Weapon} from '../gameObjects/weapon';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class Monster extends Entity {

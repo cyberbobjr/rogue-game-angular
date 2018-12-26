@@ -1,5 +1,5 @@
-import {Sprite} from './sprite';
-import {Entity} from './entity';
+import {Sprite} from '../base/sprite';
+import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 
 export abstract class GameObject {

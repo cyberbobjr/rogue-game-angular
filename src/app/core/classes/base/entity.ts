@@ -11,9 +11,9 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {IRace} from '../../interfaces/i-race';
-import {Weapon} from './weapon';
+import {Weapon} from '../gameObjects/weapon';
 import {GameClass} from './game-class';
-import {GameObject} from './game-object';
+import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
 
 @Injectable({

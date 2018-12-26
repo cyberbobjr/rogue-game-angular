@@ -1,4 +1,4 @@
-import {GameObject} from '../classes/base/game-object';
+import {GameObject} from '../classes/gameObjects/game-object';
 
 export interface JsonSprite {
   _color: string;

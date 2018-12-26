@@ -1,7 +1,7 @@
 import {JsonMonster} from '../../interfaces/json-interfaces';
 import {Utility} from '../utility';
 import {Sprite} from './sprite';
-import {Weapon} from './weapon';
+import {Weapon} from '../gameObjects/weapon';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class GameMonsterClass {

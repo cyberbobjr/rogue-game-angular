@@ -8,9 +8,9 @@ import {Sprite} from '../base/sprite';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObjectFactory} from '../../factories/game-object-factory';
-import {Weapon} from '../base/weapon';
+import {Weapon} from '../gameObjects/weapon';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {GameObject} from '../base/game-object';
+import {GameObject} from '../gameObjects/game-object';
 
 export class Player extends Entity {
   private _xp = 0;

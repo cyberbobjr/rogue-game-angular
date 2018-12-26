@@ -5,6 +5,9 @@ import {GameEngineService} from '../../../game/services/game-engine.service';
 import {Router} from '@angular/router';
 import {EntitiesService} from '../../../game/services/entities.service';
 import {Player} from '../../../../core/classes/entities/player';
+import {GameObject} from '../../../../core/classes/gameObjects/game-object';
+import {Armour} from '../../../../core/classes/gameObjects/armour';
+import {Weapon} from '../../../../core/classes/gameObjects/weapon';
 
 @Component({
              selector: 'app-inventory-modal',
@@ -68,5 +71,15 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
       }
       console.log(key);
     }
+  }
+
+  isSelectedWearable(): boolean {
+    const object: GameObject = this._player.inventory.get(this._selected);
+    return (object instanceof Armour);
+  }
+
+  isSelectedEquipable(): boolean {
+    const object: GameObject = this._player.inventory.get(this._selected);
+    return (object instanceof Weapon);
   }
 }

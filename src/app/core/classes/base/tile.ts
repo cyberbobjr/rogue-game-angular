@@ -4,7 +4,7 @@ import {Sprite} from './sprite';
 import {Iaction} from '../../interfaces/iaction';
 import {Iobject} from '../../interfaces/iobject';
 import {TileType} from '../../enums/tile-type.enum';
-import {GameObject} from './game-object';
+import {GameObject} from '../gameObjects/game-object';
 
 export class Tile implements Iobject {
   protected _type: TileType;

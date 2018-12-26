@@ -1,6 +1,6 @@
 import * as weapons from '../rules/object/weapons.json';
-import {Weapon} from '../classes/base/weapon';
-import {GameObject} from '../classes/base/game-object';
+import {Weapon} from '../classes/gameObjects/weapon';
+import {GameObject} from '../classes/gameObjects/game-object';
 import {Gold} from '../classes/base/gold';
 import {SlotType} from '../enums/equiped-type.enum';
 

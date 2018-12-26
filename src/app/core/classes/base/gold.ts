@@ -2,7 +2,7 @@ import {Sprite} from './sprite';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from './entity';
-import {GameObject} from './game-object';
+import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Gold implements GameObject {
