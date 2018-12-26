@@ -5,6 +5,7 @@ import {AppComponent} from './app.component';
 import {SharedModule} from './modules/shared/shared.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {InventoryModule} from './modules/inventory/inventory.module';
+import {NgxSmartModalModule} from 'ngx-smart-modal';
 
 @NgModule({
             declarations: [
@@ -15,7 +16,8 @@ import {InventoryModule} from './modules/inventory/inventory.module';
               BrowserModule,
               AppRoutingModule,
               SharedModule,
-              InventoryModule
+              InventoryModule,
+              NgxSmartModalModule.forRoot()
             ],
             providers: [],
             bootstrap: [AppComponent]

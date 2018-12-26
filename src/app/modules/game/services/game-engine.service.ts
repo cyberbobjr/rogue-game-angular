@@ -8,6 +8,7 @@ import {ActionResult} from '../../../core/classes/actions/action-result';
 import {StorageService} from './storage.service';
 import {Entity} from '../../../core/classes/base/entity';
 import {EffectEngine} from './effect-engine.service';
+import {NgxSmartModalService} from 'ngx-smart-modal';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -19,6 +20,7 @@ export class GameEngineService {
   private _gameLoop: any = null;
   private _timeStart: any = null;
   private _handleKeyEvent: (key: KeyboardEvent) => void = null;
+  private _modalService: NgxSmartModalService;
 
   get handleKeyEvent(): (key: KeyboardEvent) => void {
     return this._handleKeyEvent.bind(this);
@@ -157,5 +159,13 @@ export class GameEngineService {
         }
       }
     }
+  }
+
+  getModalService(): NgxSmartModalService {
+    return this._modalService;
+  }
+
+  setModalService(value: NgxSmartModalService) {
+    this._modalService = value;
   }
 }

@@ -6,7 +6,6 @@ import {OpenDoorCommand} from '../../../core/classes/commands/open-door-command'
 import {TakeCommand} from '../../../core/classes/commands/take-command';
 import {AttackDistance} from '../../../core/classes/commands/attack-distance';
 import {InventoryCommand} from '../../../core/classes/commands/inventory-command';
-import {NgxSmartModalService} from 'ngx-smart-modal';
 
 @Injectable({
               providedIn: 'root'
@@ -30,7 +29,7 @@ export class CommandsService {
   KeyF: Command;
   KeyI: Command;
 
-  constructor(private _modalService: NgxSmartModalService) {
+  constructor() {
     this._initCommand();
   }
 
@@ -51,6 +50,6 @@ export class CommandsService {
     this.KeyS = new SaveCommand();
     this.KeyT = new TakeCommand();
     this.KeyF = new AttackDistance();
-    this.KeyI = new InventoryCommand(this._modalService);
+    this.KeyI = new InventoryCommand();
   }
 }

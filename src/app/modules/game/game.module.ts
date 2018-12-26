@@ -7,6 +7,7 @@ import {MainMapComponent} from './pages/main-map/main-map.component';
 import {InfoPageComponent} from './pages/info-page/info-page.component';
 import {LogPageComponent} from './pages/log-page/log-page.component';
 import {InventoryPageComponent} from './pages/inventory-page/inventory-page.component';
+import {InventoryModule} from '../inventory/inventory.module';
 
 @NgModule({
             declarations: [
@@ -19,7 +20,8 @@ import {InventoryPageComponent} from './pages/inventory-page/inventory-page.comp
             imports: [
               CommonModule,
               SharedModule,
-              GameRoutingModule
+              GameRoutingModule,
+              InventoryModule
             ]
           })
 export class GameModule {

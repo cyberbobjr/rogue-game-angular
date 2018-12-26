@@ -5,6 +5,7 @@ import {EntitiesService} from '../../services/entities.service';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
+import {NgxSmartModalService} from 'ngx-smart-modal';
 
 @Component({
              selector: 'app-main-page',
@@ -17,7 +18,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
               private _gameEngineService: GameEngineService,
               private _entitiesService: EntitiesService,
               private _storage: StorageService,
-              private _router: Router) {
+              private _router: Router,
+              private _modalService: NgxSmartModalService) {
   }
 
   ngOnInit() {
@@ -26,6 +28,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
     const level: number = player.level;
     this._initMap(level);
     this._entitiesService.player = player;
+    this._gameEngineService.setModalService(this._modalService);
     this._gameEngineService.startGameLoop();
   }
 
