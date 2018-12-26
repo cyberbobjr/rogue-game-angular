@@ -7,8 +7,6 @@ export class InventoryCommand implements Command {
   }
 
   execute(actor: Entity, gameEngine: GameEngineService) {
-    console.log(gameEngine.getModalService()
-                          .getModalStack());
     gameEngine.getModalService()
               .getModal('inventoryModal')
               .open();
