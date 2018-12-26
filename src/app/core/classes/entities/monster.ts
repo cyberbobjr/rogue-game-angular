@@ -8,6 +8,7 @@ import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {Gold} from '../gameObjects/gold';
 import {GameObject} from '../gameObjects/game-object';
 import {Weapon} from '../gameObjects/weapon';
+import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Entity {
@@ -19,7 +20,7 @@ export class Monster extends Entity {
 
     if (jsonData.inventory.length > 0) {
       jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }, index: number) => {
-        entity.addToInventory(Weapon.fromJson(value._jsonData));
+        entity.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
       });
     }
 

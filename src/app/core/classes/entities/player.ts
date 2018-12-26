@@ -7,10 +7,9 @@ import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
-import {GameObjectFactory} from '../../factories/game-object-factory';
-import {Weapon} from '../gameObjects/weapon';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObject} from '../gameObjects/game-object';
+import {GameObjectFactory} from '../../factories/game-object-factory';
 
 export class Player extends Entity {
   private _xp = 0;
@@ -59,7 +58,7 @@ export class Player extends Entity {
 
     if (jsonData.inventory.length > 0) {
       jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }, index: number) => {
-        entity.addToInventory(Weapon.fromJson(value._jsonData));
+        entity.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
       });
     }
 
