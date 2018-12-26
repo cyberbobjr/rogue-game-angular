@@ -1,19 +1,19 @@
-import {MainPageComponent} from './pages/main-page/main-page.component';
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {CommonModule} from '@angular/common';
+import {InventoryModalComponent} from './pages/inventory/inventory-modal.component';
 
-const gameRoutes: Routes = [
-  {path: '**', component: MainPageComponent}
+const inventoryRoutes: Routes = [
+  {path: '', component: InventoryModalComponent}
 ];
 
 @NgModule({
             declarations: [],
             imports: [
               CommonModule,
-              RouterModule.forChild(gameRoutes)
+              RouterModule.forChild(inventoryRoutes)
             ],
             exports: [RouterModule]
           })
-export class GameRoutingModule {
+export class InventoryRoutingModule {
 }

@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {CreatePageComponent} from './create-page/create-page.component';
 import {AbilityComponent} from './ui/ability/ability.component';
 import {DicesComponent} from './ui/dices/dices.component';

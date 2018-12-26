@@ -8,7 +8,6 @@ import {ActionResult} from '../../../core/classes/actions/action-result';
 import {StorageService} from './storage.service';
 import {Entity} from '../../../core/classes/base/entity';
 import {EffectEngine} from './effect-engine.service';
-import {NgxSmartModalService} from 'ngx-smart-modal';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 

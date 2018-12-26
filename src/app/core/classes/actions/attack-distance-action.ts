@@ -7,7 +7,6 @@ import {EventLog} from '../event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
 
 export class AttackDistanceAction implements Iaction {
-  private _info = '';
   private _handleKeyBackup: (key: KeyboardEvent) => void = null;
   private _currentTargetIndex: number;
   private _targets: Array<Entity> = [];
