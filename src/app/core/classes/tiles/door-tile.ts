@@ -8,12 +8,21 @@ import {EventLog} from '../event-log';
 import {TileType} from '../../enums/tile-type.enum';
 
 export class DoorTile extends Tile {
-  _type = TileType.DOOR;
-  name = 'DoorTile';
+  protected _type = TileType.DOOR;
+  protected _name = 'DoorTile';
 
   static fromJSON(json: any, position?: Position): DoorTile {
     const {_isClosed} = json;
     return new this(position, _isClosed);
+  }
+
+  toJSON(): any {
+    return {
+      ...super.toJSON(),
+      ...{
+        _isClosed: this._isClosed
+      }
+    };
   }
 
   constructor(position?: Position, private _isClosed = true) {

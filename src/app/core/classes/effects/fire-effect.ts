@@ -8,7 +8,7 @@ import {EffectEngine} from '../../../modules/game/services/effect-engine.service
 
 export class FireEffect implements IEffect {
   private _refreshTime = 50; // ms
-  private _duration = 2000; //ms
+  private _duration = 2000; // ms
   private _timeStart: number;
   private _timeCreated: number;
   color = '#FF5733';

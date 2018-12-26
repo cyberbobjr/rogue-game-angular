@@ -3,6 +3,7 @@ import {JsonSprite} from '../../interfaces/json-interfaces';
 
 export class Sprite implements ISprite {
   protected _visibility = 0;
+  protected _character: string;
 
   get visibility(): number {
     return this._visibility;
@@ -56,10 +57,11 @@ export class Sprite implements ISprite {
     return sprite;
   }
 
-  constructor(private _character: string,
+  constructor(_character: string,
               private _color: string = '#afafaf',
               private _bgColor: string = '#000000',
               private _light = false) {
+    this._character = _character;
   }
 
   clone(): Sprite {

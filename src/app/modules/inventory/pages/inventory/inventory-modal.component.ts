@@ -10,6 +10,7 @@ import {Armour} from '../../../../core/classes/gameObjects/armour';
 import {Weapon} from '../../../../core/classes/gameObjects/weapon';
 import {Potion} from '../../../../core/classes/gameObjects/potion';
 import {Food} from '../../../../core/classes/gameObjects/food';
+import {Tile} from '../../../../core/classes/base/tile';
 
 @Component({
              selector: 'app-inventory-modal',
@@ -68,11 +69,23 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
         this._selected = letter;
       }
     } else {
-      if (letter === 'c') {
-        this._selected = null;
+      switch (letter) {
+        case 'c' :
+          this._selected = null;
+          break;
+        case 'd':
+          if (this.isDroppable()) {
+            this.dropObject();
+          }
+          break;
+        default :
+          return;
       }
-      console.log(key);
     }
+  }
+
+  isDroppable(): boolean {
+    return !!this._player.position;
   }
 
   isSelectedWearable(): boolean {
@@ -93,5 +106,13 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   isSelectedEatable(): boolean {
     const object: GameObject = this._player.inventory.get(this._selected);
     return (object instanceof Food);
+  }
+
+  dropObject() {
+    const gameObject: GameObject = this._player.inventory.get(this._selected);
+    const tile: Tile = this._gameEngine.mapEngine.getTileAt(this._player.position);
+    console.log(gameObject);
+    tile.dropOn(gameObject);
+    this._player.inventory.delete(this._selected);
   }
 }

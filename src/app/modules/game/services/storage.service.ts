@@ -46,7 +46,7 @@ export class StorageService {
       if (jsonData) {
         this._mapEngine.generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
         this._createTiles(jsonData.map);
-        this._createEntities(jsonData._entities);
+        this._loadEntities(jsonData._entities);
         return true;
       }
       return false;
@@ -56,7 +56,7 @@ export class StorageService {
     }
   }
 
-  private _createEntities(entities: Array<JsonEntity>): void {
+  private _loadEntities(entities: Array<JsonEntity>): void {
     const monsters: Array<Entity> = [];
     entities.forEach((entity: JsonEntity) => {
       const monster: Entity = EntitiesFactory.createFromJson(entity);
@@ -69,9 +69,9 @@ export class StorageService {
   private _createTiles(mapJson: JsonMap) {
     mapJson._data.forEach((cells: Array<JSonCell>) => {
       cells.forEach((cell: JSonCell) => {
-        const position: Position = new Position(cell._position._x, cell._position._y);
-        const tile: Tile = TilesFactory.createJsonTile(<TileType>cell._type, cell);
-        this._loadContents(tile, cell._contents);
+        const position: Position = new Position(cell.position._x, cell.position._y);
+        const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
+        this._loadContents(tile, cell.contents);
         this._mapEngine.setTileAt(position, tile);
       });
     });

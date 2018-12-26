@@ -1,7 +1,7 @@
 import * as weapons from '../rules/object/weapons.json';
 import {Weapon} from '../classes/gameObjects/weapon';
 import {GameObject} from '../classes/gameObjects/game-object';
-import {Gold} from '../classes/base/gold';
+import {Gold} from '../classes/gameObjects/gold';
 import {SlotType} from '../enums/equiped-type.enum';
 
 export class GameObjectFactory {
@@ -32,12 +32,12 @@ export class GameObjectFactory {
     return GameObjectFactory.instance;
   }
 
-  static createFromJson(objectType: string, jsonData: any): GameObject | null {
+  static createFromJson(objectType: string, data: any): GameObject | null {
     switch (objectType) {
       case 'GOLD' :
-        return new Gold(jsonData['_amount']);
+        return new Gold(data['_amount']);
       case 'WEAPON' :
-        return Weapon.fromJson(jsonData);
+        return Weapon.fromJson(data['_jsonData']);
       default:
         return null;
     }

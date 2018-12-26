@@ -1,13 +1,13 @@
-import {Sprite} from './sprite';
+import {Sprite} from '../base/sprite';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
-import {Entity} from './entity';
-import {GameObject} from '../gameObjects/game-object';
+import {Entity} from '../base/entity';
+import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 
-export class Gold implements GameObject {
+export class Gold extends GameObject {
+  protected _sprite: Sprite;
   name = 'Gold';
-  sprite: Sprite;
   objectType = 'GOLD';
 
   get amount(): number {
@@ -15,7 +15,8 @@ export class Gold implements GameObject {
   }
 
   constructor(private _amount: number) {
-    this.sprite = SpritesFactory.createSprite(SpriteType.GOLD);
+    super(null);
+    this._sprite = SpritesFactory.createSprite(SpriteType.GOLD);
   }
 
   getInfo(): string {

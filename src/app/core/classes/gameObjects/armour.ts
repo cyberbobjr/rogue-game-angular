@@ -5,9 +5,7 @@ import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Armour extends GameObject {
-  private _id: string;
-  private _name: string;
-  sprite: Sprite;
+  protected _sprite: Sprite;
   objectType = 'ARMOUR';
 
   get id(): string {
@@ -26,11 +24,8 @@ export class Armour extends GameObject {
     return new this(_jsonData);
   }
 
-  constructor(private _jsonData: JsonWeapon) {
-    super();
-    this._id = _jsonData.id;
-    this._name = _jsonData.name;
-    this.sprite = new Sprite(_jsonData.sprite._character, _jsonData.sprite._color);
+  constructor(_jsonData: JsonWeapon) {
+    super(_jsonData);
   }
 
   getInfo(): string {

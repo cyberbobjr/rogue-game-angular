@@ -44,7 +44,7 @@ export class Tile implements Iobject {
   get sprite(): Sprite {
     if (this._contents.length > 0) {
       const object: GameObject = this._contents[0];
-      return object.sprite;
+      return object.getSprite();
     }
     return this._sprite;
   }
@@ -55,6 +55,17 @@ export class Tile implements Iobject {
 
   static fromJSON(json: any, position?: Position): Tile {
     return new this(position);
+  }
+
+  toJSON() {
+    return {
+      name: this._name,
+      position: this._position,
+      sprite: this._sprite,
+      contents: this._contents,
+      type: this._type,
+      opaque: this._opaque
+    };
   }
 
   constructor(protected _position?: Position) {

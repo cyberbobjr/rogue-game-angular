@@ -14,12 +14,12 @@ export interface JsonPosition {
 }
 
 export interface JSonCell {
-  _type: number;
-  _name: string;
-  _opaque: boolean;
-  _position: JsonPosition;
-  _sprite: JsonSprite;
-  _contents: Array<GameObject>;
+  type: number;
+  name: string;
+  opaque: boolean;
+  position: JsonPosition;
+  sprite: JsonSprite;
+  contents: Array<GameObject>;
 }
 
 export interface JsonMap {
@@ -76,8 +76,8 @@ export interface JsonWeapon {
     long: number;
   };
   sprite: {
-    _character: string;
-    _color: string;
+    character: string;
+    color: string;
   };
 }
 
