@@ -7,7 +7,6 @@ import {EventLog} from '../event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
 
 export class AttackDistanceAction implements Iaction {
-  private _handleKeyBackup: (key: KeyboardEvent) => void = null;
   private _currentTargetIndex: number;
   private _targets: Array<Entity> = [];
   private _bgColorBackup: string;
@@ -25,7 +24,6 @@ export class AttackDistanceAction implements Iaction {
     }
     this._currentTargetIndex = 0;
     this._setTargetBgColor();
-    this._handleKeyBackup = this._gameEngine.handleKeyEvent;
     this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
     return ActionResult.WAIT;
   }
@@ -55,7 +53,7 @@ export class AttackDistanceAction implements Iaction {
 
   private _restoreGameEngineKeyHandler() {
     this._restoreBgColor();
-    this._gameEngine.handleKeyEvent = this._handleKeyBackup;
+    this._gameEngine.restoreGameKeyHandler();
   }
 
   private _restoreBgColor() {

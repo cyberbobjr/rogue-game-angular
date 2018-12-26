@@ -45,7 +45,7 @@ export class GameEngineService {
               private _commandService: CommandsService,
               private _storageService: StorageService) {
     console.log('Game engine created');
-    this._handleKeyEvent = this.handleActionKeyEvent;
+    this.restoreGameKeyHandler();
   }
 
   startGameLoop() {
@@ -167,5 +167,9 @@ export class GameEngineService {
 
   setModalService(value: NgxSmartModalService) {
     this._modalService = value;
+  }
+
+  restoreGameKeyHandler() {
+    this._handleKeyEvent = this.handleActionKeyEvent;
   }
 }

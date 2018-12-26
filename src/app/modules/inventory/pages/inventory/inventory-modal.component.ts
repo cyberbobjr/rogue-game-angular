@@ -4,6 +4,7 @@ import {NgxSmartModalService} from 'ngx-smart-modal';
 import {GameEngineService} from '../../../game/services/game-engine.service';
 import {Router} from '@angular/router';
 import {EntitiesService} from '../../../game/services/entities.service';
+import {Player} from '../../../../core/classes/entities/player';
 
 @Component({
              selector: 'app-inventory-modal',
@@ -13,6 +14,8 @@ import {EntitiesService} from '../../../game/services/entities.service';
 export class InventoryModalComponent implements OnInit, OnDestroy {
   private _handleKeyBackup: any;
   private _listener: any = null;
+  private _selected: string = null;
+  private _player: Player = null;
 
   constructor(private _modalService: NgxSmartModalService,
               private _gameEngine: GameEngineService,
@@ -23,9 +26,10 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._router.url === '/game') {
+      this._player = this._entitiesService.player;
       this.initModalHandler();
     } else {
-      this._entitiesService.player = StorageService.loadPlayer();
+      this._player = StorageService.loadPlayer();
       this._listener = this._renderer.listen(document, 'keydown', (keyEvent) => {
         this.keyboardHandler(keyEvent);
       });
@@ -48,17 +52,21 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     this._modalService.getModal('inventoryModal')
         .onAnyCloseEvent
         .subscribe(() => {
-          this._restoreKeyboardHandler();
+          this._gameEngine.restoreGameKeyHandler();
         });
   }
 
   keyboardHandler(key: KeyboardEvent) {
-    console.log(key);
-  }
-
-  private _restoreKeyboardHandler() {
-    if (this._handleKeyBackup) {
-      this._gameEngine.handleKeyEvent = this._handleKeyBackup;
+    const letter: string = key.key;
+    if (!this._selected) {
+      if (this._player.inventory.has(letter)) {
+        this._selected = letter;
+      }
+    } else {
+      if (letter === 'c') {
+        this._selected = null;
+      }
+      console.log(key);
     }
   }
 }

@@ -1,10 +1,16 @@
 <div class="container-fluid">
-  <div class="span6">
-    <ul>
-      <li *ngFor="let gameObject of _entitiesService.player.inventory | keyvalue; let i = index">
-        {{gameObject.key}} - {{gameObject.value.name}}
-      </li>
-    </ul>
+  <div class="row">
+    <div class="span6">
+      <ul>
+        <li *ngFor="let gameObject of _player.inventory | keyvalue; let i = index"
+            [class.selected]="gameObject.key == _selected">
+          {{gameObject.key}} - {{gameObject.value.name}}
+        </li>
+      </ul>
+    </div>
+    <div class="span6"></div>
   </div>
-  <div class="span6"></div>
+</div>
+<div class="row">
+  <span *ngIf="_selected">[c]ancel</span>
 </div>
