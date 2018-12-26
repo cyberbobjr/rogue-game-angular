@@ -7,5 +7,6 @@ export enum SlotType {
   BOOTS,
   RINGRIGHT,
   RINGLEFT,
-  NECKLACE
+  NECKLACE,
+  TWOHANDS
 }

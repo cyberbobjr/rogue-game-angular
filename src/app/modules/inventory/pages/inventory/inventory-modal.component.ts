@@ -70,6 +70,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
       }
     } else {
       switch (letter) {
+        case 'Escape':
         case 'c' :
           this._selected = null;
           break;
@@ -78,9 +79,13 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
             this.dropObject();
           }
           break;
+        case 'e':
+          this.equipObject(this._selected);
+          break;
         default :
           return;
       }
+      this._selected = null;
     }
   }
 
@@ -95,6 +100,9 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   isSelectedEquipable(): boolean {
     const object: GameObject = this._player.inventory.get(this._selected);
+    if (this._player.isInventoryEquipped(this._selected)) {
+      return false;
+    }
     return (object instanceof Weapon);
   }
 
@@ -108,11 +116,22 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     return (object instanceof Food);
   }
 
+  isSelectedUnequippable(): boolean {
+    return this._player.isInventoryEquipped(this._selected);
+  }
+
   dropObject() {
     const gameObject: GameObject = this._player.inventory.get(this._selected);
     const tile: Tile = this._gameEngine.mapEngine.getTileAt(this._player.position);
-    console.log(gameObject);
     tile.dropOn(gameObject);
     this._player.inventory.delete(this._selected);
+  }
+
+  equipObject(objectLetter: string) {
+    this._player.equipItem(objectLetter);
+  }
+
+  unequipObject() {
+
   }
 }

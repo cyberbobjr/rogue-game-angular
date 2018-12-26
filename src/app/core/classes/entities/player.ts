@@ -10,12 +10,13 @@ import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObject} from '../gameObjects/game-object';
 import {GameObjectFactory} from '../../factories/game-object-factory';
+import {Utility} from '../utility';
 
 export class Player extends Entity {
   private _xp = 0;
   private _level = 1;
   private _mapLevel = 1;
-  private _equippedItem: Map<SlotType, number> = new Map<SlotType, number>();
+  private _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   get mapLevel(): number {
     return this._mapLevel;
@@ -99,7 +100,39 @@ export class Player extends Entity {
 
   // endregion
 
-  EquipItem(inventoryNumber: number) {
-    const gameObject: GameObject = this._inventory[inventoryNumber];
+  equipItem(inventoryletter: string) {
+    const gameObject: GameObject = this._inventory.get(inventoryletter);
+    if (gameObject) {
+      const slots: Array<SlotType> = gameObject.getSlots();
+      slots.every((slot: SlotType) => {
+        if (this._equippedItem.has(slot)) {
+          return true;
+        }
+        this._equippedItem.set(slot, inventoryletter);
+      });
+    }
+  }
+
+  unequipItem(inventoryletter: string) {
+
+  }
+
+  isInventoryEquipped(inventoryLetter: string): boolean {
+    for (const [key, value] of this._equippedItem) {
+      if (value === inventoryLetter) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getSlotTypeForEquipped(inventoryLetter: string): string {
+    let slotEquipped: SlotType;
+    this._equippedItem.forEach((value: string, slot: SlotType) => {
+      if (value === inventoryLetter) {
+        slotEquipped = slot;
+      }
+    });
+    return Utility.getSlotTypeLabel(slotEquipped);
   }
 }

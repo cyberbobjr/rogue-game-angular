@@ -3,6 +3,8 @@ import {Weapon} from '../classes/gameObjects/weapon';
 import {GameObject} from '../classes/gameObjects/game-object';
 import {Gold} from '../classes/gameObjects/gold';
 import {SlotType} from '../enums/equiped-type.enum';
+import {Armour} from '../classes/gameObjects/armour';
+import {Potion} from '../classes/gameObjects/potion';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -38,6 +40,10 @@ export class GameObjectFactory {
         return new Gold(data['_amount']);
       case 'WEAPON' :
         return Weapon.fromJson(data['_jsonData']);
+      case 'ARMOUR' :
+        return Armour.fromJson(data['_jsonData']);
+      case 'POTION' :
+        return Potion.fromJson(data['_jsonData']);
       default:
         return null;
     }

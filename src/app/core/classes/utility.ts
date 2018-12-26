@@ -1,3 +1,5 @@
+import {SlotType} from '../enums/equiped-type.enum';
+
 export class Utility {
   static initArray(width: number, height: number, fill = '.'): string[][] {
     const newArray = new Array(height);
@@ -19,4 +21,32 @@ export class Utility {
   static getLetter(index: number): string {
     return Utility.alphabetArray()[index];
   }
+
+  static getSlotTypeLabel(slot: SlotType): string {
+    switch (slot) {
+      case SlotType.LEFTHAND :
+        return 'LEFTHAND';
+      case SlotType.RIGHTHAND :
+        return 'RIGHTHAND';
+      case SlotType.BOOTS :
+        return 'BOOTS';
+      case SlotType.CHEST :
+        return 'CHEST';
+      case SlotType.HEAD :
+        return 'HEAD';
+      case SlotType.LEGS :
+        return 'LEGS';
+      case SlotType.NECKLACE :
+        return 'NECKLACE';
+      case SlotType.RINGLEFT :
+        return 'RINGLEFT';
+      case SlotType.RINGRIGHT :
+        return 'RINGRIGHT';
+      case SlotType.TWOHANDS :
+        return 'TWOHANDS';
+      default:
+        return '';
+    }
+  }
+
 }

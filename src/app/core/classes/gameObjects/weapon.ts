@@ -37,6 +37,6 @@ export class Weapon extends GameObject {
   }
 
   getSlots(): Array<SlotType> {
-    return [];
+    return [SlotType.RIGHTHAND, SlotType.LEFTHAND];
   }
 }
