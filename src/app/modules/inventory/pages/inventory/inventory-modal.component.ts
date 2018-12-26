@@ -8,6 +8,8 @@ import {Player} from '../../../../core/classes/entities/player';
 import {GameObject} from '../../../../core/classes/gameObjects/game-object';
 import {Armour} from '../../../../core/classes/gameObjects/armour';
 import {Weapon} from '../../../../core/classes/gameObjects/weapon';
+import {Potion} from '../../../../core/classes/gameObjects/potion';
+import {Food} from '../../../../core/classes/gameObjects/food';
 
 @Component({
              selector: 'app-inventory-modal',
@@ -81,5 +83,15 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   isSelectedEquipable(): boolean {
     const object: GameObject = this._player.inventory.get(this._selected);
     return (object instanceof Weapon);
+  }
+
+  isSelectedDrinkable(): boolean {
+    const object: GameObject = this._player.inventory.get(this._selected);
+    return (object instanceof Potion);
+  }
+
+  isSelectedEatable(): boolean {
+    const object: GameObject = this._player.inventory.get(this._selected);
+    return (object instanceof Food);
   }
 }

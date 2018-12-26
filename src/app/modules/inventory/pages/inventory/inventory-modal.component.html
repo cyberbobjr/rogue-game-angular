@@ -12,7 +12,10 @@
   </div>
   <div class="row" *ngIf="_selected">
     <span>[c]ancel</span>&nbsp;
+    <span>[d]rop</span>&nbsp;
     <span *ngIf="isSelectedWearable()">[w]ear&nbsp;</span>
     <span *ngIf="isSelectedEquipable()">[e]quip&nbsp;</span>
+    <span *ngIf="isSelectedDrinkable()">[D]rink&nbsp;</span>
+    <span *ngIf="isSelectedEatable()">[E]at&nbsp;</span>
   </div>
 </div>
