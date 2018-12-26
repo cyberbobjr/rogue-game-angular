@@ -1,4 +1,4 @@
-import {Component, OnInit, Renderer2} from '@angular/core';
+import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {StorageService} from '../../../game/services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {NgxSmartModalService} from 'ngx-smart-modal';
@@ -10,17 +10,10 @@ import {Router} from '@angular/router';
              templateUrl: './inventory-modal.component.html',
              styleUrls: ['./inventory-modal.component.css']
            })
-export class InventoryModalComponent implements OnInit {
+export class InventoryModalComponent implements OnInit, OnDestroy {
   player: Player = null;
   private _handleKeyBackup: any;
-
-  /*@HostListener('document:keydown', ['$event'])
-   handleKeyEvent(keyboardEvent: KeyboardEvent) {
-   this.keyboardHandler(keyboardEvent);
-   keyboardEvent.preventDefault();
-   keyboardEvent.stopPropagation();
-   return false;
-   }*/
+  private _listener: any = null;
 
   constructor(private _modalService: NgxSmartModalService,
               private _gameEngine: GameEngineService,
@@ -33,9 +26,15 @@ export class InventoryModalComponent implements OnInit {
     if (this._router.url === '/game') {
       this.initModalHandler();
     } else {
-      this._renderer.listen(document, 'keydown', (keyEvent) => {
+      this._listener = this._renderer.listen(document, 'keydown', (keyEvent) => {
         this.keyboardHandler(keyEvent);
       });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this._listener) {
+      this._listener();
     }
   }
 
