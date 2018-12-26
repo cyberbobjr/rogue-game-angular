@@ -11,4 +11,12 @@ export class Utility {
   static rolldice(sides: number = 10): number {
     return Math.floor(Math.random() * sides) + 1;
   }
+
+  static alphabetArray(): Array<string> {
+    return 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  }
+
+  static getLetter(index: number): string {
+    return Utility.alphabetArray()[index];
+  }
 }

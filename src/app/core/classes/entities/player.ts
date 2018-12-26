@@ -6,7 +6,7 @@ import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {JsonEntity} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Weapon} from '../base/weapon';
 import {SlotType} from '../../enums/equiped-type.enum';
@@ -52,12 +52,16 @@ export class Player extends Entity {
 
   static fromJSON(jsonData: JsonEntity): Player {
     let entity: Player = new this();
+
     entity = Object.assign(entity, jsonData, {
       _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color),
-      _inventory: jsonData.inventory.map(({id, objectType, _jsonData}) => {
-        return GameObjectFactory.createFromJson(objectType, _jsonData) as Weapon;
-      })
     });
+    if (jsonData.inventory.length > 0) {
+      jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }, index: number) => {
+        entity.addToInventory(Weapon.fromJson(value._jsonData));
+      });
+    }
+
     if (jsonData.position) {
       entity.position = new Position(jsonData.position._x, jsonData.position._y);
     }
@@ -97,7 +101,5 @@ export class Player extends Entity {
 
   EquipItem(inventoryNumber: number) {
     const gameObject: GameObject = this._inventory[inventoryNumber];
-    //const slots: Array<SlotType> = GameObjectFactory.getSlot(gameObject);
-
   }
 }

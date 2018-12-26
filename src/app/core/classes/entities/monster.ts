@@ -39,7 +39,7 @@ export class Monster extends Entity {
     monster.charisma = monsterClass.charisma;
     monster.ac = monsterClass.ac;
     monster.gp = monsterClass.gp;
-    monster.inventory = monsterClass.weapons;
+    monster.setInventory(monsterClass.weapons);
     return monster;
   }
 

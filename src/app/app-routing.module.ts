@@ -15,6 +15,10 @@ const routes: Routes = [
     loadChildren: './modules/create/create.module#CreateModule'
   },
   {
+    path: 'inventory',
+    loadChildren: './modules/inventory/inventory.module#InventoryModule'
+  },
+  {
     path: '**',
     redirectTo: ''
   }

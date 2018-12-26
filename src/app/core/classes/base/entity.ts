@@ -14,6 +14,7 @@ import {IRace} from '../../interfaces/i-race';
 import {Weapon} from './weapon';
 import {GameClass} from './game-class';
 import {GameObject} from './game-object';
+import {Utility} from '../utility';
 
 @Injectable({
               providedIn: 'root'
@@ -39,7 +40,7 @@ export abstract class Entity implements Iobject, IEntity {
 
   protected _ap = 0; // action points
 
-  protected _inventory: Array<GameObject> = [];
+  protected _inventory: Map<string, GameObject> = new Map<string, GameObject>();
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
@@ -72,18 +73,19 @@ export abstract class Entity implements Iobject, IEntity {
 
   get weapons(): Array<Weapon> {
     const filteredObjects: Array<Weapon> = [];
-    this._inventory.filter((gameObject: GameObject) => {
-      return (gameObject.objectType === 'WEAPON');
+    this._inventory.forEach((gameObject: GameObject, key: string) => {
+      if (gameObject.objectType === 'WEAPON') {
+        filteredObjects.push(gameObject as Weapon);
+      }
     });
     return filteredObjects;
   }
 
-  get inventory(): Array<GameObject> {
+  get inventory(): Map<string, GameObject> {
     return this._inventory;
   }
 
-  set inventory(value: Array<GameObject>) {
-    this._inventory = value;
+  set inventory(value: Map<string, GameObject>) {
   }
 
   get id(): string {
@@ -222,7 +224,7 @@ export abstract class Entity implements Iobject, IEntity {
       hp: this.hp,
       gp: this.gp,
       hitDice: this.hitDice,
-      inventory: this.inventory,
+      inventory: Array.from(this.inventory.values()),
       speed: this.speed,
       size: this.size
     };
@@ -278,7 +280,13 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   addToInventory(gameObject: GameObject) {
-    this._inventory.push(gameObject);
+    this._inventory.set(Utility.getLetter(this._inventory.size), gameObject);
+  }
+
+  setInventory(arrInventory: Array<GameObject>) {
+    arrInventory.forEach((value: GameObject) => {
+      this.addToInventory(value);
+    });
   }
 }
 
