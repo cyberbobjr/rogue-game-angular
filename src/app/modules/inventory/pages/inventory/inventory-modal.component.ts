@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {StorageService} from '../../../game/services/storage.service';
-import {Player} from '../../../../core/classes/entities/player';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {GameEngineService} from '../../../game/services/game-engine.service';
 import {Router} from '@angular/router';
+import {EntitiesService} from '../../../game/services/entities.service';
 
 @Component({
              selector: 'app-inventory-modal',
@@ -11,21 +11,21 @@ import {Router} from '@angular/router';
              styleUrls: ['./inventory-modal.component.css']
            })
 export class InventoryModalComponent implements OnInit, OnDestroy {
-  player: Player = null;
   private _handleKeyBackup: any;
   private _listener: any = null;
 
   constructor(private _modalService: NgxSmartModalService,
               private _gameEngine: GameEngineService,
+              private _entitiesService: EntitiesService,
               private _router: Router,
               private _renderer: Renderer2) {
-    this.player = StorageService.loadPlayer();
   }
 
   ngOnInit() {
     if (this._router.url === '/game') {
       this.initModalHandler();
     } else {
+      this._entitiesService.player = StorageService.loadPlayer();
       this._listener = this._renderer.listen(document, 'keydown', (keyEvent) => {
         this.keyboardHandler(keyEvent);
       });

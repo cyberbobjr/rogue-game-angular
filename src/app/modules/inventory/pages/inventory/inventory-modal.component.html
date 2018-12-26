@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="span6">
     <ul>
-      <li *ngFor="let gameObject of player.inventory | keyvalue; let i = index">
+      <li *ngFor="let gameObject of _entitiesService.player.inventory | keyvalue; let i = index">
         {{gameObject.key}} - {{gameObject.value.name}}
       </li>
     </ul>
