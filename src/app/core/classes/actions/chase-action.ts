@@ -8,15 +8,17 @@ import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
 import {AttackMeleeAction} from './attack-melee-action';
 import {Monster} from '../entities/monster';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 export class ChaseAction implements Iaction {
   private _info = '';
+  private _mapEngine: MapEngine = null;
 
-  constructor(private _actor: Entity,
-              private _mapEngine: MapEngine) {
+  constructor(private _actor: Entity) {
   }
 
-  execute(actor: Entity): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
+    this._mapEngine = gameEngine.mapEngine;
     EventLog.getInstance().message = `${this._actor.name} chasing`;
     const destPosition: Position = this._getPathToPlayer(actor);
     if (destPosition) {
@@ -42,7 +44,7 @@ export class ChaseAction implements Iaction {
     }
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
-      result.alternative = new AttackMeleeAction(info, this._mapEngine);
+      result.alternative = new AttackMeleeAction(info);
       return result;
     }
     if (info instanceof Monster) {

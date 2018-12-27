@@ -4,6 +4,7 @@ import {ActionResult} from './action-result';
 import {DoorTile} from '../tiles/door-tile';
 import {EventLog} from '../event-log';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 export class OpendoorAction implements Iaction {
   private _info = '';
@@ -12,7 +13,7 @@ export class OpendoorAction implements Iaction {
               private _mapEngine: MapEngine) {
   }
 
-  execute(actor: Entity): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
     EventLog.getInstance().message = 'You trying to open door';
     this._tile.flipDoor();
     actor.setNextAction(null);

@@ -97,7 +97,7 @@ export class MapEngine implements IMapEngine {
       if (excludeRooms.indexOf(nb) !== 0) {
         const entity: Entity = EntitiesFactory.getInstance()
                                               .generateRandomEntities(this.getRoomCenter(rooms[nb]));
-        entity.setNextAction(new IdleAction(entity, this));
+        entity.setNextAction(new IdleAction(entity));
         monsters.push(entity);
       }
     }

@@ -147,7 +147,7 @@ export class GameEngineService {
       let actorAction = currentActor.getAction();
       if (actorAction) {
         while (true) {
-          const resultAction: ActionResult = actorAction.execute(currentActor);
+          const resultAction: ActionResult = actorAction.execute(currentActor, this);
           if (resultAction.succeeded) {
             break;
           }

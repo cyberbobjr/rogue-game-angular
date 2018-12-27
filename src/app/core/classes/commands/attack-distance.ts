@@ -5,6 +5,6 @@ import {AttackDistanceAction} from '../actions/attack-distance-action';
 
 export class AttackDistance implements Command {
   execute(actor: Entity, gameEngine: GameEngineService) {
-    actor.setNextAction(new AttackDistanceAction(actor, gameEngine.mapEngine, gameEngine));
+    actor.setNextAction(new AttackDistanceAction(actor));
   }
 }

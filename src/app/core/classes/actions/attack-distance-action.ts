@@ -1,7 +1,6 @@
 import {Iaction} from '../../interfaces/iaction';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 import {EventLog} from '../event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
@@ -10,14 +9,14 @@ export class AttackDistanceAction implements Iaction {
   private _currentTargetIndex: number;
   private _targets: Array<Entity> = [];
   private _bgColorBackup: string;
+  private _gameEngine: GameEngineService = null;
 
-  constructor(private _actor: Entity,
-              private _mapEngine: MapEngine,
-              private _gameEngine: GameEngineService) {
+  constructor(private _actor: Entity) {
   }
 
-  execute(actor: Entity): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
     this._targets = this._getTargets();
+    this._gameEngine = gameEngine;
     if (this._targets.length === 0) {
       EventLog.getInstance().message = 'No target in range !';
       return ActionResult.SUCCESS;
@@ -66,7 +65,7 @@ export class AttackDistanceAction implements Iaction {
   }
 
   private _getTargets(): Array<Entity> {
-    return this._mapEngine.entitiesVisibles;
+    return this._gameEngine.mapEngine.entitiesVisibles;
   }
 
   private _setNextTarget() {

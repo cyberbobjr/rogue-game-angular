@@ -9,6 +9,10 @@ import {Gold} from '../gameObjects/gold';
 import {GameObject} from '../gameObjects/game-object';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObjectFactory} from '../../factories/game-object-factory';
+import {Iaction} from '../../interfaces/iaction';
+import {WalkAction} from '../actions/walk-action';
+import {ChaseAction} from '../actions/chase-action';
+import {IdleAction} from '../actions/idle-action';
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Entity {
@@ -66,5 +70,15 @@ export class Monster extends Entity {
   setPosition(position: Position): Monster {
     this.position = position;
     return this;
+  }
+
+
+  onHit(actor: Entity, damage: number): Iaction | null {
+    const currentAction: Iaction = this.getAction();
+    const resultAction: Iaction | null = super.onHit(actor, damage);
+    if (!resultAction && (!currentAction || currentAction instanceof IdleAction)) {
+      this.setNextAction(new ChaseAction(this));
+    }
+    return null;
   }
 }

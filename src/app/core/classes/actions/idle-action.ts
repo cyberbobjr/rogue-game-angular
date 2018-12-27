@@ -1,21 +1,20 @@
 import {Iaction} from '../../interfaces/iaction';
 import {Entity} from '../base/entity';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {ChaseAction} from './chase-action';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 export class IdleAction implements Iaction {
   private _info = '';
 
-  constructor(private _actor: Entity,
-              private _mapEngine: MapEngine) {
+  constructor(private _actor: Entity) {
   }
 
-  execute(actor: Entity): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
     if (actor.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      actor.setNextAction(new ChaseAction(actor, this._mapEngine));
+      actor.setNextAction(new ChaseAction(actor));
     }
     return ActionResult.SUCCESS;
   }

@@ -60,7 +60,7 @@ export class StorageService {
     const monsters: Array<Entity> = [];
     entities.forEach((entity: JsonEntity) => {
       const monster: Entity = EntitiesFactory.createFromJson(entity);
-      monster.setNextAction(new IdleAction(monster, this._mapEngine));
+      monster.setNextAction(new IdleAction(monster));
       monsters.push(monster);
     });
     this._entitiesService.entities = monsters;
