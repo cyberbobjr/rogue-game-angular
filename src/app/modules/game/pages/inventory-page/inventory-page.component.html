@@ -1,9 +1,9 @@
 <div class="panel">
-  <div class="panel-heading">Inventory</div>
+  <div class="panel-heading">Items Equipped</div>
   <div class="panel-body">
     <ul>
-      <li *ngFor="let gameObject of _entitiesService.player.inventory | keyvalue">
-        {{gameObject.key}} - {{gameObject.value.name}}
+      <li *ngFor="let gameObject of player.equippedItem | keyvalue">
+        {{getSlotTypeLabel(gameObject.key)}} - {{player.getItemByLetter(gameObject.value).name}}
       </li>
     </ul>
   </div>

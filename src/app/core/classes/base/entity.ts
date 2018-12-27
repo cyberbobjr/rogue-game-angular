@@ -288,5 +288,9 @@ export abstract class Entity implements Iobject, IEntity {
       this.addToInventory(value);
     });
   }
+
+  getItemByLetter(inventoryLetter: string): GameObject {
+    return this._inventory.get(inventoryLetter);
+  }
 }
 

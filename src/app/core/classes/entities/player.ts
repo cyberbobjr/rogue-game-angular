@@ -18,9 +18,15 @@ export class Player extends Entity {
   private _mapLevel = 1;
   private _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
+  get equippedItem(): Map<SlotType, string> {
+    return this._equippedItem;
+  }
+
   get mapLevel(): number {
     return this._mapLevel;
   }
+
+  w;
 
   set mapLevel(value: number) {
     this._mapLevel = value;
