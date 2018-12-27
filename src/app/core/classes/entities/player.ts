@@ -50,6 +50,7 @@ export class Player extends Entity {
     this._xp = value;
   }
 
+  // region Serialization
   static fromJSON(jsonData: JsonEntity): Player {
     let entity: Player = new this();
 
@@ -66,8 +67,25 @@ export class Player extends Entity {
     if (jsonData.position) {
       entity.position = new Position(jsonData.position._x, jsonData.position._y);
     }
+
+    if (jsonData.equipped) {
+      entity._equippedItem = new Map(jsonData.equipped);
+    }
     return entity;
   }
+
+  toJSON(): any {
+    return {
+      ...super.toJSON(),
+      ...{
+        xp: this.xp,
+        level: this.level,
+        equipped: [...this._equippedItem]
+      }
+    };
+  }
+
+  // endregion
 
   constructor(position?: Position, sprite?: Sprite) {
     super();
@@ -76,16 +94,6 @@ export class Player extends Entity {
     }
     this.sprite = sprite ? sprite : SpritesFactory.createSprite(SpriteType.PLAYER);
     this.sprite.light = true;
-  }
-
-  toJSON(): any {
-    return {
-      ...super.toJSON(),
-      ...{
-        xp: this.xp,
-        level: this.level
-      }
-    };
   }
 
   // region Events

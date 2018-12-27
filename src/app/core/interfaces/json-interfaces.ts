@@ -1,4 +1,5 @@
 import {GameObject} from '../classes/gameObjects/game-object';
+import {SlotType} from '../enums/equiped-type.enum';
 
 export interface JsonSprite {
   _color: string;
@@ -51,6 +52,7 @@ export interface JsonEntity {
   charisma: number;
   level: number;
   inventory: [{ id: string, objectType: string, _jsonData: JsonWeapon }];
+  equipped?: [[SlotType, string]];
 }
 
 export interface JsonWeapon {
