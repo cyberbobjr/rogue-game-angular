@@ -271,7 +271,7 @@ export abstract class Entity implements Iobject, IEntity {
     this.hp -= damage;
     if (!this._backupSprite) {
       this._backupSprite = this._sprite;
-      this._sprite = SpritesFactory.createSprite(SpriteType.HITMONSTER);
+      this._sprite = SpritesFactory.createSprite(SpriteType.HITENTITY);
       this._timeDisplaySprite = performance.now();
     }
     return null;
