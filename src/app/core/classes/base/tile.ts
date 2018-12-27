@@ -5,6 +5,8 @@ import {Iaction} from '../../interfaces/iaction';
 import {Iobject} from '../../interfaces/iobject';
 import {TileType} from '../../enums/tile-type.enum';
 import {GameObject} from '../gameObjects/game-object';
+import {EventLog} from '../event-log';
+import {Player} from '../entities/player';
 
 export class Tile implements Iobject {
   protected _type: TileType;
@@ -84,6 +86,9 @@ export class Tile implements Iobject {
   }
 
   onWalk(actor: Entity): Iaction | null {
+    if (actor instanceof Player) {
+      EventLog.getInstance().message = `You walk on ${this.getInfo()}`;
+    }
     return null;
   }
 

@@ -5,7 +5,6 @@ import {Position} from '../base/position';
 import {TileType} from '../../enums/tile-type.enum';
 import {Entity} from '../base/entity';
 import {Iaction} from '../../interfaces/iaction';
-import {EventLog} from '../event-log';
 
 export class FloorTile extends Tile {
   protected _type = TileType.FLOOR;
@@ -31,8 +30,7 @@ export class FloorTile extends Tile {
   }
 
   onWalk(actor: Entity): Iaction | null {
-    EventLog.getInstance().message = 'You walk on ' + this.getInfo();
-    return null;
+    return super.onWalk(actor);
   }
 
   getInfo(): string {

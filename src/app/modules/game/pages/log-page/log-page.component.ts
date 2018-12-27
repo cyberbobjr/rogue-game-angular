@@ -13,10 +13,10 @@ export class LogPageComponent implements OnInit {
     EventLog.getInstance()
             .message$
             .subscribe((message: string) => {
-              this.messages.push(message);
-              if (this.messages.length > 5) {
+              if (this.messages.length > 4) {
                 this.messages.splice(0, 1);
               }
+              this.messages.push(message);
             });
   }
 
