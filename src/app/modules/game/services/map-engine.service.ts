@@ -91,12 +91,14 @@ export class MapEngine implements IMapEngine {
     const monsters: Array<Entity> = [];
     const rooms: Array<Room> = this.getRooms();
     const nbRooms: number = rooms.length;
+    EntitiesFactory.getInstance()
+                   .setMaxPop(nbRooms);
     for (let nb = 1; nb < nbRooms - 2; nb++) {
       if (excludeRooms.indexOf(nb) !== 0) {
-        const orc: Monster = EntitiesFactory.getInstance()
-                                            .createEntity(EntityType.ORC, this.getRoomCenter(rooms[nb])) as Monster;
-        orc.setNextAction(new IdleAction(orc, this));
-        monsters.push(orc);
+        const entity: Entity = EntitiesFactory.getInstance()
+                                              .generateRandomEntities(this.getRoomCenter(rooms[nb]));
+        entity.setNextAction(new IdleAction(entity, this));
+        monsters.push(entity);
       }
     }
     return monsters;

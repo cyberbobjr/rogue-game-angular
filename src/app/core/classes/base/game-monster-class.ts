@@ -71,6 +71,10 @@ export class GameMonsterClass {
     return this._jsonData.speed;
   }
 
+  get frequency(): number {
+    return this._jsonData.frequency;
+  }
+
   constructor(private _jsonData: JsonMonster) {
   }
 

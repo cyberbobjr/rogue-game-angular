@@ -27,6 +27,37 @@
     },
     "weapons": [
       "greataxe"
-    ]
+    ],
+    "frequency": 0.4
+  },
+  {
+    "id": "BAT",
+    "name": "Bat",
+    "hp": {
+      "dice": 4,
+      "mul": 1,
+      "bonus": 1
+    },
+    "speed": 30,
+    "size": "s",
+    "abilities": {
+      "strength": 2,
+      "dexterity": 15,
+      "constitution": 8,
+      "intelligence": 2,
+      "wisdom": 12,
+      "charisma": 4
+    },
+    "ac": 12,
+    "gp": {
+      "dice": 0
+    },
+    "sprite": {
+      "character": "X",
+      "color": "#858fa0"
+    },
+    "weapons": [
+    ],
+    "frequency": 0.8
   }
 ]

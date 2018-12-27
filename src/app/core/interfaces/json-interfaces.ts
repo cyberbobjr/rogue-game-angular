@@ -134,6 +134,7 @@ export interface JsonMonster {
     color: string;
   };
   weapons: [string];
+  frequency: number;
 }
 
 export interface JsonRace {
