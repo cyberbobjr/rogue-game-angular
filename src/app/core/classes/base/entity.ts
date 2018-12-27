@@ -269,9 +269,11 @@ export abstract class Entity implements Iobject, IEntity {
   onHit(actor: Entity, damage: number): Iaction | null {
     EventLog.getInstance().message = `${this.name} take ${damage} points of damage`;
     this.hp -= damage;
-    this._backupSprite = this._sprite;
-    this._sprite = SpritesFactory.createSprite(SpriteType.HITMONSTER);
-    this._timeDisplaySprite = performance.now();
+    if (!this._backupSprite) {
+      this._backupSprite = this._sprite;
+      this._sprite = SpritesFactory.createSprite(SpriteType.HITMONSTER);
+      this._timeDisplaySprite = performance.now();
+    }
     return null;
   }
 
