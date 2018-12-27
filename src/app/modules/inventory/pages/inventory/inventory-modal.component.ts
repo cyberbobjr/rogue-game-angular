@@ -80,7 +80,14 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
           }
           break;
         case 'e':
-          this.equipObject(this._selected);
+          if (this.isSelectedEquipable()) {
+            this.equipObject(this._selected);
+          }
+          break;
+        case 'u':
+          if (this.isSelectedUnequippable()) {
+            this.unequipObject(this._selected);
+          }
           break;
         default :
           return;
@@ -131,7 +138,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     this._player.equipItem(objectLetter);
   }
 
-  unequipObject() {
-
+  unequipObject(objectLetter: string) {
+    this._player.unequipItem(objectLetter);
   }
 }
