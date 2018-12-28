@@ -17,6 +17,25 @@ export class Player extends Entity {
   private _xp = 0;
   private _level = 1;
   private _mapLevel = 1;
+  private _race: RaceClass;
+  private _gameClass: GameClass;
+
+
+  set race(value: RaceClass) {
+    this._race = value;
+  }
+
+  set gameClass(value: GameClass) {
+    this._gameClass = value;
+  }
+
+  get gameClass(): GameClass {
+    return this._gameClass;
+  }
+
+  get race(): RaceClass {
+    return this._race;
+  }
 
   get equippedItem(): Map<SlotType, string> {
     return this._equippedItem;
@@ -150,5 +169,18 @@ export class Player extends Entity {
       }
     });
     return Utility.getSlotTypeLabel(slotEquipped);
+  }
+
+  setRace(race: RaceClass): Player {
+    this._race = race;
+    return this;
+  }
+
+  setGameClass(gameClass: GameClass): Player {
+    this._hitDice = gameClass.getHitDice();
+    this._hp = this._hitDice + this.constitution;
+    this._gp = gameClass.getGp();
+    this._gameClass = gameClass;
+    return this;
   }
 }

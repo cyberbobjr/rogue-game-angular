@@ -33,9 +33,6 @@ export abstract class Entity implements Iobject, IEntity {
   protected _ac: number;
   protected _gp: number;
 
-  private _race: RaceClass;
-  private _gameClass: GameClass;
-
   protected _hitDice: number;
   protected _id: string;
   protected _speed: number;
@@ -50,22 +47,6 @@ export abstract class Entity implements Iobject, IEntity {
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
-
-  set race(value: RaceClass) {
-    this._race = value;
-  }
-
-  set gameClass(value: GameClass) {
-    this._gameClass = value;
-  }
-
-  get gameClass(): GameClass {
-    return this._gameClass;
-  }
-
-  get race(): RaceClass {
-    return this._race;
-  }
 
   get ap(): number {
     return this._ap;
@@ -252,19 +233,6 @@ export abstract class Entity implements Iobject, IEntity {
 
   getWeaponDamageDice(): number {
     return 1 + AttributesFactory.getModifier(this.strength);
-  }
-
-  setRace(race: RaceClass): Entity {
-    this._race = race;
-    return this;
-  }
-
-  setGameClass(gameClass: GameClass): Entity {
-    this._hitDice = gameClass.getHitDice();
-    this._hp = this._hitDice + this.constitution;
-    this._gp = gameClass.getGp();
-    this._gameClass = gameClass;
-    return this;
   }
 
   getAction(): Iaction | null {

@@ -13,6 +13,7 @@ import {RaceType} from '../../../core/enums/race-type.enum';
 import {Router} from '@angular/router';
 import {GameClass} from '../../../core/classes/base/game-class';
 import {RaceClass} from '../../../core/classes/base/race';
+import {Player} from '../../../core/classes/entities/player';
 
 @Component({
              selector: 'app-create-page',
@@ -51,18 +52,18 @@ export class CreatePageComponent implements OnInit {
   }
 
   onSave() {
-    let player: Entity = <Entity>EntitiesFactory.getInstance()
-                                                .createEntity(EntityType.PLAYER);
+    let player: Player = EntitiesFactory.getInstance()
+                                        .createEntity(EntityType.PLAYER) as Player;
     player.attributes = this._diceService.attributesScore;
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                  .createGameClass(ClassType.BARBARIAN);
     const gameRace: RaceClass = RaceFactory.getInstance()
-                                       .createRace(RaceType.HUMAN);
+                                           .createRace(RaceType.HUMAN);
 
     player = player.setRace(gameRace)
                    .setGameClass(gameClass);
 
-    StorageService.savePlayer(<Entity>player);
+    StorageService.savePlayer(player);
     this._router.navigateByUrl('main');
   }
 }
