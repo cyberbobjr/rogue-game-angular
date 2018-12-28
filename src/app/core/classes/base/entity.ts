@@ -10,12 +10,12 @@ import {EventLog} from '../event-log';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {IRace} from '../../interfaces/i-race';
 import {Weapon} from '../gameObjects/weapon';
 import {GameClass} from './game-class';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {RaceClass} from './race';
 
 @Injectable({
               providedIn: 'root'
@@ -33,7 +33,9 @@ export abstract class Entity implements Iobject, IEntity {
   protected _ac: number;
   protected _gp: number;
 
-  protected _race: IRace;
+  private _race: RaceClass;
+  private _gameClass: GameClass;
+
   protected _hitDice: number;
   protected _id: string;
   protected _speed: number;
@@ -48,6 +50,22 @@ export abstract class Entity implements Iobject, IEntity {
   ligthPower = 7; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  set race(value: RaceClass) {
+    this._race = value;
+  }
+
+  set gameClass(value: GameClass) {
+    this._gameClass = value;
+  }
+
+  get gameClass(): GameClass {
+    return this._gameClass;
+  }
+
+  get race(): RaceClass {
+    return this._race;
+  }
 
   get ap(): number {
     return this._ap;
@@ -236,7 +254,7 @@ export abstract class Entity implements Iobject, IEntity {
     return 1 + AttributesFactory.getModifier(this.strength);
   }
 
-  setRace(race: IRace): Entity {
+  setRace(race: RaceClass): Entity {
     this._race = race;
     return this;
   }
@@ -245,6 +263,7 @@ export abstract class Entity implements Iobject, IEntity {
     this._hitDice = gameClass.getHitDice();
     this._hp = this._hitDice + this.constitution;
     this._gp = gameClass.getGp();
+    this._gameClass = gameClass;
     return this;
   }
 

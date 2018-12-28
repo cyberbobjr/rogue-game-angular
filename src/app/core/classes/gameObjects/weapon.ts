@@ -3,6 +3,7 @@ import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {Utility} from '../utility';
 
 export class Weapon extends GameObject {
   protected _sprite: Sprite;
@@ -38,5 +39,12 @@ export class Weapon extends GameObject {
 
   getSlots(): Array<SlotType> {
     return [SlotType.RIGHTHAND, SlotType.LEFTHAND];
+  }
+
+  getDamage(): number {
+    if (<JsonWeapon>this._jsonData.damage) {
+      return (this._jsonData.damage.mul * Utility.rolldice(this._jsonData.damage.dice));
+    }
+    return 0;
   }
 }

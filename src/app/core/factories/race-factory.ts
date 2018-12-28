@@ -1,6 +1,5 @@
 import * as races from '../rules/race/race.json';
 import {RaceType} from '../enums/race-type.enum';
-import {IRace} from '../interfaces/i-race';
 import {RaceClass} from '../classes/base/race';
 
 export class RaceFactory {
@@ -21,7 +20,7 @@ export class RaceFactory {
     }
   }
 
-  createRace(raceType: RaceType): IRace | null {
+  createRace(raceType: RaceType): RaceClass | null {
     switch (raceType) {
       case RaceType.HUMAN:
         return this._races.get('HUMAN');

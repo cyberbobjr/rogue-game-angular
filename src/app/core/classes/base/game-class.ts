@@ -3,6 +3,12 @@ import {JsonGameClass} from '../../interfaces/json-interfaces';
 import {Utility} from '../utility';
 
 export class GameClass implements IGameClass {
+  private _name: string;
+
+  get jsonData(): JsonGameClass {
+    return this._jsonData;
+  }
+
   get name(): string {
     return this._jsonData.name;
   }
@@ -28,6 +34,6 @@ export class GameClass implements IGameClass {
   }
 
   constructor(private _jsonData: JsonGameClass) {
-
+    this._name = _jsonData.name;
   }
 }

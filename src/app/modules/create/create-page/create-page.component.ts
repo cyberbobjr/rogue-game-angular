@@ -1,9 +1,8 @@
-import {Component, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Utility} from '../../../core/classes/utility';
 import {DiceService} from '../services/dice.service';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {EntityType} from '../../../core/enums/entity-type.enum';
-import {Player} from '../../../core/classes/entities/player';
 import {StorageService} from '../../game/services/storage.service';
 import {Entity} from '../../../core/classes/base/entity';
 import {IDice} from '../interface/idice';
@@ -11,10 +10,9 @@ import {ClassType} from '../../../core/enums/class-type.enum';
 import {GameClassFactory} from '../../../core/factories/game-class-factory';
 import {RaceFactory} from '../../../core/factories/race-factory';
 import {RaceType} from '../../../core/enums/race-type.enum';
-import {IGameClass} from '../../../core/interfaces/i-game-class';
 import {Router} from '@angular/router';
 import {GameClass} from '../../../core/classes/base/game-class';
-import {IRace} from '../../../core/interfaces/i-race';
+import {RaceClass} from '../../../core/classes/base/race';
 
 @Component({
              selector: 'app-create-page',
@@ -58,7 +56,7 @@ export class CreatePageComponent implements OnInit {
     player.attributes = this._diceService.attributesScore;
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                  .createGameClass(ClassType.BARBARIAN);
-    const gameRace: IRace = RaceFactory.getInstance()
+    const gameRace: RaceClass = RaceFactory.getInstance()
                                        .createRace(RaceType.HUMAN);
 
     player = player.setRace(gameRace)

@@ -10,6 +10,8 @@ import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
+import {RaceClass} from '../base/race';
+import {GameClass} from '../base/game-class';
 
 export class Player extends Entity {
   private _xp = 0;
@@ -73,6 +75,15 @@ export class Player extends Entity {
     if (jsonData.equipped) {
       entity._equippedItem = new Map(jsonData.equipped);
     }
+
+    if (jsonData.race) {
+      entity.race = new RaceClass(jsonData.race);
+    }
+
+    if (jsonData.gameClass) {
+      entity.gameClass = new GameClass(jsonData.gameClass);
+    }
+
     return entity;
   }
 
@@ -82,7 +93,9 @@ export class Player extends Entity {
       ...{
         xp: this.xp,
         level: this.level,
-        equipped: [...this._equippedItem]
+        equipped: [...this._equippedItem],
+        race: this.race.jsonData,
+        gameClass: this.gameClass.jsonData
       }
     };
   }

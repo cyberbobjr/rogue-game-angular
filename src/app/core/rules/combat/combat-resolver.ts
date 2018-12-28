@@ -10,7 +10,6 @@ export class CombatResolver {
   static HandToHandAttack(attacker: Entity, target: Entity): number {
     let weaponDamageMultiplicator = 1;
     const attackModifier: number = AttributesFactory.getModifier(attacker.strength);
-    const weaponDamageDice: number = attacker.getWeaponDamageDice();
     const hitDiceAttack: number = Utility.rolldice(20);
     if (hitDiceAttack === 1) {
       EventLog.getInstance().message = 'Hit failed';
@@ -22,7 +21,8 @@ export class CombatResolver {
       EventLog.getInstance().message = 'Critical hit!';
     }
     if (hitDiceAttack + attackModifier >= target.ac) {
-      const damage: number = (weaponDamageMultiplicator * Utility.rolldice(weaponDamageDice)) + attackModifier;
+      const weaponDamage: number = attacker.getWeaponDamageDice();
+      const damage: number = (weaponDamageMultiplicator * weaponDamage) + attackModifier;
       EventLog.getInstance().message = `Damage : ${damage}`;
       return damage;
     }
@@ -31,8 +31,8 @@ export class CombatResolver {
 
   static DistanceAttack(attacker: Entity, target: Entity): number {
     let weaponDamageMultiplicator = 1;
-    const attackModifier: number = AttributesFactory.getModifier(attacker.strength);
-    const weaponDamageDice: number = attacker.getWeaponDamageDice();
+    const attackModifier: number = AttributesFactory.getModifier(attacker.dexterity);
+    const weaponDamage: number = attacker.getWeaponDamageDice();
     const hitDiceAttack: number = Utility.rolldice(20);
     if (hitDiceAttack === 1) {
       EventLog.getInstance().message = 'Hit failed';
@@ -44,7 +44,7 @@ export class CombatResolver {
       EventLog.getInstance().message = 'Critical hit!';
     }
     if (hitDiceAttack + attackModifier >= target.ac) {
-      const damage: number = (weaponDamageMultiplicator * Utility.rolldice(weaponDamageDice)) + attackModifier;
+      const damage: number = (weaponDamageMultiplicator * Utility.rolldice(weaponDamage)) + attackModifier;
       EventLog.getInstance().message = `Damage : ${damage}`;
       return damage;
     }
