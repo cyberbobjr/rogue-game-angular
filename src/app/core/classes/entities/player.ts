@@ -8,7 +8,6 @@ import {Sprite} from '../base/sprite';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {GameObject} from '../gameObjects/game-object';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
 
@@ -16,7 +15,6 @@ export class Player extends Entity {
   private _xp = 0;
   private _level = 1;
   private _mapLevel = 1;
-  private _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   get equippedItem(): Map<SlotType, string> {
     return this._equippedItem;
@@ -112,19 +110,6 @@ export class Player extends Entity {
   }
 
   // endregion
-
-  equipItem(inventoryletter: string) {
-    const gameObject: GameObject = this._inventory.get(inventoryletter);
-    if (gameObject) {
-      const slots: Array<SlotType> = gameObject.getSlots();
-      slots.every((slot: SlotType) => {
-        if (this._equippedItem.has(slot)) {
-          return true;
-        }
-        this._equippedItem.set(slot, inventoryletter);
-      });
-    }
-  }
 
   unequipItem(inventoryLetter: string) {
     for (const [key, value] of this._equippedItem) {

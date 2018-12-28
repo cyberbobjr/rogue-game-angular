@@ -15,6 +15,7 @@ import {Weapon} from '../gameObjects/weapon';
 import {GameClass} from './game-class';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
+import {SlotType} from '../../enums/equiped-type.enum';
 
 @Injectable({
               providedIn: 'root'
@@ -41,6 +42,7 @@ export abstract class Entity implements Iobject, IEntity {
   protected _ap = 0; // action points
 
   protected _inventory: Map<string, GameObject> = new Map<string, GameObject>();
+  protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   lightRadius = 20;
   ligthPower = 7; // max is lighter
@@ -281,8 +283,10 @@ export abstract class Entity implements Iobject, IEntity {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 
-  addToInventory(gameObject: GameObject) {
-    this._inventory.set(Utility.getLetter(this._inventory.size), gameObject);
+  addToInventory(gameObject: GameObject): string {
+    const letterInventory: string = Utility.getLetter(this._inventory.size);
+    this._inventory.set(letterInventory, gameObject);
+    return letterInventory;
   }
 
   setInventory(arrInventory: Array<GameObject>) {
@@ -293,6 +297,19 @@ export abstract class Entity implements Iobject, IEntity {
 
   getItemByLetter(inventoryLetter: string): GameObject {
     return this._inventory.get(inventoryLetter);
+  }
+
+  equipItem(inventoryletter: string) {
+    const gameObject: GameObject = this._inventory.get(inventoryletter);
+    if (gameObject) {
+      const slots: Array<SlotType> = gameObject.getSlots();
+      slots.every((slot: SlotType) => {
+        if (this._equippedItem.has(slot)) {
+          return true;
+        }
+        this._equippedItem.set(slot, inventoryletter);
+      });
+    }
   }
 }
 

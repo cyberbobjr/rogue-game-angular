@@ -10,7 +10,6 @@ import {GameObject} from '../gameObjects/game-object';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Iaction} from '../../interfaces/iaction';
-import {WalkAction} from '../actions/walk-action';
 import {ChaseAction} from '../actions/chase-action';
 import {IdleAction} from '../actions/idle-action';
 
@@ -24,7 +23,8 @@ export class Monster extends Entity {
 
     if (jsonData.inventory.length > 0) {
       jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }, index: number) => {
-        entity.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
+        const letterInventory = entity.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
+        entity.equipItem(letterInventory);
       });
     }
 
