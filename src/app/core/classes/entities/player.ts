@@ -26,8 +26,6 @@ export class Player extends Entity {
     return this._mapLevel;
   }
 
-  w;
-
   set mapLevel(value: number) {
     this._mapLevel = value;
   }
@@ -100,6 +98,7 @@ export class Player extends Entity {
     }
     this.sprite = sprite ? sprite : SpritesFactory.createSprite(SpriteType.PLAYER);
     this.sprite.light = true;
+    this.name = 'Player';
   }
 
   // region Events
