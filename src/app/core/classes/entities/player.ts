@@ -12,6 +12,9 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
 import {RaceClass} from '../base/race';
 import {GameClass} from '../base/game-class';
+import {Armor} from '../gameObjects/armor';
+import {GameObject} from '../gameObjects/game-object';
+import {AttributesFactory} from '../../factories/attributes-factory';
 
 export class Player extends Entity {
   private _xp = 0;
@@ -50,7 +53,7 @@ export class Player extends Entity {
   }
 
   get ac(): number {
-    return 10 + this.attributes.get('dexterity');
+    return 10 + this.getArmorAc();
   }
 
   set ac(value: number) {
@@ -183,4 +186,40 @@ export class Player extends Entity {
     this._gameClass = gameClass;
     return this;
   }
+
+  private _getArmorEquipped(): Array<Armor> {
+    const armorEquipped: Array<Armor> = [];
+    for (const [key, value] of this._equippedItem) {
+      const gameObject: GameObject = this._inventory.get(value);
+      if (gameObject instanceof Armor) {
+        armorEquipped.push(gameObject as Armor);
+      }
+    }
+    return armorEquipped;
+  }
+
+  getArmorAc(): number {
+    let ac = 0;
+    let dexterity = false;
+    let bonus = 0;
+    const armorEquipped: Array<Armor> = this._getArmorEquipped();
+    if (armorEquipped.length === 0) {
+      return 10;
+    }
+    armorEquipped.forEach((armor: Armor) => {
+      if (armor.properties.indexOf('dexterity') > -1) {
+        dexterity = true;
+      }
+      if (armor.properties.indexOf('bonus') > -1) {
+        bonus += armor.ac;
+      } else {
+        ac += armor.ac;
+      }
+    });
+    if (ac === 0) {
+      ac = AttributesFactory.getModifier(this.attributes.get('dexterity'));
+    }
+    return ac + bonus;
+  }
+
 }

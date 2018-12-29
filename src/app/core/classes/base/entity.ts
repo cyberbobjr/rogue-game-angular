@@ -5,7 +5,6 @@ import {Sprite} from './sprite';
 import {Iobject} from '../../interfaces/iobject';
 import {IEntity} from '../../interfaces/ientity';
 import {EntityType} from '../../enums/entity-type.enum';
-import {AttributesFactory} from '../../factories/attributes-factory';
 import {EventLog} from '../event-log';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
@@ -296,8 +295,9 @@ export abstract class Entity implements Iobject, IEntity {
   private _getEquippedWeapons(): Array<Weapon> {
     const weaponsEquipped: Array<Weapon> = [];
     for (const [key, value] of this._equippedItem) {
-      if (key === SlotType.TWOHANDS || key === SlotType.RIGHTHAND || key === SlotType.LEFTHAND) {
-        weaponsEquipped.push(this._inventory.get(value) as Weapon);
+      const gameObject: GameObject = this._inventory.get(value);
+      if ((key === SlotType.TWOHANDS || key === SlotType.RIGHTHAND || key === SlotType.LEFTHAND) && (gameObject instanceof Weapon)) {
+        weaponsEquipped.push(gameObject as Weapon);
       }
     }
     return weaponsEquipped;

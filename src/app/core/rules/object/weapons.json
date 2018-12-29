@@ -1,7 +1,7 @@
 [
   {
     "id": "club",
-    "name": "club",
+    "name": "Club",
     "type": "melee",
     "cost": {
       "unit": "sp",

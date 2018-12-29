@@ -1,0 +1,21 @@
+[
+  {
+    "id": "shield",
+    "name": "Shield",
+    "type": "shield",
+    "ac": "2",
+    "cost": {
+      "unit": "gp",
+      "value": 10
+    },
+    "weight": 6,
+    "sprite": {
+      "character": "O",
+      "color": "#b28255"
+    },
+    "properties": [
+      "dexterity",
+      "bonus"
+    ]
+  }
+]

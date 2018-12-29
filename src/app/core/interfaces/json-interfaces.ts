@@ -59,6 +59,26 @@ export interface JsonEntity {
   gameClass: JsonGameClass;
 }
 
+export interface JsonArmor {
+  id: string;
+  name: string;
+  type: string;
+  objectType: string;
+  ac: number;
+  cost: {
+    unit: string,
+    value: number
+  };
+  weight: number;
+  sprite: {
+    character: string;
+    color: string;
+  };
+  properties: [
+    string
+    ];
+}
+
 export interface JsonWeapon {
   id: string;
   name: string;
