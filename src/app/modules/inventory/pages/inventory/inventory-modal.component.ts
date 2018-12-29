@@ -6,7 +6,7 @@ import {Router} from '@angular/router';
 import {EntitiesService} from '../../../game/services/entities.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameObject} from '../../../../core/classes/gameObjects/game-object';
-import {Armour} from '../../../../core/classes/gameObjects/armour';
+import {Armor} from '../../../../core/classes/gameObjects/armor';
 import {Weapon} from '../../../../core/classes/gameObjects/weapon';
 import {Potion} from '../../../../core/classes/gameObjects/potion';
 import {Food} from '../../../../core/classes/gameObjects/food';
@@ -102,7 +102,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   isSelectedWearable(): boolean {
     const object: GameObject = this._player.inventory.get(this._selected);
-    return (object instanceof Armour);
+    return (object instanceof Armor);
   }
 
   isSelectedEquipable(): boolean {

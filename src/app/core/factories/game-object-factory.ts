@@ -3,7 +3,7 @@ import {Weapon} from '../classes/gameObjects/weapon';
 import {GameObject} from '../classes/gameObjects/game-object';
 import {Gold} from '../classes/gameObjects/gold';
 import {SlotType} from '../enums/equiped-type.enum';
-import {Armour} from '../classes/gameObjects/armour';
+import {Armor} from '../classes/gameObjects/armor';
 import {Potion} from '../classes/gameObjects/potion';
 
 export class GameObjectFactory {
@@ -41,7 +41,7 @@ export class GameObjectFactory {
       case 'WEAPON' :
         return Weapon.fromJson(data['_jsonData']);
       case 'ARMOUR' :
-        return Armour.fromJson(data['_jsonData']);
+        return Armor.fromJson(data['_jsonData']);
       case 'POTION' :
         return Potion.fromJson(data['_jsonData']);
       default:

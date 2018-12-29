@@ -4,7 +4,7 @@ import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 
-export class Armour extends GameObject {
+export class Armor extends GameObject {
   protected _sprite: Sprite;
   objectType = 'ARMOUR';
 
@@ -20,7 +20,7 @@ export class Armour extends GameObject {
     return this._jsonData.properties;
   }
 
-  static fromJson(_jsonData: JsonWeapon): Armour {
+  static fromJson(_jsonData: JsonWeapon): Armor {
     return new this(_jsonData);
   }
 
