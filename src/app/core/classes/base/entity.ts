@@ -11,11 +11,9 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Weapon} from '../gameObjects/weapon';
-import {GameClass} from './game-class';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {RaceClass} from './race';
 
 @Injectable({
               providedIn: 'root'
@@ -231,10 +229,6 @@ export abstract class Entity implements Iobject, IEntity {
     };
   }
 
-  getWeaponDamageDice(): number {
-    return 1 + AttributesFactory.getModifier(this.strength);
-  }
-
   getAction(): Iaction | null {
     return (this._currentAction) ? this._currentAction : null;
   }
@@ -297,6 +291,26 @@ export abstract class Entity implements Iobject, IEntity {
         this._equippedItem.set(slot, inventoryletter);
       });
     }
+  }
+
+  private _getEquippedWeapons(): Array<Weapon> {
+    const weaponsEquipped: Array<Weapon> = [];
+    for (const [key, value] of this._equippedItem) {
+      if (key === SlotType.TWOHANDS || key === SlotType.RIGHTHAND || key === SlotType.LEFTHAND) {
+        weaponsEquipped.push(this._inventory.get(value) as Weapon);
+      }
+    }
+    return weaponsEquipped;
+  }
+
+  getWeaponsDamage(): number {
+    const weaponsEquipped: Array<Weapon> = this._getEquippedWeapons();
+    let totalDamage = 0;
+    weaponsEquipped.forEach((weapon: Weapon) => {
+      totalDamage += weapon.getDamage();
+    });
+    totalDamage = Math.min(1, totalDamage);
+    return totalDamage;
   }
 }
 
