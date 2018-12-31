@@ -259,7 +259,7 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   // region Events
-  onHit(actor: Entity, damage: number): Iaction | null {
+  onHit(actor: Entity, damage: number) {
     EventLog.getInstance().message = `${this.name} take ${damage} points of damage`;
     this.hp -= damage;
     if (!this._backupSprite) {
@@ -267,7 +267,6 @@ export abstract class Entity implements Iobject, IEntity {
       this._sprite = SpritesFactory.createSprite(SpriteType.HITENTITY);
       this._timeDisplaySprite = performance.now();
     }
-    return null;
   }
 
   onDead(_mapEngine: MapEngine): void {

@@ -15,8 +15,8 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
 
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class GameEngineService {
   private _gameLoop: any = null;
   private _timeStart: any = null;
@@ -62,7 +62,7 @@ export class GameEngineService {
     if (timestamp - this._timeStart > 50) {
       this._updateGame();
       EffectEngine.getInstance()
-                  .tick(timestamp);
+        .tick(timestamp);
       this._drawMap();
       this._timeStart = performance.now();
     }
@@ -76,7 +76,7 @@ export class GameEngineService {
   }
 
   handleActionKeyEvent(key: KeyboardEvent): void {
-    const player = this._entitiesService.player;
+    const player = this._entitiesService.player as Entity;
     switch (key.code) {
       case 'ArrowUp':
         this._commandService.ArrowUp.execute(player, this);

@@ -15,8 +15,8 @@ import {IdleAction} from '../actions/idle-action';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 
 export class Monster extends Entity {
-  static fromJSON(jsonData: JsonEntity): Entity {
-    let entity: Entity = new this();
+  static fromJSON(jsonData: JsonEntity): Monster {
+    let entity: Monster = new this();
     entity = Object.assign(entity, jsonData, {
       _position: new Position(jsonData.position._x, jsonData.position._y),
       _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color)
@@ -77,13 +77,12 @@ export class Monster extends Entity {
     // endregion
   }
 
-  onHit(actor: Entity, damage: number): Iaction | null {
+  onHit(actor: Entity, damage: number) {
     const currentAction: Iaction = this.getAction();
-    const resultAction: Iaction | null = super.onHit(actor, damage);
-    if (!resultAction && (!currentAction || currentAction instanceof IdleAction)) {
-      this.setNextAction(new ChaseAction(this));
+    super.onHit(actor, damage);
+    if (!currentAction || currentAction instanceof IdleAction) {
+      this.setNextAction(new ChaseAction(this as Entity));
     }
-    return null;
   }
 
   // endregion

@@ -17,12 +17,13 @@ export class ChaseAction implements Iaction {
   private _info = '';
   private _mapEngine: MapEngine = null;
 
-  constructor(private _subject: Monster) {
+  constructor(private _subject: Entity) {
   }
 
-  execute(subject: Monster, gameEngine: GameEngineService): ActionResult {
-    if (!subject.sprite.light && !subject.canFollowChase()) {
-      return this.cancelChasing();
+  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
+    if (!subject.sprite.light && !(subject as Monster).canFollowChase()) {
+      subject.setNextAction(new IdleAction(this._subject));
+      return ActionResult.SUCCESS;
     }
     this._mapEngine = gameEngine.mapEngine;
     EventLog.getInstance().message = `${this._subject.name} chasing`;
@@ -45,23 +46,18 @@ export class ChaseAction implements Iaction {
     const info: Iobject = this._mapEngine.getTileOrEntityAt(destPosition);
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
-      result.alternative = new AttackMeleeAction(info);
+      result.alternative = new AttackMeleeAction(info as Entity);
       return result;
     }
     if (info instanceof Tile && info.isWalkable()) {
       info.onWalk(this._subject);
       this._subject.position = destPosition;
+      return ActionResult.SUCCESS;
     }
-    if (info instanceof DoorTile && (info as DoorTile).isClosed && this._subject.canOpenDoor()) {
+    if (info instanceof DoorTile && (info as DoorTile).isClosed && (this._subject as Monster).canOpenDoor()) {
       info.openDoor();
       EventLog.getInstance().message = `${this._subject.name} open the door !`;
     }
     return ActionResult.SUCCESS;
-  }
-
-  private cancelChasing(): ActionResult {
-    const result = ActionResult.FAILURE;
-    result.alternative = new IdleAction(this._subject);
-    return result;
   }
 }

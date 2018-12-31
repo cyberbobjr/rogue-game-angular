@@ -8,6 +8,7 @@ import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {AttackMeleeAction} from './attack-melee-action';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {Monster} from '../entities/monster';
 
 export class WalkAction implements Iaction {
   private _info = '';
@@ -26,9 +27,9 @@ export class WalkAction implements Iaction {
       return ActionResult.SUCCESS;
     }
     const result = ActionResult.FAILURE;
-    if (tile instanceof Entity) {
+    if (tile instanceof Monster) {
       EventLog.getInstance().message = `You hit ${tile.name}`;
-      result.alternative = new AttackMeleeAction(tile as Entity);
+      result.alternative = new AttackMeleeAction(tile as Monster);
       return result;
     }
     result.alternative = tile.onHit(subject);
