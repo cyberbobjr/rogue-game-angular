@@ -6,7 +6,9 @@
         <div *ngFor="let attribute of attributes">{{attribute}} : {{_player?.attributes.get(attribute)}}</div>
       </div>
       <div class="span6">
-        Gold : {{_entitiesService.player.gp}}
+        Gold : {{_entitiesService.player.gp}}<br/>
+        AC : {{_entitiesService.player.ac}}<br/>
+        HP : {{_entitiesService.player.hp}}
       </div>
     </div>
     <br/>
