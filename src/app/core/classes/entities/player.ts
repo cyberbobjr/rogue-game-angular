@@ -96,7 +96,10 @@ export class Player extends Entity {
     }
 
     if (jsonData.equipped) {
-      entity._equippedItem = new Map(jsonData.equipped);
+      jsonData.equipped.forEach((value: [SlotType, string]) => {
+        const gameObject: GameObject = entity.inventory.get(value[1]);
+        gameObject.onEquip(entity, value[1]);
+      });
     }
 
     if (jsonData.race) {
