@@ -11,9 +11,9 @@ export class TakeAction implements Iaction {
               private _mapEngine: MapEngine) {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
-    const tile: Tile = this._mapEngine.getTileAt(actor.position) as Tile;
-    tile.onTake(actor);
+  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
+    const tile: Tile = this._mapEngine.getTileAt(subject.position) as Tile;
+    tile.onTake(subject);
     EventLog.getInstance().message = 'Take object';
     return ActionResult.SUCCESS;
   }

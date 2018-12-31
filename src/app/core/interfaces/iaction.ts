@@ -3,7 +3,7 @@ import {Entity} from '../classes/base/entity';
 import {GameEngineService} from '../../modules/game/services/game-engine.service';
 
 export interface Iaction {
-  execute(actor: Entity, gameEngine: GameEngineService): ActionResult;
+  execute(subject: Entity, gameEngine: GameEngineService): ActionResult;
 
   getInfo(): string;
 }

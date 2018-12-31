@@ -14,7 +14,7 @@ export class AttackDistanceAction implements Iaction {
   constructor(private _actor: Entity) {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
+  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
     this._targets = this._getTargets();
     this._gameEngine = gameEngine;
     if (this._targets.length === 0) {

@@ -7,20 +7,20 @@ import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
 import {AttackMeleeAction} from './attack-melee-action';
-import {Monster} from '../entities/monster';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {Iobject} from '../../interfaces/iobject';
 
 export class ChaseAction implements Iaction {
   private _info = '';
   private _mapEngine: MapEngine = null;
 
-  constructor(private _actor: Entity) {
+  constructor(private _subject: Entity) {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
+  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
     this._mapEngine = gameEngine.mapEngine;
-    EventLog.getInstance().message = `${this._actor.name} chasing`;
-    const destPosition: Position = this._getPathToPlayer(actor);
+    EventLog.getInstance().message = `${this._subject.name} chasing`;
+    const destPosition: Position = this._getPathToPlayer(subject);
     if (destPosition) {
       return this._moveActor(destPosition);
     }
@@ -36,10 +36,10 @@ export class ChaseAction implements Iaction {
   }
 
   private _moveActor(destPosition: Position): ActionResult {
-    const info = this._mapEngine.getTileOrEntityAt(destPosition);
+    const info: Iobject = this._mapEngine.getTileOrEntityAt(destPosition);
     if (info instanceof Tile && info.isWalkable()) {
-      info.onWalk(this._actor);
-      this._actor.position = destPosition;
+      info.onWalk(this._subject);
+      this._subject.position = destPosition;
       return ActionResult.SUCCESS;
     }
     if (info instanceof Player) {
@@ -47,7 +47,7 @@ export class ChaseAction implements Iaction {
       result.alternative = new AttackMeleeAction(info);
       return result;
     }
-    if (info instanceof Monster) {
+    if (info instanceof Entity) {
       return ActionResult.SUCCESS;
     }
   }

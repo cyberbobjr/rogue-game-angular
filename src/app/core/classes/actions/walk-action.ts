@@ -15,23 +15,23 @@ export class WalkAction implements Iaction {
   constructor(private _direction: Direction) {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
-    const destPosition: Position = actor.position.computeDestination(this._direction);
+  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
+    const destPosition: Position = subject.position.computeDestination(this._direction);
     const mapEngine: MapEngine = gameEngine.mapEngine;
     const tile: Tile = <Tile>mapEngine.getTileOrEntityAt(destPosition);
     if (tile instanceof Tile && tile.isWalkable()) {
-      actor.position = destPosition;
-      tile.onWalk(actor);
-      actor.setNextAction(null);
+      subject.position = destPosition;
+      tile.onWalk(subject);
+      subject.setNextAction(null);
       return ActionResult.SUCCESS;
     }
     const result = ActionResult.FAILURE;
     if (tile instanceof Entity) {
-      EventLog.getInstance().message = 'You hit ' + tile.name;
+      EventLog.getInstance().message = `You hit ${tile.name}`;
       result.alternative = new AttackMeleeAction(tile as Entity);
       return result;
     }
-    result.alternative = tile.onHit(actor);
+    result.alternative = tile.onHit(subject);
     return result;
   }
 
