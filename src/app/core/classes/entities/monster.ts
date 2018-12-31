@@ -12,7 +12,6 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Iaction} from '../../interfaces/iaction';
 import {ChaseAction} from '../actions/chase-action';
 import {IdleAction} from '../actions/idle-action';
-import {Torch} from '../gameObjects/torch';
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Entity {
@@ -57,6 +56,12 @@ export class Monster extends Entity {
     super();
   }
 
+  setPosition(position: Position): Monster {
+    this.position = position;
+    return this;
+  }
+
+  // region events
   onDead(mapEngine: MapEngine): void {
     // drop gold
     const goldObject: GameObject = new Gold(this.gp);
@@ -66,15 +71,7 @@ export class Monster extends Entity {
     this._inventory.forEach((weapon: Weapon) => {
       tile.dropOn(weapon);
     });
-    // drop torch
-    tile.dropOn(new Torch());
   }
-
-  setPosition(position: Position): Monster {
-    this.position = position;
-    return this;
-  }
-
 
   onHit(actor: Entity, damage: number): Iaction | null {
     const currentAction: Iaction = this.getAction();
@@ -83,5 +80,15 @@ export class Monster extends Entity {
       this.setNextAction(new ChaseAction(this));
     }
     return null;
+  }
+
+  // endregion
+
+  canOpenDoor(): boolean {
+    return (this.size === 'm');
+  }
+
+  canFollowChase(): boolean {
+    return (this.size === 'm');
   }
 }

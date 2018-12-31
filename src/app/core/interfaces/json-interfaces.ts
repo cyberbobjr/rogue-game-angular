@@ -164,6 +164,7 @@ export interface JsonMonster {
   };
   weapons: [string];
   frequency: number;
+  xp: number;
 }
 
 export interface JsonRace {

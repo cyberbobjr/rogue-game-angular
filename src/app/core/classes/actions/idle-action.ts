@@ -8,6 +8,7 @@ import {Position} from '../base/position';
 import {Direction} from '../../enums/direction.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Tile} from '../base/tile';
+import {Monster} from '../entities/monster';
 
 export class IdleAction implements Iaction {
   private _info = '';
@@ -18,7 +19,7 @@ export class IdleAction implements Iaction {
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
     if (subject.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      subject.setNextAction(new ChaseAction(subject));
+      subject.setNextAction(new ChaseAction(subject as Monster));
     } else {
       const direction: Direction = this._getRandomDirection();
       const destPosition: Position = subject.position.computeDestination(direction);

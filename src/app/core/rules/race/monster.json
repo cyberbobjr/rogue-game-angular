@@ -28,7 +28,8 @@
     "weapons": [
       "greataxe"
     ],
-    "frequency": 0.4
+    "frequency": 0.4,
+    "xp": 100
   },
   {
     "id": "BAT",
@@ -39,7 +40,7 @@
       "bonus": 1
     },
     "speed": 30,
-    "size": "s",
+    "size": "t",
     "abilities": {
       "strength": 2,
       "dexterity": 15,
@@ -58,6 +59,7 @@
     },
     "weapons": [
     ],
-    "frequency": 0.8
+    "frequency": 0.8,
+    "xp": 10
   }
 ]

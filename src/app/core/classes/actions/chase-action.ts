@@ -9,15 +9,21 @@ import {Player} from '../entities/player';
 import {AttackMeleeAction} from './attack-melee-action';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 import {Iobject} from '../../interfaces/iobject';
+import {DoorTile} from '../tiles/door-tile';
+import {Monster} from '../entities/monster';
+import {IdleAction} from './idle-action';
 
 export class ChaseAction implements Iaction {
   private _info = '';
   private _mapEngine: MapEngine = null;
 
-  constructor(private _subject: Entity) {
+  constructor(private _subject: Monster) {
   }
 
-  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
+  execute(subject: Monster, gameEngine: GameEngineService): ActionResult {
+    if (!subject.sprite.light && !subject.canFollowChase()) {
+      return this.cancelChasing();
+    }
     this._mapEngine = gameEngine.mapEngine;
     EventLog.getInstance().message = `${this._subject.name} chasing`;
     const destPosition: Position = this._getPathToPlayer(subject);
@@ -40,15 +46,22 @@ export class ChaseAction implements Iaction {
     if (info instanceof Tile && info.isWalkable()) {
       info.onWalk(this._subject);
       this._subject.position = destPosition;
-      return ActionResult.SUCCESS;
+    }
+    if (info instanceof DoorTile && (info as DoorTile).isClosed && this._subject.canOpenDoor()) {
+      info.openDoor();
+      EventLog.getInstance().message = `${this._subject.name} open the door !`;
     }
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
       result.alternative = new AttackMeleeAction(info);
       return result;
     }
-    if (info instanceof Entity) {
-      return ActionResult.SUCCESS;
-    }
+    return ActionResult.SUCCESS;
+  }
+
+  private cancelChasing(): ActionResult {
+    const result = ActionResult.FAILURE;
+    result.alternative = new IdleAction(this._subject);
+    return result;
   }
 }

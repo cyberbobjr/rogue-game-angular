@@ -17,7 +17,6 @@ import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
 
 export class Player extends Entity {
-  private _xp = 0;
   private _level = 1;
   private _mapLevel = 1;
   private _race: RaceClass;
@@ -76,14 +75,6 @@ export class Player extends Entity {
     this._level = value;
   }
 
-  get xp(): number {
-    return this._xp;
-  }
-
-  set xp(value: number) {
-    this._xp = value;
-  }
-
   // region Serialization
   static fromJSON(jsonData: JsonEntity): Player {
     let entity: Player = new this();
@@ -123,7 +114,6 @@ export class Player extends Entity {
     return {
       ...super.toJSON(),
       ...{
-        xp: this.xp,
         level: this.level,
         maxHp: this._maxHp,
         equipped: [...this._equippedItem],

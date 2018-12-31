@@ -16,6 +16,10 @@ export class DoorTile extends Tile {
     return new this(position, _isClosed);
   }
 
+  get isClosed(): boolean {
+    return this._isClosed;
+  }
+
   toJSON(): any {
     return {
       ...super.toJSON(),

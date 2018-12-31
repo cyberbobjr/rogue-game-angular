@@ -18,6 +18,7 @@ import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {EntityType} from '../../../core/enums/entity-type.enum';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {Sprite} from '../../../core/classes/base/sprite';
+import {DoorTile} from '../../../core/classes/tiles/door-tile';
 
 @Injectable({
               providedIn: 'root'
@@ -173,10 +174,10 @@ export class MapEngine implements IMapEngine {
       if (info instanceof Entity) {
         return true;
       }
-      if (info instanceof Tile) {
-        return info.isWalkable();
+      if (info instanceof Tile && info.isWalkable()) {
+        return true;
       }
-      return false;
+      return info instanceof DoorTile && (info as DoorTile).isClosed;
     });
     let target: Position = null;
     let count = 0;

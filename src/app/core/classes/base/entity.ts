@@ -36,6 +36,7 @@ export abstract class Entity implements Iobject, IEntity {
   protected _size: string;
 
   protected _ap = 0; // action points
+  protected _xp = 0; // xp for player or challenge point
 
   protected _inventory: Map<string, GameObject> = new Map<string, GameObject>();
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
@@ -206,8 +207,17 @@ export abstract class Entity implements Iobject, IEntity {
     this._position = value;
   }
 
+  get xp(): number {
+    return this._xp;
+  }
+
+  set xp(value: number) {
+    this._xp = value;
+  }
+
   toJSON() {
     return {
+      xp: this.xp,
       name: this.name,
       id: this.id,
       position: this.position,
