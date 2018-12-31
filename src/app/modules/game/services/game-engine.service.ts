@@ -127,6 +127,8 @@ export class GameEngineService {
       case 'KeyI':
         this._commandService.KeyI.execute(player, this);
         break;
+      case 'Space':
+        this._commandService.KeySpace.execute(player, this);
     }
     this.processAction();
   }
