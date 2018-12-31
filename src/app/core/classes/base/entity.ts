@@ -42,7 +42,7 @@ export abstract class Entity implements Iobject, IEntity {
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   lightRadius = 20;
-  ligthPower = 7; // max is lighter
+  ligthPower = 3; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
 
@@ -300,11 +300,24 @@ export abstract class Entity implements Iobject, IEntity {
     });
   }
 
+  useInventory(letterInventory: string, qty = 1) {
+    const gameObject: GameObject = this._inventory.get(letterInventory);
+    if (gameObject.empilable) {
+      gameObject.qty -= qty;
+      if (gameObject.qty <= 0) {
+        this._inventory.delete(letterInventory);
+      } else {
+        this._inventory.set(letterInventory, gameObject);
+      }
+    }
+  }
+
   getItemByLetter(inventoryLetter: string): GameObject {
     return this._inventory.get(inventoryLetter);
   }
 
-  equipItem(inventoryletter: string) {
+  equipItem(inventoryletter: string): boolean {
+    let equipped = false;
     const gameObject: GameObject = this._inventory.get(inventoryletter);
     if (gameObject) {
       const slots: Array<SlotType> = gameObject.getSlots();
@@ -313,8 +326,20 @@ export abstract class Entity implements Iobject, IEntity {
           return true;
         }
         this._equippedItem.set(slot, inventoryletter);
+        equipped = true;
       });
     }
+    return equipped;
+  }
+
+  unequipItem(inventoryLetter: string): boolean {
+    for (const [key, value] of this._equippedItem) {
+      if (value === inventoryLetter) {
+        this._equippedItem.delete(key);
+        return true;
+      }
+    }
+    return false;
   }
 
   getWeaponsDamage(): number {

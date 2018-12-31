@@ -27,19 +27,19 @@ export abstract class GameObject {
   abstract getInfo(): string ;
 
   // region events
-  onTake(actor: Entity) {
+  onTake(actor: Entity, letterInventory?: string) {
     actor.addToInventory(this);
   }
 
-  onUse(actor: Entity) {
+  onUse(actor: Entity, letterInventory?: string) {
 
   }
 
-  onEquip(actor: Entity) {
+  onEquip(actor: Entity, letterInventory?: string) {
 
   }
 
-  onUnequip(actor: Entity) {
+  onUnequip(actor: Entity, letterInventory?: string) {
 
   }
 

@@ -89,6 +89,11 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
             this.unequipObject(this._selected);
           }
           break;
+        case 'U':
+          if (this.isSelectedUsable()) {
+            this.useObject(this._selected);
+          }
+          break;
         default :
           return;
       }
@@ -98,11 +103,6 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   isDroppable(): boolean {
     return !!this._player.position;
-  }
-
-  isSelectedWearable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
-    return (object instanceof Armor);
   }
 
   isSelectedEquipable(): boolean {
@@ -115,13 +115,9 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     return (object instanceof Potion);
   }
 
-  isSelectedEatable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
-    return (object instanceof Food);
-  }
-
   isSelectedUnequippable(): boolean {
-    return this._player.isInventoryEquipped(this._selected);
+    const object: GameObject = this._player.inventory.get(this._selected);
+    return object.canEquip() && this._player.isInventoryEquipped(this._selected);
   }
 
   dropObject() {
@@ -131,11 +127,18 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     this._player.inventory.delete(this._selected);
   }
 
-  equipObject(objectLetter: string) {
-    this._player.equipItem(objectLetter);
+  equipObject(inventoryLetter: string) {
+    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    gameObject.onEquip(this._player, inventoryLetter);
   }
 
-  unequipObject(objectLetter: string) {
-    this._player.unequipItem(objectLetter);
+  unequipObject(inventoryLetter: string) {
+    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    gameObject.onUnequip(this._player, inventoryLetter);
+  }
+
+  useObject(inventoryLetter: string) {
+    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    gameObject.onUse(this._player);
   }
 }

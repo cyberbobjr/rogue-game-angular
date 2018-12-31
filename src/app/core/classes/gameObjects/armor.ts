@@ -1,7 +1,6 @@
 import {Sprite} from '../base/sprite';
 import {JsonArmor} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
-import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Armor extends GameObject {
@@ -42,6 +41,6 @@ export class Armor extends GameObject {
   }
 
   getSlots(): Array<SlotType> {
-    return [];
+    return [SlotType.CHEST, SlotType.LEGS, SlotType.HEAD, SlotType.BOOTS];
   }
 }

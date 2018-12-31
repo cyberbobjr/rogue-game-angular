@@ -41,10 +41,11 @@ export class Food extends GameObject {
     actor.addToInventory(this);
   }
 
-  onUse(actor: Entity) {
+  onUse(actor: Entity, letterInventory: string) {
     if (actor instanceof Player) {
       (actor as Player).setToFullHp();
     }
+    actor.useInventory(letterInventory, 1);
   }
 
   getSlots(): Array<SlotType> {

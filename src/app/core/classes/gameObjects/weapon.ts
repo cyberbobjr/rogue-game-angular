@@ -3,6 +3,7 @@ import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Utility} from '../utility';
+import {Entity} from '../base/entity';
 
 export class Weapon extends GameObject {
   protected _sprite: Sprite;
@@ -31,6 +32,14 @@ export class Weapon extends GameObject {
 
   canEquip(): boolean {
     return true;
+  }
+
+  onUnequip(actor: Entity, letterInventory?: string) {
+    actor.unequipItem(letterInventory);
+  }
+
+  onEquip(actor: Entity, letterInventory?: string) {
+    actor.equipItem(letterInventory);
   }
 
   getInfo(): string {

@@ -2,6 +2,7 @@ import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {Sprite} from '../base/sprite';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {Player} from '../entities/player';
 
 export class Torch extends GameObject {
   protected _name: string;
@@ -25,5 +26,17 @@ export class Torch extends GameObject {
 
   canEquip(): boolean {
     return true;
+  }
+
+  onEquip(actor: Entity, letterInventory?: string) {
+    if (actor.equipItem(letterInventory)) {
+      actor.ligthPower = 10;
+    }
+  }
+
+  onUnequip(actor: Entity, letterInventory?: string) {
+    if (actor.unequipItem(letterInventory)) {
+      actor.ligthPower = 3;
+    }
   }
 }

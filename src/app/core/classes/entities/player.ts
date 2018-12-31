@@ -164,15 +164,6 @@ export class Player extends Entity {
 
   // endregion
 
-  unequipItem(inventoryLetter: string) {
-    for (const [key, value] of this._equippedItem) {
-      if (value === inventoryLetter) {
-        this._equippedItem.delete(key);
-        return;
-      }
-    }
-  }
-
   isInventoryEquipped(inventoryLetter: string): boolean {
     for (const [key, value] of this._equippedItem) {
       if (value === inventoryLetter) {
