@@ -53,7 +53,7 @@ export class GameEngineService {
   startGameLoop() {
     console.log('Game loop started');
     this._timeStart = performance.now();
-    window.requestAnimationFrame((timestamp: any) => {
+    this._gameLoop = window.requestAnimationFrame((timestamp: any) => {
       this.gameLoop(timestamp);
     });
   }
@@ -66,7 +66,7 @@ export class GameEngineService {
       this._drawMap();
       this._timeStart = performance.now();
     }
-    window.requestAnimationFrame((timestamp2: any) => {
+    this._gameLoop = window.requestAnimationFrame((timestamp2: any) => {
       this.gameLoop(timestamp2);
     });
   }
@@ -139,6 +139,7 @@ export class GameEngineService {
     this._displayService.cameraPosition = this._entitiesService.player.position;
     this._entitiesService.updateEntities(this._mapEngine);
     if (this._entitiesService.player === null) {
+      this.endGameLoop();
       this._router.navigateByUrl('game-over');
     }
   }
