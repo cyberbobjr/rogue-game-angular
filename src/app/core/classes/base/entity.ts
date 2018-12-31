@@ -309,7 +309,7 @@ export abstract class Entity implements Iobject, IEntity {
     weaponsEquipped.forEach((weapon: Weapon) => {
       totalDamage += weapon.getDamage();
     });
-    totalDamage = Math.min(1, totalDamage);
+    totalDamage = Math.max(1, totalDamage);
     return totalDamage;
   }
 }

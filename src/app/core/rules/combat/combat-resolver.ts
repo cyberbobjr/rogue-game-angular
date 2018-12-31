@@ -11,6 +11,10 @@ export class CombatResolver {
     let weaponDamageMultiplicator = 1;
     const attackModifier: number = AttributesFactory.getModifier(attacker.strength);
     const hitDiceAttack: number = Utility.rolldice(20);
+    console.log(`---------------------------------------`);
+    console.log(`Attacker : ${attacker.name}`);
+    console.log(`Hit Dice Attack : ${hitDiceAttack}`);
+    console.log(`Attack modifier : ${attackModifier}`);
     if (hitDiceAttack === 1) {
       EventLog.getInstance().message = 'Attack miss!';
       return 0;
@@ -20,9 +24,15 @@ export class CombatResolver {
       weaponDamageMultiplicator = 2;
       EventLog.getInstance().message = 'Critical hit!';
     }
+    console.log(`Weapon damage multiplicator : ${weaponDamageMultiplicator}`);
+    console.log(`hitDiceAttack + attackModifier = : ${hitDiceAttack + attackModifier}`);
+    console.log(`target AC : ${target.ac}`);
     if (hitDiceAttack + attackModifier >= target.ac) {
       const weaponDamage: number = attacker.getWeaponsDamage();
-      const damage: number = (weaponDamageMultiplicator * weaponDamage) + attackModifier;
+      console.log(`Weapon damage : ${weaponDamage}`);
+
+      const damage: number = (weaponDamageMultiplicator * weaponDamage) + Math.max(0, attackModifier);
+      console.log(`Total damage : ${damage}`);
       EventLog.getInstance().message = `Damage : ${damage}`;
       return damage;
     }

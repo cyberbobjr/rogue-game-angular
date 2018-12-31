@@ -53,7 +53,7 @@ export class Player extends Entity {
   }
 
   get ac(): number {
-    return 10 + this.getArmorAc();
+    return this.getArmorAc();
   }
 
   set ac(value: number) {
