@@ -43,6 +43,11 @@ export class ChaseAction implements Iaction {
 
   private _moveActor(destPosition: Position): ActionResult {
     const info: Iobject = this._mapEngine.getTileOrEntityAt(destPosition);
+    if (info instanceof Player) {
+      const result = ActionResult.FAILURE;
+      result.alternative = new AttackMeleeAction(info);
+      return result;
+    }
     if (info instanceof Tile && info.isWalkable()) {
       info.onWalk(this._subject);
       this._subject.position = destPosition;
@@ -50,11 +55,6 @@ export class ChaseAction implements Iaction {
     if (info instanceof DoorTile && (info as DoorTile).isClosed && this._subject.canOpenDoor()) {
       info.openDoor();
       EventLog.getInstance().message = `${this._subject.name} open the door !`;
-    }
-    if (info instanceof Player) {
-      const result = ActionResult.FAILURE;
-      result.alternative = new AttackMeleeAction(info);
-      return result;
     }
     return ActionResult.SUCCESS;
   }
