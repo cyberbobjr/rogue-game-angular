@@ -1,7 +1,6 @@
 import {Sprite} from '../base/sprite';
 import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
-import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Utility} from '../utility';
 
@@ -28,6 +27,10 @@ export class Weapon extends GameObject {
 
   constructor(_jsonData: JsonWeapon) {
     super(_jsonData);
+  }
+
+  canEquip(): boolean {
+    return true;
   }
 
   getInfo(): string {

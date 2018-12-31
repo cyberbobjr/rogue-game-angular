@@ -135,6 +135,17 @@ export class Player extends Entity {
     this.name = 'Player';
   }
 
+  private _getArmorEquipped(): Array<Armor> {
+    const armorEquipped: Array<Armor> = [];
+    for (const [key, value] of this._equippedItem) {
+      const gameObject: GameObject = this._inventory.get(value);
+      if (gameObject instanceof Armor) {
+        armorEquipped.push(gameObject as Armor);
+      }
+    }
+    return armorEquipped;
+  }
+
   // region Events
   onHit(attacker: Entity, damage: number): Iaction | null {
     EventLog.getInstance().message = `You take ${damage} point of damage`;
@@ -199,17 +210,6 @@ export class Player extends Entity {
     return this;
   }
 
-  private _getArmorEquipped(): Array<Armor> {
-    const armorEquipped: Array<Armor> = [];
-    for (const [key, value] of this._equippedItem) {
-      const gameObject: GameObject = this._inventory.get(value);
-      if (gameObject instanceof Armor) {
-        armorEquipped.push(gameObject as Armor);
-      }
-    }
-    return armorEquipped;
-  }
-
   getArmorAc(): number {
     let ac = 0;
     let dexterity = false;
@@ -234,4 +234,7 @@ export class Player extends Entity {
     return ac + bonus;
   }
 
+  setToFullHp() {
+    this.hp = this._maxHp;
+  }
 }

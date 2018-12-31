@@ -26,10 +26,39 @@ export abstract class GameObject {
 
   abstract getInfo(): string ;
 
+  // region events
   onTake(actor: Entity) {
     actor.addToInventory(this);
   }
 
+  onUse(actor: Entity) {
+
+  }
+
+  onEquip(actor: Entity) {
+
+  }
+
+  onUnequip(actor: Entity) {
+
+  }
+
+  // endregion
+
+  // region capabilities
+  canTake(): boolean {
+    return true;
+  }
+
+  canUse(): boolean {
+    return false;
+  }
+
+  canEquip(): boolean {
+    return false;
+  }
+
+  // endregion
   abstract getSlots(): Array<SlotType>;
 
   getSprite(): Sprite {

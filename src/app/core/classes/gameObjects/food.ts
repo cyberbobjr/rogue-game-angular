@@ -3,6 +3,7 @@ import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {Player} from '../entities/player';
 
 export class Food extends GameObject {
   protected _sprite: Sprite;
@@ -32,8 +33,18 @@ export class Food extends GameObject {
     return `${this._name}`;
   }
 
+  canUse(): boolean {
+    return true;
+  }
+
   onTake(actor: Entity): void {
     actor.addToInventory(this);
+  }
+
+  onUse(actor: Entity) {
+    if (actor instanceof Player) {
+      (actor as Player).setToFullHp();
+    }
   }
 
   getSlots(): Array<SlotType> {

@@ -33,6 +33,10 @@ export class Armor extends GameObject {
     super(_jsonData);
   }
 
+  canEquip(): boolean {
+    return true;
+  }
+
   getInfo(): string {
     return `${this._name}`;
   }

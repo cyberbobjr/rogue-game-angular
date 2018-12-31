@@ -22,4 +22,8 @@ export class Torch extends GameObject {
   getSprite(): Sprite {
     return undefined;
   }
+
+  canEquip(): boolean {
+    return true;
+  }
 }
