@@ -22,7 +22,15 @@ export class Player extends Entity {
   private _mapLevel = 1;
   private _race: RaceClass;
   private _gameClass: GameClass;
+  private _maxHp: number;
 
+  get maxHp(): number {
+    return this._maxHp;
+  }
+
+  set maxHp(value: number) {
+    this._maxHp = value;
+  }
 
   set race(value: RaceClass) {
     this._race = value;
@@ -115,6 +123,7 @@ export class Player extends Entity {
       ...{
         xp: this.xp,
         level: this.level,
+        maxHp: this._maxHp,
         equipped: [...this._equippedItem],
         race: this.race.jsonData,
         gameClass: this.gameClass.jsonData
@@ -137,11 +146,17 @@ export class Player extends Entity {
   // region Events
   onHit(attacker: Entity, damage: number): Iaction | null {
     EventLog.getInstance().message = `You take ${damage} point of damage`;
+    this.hp -= damage;
     return null;
   }
 
   onDead(_mapEngine: MapEngine): void {
     super.onDead(_mapEngine);
+  }
+
+  onRest() {
+    this.hp += (Utility.rolldice(this._hitDice) + AttributesFactory.getModifier(this.attributes.get('constitution')));
+    this.hp = Math.min(this.hp, this._maxHp);
   }
 
   // endregion
@@ -181,7 +196,8 @@ export class Player extends Entity {
 
   setGameClass(gameClass: GameClass): Player {
     this._hitDice = gameClass.getHitDice();
-    this._hp = this._hitDice + this.constitution;
+    this._hp = this._hitDice + AttributesFactory.getModifier(this.attributes.get('constitution'));
+    this._maxHp = this._hp;
     this._gp = gameClass.getGp();
     this._gameClass = gameClass;
     return this;

@@ -9,6 +9,7 @@ export class WaitCommand implements Command {
 
   execute(actor: Entity, gameEngine: GameEngineService) {
     EventLog.getInstance().message = 'Waiting...';
+    actor.onRest();
     actor.setNextAction(null);
   }
 }

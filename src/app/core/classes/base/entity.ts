@@ -248,6 +248,7 @@ export abstract class Entity implements Iobject, IEntity {
     }
   }
 
+  // region Events
   onHit(actor: Entity, damage: number): Iaction | null {
     EventLog.getInstance().message = `${this.name} take ${damage} points of damage`;
     this.hp -= damage;
@@ -262,6 +263,11 @@ export abstract class Entity implements Iobject, IEntity {
   onDead(_mapEngine: MapEngine): void {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
+
+  onRest() {
+
+  }
+  // end region
 
   addToInventory(gameObject: GameObject): string {
     const letterInventory: string = Utility.getLetter(this._inventory.size);

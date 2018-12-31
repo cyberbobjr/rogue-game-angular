@@ -149,7 +149,6 @@ export class GameEngineService {
 
   processAction() {
     for (let currentActorIndex = 0; currentActorIndex < this._entitiesService.entities.length; currentActorIndex++) {
-
       const currentActor: Entity = this._entitiesService.getEntityAtIndex(currentActorIndex);
       let actorAction = currentActor.getAction();
       if (actorAction) {
