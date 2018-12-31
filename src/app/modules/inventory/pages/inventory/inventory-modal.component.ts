@@ -139,6 +139,6 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   useObject(inventoryLetter: string) {
     const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
-    gameObject.onUse(this._player);
+    gameObject.onUse(this._player, inventoryLetter);
   }
 }

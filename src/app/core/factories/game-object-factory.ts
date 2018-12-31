@@ -45,6 +45,8 @@ export class GameObjectFactory {
     switch (objectType) {
       case GameObjectType.TORCH:
         return new Torch();
+      case GameObjectType.POTION:
+        return new Potion();
       case GameObjectType.ARMOR:
         return GameObjectFactory.getInstance()
                                 .getArmorById(id);
@@ -65,9 +67,9 @@ export class GameObjectFactory {
       case 'ARMOUR' :
         return Armor.fromJson(data['_jsonData']);
       case 'POTION' :
-        return Potion.fromJson(data['_jsonData']);
+        return new Potion();
       case 'FOOD' :
-        return Potion.fromJson(data['_jsonData']);
+        return null;
       case 'TORCH' :
         return new Torch();
       default:

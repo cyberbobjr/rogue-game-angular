@@ -12,6 +12,7 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Iaction} from '../../interfaces/iaction';
 import {ChaseAction} from '../actions/chase-action';
 import {IdleAction} from '../actions/idle-action';
+import {GameObjectType} from '../../enums/game-object-type.enum';
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Entity {
@@ -71,6 +72,9 @@ export class Monster extends Entity {
     this._inventory.forEach((weapon: Weapon) => {
       tile.dropOn(weapon);
     });
+    // region debug purpose
+    tile.dropOn(GameObjectFactory.create(GameObjectType.POTION));
+    // endregion
   }
 
   onHit(actor: Entity, damage: number): Iaction | null {
