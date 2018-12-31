@@ -9,6 +9,7 @@ import {StorageService} from './storage.service';
 import {Entity} from '../../../core/classes/base/entity';
 import {EffectEngine} from './effect-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
+import {Router} from '@angular/router';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -43,7 +44,8 @@ export class GameEngineService {
               private _logService: LoggingService,
               private _displayService: DisplayService,
               private _commandService: CommandsService,
-              private _storageService: StorageService) {
+              private _storageService: StorageService,
+              private _router: Router) {
     console.log('Game engine created');
     this.restoreGameKeyHandler();
   }
@@ -136,6 +138,9 @@ export class GameEngineService {
   private _updateGame() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
     this._entitiesService.updateEntities(this._mapEngine);
+    if (this._entitiesService.player === null) {
+      this._router.navigateByUrl('game-over');
+    }
   }
 
   private _drawMap() {

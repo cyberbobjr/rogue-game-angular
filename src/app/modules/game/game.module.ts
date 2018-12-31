@@ -8,6 +8,7 @@ import {InfoPageComponent} from './pages/info-page/info-page.component';
 import {LogPageComponent} from './pages/log-page/log-page.component';
 import {InventoryPageComponent} from './pages/inventory-page/inventory-page.component';
 import {InventoryModule} from '../inventory/inventory.module';
+import { GameOverComponent } from './pages/game-over/game-over.component';
 
 @NgModule({
             declarations: [
@@ -15,7 +16,8 @@ import {InventoryModule} from '../inventory/inventory.module';
               MainMapComponent,
               InventoryPageComponent,
               InfoPageComponent,
-              LogPageComponent
+              LogPageComponent,
+              GameOverComponent
             ],
             imports: [
               CommonModule,

@@ -51,6 +51,10 @@ export class EntitiesService {
       if (entity.hp <= 0) {
         entity.onDead(_mapEngine);
         this._entities.splice(index, 1);
+        if (entity instanceof Player) {
+          alert('You die !');
+          this.player = null;
+        }
       }
     });
   }
