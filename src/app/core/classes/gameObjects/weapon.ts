@@ -8,6 +8,7 @@ import {Utility} from '../utility';
 export class Weapon extends GameObject {
   protected _sprite: Sprite;
   objectType = 'WEAPON';
+  empilable = false;
 
   get id(): string {
     return this._jsonData.id;
@@ -31,10 +32,6 @@ export class Weapon extends GameObject {
 
   getInfo(): string {
     return `${this._name}`;
-  }
-
-  onTake(actor: Entity): void {
-    actor.addToInventory(this);
   }
 
   getSlots(): Array<SlotType> {

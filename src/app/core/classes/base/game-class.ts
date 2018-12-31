@@ -1,6 +1,9 @@
 import {IGameClass} from '../../interfaces/i-game-class';
 import {JsonGameClass} from '../../interfaces/json-interfaces';
 import {Utility} from '../utility';
+import {GameObject} from '../gameObjects/game-object';
+import {GameObjectFactory} from '../../factories/game-object-factory';
+import {GameObjectType} from '../../enums/game-object-type.enum';
 
 export class GameClass implements IGameClass {
   private _name: string;
@@ -31,6 +34,20 @@ export class GameClass implements IGameClass {
 
   getModifier(ability: string): number {
     return this._jsonData.modifiers[ability];
+  }
+
+  getInitialEquipment(): Array<GameObject> {
+    const equipments: Array<GameObject> = [];
+    if (this._jsonData.equipment) {
+      this._jsonData.equipment.forEach((equipment: { id: string, type: string, qty: number }) => {
+        const item: GameObject = GameObjectFactory.create(GameObjectType.getFromString(equipment.type), equipment.id);
+        if (item) {
+          item.qty = equipment.qty;
+          equipments.push(item);
+        }
+      });
+    }
+    return equipments;
   }
 
   constructor(private _jsonData: JsonGameClass) {

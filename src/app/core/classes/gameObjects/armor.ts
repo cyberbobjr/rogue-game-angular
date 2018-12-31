@@ -7,8 +7,9 @@ import {SlotType} from '../../enums/equiped-type.enum';
 export class Armor extends GameObject {
   protected _sprite: Sprite;
   objectType = 'ARMOUR';
+  empilable = false;
 
-  get ac() : number {
+  get ac(): number {
     return this._jsonData.ac;
   }
 
@@ -34,10 +35,6 @@ export class Armor extends GameObject {
 
   getInfo(): string {
     return `${this._name}`;
-  }
-
-  onTake(actor: Entity): void {
-    actor.addToInventory(this);
   }
 
   getSlots(): Array<SlotType> {

@@ -129,6 +129,11 @@ export interface JsonGameClass {
     character: string;
     color: string;
   };
+  equipment: [{
+    id: string;
+    type: string;
+    qty: number;
+  }];
 }
 
 export interface JsonMonster {

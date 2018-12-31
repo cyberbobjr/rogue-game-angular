@@ -93,8 +93,10 @@ export class Player extends Entity {
     });
 
     if (jsonData.inventory.length > 0) {
-      jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }, index: number) => {
-        entity.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
+      jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon, _qty: number }, index: number) => {
+        const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
+        gameObject.qty = value._qty;
+        entity.addToInventory(gameObject);
       });
     }
 
@@ -200,6 +202,10 @@ export class Player extends Entity {
     this._maxHp = this._hp;
     this._gp = gameClass.getGp();
     this._gameClass = gameClass;
+    gameClass.getInitialEquipment()
+             .forEach((item: GameObject) => {
+               this.addToInventory(item);
+             });
     return this;
   }
 

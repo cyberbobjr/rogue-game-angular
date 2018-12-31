@@ -20,6 +20,23 @@
     "sprite": {
       "character": "O",
       "color": "#FFFFFF"
-    }
+    },
+    "equipment": [
+      {
+        "id": "greataxe",
+        "type": "WEAPON",
+        "qty": 1
+      },
+      {
+        "id": "torch",
+        "type": "TORCH",
+        "qty": 10
+      },
+      {
+        "id": "food",
+        "type": "FOOD",
+        "qty": 10
+      }
+    ]
   }
 ]

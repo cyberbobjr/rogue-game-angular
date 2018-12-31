@@ -267,10 +267,19 @@ export abstract class Entity implements Iobject, IEntity {
   onRest() {
 
   }
+
   // end region
 
   addToInventory(gameObject: GameObject): string {
-    const letterInventory: string = Utility.getLetter(this._inventory.size);
+    let letterInventory: string = Utility.getLetter(this._inventory.size);
+    if (gameObject.empilable) {
+      const key: string = this._getByInventoryItemId(gameObject.id);
+      if (key) {
+        const gameObjectExisting: GameObject = this._inventory.get(key);
+        gameObject.qty += gameObjectExisting.qty;
+        letterInventory = key;
+      }
+    }
     this._inventory.set(letterInventory, gameObject);
     return letterInventory;
   }
@@ -298,6 +307,28 @@ export abstract class Entity implements Iobject, IEntity {
     }
   }
 
+  getWeaponsDamage(): number {
+    const weaponsEquipped: Array<Weapon> = this._getEquippedWeapons();
+    let totalDamage = 0;
+    weaponsEquipped.forEach((weapon: Weapon) => {
+      totalDamage += weapon.getDamage();
+    });
+    totalDamage = Math.max(1, totalDamage);
+    return totalDamage;
+  }
+
+  private _getByInventoryItemId(itemId: string): string | null {
+    let gameObjectFind: GameObject | null = null;
+    let keyFind: string | null = null;
+    this._inventory.forEach((value: GameObject, key: string) => {
+      if (value.id === itemId) {
+        gameObjectFind = value;
+        keyFind = key;
+      }
+    });
+    return keyFind;
+  }
+
   private _getEquippedWeapons(): Array<Weapon> {
     const weaponsEquipped: Array<Weapon> = [];
     for (const [key, value] of this._equippedItem) {
@@ -307,16 +338,6 @@ export abstract class Entity implements Iobject, IEntity {
       }
     }
     return weaponsEquipped;
-  }
-
-  getWeaponsDamage(): number {
-    const weaponsEquipped: Array<Weapon> = this._getEquippedWeapons();
-    let totalDamage = 0;
-    weaponsEquipped.forEach((weapon: Weapon) => {
-      totalDamage += weapon.getDamage();
-    });
-    totalDamage = Math.max(1, totalDamage);
-    return totalDamage;
   }
 }
 

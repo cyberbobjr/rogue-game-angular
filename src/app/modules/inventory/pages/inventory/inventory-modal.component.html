@@ -4,7 +4,10 @@
       <ul>
         <li *ngFor="let gameObject of _player.inventory | keyvalue; let i = index"
             [class.selected]="gameObject.key == _selected">
-          {{gameObject.key}} - {{gameObject.value.name}} <span *ngIf="_player.isInventoryEquipped(gameObject.key)">({{_player.getSlotTypeForEquipped(gameObject.key)}})</span>
+          {{gameObject.key}} - {{gameObject.value.name}} - Qty : {{gameObject.value.qty}}
+          <span *ngIf="_player.isInventoryEquipped(gameObject.key)">
+            ({{_player.getSlotTypeForEquipped(gameObject.key)}})
+          </span>
         </li>
       </ul>
     </div>

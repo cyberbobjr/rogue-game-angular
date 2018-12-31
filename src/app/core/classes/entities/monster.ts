@@ -12,6 +12,7 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Iaction} from '../../interfaces/iaction';
 import {ChaseAction} from '../actions/chase-action';
 import {IdleAction} from '../actions/idle-action';
+import {Torch} from '../gameObjects/torch';
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Entity {
@@ -65,6 +66,8 @@ export class Monster extends Entity {
     this._inventory.forEach((weapon: Weapon) => {
       tile.dropOn(weapon);
     });
+    // drop torch
+    tile.dropOn(new Torch());
   }
 
   setPosition(position: Position): Monster {

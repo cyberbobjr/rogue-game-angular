@@ -1,18 +1,34 @@
 import {Sprite} from '../base/sprite';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {JsonWeapon} from '../../interfaces/json-interfaces';
 
 export abstract class GameObject {
   protected _id: string;
   protected _name: string;
   protected _sprite: Sprite;
+  protected _qty = 1;
+
+  empilable = true;
   name: string;
   objectType: string;
 
+  get id(): string {
+    return this._id;
+  }
+
+  get qty(): number {
+    return this._qty;
+  }
+
+  set qty(value: number) {
+    this._qty = value;
+  }
+
   abstract getInfo(): string ;
 
-  abstract onTake(actor: Entity): void ;
+  onTake(actor: Entity) {
+    actor.addToInventory(this);
+  }
 
   abstract getSlots(): Array<SlotType>;
 
