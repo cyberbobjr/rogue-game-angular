@@ -2,10 +2,11 @@ import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {Sprite} from '../base/sprite';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {EventLog} from '../event-log';
 
 export class Torch extends GameObject {
   protected _name: string;
-  protected _sprite: Sprite = new Sprite('p');
+  protected _sprite: Sprite = new Sprite('i', '#66bbe2');
   protected _id = 'torch';
 
   name = 'Torch';
@@ -19,10 +20,6 @@ export class Torch extends GameObject {
     return [SlotType.LEFTHAND, SlotType.RIGHTHAND];
   }
 
-  getSprite(): Sprite {
-    return undefined;
-  }
-
   canEquip(): boolean {
     return true;
   }
@@ -30,6 +27,7 @@ export class Torch extends GameObject {
   onEquip(actor: Entity, letterInventory?: string) {
     if (actor.equipItem(letterInventory)) {
       actor.ligthPower = 10;
+      EventLog.getInstance().message = 'You see better';
     }
   }
 

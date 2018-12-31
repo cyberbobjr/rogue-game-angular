@@ -7,15 +7,11 @@ import {EventLog} from '../event-log';
 
 export class Potion extends GameObject {
   protected _name: string;
-  protected _sprite: Sprite = new Sprite('i', 'red');
+  protected _sprite: Sprite = new Sprite('i', '#66bbe2');
   protected _id = 'potion';
 
   name = 'Potion';
   objectType = 'POTION';
-
-  get id(): string {
-    return this._id;
-  }
 
   getInfo(): string {
     return `a potion`;
