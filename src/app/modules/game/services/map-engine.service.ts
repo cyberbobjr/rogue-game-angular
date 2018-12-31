@@ -15,15 +15,15 @@ import Digger from 'rot-js/lib/map/digger';
 import {Room} from 'rot-js/lib/map/features';
 import {Monster} from '../../../core/classes/entities/monster';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
-import {EntityType} from '../../../core/enums/entity-type.enum';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {Sprite} from '../../../core/classes/base/sprite';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class MapEngine implements IMapEngine {
+  private _maxLevel = 21;
   private _width: number;
   private _height: number;
   private _rotEngine: Digger = null;
@@ -84,6 +84,10 @@ export class MapEngine implements IMapEngine {
     this._height = height;
     this._createMap(width, height, seed, level);
     this._createDoor(this._rotEngine);
+    this._generateNextLevelAccess(this._rotEngine);
+    if (level !== 1) {
+      this._generatePreviousLevelAccess(this._rotEngine);
+    }
     this._createFovCasting();
     return this._map;
   }
@@ -93,11 +97,11 @@ export class MapEngine implements IMapEngine {
     const rooms: Array<Room> = this.getRooms();
     const nbRooms: number = rooms.length;
     EntitiesFactory.getInstance()
-                   .setMaxPop(nbRooms);
+      .setMaxPop(nbRooms);
     for (let nb = 1; nb < nbRooms - 2; nb++) {
       if (excludeRooms.indexOf(nb) !== 0) {
         const entity: Entity = EntitiesFactory.getInstance()
-                                              .generateRandomEntities(this.getRoomCenter(rooms[nb]));
+          .generateRandomEntities(this.getRoomCenter(rooms[nb]));
         entity.setNextAction(new IdleAction(entity));
         monsters.push(entity);
       }
@@ -205,13 +209,29 @@ export class MapEngine implements IMapEngine {
   private _createMap(width: number, height: number, seed: number, level: number) {
     RNG.setSeed(seed);
     this._map = new GameMap<Entity>(width, height).setSeed(seed)
-                                                  .setLevel(level);
+      .setLevel(level);
     const rotMap: Digger = new Digger(width, height);
     rotMap.create((x: number, y: number, value: number) => {
       const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
       this.setTileAt(new Position(x, y), tile);
     });
     this._rotEngine = rotMap;
+  }
+
+  private _generateNextLevelAccess(rotMap: Digger) {
+    const rooms: Array<Room> = rotMap.getRooms();
+    const lastRoom: Room = rooms[rooms.length - 1];
+    const tile: Tile = TilesFactory.createTile(TileType.STAIRDOWN);
+    const center: number[] = lastRoom.getCenter();
+    this.setTileAt(new Position(center[0], center[1]), tile);
+  }
+
+  private _generatePreviousLevelAccess(rotMap: Digger) {
+    const rooms: Array<Room> = rotMap.getRooms();
+    const firstRoom: Room = rooms[0];
+    const tile: Tile = TilesFactory.createTile(TileType.STAIRUP);
+    const center: number[] = firstRoom.getCenter();
+    this.setTileAt(new Position(center[0], center[1]), tile);
   }
 
   private _createDoor(rotMap: Digger) {

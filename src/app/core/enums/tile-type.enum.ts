@@ -3,5 +3,7 @@ export enum TileType {
   WALL,
   DOOR,
   TRAP,
-  GOLD
+  GOLD,
+  STAIRUP,
+  STAIRDOWN
 }
