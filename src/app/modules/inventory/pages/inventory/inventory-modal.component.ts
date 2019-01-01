@@ -6,17 +6,14 @@ import {Router} from '@angular/router';
 import {EntitiesService} from '../../../game/services/entities.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameObject} from '../../../../core/classes/gameObjects/game-object';
-import {Armor} from '../../../../core/classes/gameObjects/armor';
-import {Weapon} from '../../../../core/classes/gameObjects/weapon';
 import {Potion} from '../../../../core/classes/gameObjects/potion';
-import {Food} from '../../../../core/classes/gameObjects/food';
 import {Tile} from '../../../../core/classes/base/tile';
 
 @Component({
-             selector: 'app-inventory-modal',
-             templateUrl: './inventory-modal.component.html',
-             styleUrls: ['./inventory-modal.component.css']
-           })
+  selector: 'app-inventory-modal',
+  templateUrl: './inventory-modal.component.html',
+  styleUrls: ['./inventory-modal.component.css']
+})
 export class InventoryModalComponent implements OnInit, OnDestroy {
   private _handleKeyBackup: any;
   private _listener: any = null;
@@ -27,6 +24,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
               private _gameEngine: GameEngineService,
               private _entitiesService: EntitiesService,
               private _router: Router,
+              private _storageService: StorageService,
               private _renderer: Renderer2) {
   }
 
@@ -35,9 +33,11 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
       this._player = this._entitiesService.player;
       this.initModalHandler();
     } else {
-      this._player = StorageService.loadPlayer();
-      this._listener = this._renderer.listen(document, 'keydown', (keyEvent) => {
-        this.keyboardHandler(keyEvent);
+      this._storageService.loadPlayer().then((player: Player) => {
+        this._player = player;
+        this._listener = this._renderer.listen(document, 'keydown', (keyEvent) => {
+          this.keyboardHandler(keyEvent);
+        });
       });
     }
   }
@@ -50,16 +50,16 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   initModalHandler() {
     this._modalService.getModal('inventoryModal')
-        .onOpen
-        .subscribe(() => {
-          this._handleKeyBackup = this._gameEngine.handleKeyEvent;
-          this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
-        });
+      .onOpen
+      .subscribe(() => {
+        this._handleKeyBackup = this._gameEngine.handleKeyEvent;
+        this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
+      });
     this._modalService.getModal('inventoryModal')
-        .onAnyCloseEvent
-        .subscribe(() => {
-          this._gameEngine.restoreGameKeyHandler();
-        });
+      .onAnyCloseEvent
+      .subscribe(() => {
+        this._gameEngine.restoreGameKeyHandler();
+      });
   }
 
   keyboardHandler(key: KeyboardEvent) {

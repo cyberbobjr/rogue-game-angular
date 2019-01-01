@@ -18,12 +18,15 @@ import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {Sprite} from '../../../core/classes/base/sprite';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
+import {JSonCell, JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
+import {GameObject} from 'src/app/core/classes/gameObjects/game-object';
+import {GameObjectFactory} from 'src/app/core/factories/game-object-factory';
+import {Player} from 'src/app/core/classes/entities/player';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapEngine implements IMapEngine {
-  private _maxLevel = 21;
   private _width: number;
   private _height: number;
   private _rotEngine: Digger = null;
@@ -31,6 +34,8 @@ export class MapEngine implements IMapEngine {
   private _map: GameMap<Iobject> = null;
   private _preciseShadowcasting: PreciseShadowcasting = null;
   private _entitiesVisibles: Array<Entity> = [];
+
+  maxLevel = 21;
 
   get entitiesVisibles(): Array<Entity> {
     return this._entitiesVisibles;
@@ -77,6 +82,55 @@ export class MapEngine implements IMapEngine {
   }
 
   constructor(private _entitiesService: EntitiesService) {
+  }
+
+  loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }) {
+    if (jsonData) {
+      this.generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
+      this._createTiles(jsonData.map);
+      this._loadEntities(jsonData._entities);
+      return true;
+    }
+    return false;
+  }
+
+  private _loadEntities(entities: Array<JsonEntity>): void {
+    const monsters: Array<Entity> = [];
+    entities.forEach((entity: JsonEntity) => {
+      const monster: Entity = EntitiesFactory.createFromJson(entity);
+      monster.setNextAction(new IdleAction(monster));
+      monsters.push(monster);
+    });
+    this._entitiesService.entities = monsters;
+  }
+
+  private _createTiles(mapJson: JsonMap) {
+    mapJson._data.forEach((cells: Array<JSonCell>) => {
+      cells.forEach((cell: JSonCell) => {
+        const position: Position = new Position(cell.position._x, cell.position._y);
+        const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
+        this._loadTileContents(tile, cell.contents);
+        this.setTileAt(position, tile);
+      });
+    });
+  }
+
+  private _loadTileContents(tile: Tile, jsonContent: Array<any>) {
+    jsonContent.forEach((content: any) => {
+      const gameObject: GameObject = GameObjectFactory.createFromJson(content.objectType, content);
+      if (gameObject) {
+        tile.dropOn(gameObject);
+      }
+    });
+  }
+
+  generateNewMap(level = 1, player: Player): GameMap<Iobject> {
+    const gameMap: GameMap<Iobject> = this.generateMap(80, 80, Math.round(Math.random() * 100), level);
+    this._entitiesService.entities = this.generateMonsters([0]);
+    player.position = this.getStartPosition();
+    player.level = level;
+    this._entitiesService.player = player;
+    return gameMap;
   }
 
   generateMap(width: number, height: number, seed = 511, level = 1): GameMap<Iobject> {

@@ -4,12 +4,13 @@ import {Router} from '@angular/router';
 import {MapEngine} from '../../game/services/map-engine.service';
 import {StorageService} from '../../game/services/storage.service';
 import {Player} from '../../../core/classes/entities/player';
+import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 
 @Component({
-             selector: 'app-menu-page',
-             templateUrl: './menu-page.component.html',
-             styleUrls: ['./menu-page.component.css']
-           })
+  selector: 'app-menu-page',
+  templateUrl: './menu-page.component.html',
+  styleUrls: ['./menu-page.component.css']
+})
 export class MenuPageComponent implements OnInit {
   private _isGameStarted: boolean;
   private _isPlayerExist: boolean;
@@ -21,20 +22,20 @@ export class MenuPageComponent implements OnInit {
               private _router: Router) {
   }
 
+
   ngOnInit() {
-    this._player = StorageService.loadPlayer();
-    const mapLoaded: boolean = this._storageService.loadMap();
-    this._isPlayerExist = !!this._player;
-    this._isGameStarted = this._isPlayerExist ? (!!this._player.position && mapLoaded) : false;
+    this._storageService.loadPlayer().then((player: Player) => {
+      this._player = player;
+      this._storageService.loadMap().then((data) => {
+        const mapLoaded: { map: JsonMap, _entities: Array<JsonEntity> } | null = data;
+        this._isPlayerExist = !!this._player;
+        this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
+      });
+    });
   }
 
   startNewGame() {
-    this._mapEngine.generateMap(80, 80, Math.round(Math.random() * 100), 1);
-    this._player.position = this._mapEngine.getStartPosition();
-    this._player.level = 1;
-    this._entitiesServices.entities = this._mapEngine.generateMonsters([0]);
-    this._entitiesServices.player = this._player;
-
+    this._mapEngine.generateNewMap(1, this._player);
     this._storageService.saveGameState();
     this._router.navigateByUrl('game');
   }

@@ -2,24 +2,82 @@ import {Injectable} from '@angular/core';
 import {Player} from '../../../core/classes/entities/player';
 import {EntitiesService} from './entities.service';
 import {MapEngine} from './map-engine.service';
-import {TilesFactory} from '../../../core/factories/tiles-factory';
-import {TileType} from '../../../core/enums/tile-type.enum';
-import {Position} from '../../../core/classes/base/position';
 import {Entity} from '../../../core/classes/base/entity';
-import {IdleAction} from '../../../core/classes/actions/idle-action';
-import {EntitiesFactory} from '../../../core/factories/entities-factory';
-import {JSonCell, JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
-import {Tile} from '../../../core/classes/base/tile';
-import {GameObjectFactory} from '../../../core/factories/game-object-factory';
-import {GameObject} from '../../../core/classes/gameObjects/game-object';
-
+import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
+import {IdbService} from './idb.service';
+import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class StorageService {
-  static loadPlayer(): Player | null {
-    const json: string = window.localStorage.getItem('player');
+  dbname = 'TsRogue';
+
+  get connection(): Instance {
+    return IdbService.idbCon;
+  }
+
+  constructor(private _entitiesService: EntitiesService,
+              private _mapEngine: MapEngine) {
+    console.log('storage created');
+    this.connection.setLogStatus(true);
+    this.initJsStore().then(() => {
+      console.log('DB init');
+    });
+  }
+
+  async initJsStore() {
+    try {
+      const isExist: boolean = await this.connection.isDbExist(this.dbname);
+      console.log(isExist);
+      if (isExist) {
+        console.log('openDB');
+        this.connection.openDb(this.dbname);
+      } else {
+        console.log('createDB');
+        const dataBase = this.getDatabase();
+        this.connection.createDb(dataBase);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  private getDatabase(): IDataBase {
+    const tblPlayer: ITable = {
+      name: 'Player',
+      columns: [
+        {
+          name: 'id',
+          primaryKey: true,
+        },
+        {
+          name: 'jsonData',
+          dataType: DATA_TYPE.String
+        }]
+    };
+    const tblMap: ITable = {
+      name: 'Map',
+      columns: [
+        {
+          name: 'level',
+          primaryKey: true
+        },
+        {
+          name: 'jsonData',
+          dataType: DATA_TYPE.String
+        }
+      ]
+    };
+    return {
+      name: this.dbname,
+      tables: [tblPlayer,
+               tblMap]
+    };
+  }
+
+  async loadPlayer(): Promise<Player> {
+    const json: string = await this.connection.get('Player');
     if (!json) {
       return null;
     }
@@ -27,70 +85,39 @@ export class StorageService {
     return Player.fromJSON(playerLoaded);
   }
 
-  static savePlayer(player: Entity): void {
-    window.localStorage.setItem('player', JSON.stringify(player));
-  }
-
-  constructor(private _entitiesService: EntitiesService,
-              private _mapEngine: MapEngine) {
-  }
-
-  saveGameState() {
-    StorageService.savePlayer(this._entitiesService.player);
-    this._saveMap();
-  }
-
-  loadMap(level = 1): boolean {
+  async loadMap(level = 1) {
     try {
-      const jsonData = JSON.parse(window.localStorage.getItem('map_' + level)) as { map: JsonMap, _entities: Array<JsonEntity> };
-      if (jsonData) {
-        this._mapEngine.generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
-        this._createTiles(jsonData.map);
-        this._loadEntities(jsonData._entities);
-        return true;
-      }
-      return false;
+      const map: any = await this.connection.select({from: 'Map', where: {level: level}});
+      console.log(map);
+      return JSON.parse(map[0]['jsonData']) as { map: JsonMap, _entities: Array<JsonEntity> };
+      debugger;
+      return JSON.parse(window.localStorage.getItem('map_' + level)) as { map: JsonMap, _entities: Array<JsonEntity> };
     } catch (e) {
       console.log(e);
-      return false;
+      return null;
     }
   }
 
-  private _loadEntities(entities: Array<JsonEntity>): void {
-    const monsters: Array<Entity> = [];
-    entities.forEach((entity: JsonEntity) => {
-      const monster: Entity = EntitiesFactory.createFromJson(entity);
-      monster.setNextAction(new IdleAction(monster));
-      monsters.push(monster);
-    });
-    this._entitiesService.entities = monsters;
+  saveGameState() {
+    this.savePlayer(this._entitiesService.player);
+    this._saveMap();
   }
 
-  private _createTiles(mapJson: JsonMap) {
-    mapJson._data.forEach((cells: Array<JSonCell>) => {
-      cells.forEach((cell: JSonCell) => {
-        const position: Position = new Position(cell.position._x, cell.position._y);
-        const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
-        this._loadContents(tile, cell.contents);
-        this._mapEngine.setTileAt(position, tile);
-      });
-    });
+  async savePlayer(player: Entity) {
+    await this.connection.set('Player', JSON.stringify(player));
+    window.localStorage.setItem('player', JSON.stringify(player));
   }
 
-  private _loadContents(tile: Tile, jsonContent: Array<any>) {
-    jsonContent.forEach((content: any) => {
-      const gameObject: GameObject = GameObjectFactory.createFromJson(content.objectType, content);
-      if (gameObject) {
-        tile.dropOn(gameObject);
-      }
-    });
-  }
-
-  private _saveMap() {
+  private async _saveMap() {
     const level: number = this._mapEngine.map.level;
     let entities: Array<Entity> = [];
     entities = Object.assign(entities, this._entitiesService.entities);
     entities.shift();
+    await this.connection.insert({
+      into: 'Map',
+      return: true,
+      values: [{level: level, jsonData: JSON.stringify({map: this._mapEngine.map, _entities: entities})}]
+    });
     window.localStorage.setItem('map_' + level, JSON.stringify({map: this._mapEngine.map, _entities: entities}));
   }
 }

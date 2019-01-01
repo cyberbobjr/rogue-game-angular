@@ -61,7 +61,7 @@ export class CreatePageComponent implements OnInit {
 
     player = player.setRace(gameRace)
                    .setGameClass(gameClass);
-    StorageService.savePlayer(player);
+    this._storageService.savePlayer(player);
     this._router.navigateByUrl('main');
   }
 }

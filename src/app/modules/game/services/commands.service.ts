@@ -7,10 +7,12 @@ import {TakeCommand} from '../../../core/classes/commands/take-command';
 import {InventoryCommand} from '../../../core/classes/commands/inventory-command';
 import {AttackDistanceCommand} from '../../../core/classes/commands/attack-distance-command';
 import {WaitCommand} from '../../../core/classes/commands/wait-command';
+import {UpStairCommand} from 'src/app/core/classes/commands/up-stair-command';
+import {DownStairCommand} from 'src/app/core/classes/commands/down-stair-command';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class CommandsService {
   ArrowUp: Command;
   ArrowDown: Command;
@@ -29,6 +31,8 @@ export class CommandsService {
   KeyT: Command;
   KeyF: Command;
   KeyI: Command;
+  KeyUp: Command;
+  KeyDown: Command;
   KeySpace: Command;
 
   constructor() {
@@ -54,5 +58,7 @@ export class CommandsService {
     this.KeyF = new AttackDistanceCommand();
     this.KeyI = new InventoryCommand();
     this.KeySpace = new WaitCommand();
+    this.KeyUp = new UpStairCommand();
+    this.KeyDown = new DownStairCommand();
   }
 }

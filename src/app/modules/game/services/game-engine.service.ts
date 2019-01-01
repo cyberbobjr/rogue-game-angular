@@ -10,6 +10,7 @@ import {Entity} from '../../../core/classes/base/entity';
 import {EffectEngine} from './effect-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Router} from '@angular/router';
+import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -76,8 +77,9 @@ export class GameEngineService {
   }
 
   handleActionKeyEvent(key: KeyboardEvent): void {
+    console.log(key.key);
     const player = this._entitiesService.player as Entity;
-    switch (key.code) {
+    switch (key.key) {
       case 'ArrowUp':
         this._commandService.ArrowUp.execute(player, this);
         break;
@@ -90,47 +92,54 @@ export class GameEngineService {
       case 'ArrowRight':
         this._commandService.ArrowRight.execute(player, this);
         break;
-      case 'KeyQ':
+      case 'q':
         this._commandService.KeyQ.execute(player, this);
         break;
-      case 'KeyZ':
+      case 'z':
         this._commandService.KeyZ.execute(player, this);
         break;
-      case 'KeyA':
+      case 'a':
         this._commandService.KeyA.execute(player, this);
         break;
-      case 'KeyE':
+      case 'e':
         this._commandService.KeyE.execute(player, this);
         break;
-      case 'KeyW':
+      case 'w':
         this._commandService.KeyW.execute(player, this);
         break;
-      case 'KeyC':
+      case 'c':
         this._commandService.KeyC.execute(player, this);
         break;
-      case 'KeyX':
+      case 'x':
         this._commandService.KeyX.execute(player, this);
         break;
-      case 'KeyD':
+      case 'd':
         this._commandService.KeyD.execute(player, this);
         break;
-      case 'KeyO':
+      case 'o':
         this._commandService.KeyO.execute(player, this);
         break;
-      case 'KeyS':
+      case 's':
         this._commandService.KeyS.execute(player, this);
         break;
-      case 'KeyT':
+      case 't':
         this._commandService.KeyT.execute(player, this);
         break;
-      case 'KeyF':
+      case 'f':
         this._commandService.KeyF.execute(player, this);
         break;
-      case 'KeyI':
+      case 'i':
         this._commandService.KeyI.execute(player, this);
         break;
-      case 'Space':
+      case ' ':
         this._commandService.KeySpace.execute(player, this);
+        break;
+      case '<':
+        this._commandService.KeyDown.execute(player, this);
+        break;
+      case '>':
+        this._commandService.KeyUp.execute(player, this);
+        break;
     }
     this.processAction();
   }
@@ -178,5 +187,32 @@ export class GameEngineService {
 
   restoreGameKeyHandler() {
     this._handleKeyEvent = this.handleActionKeyEvent;
+  }
+
+  gotoUpStair() {
+    this._entitiesService.player.level = Math.max(1, this._entitiesService.player.level - 1);
+    this.changeMapLevel(this._entitiesService.player.level);
+  }
+
+  gotoDownStair() {
+    this._entitiesService.player.level = Math.min(this._mapEngine.maxLevel, this._entitiesService.player.level + 1);
+    this.changeMapLevel(this._entitiesService.player.level);
+  }
+
+  changeMapLevel(newLevel: number) {
+    // save current level
+    this._storageService.saveGameState();
+    // get level if exist
+    this._storageService.loadMap(this._entitiesService.player.level).then((data) => {
+      const mapData: { map: JsonMap, _entities: Array<JsonEntity> } = data;
+      if (!!mapData) {
+        this._mapEngine.loadMap(mapData);
+        this._entitiesService.player.position = this._mapEngine.getStartPosition();
+      } else {
+        // create level if not exist
+        this._mapEngine.generateNewMap(newLevel, this._entitiesService.player);
+      }
+      this._storageService.saveGameState();
+    });
   }
 }

@@ -11,4 +11,9 @@ export class NextLevelTile extends Tile {
     this.sprite = new Sprite(gotoLevel === TileType.STAIRUP ? '>' : '<');
     this._opaque = false;
   }
+
+  isWalkable(): boolean {
+    return true;
+  }
+
 }
