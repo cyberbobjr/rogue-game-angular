@@ -1,6 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { InventoryModalComponent } from './inventory.component';
+import {InventoryModalComponent} from 'src/app/modules/inventory/pages/inventory/inventory-modal.component';
 
 describe('InventoryComponent', () => {
   let component: InventoryModalComponent;

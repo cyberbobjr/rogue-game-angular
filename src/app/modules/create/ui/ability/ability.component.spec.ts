@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {AbilityComponent} from 'src/app/modules/create/ui/ability/ability.component';
 
-import { AbilityComponent } from './roll-dice.component';
 
 describe('RollDiceComponent', () => {
   let component: AbilityComponent;
@@ -8,9 +8,9 @@ describe('RollDiceComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AbilityComponent ]
+      declarations: [AbilityComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

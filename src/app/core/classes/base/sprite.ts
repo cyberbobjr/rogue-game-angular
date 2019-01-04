@@ -1,5 +1,6 @@
 import * as Color from 'color';
 import {JsonSprite} from '../../interfaces/json-interfaces';
+import {ISprite} from 'src/app/core/interfaces/i-sprite';
 
 export class Sprite implements ISprite {
   protected _visibility = 0;

@@ -1,32 +1,25 @@
 import {Injectable} from '@angular/core';
-import {IMapEngine} from '../../../core/interfaces/i-map-engine';
 import {GameMap} from '../../../core/classes/base/gameMap';
 import {Entity} from '../../../core/classes/base/entity';
-import {TilesFactory} from '../../../core/factories/tiles-factory';
-import {TileType} from '../../../core/enums/tile-type.enum';
 import {Tile} from '../../../core/classes/base/tile';
 import {Position} from '../../../core/classes/base/position';
 import {EntitiesService} from './entities.service';
 import {Iobject} from '../../../core/interfaces/iobject';
-import {Path, RNG} from 'rot-js/lib';
+import {Path} from 'rot-js/lib';
 import AStar from 'rot-js/lib/path/astar';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import Digger from 'rot-js/lib/map/digger';
-import {Room} from 'rot-js/lib/map/features';
 import {Monster} from '../../../core/classes/entities/monster';
-import {EntitiesFactory} from '../../../core/factories/entities-factory';
-import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {Sprite} from '../../../core/classes/base/sprite';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
-import {JSonCell, JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
-import {GameObject} from 'src/app/core/classes/gameObjects/game-object';
-import {GameObjectFactory} from 'src/app/core/factories/game-object-factory';
-import {Player} from 'src/app/core/classes/entities/player';
+import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
+import {MapGenerator} from 'src/app/modules/game/services/map-generator';
+import {StorageService} from 'src/app/modules/game/services/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MapEngine implements IMapEngine {
+export class MapEngine {
   private _width: number;
   private _height: number;
   private _rotEngine: Digger = null;
@@ -81,86 +74,21 @@ export class MapEngine implements IMapEngine {
     this._gameMap = value;
   }
 
-  constructor(private _entitiesService: EntitiesService) {
+  constructor(private _entitiesService: EntitiesService,
+              private _mapGenerator: MapGenerator,
+              private _storageService: StorageService) {
+  }
+
+  generateMaps(nbOfMaps: number = 42) {
+    for (let level = 1; level < nbOfMaps + 1; level++) {
+      const map: GameMap<Iobject> = this._mapGenerator.generateNewMap(level);
+      this._storageService.saveMap(map);
+    }
   }
 
   loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }) {
-    if (jsonData) {
-      this.generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
-      this._createTiles(jsonData.map);
-      this._loadEntities(jsonData._entities);
-      return true;
-    }
-    return false;
-  }
-
-  private _loadEntities(entities: Array<JsonEntity>): void {
-    const monsters: Array<Entity> = [];
-    entities.forEach((entity: JsonEntity) => {
-      const monster: Entity = EntitiesFactory.createFromJson(entity);
-      monster.setNextAction(new IdleAction(monster));
-      monsters.push(monster);
-    });
-    this._entitiesService.entities = monsters;
-  }
-
-  private _createTiles(mapJson: JsonMap) {
-    mapJson._data.forEach((cells: Array<JSonCell>) => {
-      cells.forEach((cell: JSonCell) => {
-        const position: Position = new Position(cell.position._x, cell.position._y);
-        const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
-        this._loadTileContents(tile, cell.contents);
-        this.setTileAt(position, tile);
-      });
-    });
-  }
-
-  private _loadTileContents(tile: Tile, jsonContent: Array<any>) {
-    jsonContent.forEach((content: any) => {
-      const gameObject: GameObject = GameObjectFactory.createFromJson(content.objectType, content);
-      if (gameObject) {
-        tile.dropOn(gameObject);
-      }
-    });
-  }
-
-  generateNewMap(level = 1, player: Player): GameMap<Iobject> {
-    const gameMap: GameMap<Iobject> = this.generateMap(80, 80, Math.round(Math.random() * 100), level);
-    this._entitiesService.entities = this.generateMonsters([0]);
-    player.position = this.getStartPosition();
-    player.level = level;
-    this._entitiesService.player = player;
-    return gameMap;
-  }
-
-  generateMap(width: number, height: number, seed = 511, level = 1): GameMap<Iobject> {
-    this._width = width;
-    this._height = height;
-    this._createMap(width, height, seed, level);
-    this._createDoor(this._rotEngine);
-    this._generateNextLevelAccess(this._rotEngine);
-    if (level !== 1) {
-      this._generatePreviousLevelAccess(this._rotEngine);
-    }
+    this._gameMap = this._mapGenerator.loadMap(jsonData);
     this._createFovCasting();
-    return this._map;
-  }
-
-  generateMonsters(excludeRooms: Array<number> = []): Array<Entity> {
-    const monsters: Array<Entity> = [];
-    const rooms: Array<Room> = this.getRooms();
-    const nbRooms: number = rooms.length;
-    EntitiesFactory.getInstance()
-      .setMaxPop(nbRooms);
-    for (let nb = 1; nb < nbRooms - 2; nb++) {
-      if (excludeRooms.indexOf(nb) !== 0) {
-        const entity: Entity = EntitiesFactory.getInstance()
-          .generateRandomEntities(this.getRoomCenter(rooms[nb]));
-        entity.setNextAction(new IdleAction(entity));
-        monsters.push(entity);
-      }
-    }
-    return monsters;
   }
 
   computeFOV(position: Position): GameMap<Iobject> {
@@ -188,12 +116,6 @@ export class MapEngine implements IMapEngine {
     return this._gameMap;
   }
 
-  getStartPosition(): Position {
-    const rooms: Array<Room> = this.getRooms();
-    const room: Room = rooms[0];
-    return this.getRoomCenter(room);
-  }
-
   getTilesAround(position: Position): Array<Array<Iobject>> {
     const test: GameMap<Iobject> = this.gameMap.extract(position.x - 1, position.y - 1, 3, 3);
     return test.content;
@@ -209,20 +131,6 @@ export class MapEngine implements IMapEngine {
 
   getTileAt(position: Position): Tile {
     return <Tile>this._map.getDataAt(position.x, position.y);
-  }
-
-  setTileAt(position: Position, tile: Tile) {
-    this._map.content[position.y][position.x] = tile;
-    tile.position = position;
-  }
-
-  getRooms(): Array<Room> {
-    return this._rotEngine.getRooms();
-  }
-
-  getRoomCenter(room: Room): Position {
-    const center: number[] = room.getCenter();
-    return new Position(center[0], center[1]);
   }
 
   getDirectionToPlayer(originPosition: Position): Position | null {
@@ -260,44 +168,12 @@ export class MapEngine implements IMapEngine {
     }
   }
 
-  private _createMap(width: number, height: number, seed: number, level: number) {
-    RNG.setSeed(seed);
-    this._map = new GameMap<Entity>(width, height).setSeed(seed)
-      .setLevel(level);
-    const rotMap: Digger = new Digger(width, height);
-    rotMap.create((x: number, y: number, value: number) => {
-      const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR);
-      this.setTileAt(new Position(x, y), tile);
-    });
-    this._rotEngine = rotMap;
-  }
-
-  private _generateNextLevelAccess(rotMap: Digger) {
-    const rooms: Array<Room> = rotMap.getRooms();
-    const lastRoom: Room = rooms[rooms.length - 1];
-    const tile: Tile = TilesFactory.createTile(TileType.STAIRDOWN);
-    const center: number[] = lastRoom.getCenter();
-    this.setTileAt(new Position(center[0], center[1]), tile);
-  }
-
-  private _generatePreviousLevelAccess(rotMap: Digger) {
-    const rooms: Array<Room> = rotMap.getRooms();
-    const firstRoom: Room = rooms[0];
-    const tile: Tile = TilesFactory.createTile(TileType.STAIRUP);
-    const center: number[] = firstRoom.getCenter();
-    this.setTileAt(new Position(center[0], center[1]), tile);
-  }
-
-  private _createDoor(rotMap: Digger) {
-    const rooms: Array<Room> = rotMap.getRooms();
-    let room: Room = null;
-    for (let i = 0; i < rooms.length; i++) {
-      room = rooms[i];
-      room.getDoors((x: number, y: number) => {
-        const tile: Tile = TilesFactory.createTile(TileType.DOOR);
-        this.setTileAt(new Position(x, y), tile);
-      });
+  private _putEntitiesOn(gameMap: GameMap<Iobject>): GameMap<Iobject> {
+    for (const actor of this._entitiesService.entities) {
+      const position: Position = (actor as Entity).position;
+      gameMap.content[position.y][position.x] = actor;
     }
+    return gameMap;
   }
 
   private _createFovCasting() {
@@ -309,13 +185,5 @@ export class MapEngine implements IMapEngine {
         return false;
       }
     }, {topology: 8});
-  }
-
-  private _putEntitiesOn(gameMap: GameMap<Iobject>): GameMap<Iobject> {
-    for (const actor of this._entitiesService.entities) {
-      const position: Position = (actor as Entity).position;
-      gameMap.content[position.y][position.x] = actor;
-    }
-    return gameMap;
   }
 }

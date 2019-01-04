@@ -1,7 +1,38 @@
+import {Position} from 'src/app/core/classes/base/position';
+import {Entity} from 'src/app/core/classes/base/entity';
+
 export class GameMap<T extends object> {
   private _data: T[][];
   private _seed: number;
   private _level: number;
+
+  private _entryPosition: Position;
+  private _exitPosition: Position;
+
+  private _entities: Array<Entity> = [];
+
+  get entities(): Array<Entity> {
+    return this._entities;
+  }
+
+  set entities(value: Array<Entity>) {
+    this._entities = value;
+  }
+  get entryPosition(): Position {
+    return this._entryPosition;
+  }
+
+  set entryPosition(value: Position) {
+    this._entryPosition = value;
+  }
+
+  get exitPosition(): Position {
+    return this._exitPosition;
+  }
+
+  set exitPosition(value: Position) {
+    this._exitPosition = value;
+  }
 
   get level(): number {
     return this._level;
@@ -51,6 +82,10 @@ export class GameMap<T extends object> {
 
   getDataAt(x: number, y: number): T {
     return <T>this._data[y][x];
+  }
+
+  setDataAt(x: number, y: number, data: T) {
+    this._data[y][x] = data;
   }
 
   clone(): GameMap<T> {

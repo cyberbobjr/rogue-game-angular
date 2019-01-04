@@ -11,6 +11,8 @@ import {EffectEngine} from './effect-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Router} from '@angular/router';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
+import {GameMap} from 'src/app/core/classes/base/gameMap';
+import {Iobject} from 'src/app/core/interfaces/iobject';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -23,6 +25,7 @@ export class GameEngineService {
   private _timeStart: any = null;
   private _handleKeyEvent: (key: KeyboardEvent) => void = null;
   private _modalService: NgxSmartModalService;
+  private _currentMap: GameMap<Iobject> = null;
 
   get handleKeyEvent(): (key: KeyboardEvent) => void {
     return this._handleKeyEvent.bind(this);
@@ -203,14 +206,14 @@ export class GameEngineService {
     // save current level
     this._storageService.saveGameState();
     // get level if exist
-    this._storageService.loadMap(this._entitiesService.player.level).then((data) => {
+    this._storageService.loadMap(newLevel).then((data) => {
       const mapData: { map: JsonMap, _entities: Array<JsonEntity> } = data;
       if (!!mapData) {
         this._mapEngine.loadMap(mapData);
-        this._entitiesService.player.position = this._mapEngine.getStartPosition();
+        this._entitiesService.player.level = newLevel;
+        this._entitiesService.player.position = this._mapEngine.gameMap.entryPosition;
       } else {
-        // create level if not exist
-        this._mapEngine.generateNewMap(newLevel, this._entitiesService.player);
+        // throw error
       }
       this._storageService.saveGameState();
     });

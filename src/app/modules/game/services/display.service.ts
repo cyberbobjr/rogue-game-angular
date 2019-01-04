@@ -6,7 +6,6 @@ import {Sprite} from '../../../core/classes/base/sprite';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
-import {EffectEngine} from './effect-engine.service';
 
 @Injectable({
               providedIn: 'root'
