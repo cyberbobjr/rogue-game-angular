@@ -106,12 +106,10 @@ export class StorageService {
 
   saveGameState() {
     this.savePlayer(this._entitiesService.player);
-    //this._saveMap();
   }
 
   async savePlayer(player: Entity) {
     await this.connection.set('Player', JSON.stringify(player));
-    window.localStorage.setItem('player', JSON.stringify(player));
   }
 
   /*private async _saveMap() {

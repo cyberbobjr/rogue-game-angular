@@ -36,7 +36,7 @@ export class MenuPageComponent implements OnInit {
 
   startNewGame() {
     this._mapEngine.generateMaps(42);
-    this._storageService.saveGameState();
+    //this._storageService.saveGameState();
     this._router.navigateByUrl('game');
   }
 }
