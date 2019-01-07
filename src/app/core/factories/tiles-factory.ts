@@ -19,9 +19,9 @@ export class TilesFactory {
       case TileType.DOOR:
         return new DoorTile(position, true);
       case TileType.STAIRUP:
-        return new NextLevelTile(TileType.STAIRUP);
+        return new NextLevelTile(TileType.STAIRUP, position);
       case TileType.STAIRDOWN:
-        return new NextLevelTile(TileType.STAIRDOWN);
+        return new NextLevelTile(TileType.STAIRDOWN, position);
       default:
         return null;
     }
@@ -36,9 +36,8 @@ export class TilesFactory {
       case TileType.DOOR:
         return DoorTile.fromJSON(jsonData);
       case TileType.STAIRUP:
-        return new NextLevelTile(TileType.STAIRUP);
       case TileType.STAIRDOWN:
-        return new NextLevelTile(TileType.STAIRDOWN);
+        return NextLevelTile.fromJSON(jsonData);
       default:
         return null;
     }

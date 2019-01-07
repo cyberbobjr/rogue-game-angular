@@ -20,7 +20,7 @@ export class StorageService {
 
   constructor(private _entitiesService: EntitiesService) {
     console.log('storage created');
-    this.connection.setLogStatus(true);
+    this.connection.setLogStatus(false);
     this.initJsStore()
         .then(() => {
           console.log('DB init');
@@ -30,7 +30,6 @@ export class StorageService {
   async initJsStore() {
     try {
       const isExist: boolean = await this.connection.isDbExist(this.dbname);
-      console.log(isExist);
       if (isExist) {
         console.log('openDB');
         this.connection.openDb(this.dbname);
@@ -89,17 +88,24 @@ export class StorageService {
   async loadMap(level: number) {
     const gameMap: Array<any> = await this.connection.select({from: 'Map', limit: 1, where: {level: level}});
     if (gameMap.length === 0) {
-      throw new Error();
+      throw new Error('No maps in storage');
     }
     return JSON.parse(gameMap[0]['jsonData']) as { map: JsonMap, _entities: Array<JsonEntity> };
   }
 
   async saveMap(gameMap: GameMap<Iobject>) {
-    await this.connection.insert({
-                                   into: 'Map',
-                                   return: true,
-                                   values: [{level: gameMap.level, jsonData: JSON.stringify({map: gameMap, _entities: gameMap.entities})}]
-                                 });
+    return await this.connection.insert({
+                                          into: 'Map',
+                                          return: true,
+                                          values: [{
+                                            level: gameMap.level,
+                                            jsonData: JSON.stringify({map: gameMap, _entities: gameMap.entities})
+                                          }]
+                                        });
+  }
+
+  clearAllMaps(): Promise<null> {
+    return this.connection.clear('Map');
   }
 
   saveGameState() {

@@ -5,6 +5,7 @@ import {Position} from '../base/position';
 import {TileType} from '../../enums/tile-type.enum';
 import {Entity} from '../base/entity';
 import {Iaction} from '../../interfaces/iaction';
+import {JSonCell} from '../../interfaces/json-interfaces';
 
 export class FloorTile extends Tile {
   protected _type = TileType.FLOOR;
@@ -16,6 +17,10 @@ export class FloorTile extends Tile {
 
   get name(): string {
     return this._name;
+  }
+
+  static fromJSON(json: JSonCell): FloorTile {
+    return new this(new Position(json.position._x, json.position._y));
   }
 
   constructor(position: Position) {

@@ -7,6 +7,7 @@ import {Player} from '../../../core/classes/entities/player';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {GameMap} from '../../../core/classes/base/gameMap';
 import {Iobject} from '../../../core/interfaces/iobject';
+import {Error} from 'tslint/lib/error';
 
 @Component({
              selector: 'app-menu-page',
@@ -35,23 +36,26 @@ export class MenuPageComponent implements OnInit {
         .then((mapLoaded: { map: JsonMap, _entities: Array<JsonEntity> } | null) => {
           this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
         })
-        .catch(() => {
+        .catch((err: Error) => {
+          console.log(err.message);
         });
   }
 
-  startNewGame() {
-    this._mapEngine.generateMaps(42);
-    this._storageService.connection.clear('Map');
-    this._storageService.loadMap(1)
-        .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap<Iobject> = this._mapEngine.loadMap(data);
-          this._player.level = 1;
-          this._player.position = gameMap.entryPosition;
-          this._storageService.savePlayer(this._player);
-          this._router.navigateByUrl('game');
-        })
-        .catch(() => {
-
+  async startNewGame() {
+    this._storageService.clearAllMaps()
+        .then(() => {
+          this._mapEngine.generateMaps(42);
+          this._storageService.loadMap(1)
+              .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
+                const gameMap: GameMap<Iobject> = this._mapEngine.loadMap(data);
+                this._player.level = 1;
+                this._player.position = gameMap.entryPosition;
+                this._storageService.savePlayer(this._player);
+                this._router.navigateByUrl('game');
+              })
+              .catch((err: Error) => {
+                console.log(err.message);
+              });
         });
   }
 }

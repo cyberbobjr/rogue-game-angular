@@ -11,9 +11,9 @@ export class DoorTile extends Tile {
   protected _type = TileType.DOOR;
   protected _name = 'DoorTile';
 
-  static fromJSON(json: any, position?: Position): DoorTile {
+  static fromJSON(json: any): DoorTile {
     const {_isClosed} = json;
-    return new this(position, _isClosed);
+    return new this(new Position(json.position._x, json.position._y), _isClosed);
   }
 
   get isClosed(): boolean {

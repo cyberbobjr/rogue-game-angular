@@ -79,10 +79,10 @@ export class MapEngine {
               private _storageService: StorageService) {
   }
 
-  generateMaps(nbOfMaps: number = 42) {
+  async generateMaps(nbOfMaps: number = 42) {
     for (let level = 1; level < nbOfMaps + 1; level++) {
       const map: GameMap<Iobject> = this._mapGenerator.generateNewMap(level);
-      this._storageService.saveMap(map);
+      await this._storageService.saveMap(map);
     }
   }
 
