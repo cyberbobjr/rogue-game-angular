@@ -8,7 +8,6 @@ import {EntityType} from '../../enums/entity-type.enum';
 import {EventLog} from '../event-log';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';

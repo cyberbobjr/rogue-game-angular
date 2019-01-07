@@ -162,8 +162,10 @@ export class GameEngineService {
   }
 
   processAction() {
-    for (let currentActorIndex = 0; currentActorIndex < this._entitiesService.entities.length; currentActorIndex++) {
-      const currentActor: Entity = this._entitiesService.getEntityAtIndex(currentActorIndex);
+    const entities: Array<Entity> = this.getCurrentMap().entities;
+    entities.push(this.getPlayer());
+    for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
+      const currentActor: Entity = entities[currentActorIndex];
       let actorAction = currentActor.getAction();
       if (actorAction) {
         while (true) {

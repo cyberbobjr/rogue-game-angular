@@ -2,7 +2,6 @@ import {Iaction} from '../../interfaces/iaction';
 import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
 import {Entity} from '../base/entity';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';

@@ -110,14 +110,6 @@ export class MapEngine {
     }
   }
 
-  private _putEntitiesOn(gameMap: GameMap<Iobject>): GameMap<Iobject> {
-    for (const actor of this._entitiesService.entities) {
-      const position: Position = (actor as Entity).position;
-      gameMap.content[position.y][position.x] = actor;
-    }
-    return gameMap;
-  }
-
   private _createFovCasting(gameMap: GameMap<Iobject>) {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {

@@ -9,16 +9,7 @@ import {GameEngineService} from './game-engine.service';
               providedIn: 'root'
             })
 export class EntitiesService {
-  private _entities: Array<Entity> = [];
   private _player: Player = null;
-
-  get entities(): Entity[] {
-    return this._entities;
-  }
-
-  set entities(value: Array<Entity>) {
-    this._entities = value;
-  }
 
   get player(): Player | null {
     return this._player;
@@ -26,18 +17,13 @@ export class EntitiesService {
 
   set player(actor: Player) {
     this._player = actor;
-    this._entities.unshift(this._player);
   }
 
   constructor() {
   }
 
-  getEntityAtIndex(index: number): Entity {
-    return this.entities[index];
-  }
-
   updateEntities(_gameEngine: GameEngineService) {
-    this._entities.forEach((entity: Entity, index: number) => {
+    /*this._entities.forEach((entity: Entity, index: number) => {
       entity.update();
       if (entity.hp <= 0) {
         entity.onDead(_gameEngine);
@@ -47,6 +33,6 @@ export class EntitiesService {
           this.player = null;
         }
       }
-    });
+    });*/
   }
 }
