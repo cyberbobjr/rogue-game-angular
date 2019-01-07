@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {MapEngine} from './map-engine.service';
 import {Position} from '../../../core/classes/base/position';
 import {GameMap} from '../../../core/classes/base/gameMap';
 import {Sprite} from '../../../core/classes/base/sprite';
@@ -7,6 +6,8 @@ import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
 import {GameEngineService} from './game-engine.service';
+import {EntitiesFactory} from '../../../core/factories/entities-factory';
+import {EntitiesService} from './entities.service';
 
 @Injectable({
               providedIn: 'root'
@@ -42,7 +43,7 @@ export class DisplayService {
     return this.display.getContainer();
   }
 
-  constructor(private _gameEngine: GameEngineService) {
+  constructor(private _entitiesService: EntitiesService) {
   }
 
   computeBounds() {
@@ -52,7 +53,7 @@ export class DisplayService {
   }
 
   draw(gameMap: GameMap<Iobject>) {
-    const finalMap: GameMap<Iobject> = gameMap.computeFOV(this._gameEngine.getPlayer(), this.cameraPosition);
+    const finalMap: GameMap<Iobject> = gameMap.computeFOV(this._entitiesService.player, this.cameraPosition);
     const viewport: GameMap<Iobject> = this.extractViewport(finalMap);
     this.drawViewPort(viewport);
   }
