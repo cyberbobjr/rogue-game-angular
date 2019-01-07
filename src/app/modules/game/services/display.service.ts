@@ -51,8 +51,8 @@ export class DisplayService {
   }
 
   draw(gameMap: GameMap<Iobject>) {
-    //const gameMap: GameMap<Iobject> = this._mapEngine.computeFOV(this.cameraPosition);
-    const viewport: GameMap<Iobject> = this.extractViewport(gameMap);
+    const finalMap: GameMap<Iobject> = this._mapEngine.computeFOV(gameMap, this.cameraPosition);
+    const viewport: GameMap<Iobject> = this.extractViewport(finalMap);
     this.drawViewPort(viewport);
   }
 
