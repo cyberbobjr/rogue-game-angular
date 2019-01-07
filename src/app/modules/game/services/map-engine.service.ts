@@ -1,17 +1,6 @@
 import {Injectable} from '@angular/core';
 import {GameMap} from '../../../core/classes/base/gameMap';
-import {Entity} from '../../../core/classes/base/entity';
-import {Tile} from '../../../core/classes/base/tile';
-import {Position} from '../../../core/classes/base/position';
-import {EntitiesService} from './entities.service';
 import {Iobject} from '../../../core/interfaces/iobject';
-import {Path} from 'rot-js/lib';
-import AStar from 'rot-js/lib/path/astar';
-import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
-import Digger from 'rot-js/lib/map/digger';
-import {Monster} from '../../../core/classes/entities/monster';
-import {Sprite} from '../../../core/classes/base/sprite';
-import {DoorTile} from '../../../core/classes/tiles/door-tile';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {MapGenerator} from 'src/app/modules/game/services/map-generator';
 import {StorageService} from 'src/app/modules/game/services/storage.service';
