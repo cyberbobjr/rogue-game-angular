@@ -50,8 +50,8 @@ export class DisplayService {
     this.maxVisiblesRows = height;
   }
 
-  draw() {
-    const gameMap: GameMap<Iobject> = this._mapEngine.computeFOV(this.cameraPosition);
+  draw(gameMap: GameMap<Iobject>) {
+    //const gameMap: GameMap<Iobject> = this._mapEngine.computeFOV(this.cameraPosition);
     const viewport: GameMap<Iobject> = this.extractViewport(gameMap);
     this.drawViewPort(viewport);
   }

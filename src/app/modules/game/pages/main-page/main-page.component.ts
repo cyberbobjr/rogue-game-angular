@@ -31,7 +31,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
           return this._storageService.loadMap(player.level);
         })
         .then((mapData: { map: JsonMap, _entities: Array<JsonEntity> }) => {
-          this._mapEngine.loadMap(mapData);
+          this._gameEngineService.setGameMap(this._mapEngine.loadMap(mapData));
           this._gameEngineService.setModalService(this._modalService);
           this._gameEngineService.startGameLoop();
         });

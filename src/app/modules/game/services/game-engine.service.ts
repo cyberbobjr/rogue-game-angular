@@ -13,13 +13,14 @@ import {Router} from '@angular/router';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {GameMap} from 'src/app/core/classes/base/gameMap';
 import {Iobject} from 'src/app/core/interfaces/iobject';
+import {Player} from '../../../core/classes/entities/player';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class GameEngineService {
   private _gameLoop: any = null;
   private _timeStart: any = null;
@@ -66,7 +67,7 @@ export class GameEngineService {
     if (timestamp - this._timeStart > 50) {
       this._updateGame();
       EffectEngine.getInstance()
-        .tick(timestamp);
+                  .tick(timestamp);
       this._drawMap();
       this._timeStart = performance.now();
     }
@@ -149,7 +150,7 @@ export class GameEngineService {
 
   private _updateGame() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
-    this._entitiesService.updateEntities(this._mapEngine);
+    this._entitiesService.updateEntities(this);
     if (this._entitiesService.player === null) {
       this.endGameLoop();
       this._router.navigateByUrl('game-over');
@@ -157,7 +158,7 @@ export class GameEngineService {
   }
 
   private _drawMap() {
-    this._displayService.draw();
+    this._displayService.draw(this._currentMap);
   }
 
   processAction() {
@@ -188,6 +189,18 @@ export class GameEngineService {
     this._modalService = value;
   }
 
+  setGameMap(value: GameMap<Iobject>) {
+    this._currentMap = value;
+  }
+
+  getCurrentMap(): GameMap<Iobject> {
+    return this._currentMap;
+  }
+
+  getPlayer(): Player {
+    return this._entitiesService.player;
+  }
+
   restoreGameKeyHandler() {
     this._handleKeyEvent = this.handleActionKeyEvent;
   }
@@ -206,16 +219,17 @@ export class GameEngineService {
     // save current level
     this._storageService.saveGameState();
     // get level if exist
-    this._storageService.loadMap(newLevel).then((data) => {
-      const mapData: { map: JsonMap, _entities: Array<JsonEntity> } = data;
-      if (!!mapData) {
-        this._mapEngine.loadMap(mapData);
-        this._entitiesService.player.level = newLevel;
-        this._entitiesService.player.position = this._mapEngine.gameMap.entryPosition;
-      } else {
-        // throw error
-      }
-      this._storageService.saveGameState();
-    });
+    this._storageService.loadMap(newLevel)
+        .then((data) => {
+          const mapData: { map: JsonMap, _entities: Array<JsonEntity> } = data;
+          if (!!mapData) {
+            this._mapEngine.loadMap(mapData);
+            this._entitiesService.player.level = newLevel;
+            this._entitiesService.player.position = this._currentMap.entryPosition;
+          } else {
+            // throw error
+          }
+          this._storageService.saveGameState();
+        });
   }
 }

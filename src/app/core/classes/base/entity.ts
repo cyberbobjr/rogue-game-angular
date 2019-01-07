@@ -13,6 +13,7 @@ import {Weapon} from '../gameObjects/weapon';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 @Injectable({
               providedIn: 'root'
@@ -269,7 +270,7 @@ export abstract class Entity implements Iobject, IEntity {
     }
   }
 
-  onDead(_mapEngine: MapEngine): void {
+  onDead(_gameEngine: GameEngineService): void {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 

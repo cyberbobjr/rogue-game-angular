@@ -6,7 +6,6 @@ import {ChaseAction} from './chase-action';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 import {Position} from '../base/position';
 import {Direction} from '../../enums/direction.enum';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Tile} from '../base/tile';
 import {Monster} from '../entities/monster';
 
@@ -23,8 +22,8 @@ export class IdleAction implements Iaction {
     } else {
       const direction: Direction = this._getRandomDirection();
       const destPosition: Position = subject.position.computeDestination(direction);
-      const mapEngine: MapEngine = gameEngine.mapEngine;
-      const tile: Tile = <Tile>mapEngine.getTileOrEntityAt(destPosition);
+      const tile: Tile = <Tile>gameEngine.getCurrentMap()
+                                         .getTileOrEntityAt(destPosition);
       if (tile instanceof Tile && tile.isWalkable()) {
         subject.position = destPosition;
         tile.onWalk(subject);

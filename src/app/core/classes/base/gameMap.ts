@@ -1,5 +1,10 @@
 import {Position} from 'src/app/core/classes/base/position';
 import {Entity} from 'src/app/core/classes/base/entity';
+import {Iobject} from '../../interfaces/iobject';
+import {Tile} from './tile';
+import AStar from 'rot-js/lib/path/astar';
+import {Path} from 'rot-js';
+import {DoorTile} from '../tiles/door-tile';
 
 export class GameMap<T extends object> {
   private _data: T[][];
@@ -18,6 +23,7 @@ export class GameMap<T extends object> {
   set entities(value: Array<Entity>) {
     this._entities = value;
   }
+
   get entryPosition(): Position {
     return this._entryPosition;
   }
@@ -110,6 +116,56 @@ export class GameMap<T extends object> {
     const arrayExtracted: T[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
 
     return new GameMap<T>(finalWidth, finalHeight, arrayExtracted);
+  }
+
+  getTilesAround(position: Position): Array<Array<T>> {
+    const test: GameMap<T> = this.extract(position.x - 1, position.y - 1, 3, 3);
+    return test.content;
+  }
+
+  getTileOrEntityAt(position: Position): Iobject {
+    const monster: Iobject = this.getEntityAt(position);
+    if (monster) {
+      return monster;
+    }
+    return <Iobject>this.getDataAt(position.x, position.y);
+  }
+
+  getEntityAt(position: Position): Entity | null {
+    let monster: Entity = null;
+    this._entities.forEach((value: Entity, index: number) => {
+      if (value.position.equal(position)) {
+        monster = value;
+      }
+    });
+    return monster;
+  }
+
+  getTileAt(position: Position): Tile {
+    return <Tile>this.getDataAt(position.x, position.y);
+  }
+
+  getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
+    const astar: AStar = new Path.AStar(destPosition.x, destPosition.y, (x: number, y: number) => {
+      const info: Iobject = this.getTileOrEntityAt(new Position(x, y));
+      if (info instanceof Entity) {
+        return true;
+      }
+      if (info instanceof Tile && info.isWalkable()) {
+        return true;
+      }
+      return info instanceof DoorTile && (info as DoorTile).isClosed;
+    });
+    let target: Position = null;
+    let count = 0;
+    astar.compute(originPosition.x, originPosition.y, (x: number, y: number) => {
+      count++;
+      if (count !== 2) {
+        return;
+      }
+      target = new Position(x, y);
+    });
+    return target;
   }
 
   private _getRawData(startX, startY, width, height): T[][] {

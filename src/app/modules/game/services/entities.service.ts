@@ -3,6 +3,7 @@ import {Entity} from '../../../core/classes/base/entity';
 import {Position} from '../../../core/classes/base/position';
 import {MapEngine} from './map-engine.service';
 import {Player} from '../../../core/classes/entities/player';
+import {GameEngineService} from './game-engine.service';
 
 @Injectable({
               providedIn: 'root'
@@ -31,25 +32,15 @@ export class EntitiesService {
   constructor() {
   }
 
-  getEntityAt(position: Position): Entity | null {
-    let monster: Entity = null;
-    this._entities.forEach((value: Entity, index: number) => {
-      if (value.position.equal(position)) {
-        monster = value;
-      }
-    });
-    return monster;
-  }
-
   getEntityAtIndex(index: number): Entity {
     return this.entities[index];
   }
 
-  updateEntities(_mapEngine: MapEngine) {
+  updateEntities(_gameEngine: GameEngineService) {
     this._entities.forEach((entity: Entity, index: number) => {
       entity.update();
       if (entity.hp <= 0) {
-        entity.onDead(_mapEngine);
+        entity.onDead(_gameEngine);
         this._entities.splice(index, 1);
         if (entity instanceof Player) {
           alert('You die !');

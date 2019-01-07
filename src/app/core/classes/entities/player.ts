@@ -15,6 +15,7 @@ import {GameClass} from '../base/game-class';
 import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 export class Player extends Entity {
   private _level = 1;
@@ -156,8 +157,8 @@ export class Player extends Entity {
     return null;
   }
 
-  onDead(_mapEngine: MapEngine): void {
-    super.onDead(_mapEngine);
+  onDead(_gameEngine: GameEngineService): void {
+    super.onDead(_gameEngine);
   }
 
   onRest() {

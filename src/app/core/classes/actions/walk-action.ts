@@ -18,8 +18,8 @@ export class WalkAction implements Iaction {
 
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
     const destPosition: Position = subject.position.computeDestination(this._direction);
-    const mapEngine: MapEngine = gameEngine.mapEngine;
-    const tile: Tile = <Tile>mapEngine.getTileOrEntityAt(destPosition);
+    const tile: Tile = <Tile>gameEngine.getCurrentMap()
+                                       .getTileOrEntityAt(destPosition);
     if (tile instanceof Tile && tile.isWalkable()) {
       subject.position = destPosition;
       tile.onWalk(subject);
