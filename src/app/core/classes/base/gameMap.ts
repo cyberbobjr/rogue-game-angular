@@ -5,6 +5,10 @@ import {Tile} from './tile';
 import AStar from 'rot-js/lib/path/astar';
 import {Path} from 'rot-js';
 import {DoorTile} from '../tiles/door-tile';
+import {Monster} from '../entities/monster';
+import {Sprite} from './sprite';
+import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
+import {Player} from '../entities/player';
 
 export class GameMap<T extends object> {
   private _data: T[][];
@@ -15,6 +19,12 @@ export class GameMap<T extends object> {
   private _exitPosition: Position;
 
   private _entities: Array<Entity> = [];
+  private _entitiesVisibles: Array<Entity> = [];
+  private _preciseShadowcasting: PreciseShadowcasting = null;
+
+  get entitiesVisibles(): Array<Entity> {
+    return this._entitiesVisibles;
+  }
 
   get entities(): Array<Entity> {
     return this._entities;
@@ -46,14 +56,6 @@ export class GameMap<T extends object> {
 
   set level(value: number) {
     this._level = value;
-  }
-
-  get seed(): number {
-    return this._seed;
-  }
-
-  set seed(value: number) {
-    this._seed = value;
   }
 
   set content(data: T[][]) {
@@ -166,6 +168,53 @@ export class GameMap<T extends object> {
       target = new Position(x, y);
     });
     return target;
+  }
+
+  computeFOV(mainActor: Player, position: Position): GameMap<T> {
+    if (!mainActor) {
+      return;
+    }
+    const lightRadius: number = mainActor.lightRadius;
+    const lightPower: number = mainActor.ligthPower;
+    const finalMap: GameMap<T> = this.clone();
+    this._resetLightMap(finalMap);
+    this._entitiesVisibles.splice(0);
+    this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
+      try {
+        const tile: Iobject = <Iobject>finalMap.getDataAt(x, y);
+        const sprite = tile.sprite;
+        sprite.light = true;
+        sprite.visibility = R / lightPower;
+        if (tile instanceof Monster && sprite.visibility > 0) {
+          this._entitiesVisibles.push(<Entity>finalMap.getDataAt(x, y));
+        }
+      } catch (e) {
+      }
+    });
+    return finalMap;
+  }
+
+  private _resetLightMap(gameMap: GameMap<T>) {
+    for (let j = 0; j < gameMap.height; j++) {
+      for (let i = 0; i < gameMap.width; i++) {
+        const sprite: Sprite = (gameMap.getDataAt(i, j) as Iobject).sprite;
+        if (sprite) {
+          sprite.light = false;
+        }
+      }
+    }
+  }
+
+  public createFovCasting(): GameMap<T> {
+    this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
+      try {
+        const info = <Tile>this.getDataAt(x, y);
+        return !info.opaque;
+      } catch (e) {
+        return false;
+      }
+    }, {topology: 8});
+    return this;
   }
 
   private _getRawData(startX, startY, width, height): T[][] {
