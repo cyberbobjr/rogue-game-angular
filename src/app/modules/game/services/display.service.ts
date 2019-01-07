@@ -5,8 +5,6 @@ import {Sprite} from '../../../core/classes/base/sprite';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
-import {GameEngineService} from './game-engine.service';
-import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {EntitiesService} from './entities.service';
 
 @Injectable({
