@@ -17,8 +17,8 @@ import {MapGenerator} from 'src/app/modules/game/services/map-generator';
 import {StorageService} from 'src/app/modules/game/services/storage.service';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class MapEngine {
   private _width: number;
   private _height: number;
@@ -86,9 +86,10 @@ export class MapEngine {
     }
   }
 
-  loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }) {
+  loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap<Iobject> {
     this._gameMap = this._mapGenerator.loadMap(jsonData);
     this._createFovCasting();
+    return this._gameMap;
   }
 
   computeFOV(position: Position): GameMap<Iobject> {
