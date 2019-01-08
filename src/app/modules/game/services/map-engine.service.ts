@@ -98,13 +98,12 @@ export class MapEngine {
   }
 
   getTilesAround(position: Position): Array<Array<Tile>> {
-    const test: GameMap<Tile> = this.getCurrentMap()
-                                    .extract(position.x - 1, position.y - 1, 3, 3) as GameMap<Tile>;
-    return test.content;
+    return this.getCurrentMap()
+               .getTilesAround(position);
   }
 
   getTileAt(position: Position): Tile {
     return <Tile>this.getCurrentMap()
-                     .getDataAt(position.x, position.y);
+                     .getTileAt(position);
   }
 }

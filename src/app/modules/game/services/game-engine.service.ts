@@ -11,10 +11,7 @@ import {EffectEngine} from './effect-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Router} from '@angular/router';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
-import {GameMap} from 'src/app/core/classes/base/gameMap';
-import {Iobject} from 'src/app/core/interfaces/iobject';
 import {Player} from '../../../core/classes/entities/player';
-import {Position} from '../../../core/classes/base/position';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 

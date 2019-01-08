@@ -1,14 +1,6 @@
 import {Position} from 'src/app/core/classes/base/position';
-import {Entity} from 'src/app/core/classes/base/entity';
-import {Iobject} from '../../interfaces/iobject';
 import {Tile} from './tile';
-import AStar from 'rot-js/lib/path/astar';
-import {Path} from 'rot-js';
-import {DoorTile} from '../tiles/door-tile';
-import {Monster} from '../entities/monster';
-import {Sprite} from './sprite';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
-import {Player} from '../entities/player';
 import {Utility} from '../utility';
 
 export class GameMap<T extends object> {
