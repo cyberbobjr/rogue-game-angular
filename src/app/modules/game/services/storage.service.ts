@@ -90,7 +90,9 @@ export class StorageService {
     if (gameMap.length === 0) {
       throw new Error('No maps in storage');
     }
-    return JSON.parse(gameMap[0]['jsonData']) as { map: JsonMap, _entities: Array<JsonEntity> };
+    const data: { map: JsonMap, _entities: Array<JsonEntity> } = JSON.parse(gameMap[0]['jsonData']);
+    this._entitiesService.loadEntitiesFromJson(data._entities);
+    return data;
   }
 
   async saveMap(gameMap: GameMap<Iobject>) {
@@ -99,7 +101,7 @@ export class StorageService {
                                           return: true,
                                           values: [{
                                             level: gameMap.level,
-                                            jsonData: JSON.stringify({map: gameMap, _entities: gameMap.entities})
+                                            jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
                                           }]
                                         });
   }

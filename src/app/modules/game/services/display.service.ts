@@ -6,6 +6,7 @@ import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
 import {EntitiesService} from './entities.service';
+import {Player} from '../../../core/classes/entities/player';
 
 @Injectable({
               providedIn: 'root'
@@ -51,9 +52,10 @@ export class DisplayService {
   }
 
   draw(gameMap: GameMap<Iobject>) {
-    const finalMap: GameMap<Iobject> = gameMap.computeFOV(this._entitiesService.player, this.cameraPosition);
-    const viewport: GameMap<Iobject> = this.extractViewport(finalMap);
-    this.drawViewPort(viewport);
+    const player: Player = this._entitiesService.player;
+    const fovMap: Array<Array<number>> = gameMap.computeFOVMap(player.lightRadius, player.ligthPower, this.cameraPosition);
+    const viewport: GameMap<Iobject> = this.extractViewport(gameMap);
+    this.drawViewPort(viewport, fovMap);
   }
 
   private _getStartViewPortOfPosition(cameraPosition: Position) {
@@ -62,7 +64,7 @@ export class DisplayService {
     return new Position(x, y);
   }
 
-  private drawViewPort(viewport: GameMap<Iobject>) {
+  private drawViewPort(viewport: GameMap<Iobject>, fovMap: Array<Array<number>>) {
     this.display.clear();
     for (let j = 0; j < viewport.height; j++) {
       for (let i = 0; i < viewport.width; i++) {

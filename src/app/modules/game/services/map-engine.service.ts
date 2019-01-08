@@ -4,6 +4,13 @@ import {Iobject} from '../../../core/interfaces/iobject';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {MapGenerator} from 'src/app/modules/game/services/map-generator';
 import {StorageService} from 'src/app/modules/game/services/storage.service';
+import {Position} from '../../../core/classes/base/position';
+import AStar from 'rot-js/lib/path/astar';
+import {Path} from 'rot-js';
+import {Entity} from '../../../core/classes/base/entity';
+import {Tile} from '../../../core/classes/base/tile';
+import {DoorTile} from '../../../core/classes/tiles/door-tile';
+import {EntitiesService} from './entities.service';
 
 @Injectable({
               providedIn: 'root'
@@ -11,6 +18,7 @@ import {StorageService} from 'src/app/modules/game/services/storage.service';
 export class MapEngine {
   private _width: number;
   private _height: number;
+  private _currentMap: GameMap<Iobject> = null;
 
   maxLevel = 21;
 
@@ -31,7 +39,8 @@ export class MapEngine {
   }
 
   constructor(private _mapGenerator: MapGenerator,
-              private _storageService: StorageService) {
+              private _storageService: StorageService,
+              private _entitiesService: EntitiesService) {
   }
 
   async generateMaps(nbOfMaps: number = 42) {
@@ -41,9 +50,61 @@ export class MapEngine {
     }
   }
 
+  setGameMap(value: GameMap<Iobject>) {
+    this._currentMap = value;
+  }
+
+  getCurrentMap(): GameMap<Iobject> {
+    return this._currentMap;
+  }
+
   loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap<Iobject> {
     return this._mapGenerator
                .loadMap(jsonData)
                .createFovCasting();
+  }
+
+  getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
+    const astar: AStar = new Path.AStar(destPosition.x, destPosition.y, (x: number, y: number) => {
+      const info: Iobject = this.getTileOrEntityAt(new Position(x, y));
+      if (info instanceof Entity) {
+        return true;
+      }
+      if (info instanceof Tile && info.isWalkable()) {
+        return true;
+      }
+      return info instanceof DoorTile && (info as DoorTile).isClosed;
+    });
+
+    let target: Position = null;
+    let count = 0;
+    astar.compute(originPosition.x, originPosition.y, (x: number, y: number) => {
+      count++;
+      if (count !== 2) {
+        return;
+      }
+      target = new Position(x, y);
+    });
+    return target;
+  }
+
+  getTileOrEntityAt(position: Position): Iobject {
+    const monster: Iobject = this._entitiesService.getEntityAt(position);
+    if (monster) {
+      return monster;
+    }
+    return <Iobject>this.getCurrentMap()
+                        .getDataAt(position.x, position.y);
+  }
+
+  getTilesAround(position: Position): Array<Array<Tile>> {
+    const test: GameMap<Tile> = this.getCurrentMap()
+                                    .extract(position.x - 1, position.y - 1, 3, 3) as GameMap<Tile>;
+    return test.content;
+  }
+
+  getTileAt(position: Position): Tile {
+    return <Tile>this.getCurrentMap()
+                     .getDataAt(position.x, position.y);
   }
 }

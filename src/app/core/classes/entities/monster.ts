@@ -66,7 +66,7 @@ export class Monster extends Entity {
   onDead(gameEngine: GameEngineService): void {
     // drop gold
     const goldObject: GameObject = new Gold(this.gp);
-    const tile: Tile = gameEngine.getCurrentMap()
+    const tile: Tile = gameEngine.getMapEngine()
                                  .getTileAt(this.position);
     tile.dropOn(goldObject);
     // drop weapon

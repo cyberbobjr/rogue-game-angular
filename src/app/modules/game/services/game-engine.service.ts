@@ -14,6 +14,7 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {GameMap} from 'src/app/core/classes/base/gameMap';
 import {Iobject} from 'src/app/core/interfaces/iobject';
 import {Player} from '../../../core/classes/entities/player';
+import {Position} from '../../../core/classes/base/position';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -26,7 +27,6 @@ export class GameEngineService {
   private _timeStart: any = null;
   private _handleKeyEvent: (key: KeyboardEvent) => void = null;
   private _modalService: NgxSmartModalService;
-  private _currentMap: GameMap<Iobject> = null;
 
   get handleKeyEvent(): (key: KeyboardEvent) => void {
     return this._handleKeyEvent.bind(this);
@@ -158,11 +158,11 @@ export class GameEngineService {
   }
 
   private _drawMap() {
-    this._displayService.draw(this._currentMap);
+    this._displayService.draw(this._mapEngine.getCurrentMap());
   }
 
   processAction() {
-    const entities: Array<Entity> = this.getCurrentMap().entities;
+    const entities: Array<Entity> = this._entitiesService.getEntities();
     entities.push(this.getPlayer());
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
@@ -191,16 +191,16 @@ export class GameEngineService {
     this._modalService = value;
   }
 
-  setGameMap(value: GameMap<Iobject>) {
-    this._currentMap = value;
-  }
-
-  getCurrentMap(): GameMap<Iobject> {
-    return this._currentMap;
-  }
-
   getPlayer(): Player {
     return this._entitiesService.player;
+  }
+
+  getEntitiesVisibles(): Array<Entity> {
+    return this._entitiesService.getEntitiesVisibles();
+  }
+
+  getMapEngine(): MapEngine {
+    return this._mapEngine;
   }
 
   restoreGameKeyHandler() {
@@ -227,11 +227,12 @@ export class GameEngineService {
           if (!!mapData) {
             this._mapEngine.loadMap(mapData);
             this._entitiesService.player.level = newLevel;
-            this._entitiesService.player.position = this._currentMap.entryPosition;
+            this._entitiesService.player.position = this._mapEngine.getCurrentMap().entryPosition;
           } else {
             // throw error
           }
           this._storageService.saveGameState();
         });
   }
+
 }

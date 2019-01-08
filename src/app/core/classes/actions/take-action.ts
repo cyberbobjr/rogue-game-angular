@@ -12,7 +12,7 @@ export class TakeAction implements Iaction {
   }
 
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
-    const tile: Tile = gameEngine.getCurrentMap()
+    const tile: Tile = gameEngine.getMapEngine()
                                  .getTileAt(subject.position) as Tile;
     tile.onTake(subject);
     EventLog.getInstance().message = 'Take object';

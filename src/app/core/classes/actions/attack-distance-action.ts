@@ -65,7 +65,7 @@ export class AttackDistanceAction implements Iaction {
   }
 
   private _getTargets(): Array<Entity> {
-    return this._gameEngine.getCurrentMap().entitiesVisibles;
+    return this._gameEngine.getEntitiesVisibles();
   }
 
   private _setNextTarget() {

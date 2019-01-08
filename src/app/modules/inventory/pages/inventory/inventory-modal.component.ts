@@ -123,7 +123,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   dropObject() {
     const gameObject: GameObject = this._player.inventory.get(this._selected);
-    const tile: Tile = this._gameEngine.getCurrentMap()
+    const tile: Tile = this._gameEngine.getMapEngine()
                            .getTileAt(this._player.position);
     tile.dropOn(gameObject);
     this._player.inventory.delete(this._selected);

@@ -11,7 +11,6 @@ import {Iobject} from '../../interfaces/iobject';
 import {DoorTile} from '../tiles/door-tile';
 import {Monster} from '../entities/monster';
 import {IdleAction} from './idle-action';
-import {GameMap} from '../base/gameMap';
 
 export class ChaseAction implements Iaction {
   private _info = '';
@@ -40,13 +39,13 @@ export class ChaseAction implements Iaction {
 
   private _getPathToPlayer(actor: Entity): Position {
     const player: Player = this._gameEngine.getPlayer();
-    return this._gameEngine.getCurrentMap()
+    return this._gameEngine.getMapEngine()
                .getDirectionFromPositionToPosition(actor.position, player.position);
   }
 
   private _moveActor(destPosition: Position): ActionResult {
-    const gameMap: GameMap<Iobject> = this._gameEngine.getCurrentMap();
-    const info: Iobject = gameMap.getTileOrEntityAt(destPosition);
+    const info: Iobject = this._gameEngine.getMapEngine()
+                              .getTileOrEntityAt(destPosition);
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
       result.alternative = new AttackMeleeAction(info as Entity);

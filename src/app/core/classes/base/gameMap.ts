@@ -9,6 +9,7 @@ import {Monster} from '../entities/monster';
 import {Sprite} from './sprite';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {Player} from '../entities/player';
+import {Utility} from '../utility';
 
 export class GameMap<T extends object> {
   private _data: T[][];
@@ -18,21 +19,7 @@ export class GameMap<T extends object> {
   private _entryPosition: Position;
   private _exitPosition: Position;
 
-  private _entities: Array<Entity> = [];
-  private _entitiesVisibles: Array<Entity> = [];
   private _preciseShadowcasting: PreciseShadowcasting = null;
-
-  get entitiesVisibles(): Array<Entity> {
-    return this._entitiesVisibles;
-  }
-
-  get entities(): Array<Entity> {
-    return this._entities;
-  }
-
-  set entities(value: Array<Entity>) {
-    this._entities = value;
-  }
 
   get entryPosition(): Position {
     return this._entryPosition;
@@ -120,89 +107,15 @@ export class GameMap<T extends object> {
     return new GameMap<T>(finalWidth, finalHeight, arrayExtracted);
   }
 
-  getTilesAround(position: Position): Array<Array<T>> {
-    const test: GameMap<T> = this.extract(position.x - 1, position.y - 1, 3, 3);
-    return test.content;
-  }
-
-  getTileOrEntityAt(position: Position): Iobject {
-    const monster: Iobject = this.getEntityAt(position);
-    if (monster) {
-      return monster;
-    }
-    return <Iobject>this.getDataAt(position.x, position.y);
-  }
-
-  getEntityAt(position: Position): Entity | null {
-    let monster: Entity = null;
-    this._entities.forEach((value: Entity, index: number) => {
-      if (value.position.equal(position)) {
-        monster = value;
-      }
-    });
-    return monster;
-  }
-
-  getTileAt(position: Position): Tile {
-    return <Tile>this.getDataAt(position.x, position.y);
-  }
-
-  getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
-    const astar: AStar = new Path.AStar(destPosition.x, destPosition.y, (x: number, y: number) => {
-      const info: Iobject = this.getTileOrEntityAt(new Position(x, y));
-      if (info instanceof Entity) {
-        return true;
-      }
-      if (info instanceof Tile && info.isWalkable()) {
-        return true;
-      }
-      return info instanceof DoorTile && (info as DoorTile).isClosed;
-    });
-    let target: Position = null;
-    let count = 0;
-    astar.compute(originPosition.x, originPosition.y, (x: number, y: number) => {
-      count++;
-      if (count !== 2) {
-        return;
-      }
-      target = new Position(x, y);
-    });
-    return target;
-  }
-
-  computeFOV(mainActor: Player, position: Position): GameMap<T> {
-    if (!mainActor) {
-      return;
-    }
-    const lightRadius: number = mainActor.lightRadius;
-    const lightPower: number = mainActor.ligthPower;
-    const finalMap: GameMap<T> = this.clone();
-    this._resetLightMap(finalMap);
-    this._entitiesVisibles.splice(0);
+  computeFOVMap(lightRadius: number, lightPower: number, position: Position): Array<Array<number>> {
+    const fovMap: Array<Array<number>> = Utility.initArrayNumber(this.width, this.height);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        const tile: Iobject = <Iobject>finalMap.getDataAt(x, y);
-        const sprite = tile.sprite;
-        sprite.light = true;
-        sprite.visibility = R / lightPower;
-        if (tile instanceof Monster && sprite.visibility > 0) {
-          this._entitiesVisibles.push(<Entity>finalMap.getDataAt(x, y));
-        }
+        fovMap[y][x] = R / lightPower;
       } catch (e) {
       }
     });
-    return finalMap;
-  }
-
-  private _resetLightMap(gameMap: GameMap<T>) {
-    for (let j = 0; j < gameMap.height; j++) {
-      for (let i = 0; i < gameMap.width; i++) {
-        const sprite: Sprite = (gameMap.getDataAt(i, j) as Iobject).sprite;
-        if (sprite) {
-          sprite.light = false;
-        }
-      }
-    }
+    return fovMap;
   }
 
   public createFovCasting(): GameMap<T> {
@@ -239,5 +152,14 @@ export class GameMap<T extends object> {
       newArray[index] = new Array(width).fill(fill);
     });
     return newArray;
+  }
+
+  getTilesAround(position: Position): Array<Array<Tile>> {
+    const test: GameMap<Tile> = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap<Tile>;
+    return test.content;
+  }
+
+  getTileAt(position: Position): Tile {
+    return <Tile>this.getDataAt(position.x, position.y);
   }
 }

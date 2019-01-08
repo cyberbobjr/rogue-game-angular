@@ -31,9 +31,9 @@ export class Sprite implements ISprite {
   }
 
   get color(): string {
-    return Color(this._color)
-      .darken(this._visibility)
-      .hex();
+    return Color(this._color);
+      /*.darken(this._visibility)
+      .hex();*/
   }
 
   set color(value: string) {

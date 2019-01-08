@@ -22,7 +22,7 @@ export class IdleAction implements Iaction {
     } else {
       const direction: Direction = this._getRandomDirection();
       const destPosition: Position = subject.position.computeDestination(direction);
-      const tile: Tile = <Tile>gameEngine.getCurrentMap()
+      const tile: Tile = <Tile>gameEngine.getMapEngine()
                                          .getTileOrEntityAt(destPosition);
       if (tile instanceof Tile && tile.isWalkable()) {
         subject.position = destPosition;

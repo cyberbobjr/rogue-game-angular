@@ -14,6 +14,7 @@ import {Iobject} from 'src/app/core/interfaces/iobject';
 import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';
+import {EntitiesService} from './entities.service';
 
 @Injectable({
               providedIn: 'root'
@@ -21,7 +22,7 @@ import Digger from 'rot-js/lib/map/digger';
 export class MapGenerator {
   private _rotEngine: Digger;
 
-  constructor() {
+  constructor(private _entitiesService: EntitiesService) {
 
   }
 
@@ -29,7 +30,7 @@ export class MapGenerator {
     const width = 80;
     const height = 80;
     const map: GameMap<Iobject> = this._generateMap(width, height, Math.round(Math.random() * 100), level);
-    map.entities = this._generateMonsters([0]);
+    this._entitiesService.entities = this._generateMonsters([0]);
     return map;
   }
 
@@ -50,7 +51,7 @@ export class MapGenerator {
       monster.setNextAction(new IdleAction(monster));
       monsters.push(monster);
     });
-    map.entities = monsters;
+    this._entitiesService.entities = monsters;
   }
 
   private _loadTiles(map: GameMap<Iobject>, mapJson: JsonMap) {
