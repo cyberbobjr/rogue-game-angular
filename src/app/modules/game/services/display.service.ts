@@ -54,9 +54,10 @@ export class DisplayService {
 
   draw(gameMap: GameMap<Iobject>) {
     const player: Player = this._entitiesService.player;
-    const finalMap: GameMap<Iobject> = gameMap.createFovCasting()
-                                              .computeFOVMap(player.lightRadius, player.lightRadius, this.cameraPosition)
-                                              .putEntitiesOn(this._entitiesService.getEntities());
+    const finalMap: GameMap<Iobject> = gameMap.clone()
+                                              .putEntitiesOn(this._entitiesService.getEntities().concat(this._entitiesService.player))
+                                              .createFovCasting()
+                                              .computeFOVMap(player.lightRadius, player.lightRadius, this.cameraPosition);
     const viewport: GameMap<Iobject> = this.extractViewport(finalMap);
     this.drawViewPort(viewport);
   }
@@ -73,7 +74,6 @@ export class DisplayService {
       for (let j = 0; j < viewport.height; j++) {
         for (let i = 0; i < viewport.width; i++) {
           const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
-          const data : any = viewport.getDataAt(i,j);
           const fovValue: number = viewport.fovMap[j][i];
           if (sprite && fovValue !== 0) {
             this.display.draw(i, j, sprite.character, Color(sprite.color).darken(fovValue).hex(), Color(sprite.bgColor).darken(fovValue).hex());

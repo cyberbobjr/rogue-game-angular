@@ -31,7 +31,7 @@ export class EntitiesService {
   }
 
   getEntities(): Array<Entity> {
-    return this._entities.concat(this.player);
+    return this._entities;
   }
 
   getEntitiesVisibles(): Array<Entity> {
@@ -49,7 +49,7 @@ export class EntitiesService {
 
   getEntityAt(position: Position): Entity | null {
     let monster: Entity = null;
-    this._entities.forEach((value: Entity, index: number) => {
+    this._entities.concat(this.player).forEach((value: Entity, index: number) => {
       if (value.position.equal(position)) {
         monster = value;
       }
@@ -58,16 +58,15 @@ export class EntitiesService {
   }
 
   updateEntities(_gameEngine: GameEngineService) {
-    /*this._entities.forEach((entity: Entity, index: number) => {
-     entity.update();
-     if (entity.hp <= 0) {
-     entity.onDead(_gameEngine);
-     this._entities.splice(index, 1);
-     if (entity instanceof Player) {
-     alert('You die !');
-     this.player = null;
-     }
-     }
-     });*/
+    this._entities.concat(this.player).forEach((entity: Entity, index: number) => {
+      entity.update();
+      if (entity.hp <= 0) {
+        entity.onDead(_gameEngine);
+        this._entities.splice(index, 1);
+        if (entity instanceof Player) {
+          _gameEngine.gameOver();
+        }
+      }
+    });
   }
 }

@@ -148,19 +148,19 @@ export class GameEngineService {
   private _updateGame() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
     this._entitiesService.updateEntities(this);
-    if (this._entitiesService.player === null) {
-      this.endGameLoop();
-      this._router.navigateByUrl('game-over');
-    }
   }
 
   private _drawMap() {
     this._displayService.draw(this._mapEngine.getCurrentMap());
   }
 
+  gameOver() {
+    this.endGameLoop();
+    this._router.navigateByUrl('game/gameover');
+  }
+
   processAction() {
-    const entities: Array<Entity> = this._entitiesService.getEntities();
-    entities.push(this.getPlayer());
+    const entities: Array<Entity> = this._entitiesService.getEntities().concat(this._entitiesService.player);
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
       let actorAction = currentActor.getAction();

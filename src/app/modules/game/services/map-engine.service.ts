@@ -89,9 +89,9 @@ export class MapEngine {
   }
 
   getTileOrEntityAt(position: Position): Iobject {
-    const monster: Iobject = this._entitiesService.getEntityAt(position);
-    if (monster) {
-      return monster;
+    const entity: Iobject = this._entitiesService.getEntityAt(position);
+    if (entity) {
+      return entity;
     }
     return <Iobject>this.getCurrentMap()
                         .getDataAt(position.x, position.y);

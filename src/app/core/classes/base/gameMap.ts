@@ -19,10 +19,6 @@ export class GameMap<T extends object> {
     return this._fovMap;
   }
 
-  set fovMap(value: Array<Array<number>>) {
-    this._fovMap = value;
-  }
-
   get entryPosition(): Position {
     return this._entryPosition;
   }
@@ -64,6 +60,7 @@ export class GameMap<T extends object> {
   }
 
   constructor(private _width?: number, private _height?: number, data?: T[][]) {
+    this._fovMap = Utility.initArrayNumber(this.width, this.height);
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
   }
 
@@ -120,15 +117,17 @@ export class GameMap<T extends object> {
   }
 
   public computeFOVMap(lightRadius: number, lightPower: number, position: Position): GameMap<T> {
-    this._fovMap = Utility.initArrayNumber(this.width, this.height);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
         this._fovMap[y][x] = R / lightPower;
+        if (this.getDataAt(x, y) instanceof Entity) {
+          (this.getDataAt(x, y) as Entity).sprite.light = (visibility === 1);
+        }
       } catch (e) {
       }
     });
     this._fovMap[position.y][position.x] = 0.001;
-    return this.clone();
+    return this;
   }
 
   public createFovCasting(): GameMap<T> {
