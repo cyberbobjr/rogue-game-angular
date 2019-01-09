@@ -45,9 +45,9 @@ export class Sprite implements ISprite {
   }
 
   get bgColor(): string {
-    return Color(this._bgColor)
+    return Color(this._bgColor);/*
       .darken(this._visibility)
-      .hex();
+      .hex();*/
   }
 
   static fromJson(jsonData: JsonSprite): Sprite {

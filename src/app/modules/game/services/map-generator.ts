@@ -17,8 +17,8 @@ import Digger from 'rot-js/lib/map/digger';
 import {EntitiesService} from './entities.service';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class MapGenerator {
   private _rotEngine: Digger;
 
@@ -38,20 +38,10 @@ export class MapGenerator {
     if (jsonData) {
       const map: GameMap<Iobject> = this._generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
       this._loadTiles(map, jsonData.map);
-      this._loadEntities(map, jsonData._entities);
+      this._entitiesService.loadEntitiesFromJson(jsonData._entities);
       return map;
     }
     return null;
-  }
-
-  private _loadEntities(map: GameMap<Iobject>, entities: Array<JsonEntity>): void {
-    const monsters: Array<Entity> = [];
-    entities.forEach((entity: JsonEntity) => {
-      const monster: Entity = EntitiesFactory.createFromJson(entity);
-      monster.setNextAction(new IdleAction(monster));
-      monsters.push(monster);
-    });
-    this._entitiesService.entities = monsters;
   }
 
   private _loadTiles(map: GameMap<Iobject>, mapJson: JsonMap) {
@@ -102,11 +92,11 @@ export class MapGenerator {
     const rooms: Array<Room> = this._getRooms();
     const nbRooms: number = rooms.length;
     EntitiesFactory.getInstance()
-                   .setMaxPop(nbRooms);
+      .setMaxPop(nbRooms);
     for (let nb = 1; nb < nbRooms - 2; nb++) {
       if (excludeRooms.indexOf(nb) !== 0) {
         const entity: Entity = EntitiesFactory.getInstance()
-                                              .generateRandomEntities(this._getRoomCenter(rooms[nb]));
+          .generateRandomEntities(this._getRoomCenter(rooms[nb]));
         entity.setNextAction(new IdleAction(entity));
         monsters.push(entity);
       }
@@ -117,7 +107,7 @@ export class MapGenerator {
   private _createMap(width: number, height: number, seed: number, level: number): GameMap<Iobject> {
     RNG.setSeed(seed);
     const map: GameMap<Iobject> = new GameMap<Iobject>(width, height).setSeed(seed)
-                                                                     .setLevel(level);
+      .setLevel(level);
     this._rotEngine = new Digger(width, height);
     this._rotEngine.create((x: number, y: number, value: number) => {
       const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));

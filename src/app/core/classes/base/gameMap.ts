@@ -2,9 +2,11 @@ import {Position} from 'src/app/core/classes/base/position';
 import {Tile} from './tile';
 import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {Utility} from '../utility';
+import {Entity} from 'src/app/core/classes/base/entity';
 
 export class GameMap<T extends object> {
   private _data: T[][];
+  private _fovMap: Array<Array<number>>;
   private _seed: number;
   private _level: number;
 
@@ -12,6 +14,14 @@ export class GameMap<T extends object> {
   private _exitPosition: Position;
 
   private _preciseShadowcasting: PreciseShadowcasting = null;
+
+  get fovMap(): Array<Array<number>> {
+    return this._fovMap;
+  }
+
+  set fovMap(value: Array<Array<number>>) {
+    this._fovMap = value;
+  }
 
   get entryPosition(): Position {
     return this._entryPosition;
@@ -96,18 +106,29 @@ export class GameMap<T extends object> {
 
     const arrayExtracted: T[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
 
-    return new GameMap<T>(finalWidth, finalHeight, arrayExtracted);
+    const gameMap: GameMap<T> = new GameMap<T>(finalWidth, finalHeight, arrayExtracted);
+    gameMap._fovMap = this._getRawFovData(startPosX, startPosY, finalWidth, finalHeight);
+    gameMap._preciseShadowcasting = this._preciseShadowcasting;
+    return gameMap;
   }
 
-  computeFOVMap(lightRadius: number, lightPower: number, position: Position): Array<Array<number>> {
-    const fovMap: Array<Array<number>> = Utility.initArrayNumber(this.width, this.height);
+  public putEntitiesOn(entities: Array<Entity>): GameMap<T> {
+    entities.forEach((entity: Entity) => {
+      this.setDataAt(entity.position.x, entity.position.y, entity as T);
+    });
+    return this;
+  }
+
+  public computeFOVMap(lightRadius: number, lightPower: number, position: Position): GameMap<T> {
+    this._fovMap = Utility.initArrayNumber(this.width, this.height);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        fovMap[y][x] = R / lightPower;
+        this._fovMap[y][x] = R / lightPower;
       } catch (e) {
       }
     });
-    return fovMap;
+    this._fovMap[position.y][position.x] = 0.001;
+    return this.clone();
   }
 
   public createFovCasting(): GameMap<T> {
@@ -120,6 +141,21 @@ export class GameMap<T extends object> {
       }
     }, {topology: 8});
     return this;
+  }
+
+  private _getRawFovData(startX, startY, width, height) {
+    const arrayExtracted: number[][] = Utility.initArrayNumber(width, height);
+    let y = 0;
+    let x = 0;
+    for (let j = startY; j < startY + height; j++) {
+      for (let i = startX; i < startX + width; i++) {
+        arrayExtracted[y][x] = this._fovMap[j][i];
+        x++;
+      }
+      y++;
+      x = 0;
+    }
+    return arrayExtracted;
   }
 
   private _getRawData(startX, startY, width, height): T[][] {

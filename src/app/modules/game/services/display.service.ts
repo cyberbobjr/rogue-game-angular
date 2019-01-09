@@ -7,10 +7,11 @@ import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
 import {EntitiesService} from './entities.service';
 import {Player} from '../../../core/classes/entities/player';
+import * as Color from 'color';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class DisplayService {
   private _fontSize = 16;
   private _display: Display = new Display();
@@ -53,9 +54,11 @@ export class DisplayService {
 
   draw(gameMap: GameMap<Iobject>) {
     const player: Player = this._entitiesService.player;
-    const fovMap: Array<Array<number>> = gameMap.computeFOVMap(player.lightRadius, player.ligthPower, this.cameraPosition);
-    const viewport: GameMap<Iobject> = this.extractViewport(gameMap);
-    this.drawViewPort(viewport, fovMap);
+    const finalMap: GameMap<Iobject> = gameMap.createFovCasting()
+                                              .computeFOVMap(player.lightRadius, player.lightRadius, this.cameraPosition)
+                                              .putEntitiesOn(this._entitiesService.getEntities());
+    const viewport: GameMap<Iobject> = this.extractViewport(finalMap);
+    this.drawViewPort(viewport);
   }
 
   private _getStartViewPortOfPosition(cameraPosition: Position) {
@@ -64,19 +67,26 @@ export class DisplayService {
     return new Position(x, y);
   }
 
-  private drawViewPort(viewport: GameMap<Iobject>, fovMap: Array<Array<number>>) {
-    this.display.clear();
-    for (let j = 0; j < viewport.height; j++) {
-      for (let i = 0; i < viewport.width; i++) {
-        const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
-        if (sprite && sprite.light) {
-          this.display.draw(i, j, sprite.character, sprite.color, sprite.bgColor);
+  private drawViewPort(viewport: GameMap<Iobject>) {
+    try {
+      this.display.clear();
+      for (let j = 0; j < viewport.height; j++) {
+        for (let i = 0; i < viewport.width; i++) {
+          const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
+          const data : any = viewport.getDataAt(i,j);
+          const fovValue: number = viewport.fovMap[j][i];
+          if (sprite && fovValue !== 0) {
+            this.display.draw(i, j, sprite.character, Color(sprite.color).darken(fovValue).hex(), Color(sprite.bgColor).darken(fovValue).hex());
+          }
         }
       }
+    } catch (e) {
+      console.log(e);
+      debugger;
     }
   }
 
-  private extractViewport(currentMap: GameMap<Iobject>): GameMap<Iobject> {
-    return currentMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+  private extractViewport(gameMap: GameMap<Iobject>): GameMap<Iobject> {
+    return gameMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
   }
 }

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Entity} from '../../../core/classes/base/entity';
 import {Position} from '../../../core/classes/base/position';
-import {MapEngine} from './map-engine.service';
 import {Player} from '../../../core/classes/entities/player';
 import {GameEngineService} from './game-engine.service';
 import {JsonEntity} from '../../../core/interfaces/json-interfaces';
@@ -9,8 +8,8 @@ import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class EntitiesService {
   private _player: Player = null;
   private _entities: Array<Entity> = [];
@@ -32,7 +31,7 @@ export class EntitiesService {
   }
 
   getEntities(): Array<Entity> {
-    return this._entities;
+    return this._entities.concat(this.player);
   }
 
   getEntitiesVisibles(): Array<Entity> {
