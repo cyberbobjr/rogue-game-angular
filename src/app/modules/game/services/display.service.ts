@@ -55,11 +55,11 @@ export class DisplayService {
   draw(gameMap: GameMap<Iobject>) {
     const player: Player = this._entitiesService.player;
     const finalMap: GameMap<Iobject> = gameMap.clone()
-                                              .putEntitiesOn(this._entitiesService.getEntities().concat(this._entitiesService.player))
+                                              .putEntitiesOnMap(this._entitiesService.getAllEntities())
                                               .createFovCasting()
-                                              .computeFOVMap(player.lightRadius, player.lightRadius, this.cameraPosition);
-    const viewport: GameMap<Iobject> = this.extractViewport(finalMap);
-    this.drawViewPort(viewport);
+                                              .computeFOVMap(player.lightRadius, player.lightPower, this.cameraPosition)
+                                              .extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    this._drawViewPort(finalMap);
   }
 
   private _getStartViewPortOfPosition(cameraPosition: Position) {
@@ -68,7 +68,7 @@ export class DisplayService {
     return new Position(x, y);
   }
 
-  private drawViewPort(viewport: GameMap<Iobject>) {
+  private _drawViewPort(viewport: GameMap<Iobject>) {
     try {
       this.display.clear();
       for (let j = 0; j < viewport.height; j++) {
@@ -76,7 +76,7 @@ export class DisplayService {
           const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
           const fovValue: number = viewport.fovMap[j][i];
           if (sprite && fovValue !== 0) {
-            this.display.draw(i, j, sprite.character, Color(sprite.color).darken(fovValue).hex(), Color(sprite.bgColor).darken(fovValue).hex());
+            this.display.draw(i, j, sprite.character, this._darkenColor(sprite.color, fovValue), this._darkenColor(sprite.bgColor, fovValue));
           }
         }
       }
@@ -86,7 +86,7 @@ export class DisplayService {
     }
   }
 
-  private extractViewport(gameMap: GameMap<Iobject>): GameMap<Iobject> {
-    return gameMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+  private _darkenColor(color: string, darkenValue: number): string {
+    return Color(color).darken(darkenValue).hex();
   }
 }

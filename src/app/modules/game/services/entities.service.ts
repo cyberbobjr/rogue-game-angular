@@ -38,6 +38,10 @@ export class EntitiesService {
     return this._entitiesVisibles;
   }
 
+  getAllEntities(): Array<Entity> {
+    return this.getEntities().concat(this.player);
+  }
+
   loadEntitiesFromJson(jsonEntities: Array<JsonEntity>) {
     this._entities.slice(0);
     jsonEntities.forEach((entity: JsonEntity) => {

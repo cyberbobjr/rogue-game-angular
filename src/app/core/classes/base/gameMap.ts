@@ -109,7 +109,7 @@ export class GameMap<T extends object> {
     return gameMap;
   }
 
-  public putEntitiesOn(entities: Array<Entity>): GameMap<T> {
+  public putEntitiesOnMap(entities: Array<Entity>): GameMap<T> {
     entities.forEach((entity: Entity) => {
       this.setDataAt(entity.position.x, entity.position.y, entity as T);
     });

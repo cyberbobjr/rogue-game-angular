@@ -42,7 +42,7 @@ export abstract class Entity implements Iobject, IEntity {
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   lightRadius = 20;
-  ligthPower = 3; // max is lighter
+  lightPower = 3; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
 

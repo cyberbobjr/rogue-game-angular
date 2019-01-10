@@ -53,6 +53,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     this._modalService.getModal('inventoryModal')
         .onOpen
         .subscribe(() => {
+          this._player = this._entitiesService.player;
           this._handleKeyBackup = this._gameEngine.handleKeyEvent;
           this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
         });
