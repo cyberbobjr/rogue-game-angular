@@ -5,7 +5,6 @@ import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectFactory} from '../../factories/game-object-factory';
@@ -15,6 +14,7 @@ import {GameClass} from '../base/game-class';
 import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 export class Player extends Entity {
   private _level = 1;
@@ -156,8 +156,8 @@ export class Player extends Entity {
     return null;
   }
 
-  onDead(_mapEngine: MapEngine): void {
-    super.onDead(_mapEngine);
+  onDead(_gameEngine: GameEngineService): void {
+    super.onDead(_gameEngine);
   }
 
   onRest() {
@@ -208,9 +208,10 @@ export class Player extends Entity {
     let ac = 0;
     let dexterity = false;
     let bonus = 0;
+    const dexterityModifier: number = AttributesFactory.getModifier(this.attributes.get('dexterity'));
     const armorEquipped: Array<Armor> = this._getArmorEquipped();
     if (armorEquipped.length === 0) {
-      return 10;
+      return 10 + dexterityModifier;
     }
     armorEquipped.forEach((armor: Armor) => {
       if (armor.properties.indexOf('dexterity') > -1) {
@@ -223,7 +224,7 @@ export class Player extends Entity {
       }
     });
     if (ac === 0) {
-      ac = AttributesFactory.getModifier(this.attributes.get('dexterity'));
+      ac = 10 + dexterityModifier;
     }
     return ac + bonus;
   }

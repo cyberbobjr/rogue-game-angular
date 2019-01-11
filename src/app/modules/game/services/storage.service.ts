@@ -1,15 +1,16 @@
 import {Injectable} from '@angular/core';
 import {Player} from '../../../core/classes/entities/player';
 import {EntitiesService} from './entities.service';
-import {MapEngine} from './map-engine.service';
 import {Entity} from '../../../core/classes/base/entity';
 import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {IdbService} from './idb.service';
 import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
+import {GameMap} from 'src/app/core/classes/base/gameMap';
+import {Iobject} from 'src/app/core/interfaces/iobject';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class StorageService {
   dbname = 'TsRogue';
 
@@ -17,19 +18,18 @@ export class StorageService {
     return IdbService.idbCon;
   }
 
-  constructor(private _entitiesService: EntitiesService,
-              private _mapEngine: MapEngine) {
+  constructor(private _entitiesService: EntitiesService) {
     console.log('storage created');
-    this.connection.setLogStatus(true);
-    this.initJsStore().then(() => {
-      console.log('DB init');
-    });
+    this.connection.setLogStatus(false);
+    this.initJsStore()
+        .then(() => {
+          console.log('DB init');
+        });
   }
 
   async initJsStore() {
     try {
       const isExist: boolean = await this.connection.isDbExist(this.dbname);
-      console.log(isExist);
       if (isExist) {
         console.log('openDB');
         this.connection.openDb(this.dbname);
@@ -85,39 +85,59 @@ export class StorageService {
     return Player.fromJSON(playerLoaded);
   }
 
-  async loadMap(level = 1) {
-    try {
-      const map: any = await this.connection.select({from: 'Map', where: {level: level}});
-      console.log(map);
-      return JSON.parse(map[0]['jsonData']) as { map: JsonMap, _entities: Array<JsonEntity> };
-      debugger;
-      return JSON.parse(window.localStorage.getItem('map_' + level)) as { map: JsonMap, _entities: Array<JsonEntity> };
-    } catch (e) {
-      console.log(e);
-      return null;
+  async loadMap(level: number) {
+    const gameMap: Array<any> = await this.connection.select({from: 'Map', limit: 1, where: {level: level}});
+    if (gameMap.length === 0) {
+      throw new Error('No maps in storage');
+    }
+    return JSON.parse(gameMap[0]['jsonData']);
+  }
+
+  async saveMap(gameMap: GameMap<Iobject>) {
+    const count: number = await this.connection.count({from: 'Map', where: {level: gameMap.level}});
+    if (count > 0) {
+      return await this.connection.update({
+                                            in: 'Map',
+                                            where: {level: gameMap.level},
+                                            set: [{
+                                              jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
+                                            }]
+                                          });
+    } else {
+      return await this.connection.insert({
+                                            into: 'Map',
+                                            return: true,
+                                            values: [{
+                                              level: gameMap.level,
+                                              jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
+                                            }]
+                                          });
     }
   }
 
-  saveGameState() {
+  clearAllMaps(): Promise<null> {
+    return this.connection.clear('Map');
+  }
+
+  saveGameState(gameMap: GameMap<Iobject>) {
     this.savePlayer(this._entitiesService.player);
-    this._saveMap();
+    this.saveMap(gameMap);
   }
 
   async savePlayer(player: Entity) {
     await this.connection.set('Player', JSON.stringify(player));
-    window.localStorage.setItem('player', JSON.stringify(player));
   }
 
-  private async _saveMap() {
-    const level: number = this._mapEngine.map.level;
-    let entities: Array<Entity> = [];
-    entities = Object.assign(entities, this._entitiesService.entities);
-    entities.shift();
-    await this.connection.insert({
-      into: 'Map',
-      return: true,
-      values: [{level: level, jsonData: JSON.stringify({map: this._mapEngine.map, _entities: entities})}]
-    });
-    window.localStorage.setItem('map_' + level, JSON.stringify({map: this._mapEngine.map, _entities: entities}));
-  }
+  /*private async _saveMap() {
+   const level: number = this._mapEngine.map.level;
+   let entities: Array<Entity> = [];
+   entities = Object.assign(entities, this._entitiesService.entities);
+   entities.shift();
+   await this.connection.insert({
+   into: 'Map',
+   return: true,
+   values: [{level: level, jsonData: JSON.stringify({map: this._mapEngine.map, _entities: entities})}]
+   });
+   window.localStorage.setItem('map_' + level, JSON.stringify({map: this._mapEngine.map, _entities: entities}));
+   }*/
 }

@@ -5,5 +5,6 @@ export enum SpriteType {
   CLOSEDOOR,
   FLOOR,
   HITENTITY,
-  GOLD
+  GOLD,
+  FOOD
 }

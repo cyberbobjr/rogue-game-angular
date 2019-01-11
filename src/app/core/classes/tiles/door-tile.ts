@@ -11,22 +11,13 @@ export class DoorTile extends Tile {
   protected _type = TileType.DOOR;
   protected _name = 'DoorTile';
 
-  static fromJSON(json: any, position?: Position): DoorTile {
+  static fromJSON(json: any): DoorTile {
     const {_isClosed} = json;
-    return new this(position, _isClosed);
+    return new this(new Position(json.position._x, json.position._y), _isClosed);
   }
 
   get isClosed(): boolean {
     return this._isClosed;
-  }
-
-  toJSON(): any {
-    return {
-      ...super.toJSON(),
-      ...{
-        _isClosed: this._isClosed
-      }
-    };
   }
 
   constructor(position?: Position, private _isClosed = true) {
@@ -36,6 +27,15 @@ export class DoorTile extends Tile {
     if (position) {
       this.position = position;
     }
+  }
+
+  toJSON(): any {
+    return {
+      ...super.toJSON(),
+      ...{
+        _isClosed: this._isClosed
+      }
+    };
   }
 
   isWalkable(): boolean {
@@ -52,6 +52,11 @@ export class DoorTile extends Tile {
       this.openDoor();
     }
     return null;
+  }
+
+  getInfo(): string {
+    const info = 'door';
+    return info + super.getInfo();
   }
 
   openDoor() {
@@ -79,10 +84,4 @@ export class DoorTile extends Tile {
   private _setSprite() {
     this.sprite = SpritesFactory.createSprite(this._isClosed ? SpriteType.CLOSEDOOR : SpriteType.OPENDOOR);
   }
-
-  getInfo(): string {
-    const info = 'door';
-    return info + super.getInfo();
-  }
-
 }

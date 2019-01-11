@@ -1,5 +1,6 @@
 import * as Color from 'color';
 import {JsonSprite} from '../../interfaces/json-interfaces';
+import {ISprite} from 'src/app/core/interfaces/i-sprite';
 
 export class Sprite implements ISprite {
   protected _visibility = 0;
@@ -30,9 +31,9 @@ export class Sprite implements ISprite {
   }
 
   get color(): string {
-    return Color(this._color)
-      .darken(this._visibility)
-      .hex();
+    return Color(this._color);
+      /*.darken(this._visibility)
+      .hex();*/
   }
 
   set color(value: string) {
@@ -44,9 +45,9 @@ export class Sprite implements ISprite {
   }
 
   get bgColor(): string {
-    return Color(this._bgColor)
+    return Color(this._bgColor);/*
       .darken(this._visibility)
-      .hex();
+      .hex();*/
   }
 
   static fromJson(jsonData: JsonSprite): Sprite {

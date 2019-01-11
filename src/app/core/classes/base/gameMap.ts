@@ -1,7 +1,39 @@
+import {Position} from 'src/app/core/classes/base/position';
+import {Tile} from './tile';
+import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
+import {Utility} from '../utility';
+import {Entity} from 'src/app/core/classes/base/entity';
+
 export class GameMap<T extends object> {
   private _data: T[][];
+  private _fovMap: Array<Array<number>>;
   private _seed: number;
   private _level: number;
+
+  private _entryPosition: Position;
+  private _exitPosition: Position;
+
+  private _preciseShadowcasting: PreciseShadowcasting = null;
+
+  get fovMap(): Array<Array<number>> {
+    return this._fovMap;
+  }
+
+  get entryPosition(): Position {
+    return this._entryPosition;
+  }
+
+  set entryPosition(value: Position) {
+    this._entryPosition = value;
+  }
+
+  get exitPosition(): Position {
+    return this._exitPosition;
+  }
+
+  set exitPosition(value: Position) {
+    this._exitPosition = value;
+  }
 
   get level(): number {
     return this._level;
@@ -9,14 +41,6 @@ export class GameMap<T extends object> {
 
   set level(value: number) {
     this._level = value;
-  }
-
-  get seed(): number {
-    return this._seed;
-  }
-
-  set seed(value: number) {
-    this._seed = value;
   }
 
   set content(data: T[][]) {
@@ -36,6 +60,7 @@ export class GameMap<T extends object> {
   }
 
   constructor(private _width?: number, private _height?: number, data?: T[][]) {
+    this._fovMap = Utility.initArrayNumber(this.width, this.height);
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
   }
 
@@ -51,6 +76,10 @@ export class GameMap<T extends object> {
 
   getDataAt(x: number, y: number): T {
     return <T>this._data[y][x];
+  }
+
+  setDataAt(x: number, y: number, data: T) {
+    this._data[y][x] = data;
   }
 
   clone(): GameMap<T> {
@@ -74,7 +103,58 @@ export class GameMap<T extends object> {
 
     const arrayExtracted: T[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
 
-    return new GameMap<T>(finalWidth, finalHeight, arrayExtracted);
+    const gameMap: GameMap<T> = new GameMap<T>(finalWidth, finalHeight, arrayExtracted);
+    gameMap._fovMap = this._getRawFovData(startPosX, startPosY, finalWidth, finalHeight);
+    gameMap._preciseShadowcasting = this._preciseShadowcasting;
+    return gameMap;
+  }
+
+  public putEntitiesOnMap(entities: Array<Entity>): GameMap<T> {
+    entities.forEach((entity: Entity) => {
+      this.setDataAt(entity.position.x, entity.position.y, entity as T);
+    });
+    return this;
+  }
+
+  public computeFOVMap(lightRadius: number, lightPower: number, position: Position): GameMap<T> {
+    this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
+      try {
+        this._fovMap[y][x] = R / lightPower;
+        if (this.getDataAt(x, y) instanceof Entity) {
+          (this.getDataAt(x, y) as Entity).sprite.light = (visibility === 1);
+        }
+      } catch (e) {
+      }
+    });
+    this._fovMap[position.y][position.x] = 0.001;
+    return this;
+  }
+
+  public createFovCasting(): GameMap<T> {
+    this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
+      try {
+        const info = <Tile>this.getDataAt(x, y);
+        return !info.opaque;
+      } catch (e) {
+        return false;
+      }
+    }, {topology: 8});
+    return this;
+  }
+
+  private _getRawFovData(startX, startY, width, height) {
+    const arrayExtracted: number[][] = Utility.initArrayNumber(width, height);
+    let y = 0;
+    let x = 0;
+    for (let j = startY; j < startY + height; j++) {
+      for (let i = startX; i < startX + width; i++) {
+        arrayExtracted[y][x] = this._fovMap[j][i];
+        x++;
+      }
+      y++;
+      x = 0;
+    }
+    return arrayExtracted;
   }
 
   private _getRawData(startX, startY, width, height): T[][] {
@@ -99,5 +179,14 @@ export class GameMap<T extends object> {
       newArray[index] = new Array(width).fill(fill);
     });
     return newArray;
+  }
+
+  getTilesAround(position: Position): Array<Array<Tile>> {
+    const test: GameMap<Tile> = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap<Tile>;
+    return test.content;
+  }
+
+  getTileAt(position: Position): Tile {
+    return <Tile>this.getDataAt(position.x, position.y);
   }
 }

@@ -3,11 +3,11 @@ import * as armors from '../rules/object/armors.json';
 import {Weapon} from '../classes/gameObjects/weapon';
 import {GameObject} from '../classes/gameObjects/game-object';
 import {Gold} from '../classes/gameObjects/gold';
-import {SlotType} from '../enums/equiped-type.enum';
 import {Armor} from '../classes/gameObjects/armor';
 import {Potion} from '../classes/gameObjects/potion';
 import {GameObjectType} from '../enums/game-object-type.enum';
 import {Torch} from '../classes/gameObjects/torch';
+import {Food} from '../classes/gameObjects/food';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -24,16 +24,6 @@ export class GameObjectFactory {
     }
   }
 
-  static canBeEquipped(where: SlotType, item: GameObject): boolean {
-    if (item instanceof Weapon && (where === SlotType.LEFTHAND || where === SlotType.RIGHTHAND)) {
-      return true;
-    }
-    if (item instanceof Gold) {
-      return false;
-    }
-    return false;
-  }
-
   static getInstance() {
     if (!GameObjectFactory.instance) {
       GameObjectFactory.instance = new GameObjectFactory();
@@ -47,6 +37,8 @@ export class GameObjectFactory {
         return new Torch();
       case GameObjectType.POTION:
         return new Potion();
+      case GameObjectType.FOOD:
+        return new Food();
       case GameObjectType.ARMOR:
         return GameObjectFactory.getInstance()
                                 .getArmorById(id);
@@ -69,7 +61,7 @@ export class GameObjectFactory {
       case 'POTION' :
         return new Potion();
       case 'FOOD' :
-        return null;
+        return new Food();
       case 'TORCH' :
         return new Torch();
       default:

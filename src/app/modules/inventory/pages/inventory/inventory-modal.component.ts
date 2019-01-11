@@ -10,10 +10,10 @@ import {Potion} from '../../../../core/classes/gameObjects/potion';
 import {Tile} from '../../../../core/classes/base/tile';
 
 @Component({
-  selector: 'app-inventory-modal',
-  templateUrl: './inventory-modal.component.html',
-  styleUrls: ['./inventory-modal.component.css']
-})
+             selector: 'app-inventory-modal',
+             templateUrl: './inventory-modal.component.html',
+             styleUrls: ['./inventory-modal.component.css']
+           })
 export class InventoryModalComponent implements OnInit, OnDestroy {
   private _handleKeyBackup: any;
   private _listener: any = null;
@@ -33,12 +33,13 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
       this._player = this._entitiesService.player;
       this.initModalHandler();
     } else {
-      this._storageService.loadPlayer().then((player: Player) => {
-        this._player = player;
-        this._listener = this._renderer.listen(document, 'keydown', (keyEvent) => {
-          this.keyboardHandler(keyEvent);
-        });
-      });
+      this._storageService.loadPlayer()
+          .then((player: Player) => {
+            this._player = player;
+            this._listener = this._renderer.listen(document, 'keydown', (keyEvent) => {
+              this.keyboardHandler(keyEvent);
+            });
+          });
     }
   }
 
@@ -50,16 +51,17 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   initModalHandler() {
     this._modalService.getModal('inventoryModal')
-      .onOpen
-      .subscribe(() => {
-        this._handleKeyBackup = this._gameEngine.handleKeyEvent;
-        this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
-      });
+        .onOpen
+        .subscribe(() => {
+          this._player = this._entitiesService.player;
+          this._handleKeyBackup = this._gameEngine.handleKeyEvent;
+          this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
+        });
     this._modalService.getModal('inventoryModal')
-      .onAnyCloseEvent
-      .subscribe(() => {
-        this._gameEngine.restoreGameKeyHandler();
-      });
+        .onAnyCloseEvent
+        .subscribe(() => {
+          this._gameEngine.restoreGameKeyHandler();
+        });
   }
 
   keyboardHandler(key: KeyboardEvent) {
@@ -112,7 +114,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   isSelectedUsable(): boolean {
     const object: GameObject = this._player.inventory.get(this._selected);
-    return (object instanceof Potion);
+    return object.canUse();
   }
 
   isSelectedUnequippable(): boolean {
@@ -122,7 +124,8 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   dropObject() {
     const gameObject: GameObject = this._player.inventory.get(this._selected);
-    const tile: Tile = this._gameEngine.mapEngine.getTileAt(this._player.position);
+    const tile: Tile = this._gameEngine.getMapEngine()
+                           .getTileAt(this._player.position);
     tile.dropOn(gameObject);
     this._player.inventory.delete(this._selected);
   }

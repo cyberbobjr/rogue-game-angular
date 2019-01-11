@@ -8,11 +8,11 @@ import {EntityType} from '../../enums/entity-type.enum';
 import {EventLog} from '../event-log';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 @Injectable({
               providedIn: 'root'
@@ -42,7 +42,7 @@ export abstract class Entity implements Iobject, IEntity {
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   lightRadius = 20;
-  ligthPower = 3; // max is lighter
+  lightPower = 3; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
 
@@ -269,7 +269,7 @@ export abstract class Entity implements Iobject, IEntity {
     }
   }
 
-  onDead(_mapEngine: MapEngine): void {
+  onDead(_gameEngine: GameEngineService): void {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 

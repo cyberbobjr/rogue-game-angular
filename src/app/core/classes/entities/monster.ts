@@ -1,7 +1,6 @@
 import {Entity} from '../base/entity';
 import {Sprite} from '../base/sprite';
 import {Position} from '../base/position';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
 import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
@@ -13,6 +12,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {ChaseAction} from '../actions/chase-action';
 import {IdleAction} from '../actions/idle-action';
 import {GameObjectType} from '../../enums/game-object-type.enum';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Monster {
@@ -63,10 +63,11 @@ export class Monster extends Entity {
   }
 
   // region events
-  onDead(mapEngine: MapEngine): void {
+  onDead(gameEngine: GameEngineService): void {
     // drop gold
     const goldObject: GameObject = new Gold(this.gp);
-    const tile: Tile = mapEngine.getTileAt(this.position);
+    const tile: Tile = gameEngine.getMapEngine()
+                                 .getTileAt(this.position);
     tile.dropOn(goldObject);
     // drop weapon
     this._inventory.forEach((weapon: Weapon) => {

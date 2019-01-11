@@ -11,13 +11,17 @@ import {EffectEngine} from './effect-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Router} from '@angular/router';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
+import {Player} from '../../../core/classes/entities/player';
+import {GameMap} from '../../../core/classes/base/gameMap';
+import {Iobject} from '../../../core/interfaces/iobject';
+import {EventLog} from '../../../core/classes/event-log';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class GameEngineService {
   private _gameLoop: any = null;
   private _timeStart: any = null;
@@ -63,7 +67,7 @@ export class GameEngineService {
     if (timestamp - this._timeStart > 50) {
       this._updateGame();
       EffectEngine.getInstance()
-        .tick(timestamp);
+                  .tick(timestamp);
       this._drawMap();
       this._timeStart = performance.now();
     }
@@ -77,7 +81,6 @@ export class GameEngineService {
   }
 
   handleActionKeyEvent(key: KeyboardEvent): void {
-    console.log(key.key);
     const player = this._entitiesService.player as Entity;
     switch (key.key) {
       case 'ArrowUp':
@@ -146,20 +149,23 @@ export class GameEngineService {
 
   private _updateGame() {
     this._displayService.cameraPosition = this._entitiesService.player.position;
-    this._entitiesService.updateEntities(this._mapEngine);
-    if (this._entitiesService.player === null) {
-      this.endGameLoop();
-      this._router.navigateByUrl('game-over');
-    }
+    this._entitiesService.updateEntities(this);
   }
 
   private _drawMap() {
-    this._displayService.draw();
+    this._displayService.draw(this._mapEngine.getCurrentMap());
+  }
+
+  gameOver() {
+    this.endGameLoop();
+    this._router.navigateByUrl('game/gameover');
   }
 
   processAction() {
-    for (let currentActorIndex = 0; currentActorIndex < this._entitiesService.entities.length; currentActorIndex++) {
-      const currentActor: Entity = this._entitiesService.getEntityAtIndex(currentActorIndex);
+    const entities: Array<Entity> = this._entitiesService.getEntities()
+                                        .concat(this._entitiesService.player);
+    for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
+      const currentActor: Entity = entities[currentActorIndex];
       let actorAction = currentActor.getAction();
       if (actorAction) {
         while (true) {
@@ -185,34 +191,61 @@ export class GameEngineService {
     this._modalService = value;
   }
 
+  getPlayer(): Player {
+    return this._entitiesService.player;
+  }
+
+  getEntitiesVisibles(): Array<Entity> {
+    return this._entitiesService.getEntitiesVisibles();
+  }
+
+  getMapEngine(): MapEngine {
+    return this._mapEngine;
+  }
+
   restoreGameKeyHandler() {
     this._handleKeyEvent = this.handleActionKeyEvent;
   }
 
   gotoUpStair() {
-    this._entitiesService.player.level = Math.max(1, this._entitiesService.player.level - 1);
-    this.changeMapLevel(this._entitiesService.player.level);
+    if (this._entitiesService.player.level === this._mapEngine.maxLevel) {
+      EventLog.getInstance().message = `You Win !!!`;
+    } else {
+      const newLevel: number = this._entitiesService.player.level + 1;
+      this._entitiesService.player.level = newLevel;
+      this.changeMapLevel(newLevel);
+      EventLog.getInstance().message = `You up the stair to level ${newLevel}`;
+    }
   }
 
   gotoDownStair() {
-    this._entitiesService.player.level = Math.min(this._mapEngine.maxLevel, this._entitiesService.player.level + 1);
-    this.changeMapLevel(this._entitiesService.player.level);
+    if (this._entitiesService.player.level === 1) {
+      EventLog.getInstance().message = `You  can't go down !`;
+    } else {
+      const newLevel: number = this._entitiesService.player.level - 1;
+      this._entitiesService.player.level = newLevel;
+      this.changeMapLevel(newLevel);
+      EventLog.getInstance().message = `You down the stair to level ${newLevel}`;
+    }
   }
 
   changeMapLevel(newLevel: number) {
     // save current level
-    this._storageService.saveGameState();
+    this._storageService.saveGameState(this._mapEngine.getCurrentMap());
     // get level if exist
-    this._storageService.loadMap(this._entitiesService.player.level).then((data) => {
-      const mapData: { map: JsonMap, _entities: Array<JsonEntity> } = data;
-      if (!!mapData) {
-        this._mapEngine.loadMap(mapData);
-        this._entitiesService.player.position = this._mapEngine.getStartPosition();
-      } else {
-        // create level if not exist
-        this._mapEngine.generateNewMap(newLevel, this._entitiesService.player);
-      }
-      this._storageService.saveGameState();
-    });
+    this._storageService
+        .loadMap(newLevel)
+        .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
+          const gameMap: GameMap<Iobject> = this._mapEngine.loadRawMap(data);
+          this._entitiesService.player.level = newLevel;
+          this._entitiesService.player.position = gameMap.entryPosition;
+          this._storageService.saveGameState(this._mapEngine.getCurrentMap());
+          this.getMapEngine()
+              .setGameMap(gameMap);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }
+
 }

@@ -8,7 +8,7 @@ import {GameObject} from '../gameObjects/game-object';
 import {EventLog} from '../event-log';
 import {Player} from '../entities/player';
 
-export class Tile implements Iobject {
+export abstract class Tile implements Iobject {
   protected _type: TileType;
   protected _name: string;
   protected _sprite: Sprite;
@@ -55,10 +55,6 @@ export class Tile implements Iobject {
     this._sprite = value;
   }
 
-  static fromJSON(json: any, position?: Position): Tile {
-    return new this(position);
-  }
-
   toJSON() {
     return {
       name: this._name,
@@ -73,16 +69,14 @@ export class Tile implements Iobject {
   constructor(protected _position?: Position) {
   }
 
+  abstract isWalkable(): boolean ;
+
   getInfo(): string {
     let info = '';
     this._contents.forEach((gameObject: GameObject) => {
       info += `, ${gameObject.getInfo()}`;
     });
     return info;
-  }
-
-  isWalkable(): boolean {
-    return false;
   }
 
   onWalk(actor: Entity): Iaction | null {

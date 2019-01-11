@@ -5,8 +5,8 @@ import {CommonModule} from '@angular/common';
 import {GameOverComponent} from './pages/game-over/game-over.component';
 
 const gameRoutes: Routes = [
-  {path: '**', component: MainPageComponent},
-  {path: 'game-over', component: GameOverComponent}
+  {path: 'gameover', component: GameOverComponent},
+  {path: '**', component: MainPageComponent}
 ];
 
 @NgModule({

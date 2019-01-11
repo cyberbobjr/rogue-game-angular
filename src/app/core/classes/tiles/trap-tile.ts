@@ -11,4 +11,8 @@ export class TrapTile extends Tile {
     this.sprite = new Sprite('.');
     this._opaque = false;
   }
+
+  isWalkable(): boolean {
+    return true;
+  }
 }

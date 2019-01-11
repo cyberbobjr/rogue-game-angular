@@ -2,7 +2,6 @@ import {Iaction} from '../../interfaces/iaction';
 import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
 import {Entity} from '../base/entity';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
@@ -18,8 +17,8 @@ export class WalkAction implements Iaction {
 
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
     const destPosition: Position = subject.position.computeDestination(this._direction);
-    const mapEngine: MapEngine = gameEngine.mapEngine;
-    const tile: Tile = <Tile>mapEngine.getTileOrEntityAt(destPosition);
+    const tile: Tile = <Tile>gameEngine.getMapEngine()
+                                       .getTileOrEntityAt(destPosition);
     if (tile instanceof Tile && tile.isWalkable()) {
       subject.position = destPosition;
       tile.onWalk(subject);

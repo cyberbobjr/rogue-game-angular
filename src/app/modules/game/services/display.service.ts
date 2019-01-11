@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
-import {MapEngine} from './map-engine.service';
 import {Position} from '../../../core/classes/base/position';
 import {GameMap} from '../../../core/classes/base/gameMap';
 import {Sprite} from '../../../core/classes/base/sprite';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
-import {EffectEngine} from './effect-engine.service';
+import {EntitiesService} from './entities.service';
+import {Player} from '../../../core/classes/entities/player';
+import * as Color from 'color';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class DisplayService {
   private _fontSize = 16;
   private _display: Display = new Display();
@@ -42,7 +43,7 @@ export class DisplayService {
     return this.display.getContainer();
   }
 
-  constructor(private _mapEngine: MapEngine) {
+  constructor(private _entitiesService: EntitiesService) {
   }
 
   computeBounds() {
@@ -51,10 +52,14 @@ export class DisplayService {
     this.maxVisiblesRows = height;
   }
 
-  draw() {
-    const gameMap: GameMap<Iobject> = this._mapEngine.computeFOV(this.cameraPosition);
-    const viewport: GameMap<Iobject> = this.extractViewport(gameMap);
-    this.drawViewPort(viewport);
+  draw(gameMap: GameMap<Iobject>) {
+    const player: Player = this._entitiesService.player;
+    const finalMap: GameMap<Iobject> = gameMap.clone()
+                                              .putEntitiesOnMap(this._entitiesService.getAllEntities())
+                                              .createFovCasting()
+                                              .computeFOVMap(player.lightRadius, player.lightPower, this.cameraPosition)
+                                              .extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    this._drawViewPort(finalMap);
   }
 
   private _getStartViewPortOfPosition(cameraPosition: Position) {
@@ -63,19 +68,25 @@ export class DisplayService {
     return new Position(x, y);
   }
 
-  private drawViewPort(viewport: GameMap<Iobject>) {
-    this.display.clear();
-    for (let j = 0; j < viewport.height; j++) {
-      for (let i = 0; i < viewport.width; i++) {
-        const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
-        if (sprite && sprite.light) {
-          this.display.draw(i, j, sprite.character, sprite.color, sprite.bgColor);
+  private _drawViewPort(viewport: GameMap<Iobject>) {
+    try {
+      this.display.clear();
+      for (let j = 0; j < viewport.height; j++) {
+        for (let i = 0; i < viewport.width; i++) {
+          const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
+          const fovValue: number = viewport.fovMap[j][i];
+          if (sprite && fovValue !== 0) {
+            this.display.draw(i, j, sprite.character, this._darkenColor(sprite.color, fovValue), this._darkenColor(sprite.bgColor, fovValue));
+          }
         }
       }
+    } catch (e) {
+      console.log(e);
+      debugger;
     }
   }
 
-  private extractViewport(currentMap: GameMap<Iobject>): GameMap<Iobject> {
-    return currentMap.extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+  private _darkenColor(color: string, darkenValue: number): string {
+    return Color(color).darken(darkenValue).hex();
   }
 }

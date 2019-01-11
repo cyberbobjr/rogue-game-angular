@@ -2,6 +2,7 @@ import {Sprite} from '../base/sprite';
 import {JsonArmor} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {Entity} from 'src/app/core/classes/base/entity';
 
 export class Armor extends GameObject {
   protected _sprite: Sprite;
@@ -9,7 +10,7 @@ export class Armor extends GameObject {
   empilable = false;
 
   get ac(): number {
-    return this._jsonData.ac;
+    return +this._jsonData.ac;
   }
 
   get id(): string {
@@ -32,6 +33,10 @@ export class Armor extends GameObject {
     super(_jsonData);
   }
 
+  onEquip(actor: Entity, letterInventory?: string) {
+    actor.equipItem(letterInventory);
+  }
+
   canEquip(): boolean {
     return true;
   }
@@ -41,6 +46,14 @@ export class Armor extends GameObject {
   }
 
   getSlots(): Array<SlotType> {
-    return [SlotType.CHEST, SlotType.LEGS, SlotType.HEAD, SlotType.BOOTS];
+    if (this.id === 'shield') {
+      return [SlotType.LEFTHAND,
+              SlotType.RIGHTHAND];
+    }
+
+    return [SlotType.CHEST,
+            SlotType.LEGS,
+            SlotType.HEAD,
+            SlotType.BOOTS];
   }
 }
