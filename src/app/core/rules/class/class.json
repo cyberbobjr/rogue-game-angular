@@ -36,6 +36,11 @@
         "id": "food",
         "type": "FOOD",
         "qty": 10
+      },
+      {
+        "id": "shield",
+        "type": "ARMOR",
+        "qty": 1
       }
     ]
   }

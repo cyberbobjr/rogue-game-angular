@@ -21,6 +21,8 @@ export class SpritesFactory {
         return new Sprite('*', '#f95757');
       case SpriteType.GOLD:
         return new Sprite('g', '#f7ff0f');
+      case SpriteType.FOOD:
+        return new Sprite('f', '#087a34');
       default:
         return null;
     }

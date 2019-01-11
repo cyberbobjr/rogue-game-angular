@@ -1,32 +1,35 @@
 import {Sprite} from '../base/sprite';
-import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Player} from '../entities/player';
+import {SpritesFactory} from '../../factories/sprites-factory';
+import {SpriteType} from '../../enums/sprite-type.enum';
+import {EventLog} from '../event-log';
 
 export class Food extends GameObject {
   protected _sprite: Sprite;
   objectType = 'FOOD';
 
   get id(): string {
-    return this._jsonData.id;
+    return 'FOOD';
   }
 
   get name(): string {
-    return this._jsonData.name;
+    return 'food';
   }
 
   get properties(): Array<string> {
-    return this._jsonData.properties;
+    return [];
   }
 
-  static fromJson(_jsonData: JsonWeapon): Food {
-    return new this(_jsonData);
+  static fromJson(): Food {
+    return new this();
   }
 
-  constructor(_jsonData: JsonWeapon) {
-    super(_jsonData);
+  constructor() {
+    super();
+    this._sprite = SpritesFactory.createSprite(SpriteType.FOOD);
   }
 
   getInfo(): string {
@@ -43,6 +46,7 @@ export class Food extends GameObject {
 
   onUse(actor: Entity, letterInventory: string) {
     if (actor instanceof Player) {
+      EventLog.getInstance().message = `You eat the food, you feel better`;
       (actor as Player).setToFullHp();
     }
     actor.useInventory(letterInventory, 1);

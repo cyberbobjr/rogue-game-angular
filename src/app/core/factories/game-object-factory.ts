@@ -8,6 +8,7 @@ import {Armor} from '../classes/gameObjects/armor';
 import {Potion} from '../classes/gameObjects/potion';
 import {GameObjectType} from '../enums/game-object-type.enum';
 import {Torch} from '../classes/gameObjects/torch';
+import {Food} from '../classes/gameObjects/food';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -47,6 +48,8 @@ export class GameObjectFactory {
         return new Torch();
       case GameObjectType.POTION:
         return new Potion();
+      case GameObjectType.FOOD:
+        return new Food();
       case GameObjectType.ARMOR:
         return GameObjectFactory.getInstance()
                                 .getArmorById(id);
@@ -69,7 +72,7 @@ export class GameObjectFactory {
       case 'POTION' :
         return new Potion();
       case 'FOOD' :
-        return null;
+        return new Food();
       case 'TORCH' :
         return new Torch();
       default:
