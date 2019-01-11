@@ -3,7 +3,6 @@ import * as armors from '../rules/object/armors.json';
 import {Weapon} from '../classes/gameObjects/weapon';
 import {GameObject} from '../classes/gameObjects/game-object';
 import {Gold} from '../classes/gameObjects/gold';
-import {SlotType} from '../enums/equiped-type.enum';
 import {Armor} from '../classes/gameObjects/armor';
 import {Potion} from '../classes/gameObjects/potion';
 import {GameObjectType} from '../enums/game-object-type.enum';
@@ -23,16 +22,6 @@ export class GameObjectFactory {
     for (const key of Object.keys(armors.default)) {
       this._armors.set(armors.default[key]['id'], new Armor(armors.default[key]));
     }
-  }
-
-  static canBeEquipped(where: SlotType, item: GameObject): boolean {
-    if (item instanceof Weapon && (where === SlotType.LEFTHAND || where === SlotType.RIGHTHAND)) {
-      return true;
-    }
-    if (item instanceof Gold) {
-      return false;
-    }
-    return false;
   }
 
   static getInstance() {

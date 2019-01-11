@@ -114,7 +114,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   isSelectedUsable(): boolean {
     const object: GameObject = this._player.inventory.get(this._selected);
-    return (object instanceof Potion);
+    return object.canUse();
   }
 
   isSelectedUnequippable(): boolean {
