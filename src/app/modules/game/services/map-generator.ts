@@ -118,19 +118,19 @@ export class MapGenerator {
 
   private _generateExitPoint(map: GameMap<Iobject>, rotMap: Digger) {
     const rooms: Array<Room> = rotMap.getRooms();
-    const lastRoom: Room = rooms[rooms.length - 1];
+    const lastRoom: Room = rooms[0];
     const center: number[] = lastRoom.getCenter();
     map.exitPosition = new Position(center[0], center[1]);
-    const tile: Tile = TilesFactory.createTile(TileType.STAIRDOWN, map.exitPosition);
+    const tile: Tile = TilesFactory.createTile(TileType.STAIRUP, map.exitPosition);
     map.setDataAt(center[0], center[1], tile);
   }
 
   private _generateEntryPoint(map: GameMap<Iobject>, rotMap: Digger) {
     const rooms: Array<Room> = rotMap.getRooms();
-    const firstRoom: Room = rooms[0];
+    const firstRoom: Room = rooms[rooms.length - 1];
     const center: number[] = firstRoom.getCenter();
     map.entryPosition = new Position(center[0], center[1]);
-    const tile: Tile = TilesFactory.createTile(TileType.STAIRUP, map.entryPosition);
+    const tile: Tile = TilesFactory.createTile(TileType.STAIRDOWN, map.entryPosition);
     map.setDataAt(center[0], center[1], tile);
   }
 

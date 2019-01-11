@@ -5,7 +5,8 @@ import {EventLog} from '../event-log';
 
 export class SaveCommand implements Command {
   execute(actor: Entity, gameEngine: GameEngineService) {
-    gameEngine.storageEngine.saveGameState();
+    gameEngine.storageEngine.saveGameState(gameEngine.getMapEngine()
+                                                     .getCurrentMap());
     EventLog.getInstance().message = 'Game saved!';
     actor.setNextAction(null);
   }

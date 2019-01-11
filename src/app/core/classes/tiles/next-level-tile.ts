@@ -7,8 +7,7 @@ export class NextLevelTile extends Tile {
   name = 'Stair';
 
   static fromJSON(json: any): NextLevelTile {
-    const {_type} = json.type;
-    return new this(_type, new Position(json.position._x, json.position._y));
+    return new this(json.type, new Position(json.position._x, json.position._y));
   }
 
   constructor(gotoLevel: TileType, position?: Position) {
@@ -22,4 +21,7 @@ export class NextLevelTile extends Tile {
     return true;
   }
 
+  getInfo(): string {
+    return this._type === TileType.STAIRUP ? 'Stair up' : 'Stair down';
+  }
 }

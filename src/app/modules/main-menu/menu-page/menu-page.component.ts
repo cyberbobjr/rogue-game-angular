@@ -27,7 +27,8 @@ export class MenuPageComponent implements OnInit {
 
 
   ngOnInit() {
-    this._storageService.loadPlayer()
+    this._storageService
+        .loadPlayer()
         .then((player: Player) => {
           this._player = player;
           this._isPlayerExist = !!this._player;
@@ -42,14 +43,19 @@ export class MenuPageComponent implements OnInit {
   }
 
   async startNewGame() {
-    this._storageService.clearAllMaps()
+    this._storageService
+        .clearAllMaps()
         .then(() => {
-          this._mapEngine.generateMaps(42);
-          this._storageService.loadMap(1)
+          return this._mapEngine.generateMaps(this._mapEngine.maxLevel);
+        })
+        .then(() => {
+          this._storageService
+              .loadMap(1)
               .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
-                const gameMap: GameMap<Iobject> = this._mapEngine.loadMap(data);
+                const gameMap: GameMap<Iobject> = this._mapEngine.loadRawMap(data);
                 this._player.level = 1;
                 this._player.position = gameMap.entryPosition;
+                this._player.setToFullHp();
                 this._storageService.savePlayer(this._player);
                 this._router.navigateByUrl('game');
               })

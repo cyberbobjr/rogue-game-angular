@@ -43,7 +43,7 @@ export class EntitiesService {
   }
 
   loadEntitiesFromJson(jsonEntities: Array<JsonEntity>) {
-    this._entities.slice(0);
+    this._entities.splice(0);
     jsonEntities.forEach((entity: JsonEntity) => {
       const actor: Entity = EntitiesFactory.createFromJson(entity);
       actor.setNextAction(new IdleAction(actor));

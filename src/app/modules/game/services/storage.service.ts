@@ -94,22 +94,34 @@ export class StorageService {
   }
 
   async saveMap(gameMap: GameMap<Iobject>) {
-    return await this.connection.insert({
-                                          into: 'Map',
-                                          return: true,
-                                          values: [{
-                                            level: gameMap.level,
-                                            jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
-                                          }]
-                                        });
+    const count: number = await this.connection.count({from: 'Map', where: {level: gameMap.level}});
+    if (count > 0) {
+      return await this.connection.update({
+                                            in: 'Map',
+                                            where: {level: gameMap.level},
+                                            set: [{
+                                              jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
+                                            }]
+                                          });
+    } else {
+      return await this.connection.insert({
+                                            into: 'Map',
+                                            return: true,
+                                            values: [{
+                                              level: gameMap.level,
+                                              jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
+                                            }]
+                                          });
+    }
   }
 
   clearAllMaps(): Promise<null> {
     return this.connection.clear('Map');
   }
 
-  saveGameState() {
+  saveGameState(gameMap: GameMap<Iobject>) {
     this.savePlayer(this._entitiesService.player);
+    this.saveMap(gameMap);
   }
 
   async savePlayer(player: Entity) {

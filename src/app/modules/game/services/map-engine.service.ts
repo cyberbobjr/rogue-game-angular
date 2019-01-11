@@ -43,11 +43,12 @@ export class MapEngine {
               private _entitiesService: EntitiesService) {
   }
 
-  async generateMaps(nbOfMaps: number = 42) {
+  async generateMaps(nbOfMaps: number = 42): Promise<boolean> {
     for (let level = 1; level < nbOfMaps + 1; level++) {
       const map: GameMap<Iobject> = this._mapGenerator.generateNewMap(level);
       await this._storageService.saveMap(map);
     }
+    return true;
   }
 
   setGameMap(value: GameMap<Iobject>) {
@@ -58,7 +59,7 @@ export class MapEngine {
     return this._currentMap;
   }
 
-  loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap<Iobject> {
+  loadRawMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap<Iobject> {
     return this._mapGenerator
                .loadMap(jsonData)
                .createFovCasting();
