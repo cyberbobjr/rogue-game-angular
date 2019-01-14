@@ -1,10 +1,12 @@
 export enum SpriteType {
   PLAYER = 0,
   WALL,
-  OPENDOOR,
-  CLOSEDOOR,
+  DOOROPENED,
+  DOORCLOSED,
   FLOOR,
   HITENTITY,
   GOLD,
-  FOOD
+  FOOD,
+  CHESTOPENED,
+  CHESTCLOSED
 }

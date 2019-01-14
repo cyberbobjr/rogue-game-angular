@@ -13,9 +13,9 @@ export class SpritesFactory {
         return new Sprite('#', '#f95757', '#282828');
       case SpriteType.FLOOR:
         return new Sprite('.', '#ffffff');
-      case SpriteType.CLOSEDOOR:
+      case SpriteType.DOORCLOSED:
         return new Sprite('I', '#f95757');
-      case SpriteType.OPENDOOR:
+      case SpriteType.DOOROPENED:
         return new Sprite('=', '#f95757');
       case SpriteType.HITENTITY:
         return new Sprite('*', '#f95757');
@@ -23,6 +23,10 @@ export class SpritesFactory {
         return new Sprite('g', '#f7ff0f');
       case SpriteType.FOOD:
         return new Sprite('f', '#087a34');
+      case SpriteType.CHESTOPENED:
+        return new Sprite('C', '#b56d48');
+      case SpriteType.CHESTCLOSED:
+        return new Sprite('c', '#b56d48');
       default:
         return null;
     }

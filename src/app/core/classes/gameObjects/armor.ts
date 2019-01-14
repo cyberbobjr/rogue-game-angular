@@ -37,6 +37,10 @@ export class Armor extends GameObject {
     actor.equipItem(letterInventory);
   }
 
+  onUnequip(actor: Entity, letterInventory?: string) {
+    actor.unequipItem(letterInventory);
+  }
+
   canEquip(): boolean {
     return true;
   }

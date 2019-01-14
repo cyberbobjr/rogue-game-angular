@@ -17,8 +17,8 @@ import Digger from 'rot-js/lib/map/digger';
 import {EntitiesService} from './entities.service';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class MapGenerator {
   private _rotEngine: Digger;
 
@@ -42,6 +42,10 @@ export class MapGenerator {
       return map;
     }
     return null;
+  }
+
+  private _generateChests(map: GameMap<Iobject>) {
+    const nbRooms: number = this._getRooms().length;
   }
 
   private _loadTiles(map: GameMap<Iobject>, mapJson: JsonMap) {
@@ -92,11 +96,11 @@ export class MapGenerator {
     const rooms: Array<Room> = this._getRooms();
     const nbRooms: number = rooms.length;
     EntitiesFactory.getInstance()
-      .setMaxPop(nbRooms);
+                   .setMaxPop(nbRooms);
     for (let nb = 1; nb < nbRooms - 2; nb++) {
       if (excludeRooms.indexOf(nb) !== 0) {
         const entity: Entity = EntitiesFactory.getInstance()
-          .generateRandomEntities(this._getRoomCenter(rooms[nb]));
+                                              .generateRandomEntities(this._getRoomCenter(rooms[nb]));
         entity.setNextAction(new IdleAction(entity));
         monsters.push(entity);
       }
@@ -107,7 +111,7 @@ export class MapGenerator {
   private _createMap(width: number, height: number, seed: number, level: number): GameMap<Iobject> {
     RNG.setSeed(seed);
     const map: GameMap<Iobject> = new GameMap<Iobject>(width, height).setSeed(seed)
-      .setLevel(level);
+                                                                     .setLevel(level);
     this._rotEngine = new Digger(width, height);
     this._rotEngine.create((x: number, y: number, value: number) => {
       const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));

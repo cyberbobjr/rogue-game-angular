@@ -3,7 +3,7 @@
   <div class="panel-body">
     <div class="row-fluid">
       <div class="span6" style="border-right: yellow solid 1px">
-        <div *ngFor="let attribute of attributes">{{attribute}} : {{_player?.attributes.get(attribute)}}</div>
+        <div *ngFor="let attribute of attributes">{{attribute}} : {{_entitiesService.player?.attributes.get(attribute)}}</div>
       </div>
       <div class="span6">
         Gold : {{_entitiesService.player?.gp}}<br/>

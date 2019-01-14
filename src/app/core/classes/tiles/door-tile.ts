@@ -82,6 +82,6 @@ export class DoorTile extends Tile {
   }
 
   private _setSprite() {
-    this.sprite = SpritesFactory.createSprite(this._isClosed ? SpriteType.CLOSEDOOR : SpriteType.OPENDOOR);
+    this.sprite = SpritesFactory.createSprite(this._isClosed ? SpriteType.DOORCLOSED : SpriteType.DOOROPENED);
   }
 }

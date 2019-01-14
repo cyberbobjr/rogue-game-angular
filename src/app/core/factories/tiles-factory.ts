@@ -5,6 +5,7 @@ import {FloorTile} from '../classes/tiles/floor-tile';
 import {DoorTile} from '../classes/tiles/door-tile';
 import {Position} from '../classes/base/position';
 import {NextLevelTile} from '../classes/tiles/next-level-tile';
+import {ChestTile} from '../classes/tiles/chest-tile';
 
 export class TilesFactory {
   constructor() {
@@ -22,6 +23,8 @@ export class TilesFactory {
         return new NextLevelTile(TileType.STAIRUP, position);
       case TileType.STAIRDOWN:
         return new NextLevelTile(TileType.STAIRDOWN, position);
+      case TileType.CHEST:
+        return new ChestTile(position);
       default:
         return null;
     }
@@ -38,6 +41,8 @@ export class TilesFactory {
       case TileType.STAIRUP:
       case TileType.STAIRDOWN:
         return NextLevelTile.fromJSON(jsonData);
+      case TileType.CHEST:
+        return ChestTile.fromJSON(jsonData);
       default:
         return null;
     }
