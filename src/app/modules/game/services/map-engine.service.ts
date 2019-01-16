@@ -18,9 +18,7 @@ import {EntitiesService} from './entities.service';
 export class MapEngine {
   private _width: number;
   private _height: number;
-  private _currentMap: GameMap<Iobject> = null;
-
-  maxLevel = 21;
+  private _currentMap: GameMap = null;
 
   get width(): number {
     return this._width;
@@ -45,21 +43,21 @@ export class MapEngine {
 
   async generateMaps(nbOfMaps: number = 42): Promise<boolean> {
     for (let level = 1; level < nbOfMaps + 1; level++) {
-      const map: GameMap<Iobject> = this._mapGenerator.generateNewMap(level);
+      const map: GameMap = this._mapGenerator.generateNewMap(level);
       await this._storageService.saveMap(map);
     }
     return true;
   }
 
-  setGameMap(value: GameMap<Iobject>) {
+  setGameMap(value: GameMap) {
     this._currentMap = value;
   }
 
-  getCurrentMap(): GameMap<Iobject> {
+  getCurrentMap(): GameMap {
     return this._currentMap;
   }
 
-  loadRawMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap<Iobject> {
+  loadRawMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap {
     return this._mapGenerator
                .loadMap(jsonData)
                .createFovCasting();
@@ -98,7 +96,7 @@ export class MapEngine {
                         .getDataAt(position.x, position.y);
   }
 
-  getTilesAround(position: Position): Array<Array<Tile>> {
+  getTilesAround(position: Position): Array<Array<Iobject>> {
     return this.getCurrentMap()
                .getTilesAround(position);
   }

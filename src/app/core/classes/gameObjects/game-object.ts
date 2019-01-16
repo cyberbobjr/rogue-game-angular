@@ -9,8 +9,15 @@ export abstract class GameObject {
   protected _qty = 1;
 
   empilable = true;
-  name: string;
   objectType: string;
+
+  set name(value: string) {
+    this._name = value;
+  }
+
+  get name(): string {
+    return this._name;
+  }
 
   get id(): string {
     return this._id;

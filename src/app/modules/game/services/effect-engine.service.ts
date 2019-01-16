@@ -1,5 +1,4 @@
 import {GameMap} from '../../../core/classes/base/gameMap';
-import {Iobject} from '../../../core/interfaces/iobject';
 import {IEffect} from '../../../core/interfaces/i-effect';
 import {Injectable} from '@angular/core';
 
@@ -37,7 +36,7 @@ export class EffectEngine {
     this._effects.delete(effect.type);
   }
 
-  drawEffects(gameMap: GameMap<Iobject>): GameMap<Iobject> {
+  drawEffects(gameMap: GameMap): GameMap {
     this._effects.forEach((effect: IEffect) => {
       effect.draw_callback(gameMap);
     });

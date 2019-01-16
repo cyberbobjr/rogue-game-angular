@@ -15,6 +15,10 @@ import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';
 import {EntitiesService} from './entities.service';
+import {Config} from '../../../core/config';
+import {Utility} from '../../../core/classes/utility';
+import {FloorTile} from '../../../core/classes/tiles/floor-tile';
+import {ChestTile} from '../../../core/classes/tiles/chest-tile';
 
 @Injectable({
               providedIn: 'root'
@@ -26,17 +30,18 @@ export class MapGenerator {
 
   }
 
-  generateNewMap(level = 1): GameMap<Iobject> {
+  generateNewMap(level = 1): GameMap {
     const width = 80;
     const height = 80;
-    const map: GameMap<Iobject> = this._generateMap(width, height, Math.round(Math.random() * 100), level);
+    const map: GameMap = this._generateMap(width, height, Math.round(Math.random() * 100), level);
     this._entitiesService.entities = this._generateMonsters([0]);
+    this._generateChests(map);
     return map;
   }
 
-  loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap<Iobject> | null {
+  loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap | null {
     if (jsonData) {
-      const map: GameMap<Iobject> = this._generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
+      const map: GameMap = this._generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
       this._loadTiles(map, jsonData.map);
       this._entitiesService.loadEntitiesFromJson(jsonData._entities);
       return map;
@@ -44,11 +49,48 @@ export class MapGenerator {
     return null;
   }
 
-  private _generateChests(map: GameMap<Iobject>) {
-    const nbRooms: number = this._getRooms().length;
+  private _generateChests(map: GameMap) {
+    const maxChests: number = Utility.rolldice(Config.maxLevel - map.level + 1);
+    for (let chest = 0; chest < maxChests; chest++) {
+      const chestPosition: Position = this._getFreeSlotForRoom(map, Utility.rolldice(this._getRooms().length - 1));
+      if (chestPosition) {
+        const chestTile: Tile = TilesFactory.createTile(TileType.CHEST);
+        map.setDataAt(chestPosition.x, chestPosition.y, chestTile);
+        const chestObjects: Array<GameObject> = GameObjectFactory.generateRandomObjects(3);
+        chestObjects.forEach((gameObject: GameObject) => {
+          chestTile.dropOn(gameObject);
+        });
+      }
+    }
   }
 
-  private _loadTiles(map: GameMap<Iobject>, mapJson: JsonMap) {
+  private _getFreeSlotForRoom(map: GameMap, roomNumber: number): Position | null {
+    let validPosition = false;
+    let randomPosition: Position = null;
+    let randomX: number;
+    let randomY: number;
+    let tile: Tile = null;
+    let tryCount = 0;
+    const roomPosition: [Position, Position] = this._getRoomPosition(roomNumber); // topleft, bottomright
+    while (!validPosition || tryCount < 10) {
+      randomX = Utility.getRandomInt(roomPosition[0].x, roomPosition[1].x);
+      randomY = Utility.getRandomInt(roomPosition[0].y, roomPosition[1].y);
+      randomPosition = new Position(randomX, randomY);
+      tile = map.getTileAt(randomPosition);
+      validPosition = (tile instanceof FloorTile);
+      tryCount++;
+    }
+    return randomPosition;
+  }
+
+  private _getRoomPosition(roomNumber: number): [Position, Position] {
+    const room: Room = this._rotEngine.getRooms()[roomNumber];
+    const topleft: Position = new Position(room.getLeft(), room.getTop());
+    const bottomright: Position = new Position(room.getRight(), room.getBottom());
+    return [topleft, bottomright];
+  }
+
+  private _loadTiles(map: GameMap, mapJson: JsonMap) {
     mapJson._data.forEach((cells: Array<JSonCell>) => {
       cells.forEach((cell: JSonCell) => {
         try {
@@ -83,8 +125,8 @@ export class MapGenerator {
     return new Position(center[0], center[1]);
   }
 
-  private _generateMap(width: number, height: number, seed = 511, level = 1): GameMap<Iobject> {
-    const map: GameMap<Iobject> = this._createMap(width, height, seed, level);
+  private _generateMap(width: number, height: number, seed = 511, level = 1): GameMap {
+    const map: GameMap = this._createMap(width, height, seed, level);
     this._createDoor(map, this._rotEngine);
     this._generateEntryPoint(map, this._rotEngine);
     this._generateExitPoint(map, this._rotEngine);
@@ -108,10 +150,10 @@ export class MapGenerator {
     return monsters;
   }
 
-  private _createMap(width: number, height: number, seed: number, level: number): GameMap<Iobject> {
+  private _createMap(width: number, height: number, seed: number, level: number): GameMap {
     RNG.setSeed(seed);
-    const map: GameMap<Iobject> = new GameMap<Iobject>(width, height).setSeed(seed)
-                                                                     .setLevel(level);
+    const map: GameMap = new GameMap(width, height).setSeed(seed)
+                                                            .setLevel(level);
     this._rotEngine = new Digger(width, height);
     this._rotEngine.create((x: number, y: number, value: number) => {
       const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
@@ -120,7 +162,7 @@ export class MapGenerator {
     return map;
   }
 
-  private _generateExitPoint(map: GameMap<Iobject>, rotMap: Digger) {
+  private _generateExitPoint(map: GameMap, rotMap: Digger) {
     const rooms: Array<Room> = rotMap.getRooms();
     const lastRoom: Room = rooms[0];
     const center: number[] = lastRoom.getCenter();
@@ -129,7 +171,7 @@ export class MapGenerator {
     map.setDataAt(center[0], center[1], tile);
   }
 
-  private _generateEntryPoint(map: GameMap<Iobject>, rotMap: Digger) {
+  private _generateEntryPoint(map: GameMap, rotMap: Digger) {
     const rooms: Array<Room> = rotMap.getRooms();
     const firstRoom: Room = rooms[rooms.length - 1];
     const center: number[] = firstRoom.getCenter();
@@ -138,7 +180,7 @@ export class MapGenerator {
     map.setDataAt(center[0], center[1], tile);
   }
 
-  private _createDoor(map: GameMap<Iobject>, rotMap: Digger) {
+  private _createDoor(map: GameMap, rotMap: Digger) {
     const rooms: Array<Room> = rotMap.getRooms();
     let room: Room = null;
     for (let i = 0; i < rooms.length; i++) {

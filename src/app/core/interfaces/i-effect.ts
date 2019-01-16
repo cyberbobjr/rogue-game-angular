@@ -1,6 +1,5 @@
 import {Position} from '../classes/base/position';
 import {GameMap} from '../classes/base/gameMap';
-import {Iobject} from './iobject';
 
 export interface IEffect {
   type: string;
@@ -10,7 +9,7 @@ export interface IEffect {
 
   tick(timestamp: number);
 
-  draw_callback(gameMap: GameMap<Iobject>): GameMap<Iobject>;
+  draw_callback(gameMap: GameMap): GameMap;
 
   unregister_callback();
 }

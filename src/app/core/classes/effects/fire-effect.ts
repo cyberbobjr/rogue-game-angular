@@ -2,9 +2,9 @@ import {IEffect} from '../../interfaces/i-effect';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
 import {GameMap} from '../base/gameMap';
-import {Iobject} from '../../interfaces/iobject';
 import {Tile} from '../base/tile';
 import {EffectEngine} from '../../../modules/game/services/effect-engine.service';
+import {Iobject} from '../../interfaces/iobject';
 
 export class FireEffect implements IEffect {
   private _refreshTime = 50; // ms
@@ -32,8 +32,8 @@ export class FireEffect implements IEffect {
     }
   }
 
-  draw_callback(gameMap: GameMap<Iobject>): GameMap<Iobject> {
-    const tile: Tile = <Tile>gameMap.getDataAt(this.position.x, this.position.y);
+  draw_callback(gameMap: GameMap): GameMap {
+    const tile: Iobject = gameMap.getDataAt(this.position.x, this.position.y);
     const spriteEffect: Sprite = tile.sprite.clone();
     spriteEffect.visibility = this.intensity;
     spriteEffect.bgColor = '#FFBE33';

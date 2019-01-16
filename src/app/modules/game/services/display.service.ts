@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Position} from '../../../core/classes/base/position';
 import {GameMap} from '../../../core/classes/base/gameMap';
 import {Sprite} from '../../../core/classes/base/sprite';
-import {Iobject} from '../../../core/interfaces/iobject';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
 import {EntitiesService} from './entities.service';
@@ -10,8 +9,8 @@ import {Player} from '../../../core/classes/entities/player';
 import * as Color from 'color';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class DisplayService {
   private _fontSize = 16;
   private _display: Display = new Display();
@@ -52,13 +51,13 @@ export class DisplayService {
     this.maxVisiblesRows = height;
   }
 
-  draw(gameMap: GameMap<Iobject>) {
+  draw(gameMap: GameMap) {
     const player: Player = this._entitiesService.player;
-    const finalMap: GameMap<Iobject> = gameMap.clone()
-                                              .putEntitiesOnMap(this._entitiesService.getAllEntities())
-                                              .createFovCasting()
-                                              .computeFOVMap(player.lightRadius, player.lightPower, this.cameraPosition)
-                                              .extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    const finalMap: GameMap = gameMap.clone()
+                                     .putEntitiesOnMap(this._entitiesService.getAllEntities())
+                                     .createFovCasting()
+                                     .computeFOVMap(player.lightRadius, player.lightPower, this.cameraPosition)
+                                     .extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
     this._drawViewPort(finalMap);
   }
 
@@ -68,7 +67,7 @@ export class DisplayService {
     return new Position(x, y);
   }
 
-  private _drawViewPort(viewport: GameMap<Iobject>) {
+  private _drawViewPort(viewport: GameMap) {
     try {
       this.display.clear();
       for (let j = 0; j < viewport.height; j++) {
@@ -87,6 +86,8 @@ export class DisplayService {
   }
 
   private _darkenColor(color: string, darkenValue: number): string {
-    return Color(color).darken(darkenValue).hex();
+    return Color(color)
+      .darken(darkenValue)
+      .hex();
   }
 }

@@ -69,6 +69,14 @@ export class GameObjectFactory {
     }
   }
 
+  static generateRandomObjects(nbObjects: number): Array<GameObject> {
+    const chestContents: Array<GameObject> = [];
+    for (let i = 0; i < nbObjects; i++) {
+      chestContents.push(GameObjectFactory.create(GameObjectType.FOOD));
+    }
+    return chestContents;
+  }
+
   getWeaponById(weaponId: string): Weapon | null {
     return this._weapons.get(weaponId);
   }
@@ -76,4 +84,5 @@ export class GameObjectFactory {
   getArmorById(armorId: string): Armor | null {
     return this._armors.get(armorId);
   }
+
 }

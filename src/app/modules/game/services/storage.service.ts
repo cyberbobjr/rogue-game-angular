@@ -93,33 +93,24 @@ export class StorageService {
     return JSON.parse(gameMap[0]['jsonData']);
   }
 
-  async saveMap(gameMap: GameMap<Iobject>) {
-    const count: number = await this.connection.count({from: 'Map', where: {level: gameMap.level}});
-    if (count > 0) {
-      return await this.connection.update({
-                                            in: 'Map',
-                                            where: {level: gameMap.level},
-                                            set: [{
-                                              jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
-                                            }]
-                                          });
-    } else {
-      return await this.connection.insert({
-                                            into: 'Map',
-                                            return: true,
-                                            values: [{
-                                              level: gameMap.level,
-                                              jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
-                                            }]
-                                          });
-    }
+  async saveMap(gameMap: GameMap) {
+    console.log(this._entitiesService.getEntities());
+    return await this.connection.insert({
+                                          into: 'Map',
+                                          return: true,
+                                          upsert: true,
+                                          values: [{
+                                            level: gameMap.level,
+                                            jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
+                                          }]
+                                        });
   }
 
   clearAllMaps(): Promise<null> {
     return this.connection.clear('Map');
   }
 
-  saveGameState(gameMap: GameMap<Iobject>) {
+  saveGameState(gameMap: GameMap) {
     this.savePlayer(this._entitiesService.player);
     this.saveMap(gameMap);
   }

@@ -15,6 +15,7 @@ import {Player} from '../../../core/classes/entities/player';
 import {GameMap} from '../../../core/classes/base/gameMap';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {EventLog} from '../../../core/classes/event-log';
+import {Config} from '../../../core/config';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -208,7 +209,7 @@ export class GameEngineService {
   }
 
   gotoUpStair() {
-    if (this._entitiesService.player.level === this._mapEngine.maxLevel) {
+    if (this._entitiesService.player.level === Config.maxLevel) {
       EventLog.getInstance().message = `You Win !!!`;
     } else {
       const newLevel: number = this._entitiesService.player.level + 1;
@@ -236,7 +237,7 @@ export class GameEngineService {
     this._storageService
         .loadMap(newLevel)
         .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap<Iobject> = this._mapEngine.loadRawMap(data);
+          const gameMap: GameMap = this._mapEngine.loadRawMap(data);
           this._entitiesService.player.level = newLevel;
           this._entitiesService.player.position = gameMap.entryPosition;
           this._storageService.saveGameState(this._mapEngine.getCurrentMap());

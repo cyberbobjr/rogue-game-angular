@@ -9,14 +9,12 @@ import {EventLog} from '../event-log';
 
 export class Food extends GameObject {
   protected _sprite: Sprite;
+  protected _name = 'food';
+
   objectType = 'FOOD';
 
   get id(): string {
     return 'FOOD';
-  }
-
-  get name(): string {
-    return 'food';
   }
 
   get properties(): Array<string> {

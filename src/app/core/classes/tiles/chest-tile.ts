@@ -2,8 +2,11 @@ import {FloorTile} from './floor-tile';
 import {Position} from '../base/position';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
+import {TileType} from '../../enums/tile-type.enum';
 
 export class ChestTile extends FloorTile {
+  protected _type = TileType.CHEST;
+  protected _name = 'ChestTile';
 
   get isClosed(): boolean {
     return this._isClosed;
@@ -36,4 +39,8 @@ export class ChestTile extends FloorTile {
     this.sprite = SpritesFactory.createSprite(this._isClosed ? SpriteType.CHESTCLOSED : SpriteType.CHESTOPENED);
   }
 
+  getInfo(): string {
+    const info = 'chest';
+    return info;
+  }
 }
