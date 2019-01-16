@@ -315,7 +315,7 @@ export abstract class Entity implements Iobject, IEntity {
     return this._inventory.get(inventoryLetter);
   }
 
-  equipItem(inventoryletter: string): boolean {
+  equipInventory(inventoryletter: string): boolean {
     let equipped = false;
     const gameObject: GameObject = this._inventory.get(inventoryletter);
     if (gameObject) {

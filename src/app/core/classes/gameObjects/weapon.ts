@@ -39,7 +39,7 @@ export class Weapon extends GameObject {
   }
 
   onEquip(actor: Entity, letterInventory?: string) {
-    actor.equipItem(letterInventory);
+    actor.equipInventory(letterInventory);
   }
 
   getInfo(): string {

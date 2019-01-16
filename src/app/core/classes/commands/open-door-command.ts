@@ -3,7 +3,7 @@ import {Entity} from '../base/entity';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 import {Tile} from '../base/tile';
 import {DoorTile} from '../tiles/door-tile';
-import {OpendoorAction} from '../actions/opendoor-action';
+import {OpenDoorAction} from '../actions/open-door-action';
 
 export class OpenDoorCommand implements Command {
   execute(actor: Entity, gameEngine: GameEngineService) {
@@ -12,7 +12,7 @@ export class OpenDoorCommand implements Command {
     for (const row of tiles) {
       for (const tile of row) {
         if (tile instanceof DoorTile) {
-          actor.setNextAction(new OpendoorAction(<DoorTile>gameEngine.getMapEngine()
+          actor.setNextAction(new OpenDoorAction(<DoorTile>gameEngine.getMapEngine()
                                                                      .getTileOrEntityAt(tile.position)));
           return;
         }

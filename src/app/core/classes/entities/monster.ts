@@ -16,20 +16,20 @@ import {GameEngineService} from '../../../modules/game/services/game-engine.serv
 
 export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Monster {
-    let entity: Monster = new this();
-    entity = Object.assign(entity, jsonData, {
+    let monster: Monster = new this();
+    monster = Object.assign(monster, jsonData, {
       _position: new Position(jsonData.position._x, jsonData.position._y),
       _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color)
     });
 
     if (jsonData.inventory.length > 0) {
-      jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }, index: number) => {
-        const letterInventory = entity.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
-        entity.equipItem(letterInventory);
+      jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon }) => {
+        const letterInventory = monster.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
+        monster.equipInventory(letterInventory);
       });
     }
 
-    return entity;
+    return monster;
   }
 
   static fromMonsterClass(monsterClass: GameMonsterClass): Monster {

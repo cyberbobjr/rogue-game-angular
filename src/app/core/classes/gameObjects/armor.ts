@@ -34,7 +34,7 @@ export class Armor extends GameObject {
   }
 
   onEquip(actor: Entity, letterInventory?: string) {
-    actor.equipItem(letterInventory);
+    actor.equipInventory(letterInventory);
   }
 
   onUnequip(actor: Entity, letterInventory?: string) {

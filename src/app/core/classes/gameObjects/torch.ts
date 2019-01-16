@@ -25,7 +25,7 @@ export class Torch extends GameObject {
   }
 
   onEquip(actor: Entity, letterInventory?: string) {
-    if (actor.equipItem(letterInventory)) {
+    if (actor.equipInventory(letterInventory)) {
       actor.lightPower = 10;
       EventLog.getInstance().message = 'You see better';
     }

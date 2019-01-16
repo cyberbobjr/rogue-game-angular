@@ -9,31 +9,33 @@ import {AttackDistanceCommand} from '../../../core/classes/commands/attack-dista
 import {WaitCommand} from '../../../core/classes/commands/wait-command';
 import {UpStairCommand} from 'src/app/core/classes/commands/up-stair-command';
 import {DownStairCommand} from 'src/app/core/classes/commands/down-stair-command';
+import {OpenChestCommand} from '../../../core/classes/commands/open-chest-command';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class CommandsService {
   ArrowUp: Command;
   ArrowDown: Command;
   ArrowLeft: Command;
   ArrowRight: Command;
-  KeyQ: Command;
-  KeyZ: Command;
-  KeyA: Command;
-  KeyE: Command;
-  KeyW: Command;
-  KeyC: Command;
-  KeyX: Command;
-  KeyD: Command;
-  KeyO: Command;
-  KeyS: Command;
-  KeyT: Command;
-  KeyF: Command;
-  KeyI: Command;
+  Keyq: Command;
+  Keyz: Command;
+  Keya: Command;
+  Keye: Command;
+  Keyw: Command;
+  Keyc: Command;
+  Keyx: Command;
+  Keyd: Command;
+  Keyo: Command;
+  Keys: Command;
+  Keyt: Command;
+  Keyf: Command;
+  Keyi: Command;
   KeyUp: Command;
   KeyDown: Command;
   KeySpace: Command;
+  KeyC: Command;
 
   constructor() {
     this._initCommand();
@@ -44,21 +46,22 @@ export class CommandsService {
     this.ArrowDown = new MoveS();
     this.ArrowLeft = new MoveW();
     this.ArrowRight = new MoveE();
-    this.KeyW = new MoveSW();
-    this.KeyQ = new MoveW();
-    this.KeyE = new MoveNE();
-    this.KeyD = new MoveE();
-    this.KeyC = new MoveSE();
-    this.KeyX = new MoveS();
-    this.KeyZ = new MoveN();
-    this.KeyA = new MoveNW();
-    this.KeyO = new OpenDoorCommand();
-    this.KeyS = new SaveCommand();
-    this.KeyT = new TakeCommand();
-    this.KeyF = new AttackDistanceCommand();
-    this.KeyI = new InventoryCommand();
+    this.Keyw = new MoveSW();
+    this.Keyq = new MoveW();
+    this.Keye = new MoveNE();
+    this.Keyd = new MoveE();
+    this.Keyc = new MoveSE();
+    this.Keyx = new MoveS();
+    this.Keyz = new MoveN();
+    this.Keya = new MoveNW();
+    this.Keyo = new OpenDoorCommand();
+    this.Keys = new SaveCommand();
+    this.Keyt = new TakeCommand();
+    this.Keyf = new AttackDistanceCommand();
+    this.Keyi = new InventoryCommand();
     this.KeySpace = new WaitCommand();
     this.KeyUp = new UpStairCommand();
     this.KeyDown = new DownStairCommand();
+    this.KeyC = new OpenChestCommand();
   }
 }

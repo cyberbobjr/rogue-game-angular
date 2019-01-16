@@ -72,16 +72,15 @@ export abstract class Tile implements Iobject {
   abstract isWalkable(): boolean ;
 
   getInfo(): string {
-    let info = '';
-    this._contents.forEach((gameObject: GameObject) => {
-      info += `, ${gameObject.getInfo()}`;
-    });
-    return info;
+    if (this._contents.length > 0) {
+      return `, you see :  + ${this._getContentInfo()}`;
+    }
+    return '';
   }
 
   onWalk(actor: Entity): Iaction | null {
     if (actor instanceof Player) {
-      EventLog.getInstance().message = `You walk on ${this.getInfo()}`;
+      EventLog.getInstance().message = `You walk on ${this.getInfo()} `;
     }
     return null;
   }
@@ -99,5 +98,13 @@ export abstract class Tile implements Iobject {
       gameObject.onTake(actor);
     });
     this._contents.splice(0);
+  }
+
+  protected _getContentInfo() {
+    const info: Array<string> = [];
+    this._contents.forEach((gameObject: GameObject) => {
+      info.push(`${gameObject.getInfo()}`);
+    });
+    return info.join(', ');
   }
 }

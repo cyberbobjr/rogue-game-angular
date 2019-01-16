@@ -97,43 +97,46 @@ export class GameEngineService {
         this._commandService.ArrowRight.execute(player, this);
         break;
       case 'q':
-        this._commandService.KeyQ.execute(player, this);
+        this._commandService.Keyq.execute(player, this);
         break;
       case 'z':
-        this._commandService.KeyZ.execute(player, this);
+        this._commandService.Keyz.execute(player, this);
         break;
       case 'a':
-        this._commandService.KeyA.execute(player, this);
+        this._commandService.Keya.execute(player, this);
         break;
       case 'e':
-        this._commandService.KeyE.execute(player, this);
+        this._commandService.Keye.execute(player, this);
         break;
       case 'w':
-        this._commandService.KeyW.execute(player, this);
+        this._commandService.Keyw.execute(player, this);
         break;
       case 'c':
+        this._commandService.Keyc.execute(player, this);
+        break;
+      case 'C':
         this._commandService.KeyC.execute(player, this);
         break;
       case 'x':
-        this._commandService.KeyX.execute(player, this);
+        this._commandService.Keyx.execute(player, this);
         break;
       case 'd':
-        this._commandService.KeyD.execute(player, this);
+        this._commandService.Keyd.execute(player, this);
         break;
       case 'o':
-        this._commandService.KeyO.execute(player, this);
+        this._commandService.Keyo.execute(player, this);
         break;
       case 's':
-        this._commandService.KeyS.execute(player, this);
+        this._commandService.Keys.execute(player, this);
         break;
       case 't':
-        this._commandService.KeyT.execute(player, this);
+        this._commandService.Keyt.execute(player, this);
         break;
       case 'f':
-        this._commandService.KeyF.execute(player, this);
+        this._commandService.Keyf.execute(player, this);
         break;
       case 'i':
-        this._commandService.KeyI.execute(player, this);
+        this._commandService.Keyi.execute(player, this);
         break;
       case ' ':
         this._commandService.KeySpace.execute(player, this);

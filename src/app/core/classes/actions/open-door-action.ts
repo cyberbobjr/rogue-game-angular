@@ -5,7 +5,7 @@ import {DoorTile} from '../tiles/door-tile';
 import {EventLog} from '../event-log';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 
-export class OpendoorAction implements Iaction {
+export class OpenDoorAction implements Iaction {
   private _info = '';
 
   constructor(private _tile: DoorTile) {

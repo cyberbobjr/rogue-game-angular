@@ -3,6 +3,8 @@ import {Position} from '../base/position';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {TileType} from '../../enums/tile-type.enum';
+import {Entity} from '../base/entity';
+import {EventLog} from '../event-log';
 
 export class ChestTile extends FloorTile {
   protected _type = TileType.CHEST;
@@ -32,7 +34,7 @@ export class ChestTile extends FloorTile {
   }
 
   isWalkable(): boolean {
-    return false;
+    return true;
   }
 
   private _setSprite() {
@@ -40,7 +42,24 @@ export class ChestTile extends FloorTile {
   }
 
   getInfo(): string {
-    const info = 'chest';
-    return info;
+    if (this._isClosed) {
+      return 'closed chest';
+    } else {
+      return 'open chest with ' + this._getContentInfo();
+    }
+  }
+
+  openChest() {
+    this._isClosed = false;
+  }
+
+
+  onTake(actor: Entity): void {
+    if (!this._isClosed) {
+      EventLog.getInstance().message = 'You take everything from chest';
+      super.onTake(actor);
+    } else {
+      EventLog.getInstance().message = 'The chest is closed';
+    }
   }
 }
