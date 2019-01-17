@@ -49,8 +49,9 @@ export class MapEngine {
     return true;
   }
 
-  setGameMap(value: GameMap) {
+  setGameMap(value: GameMap): GameMap {
     this._currentMap = value;
+    return this._currentMap;
   }
 
   getCurrentMap(): GameMap {

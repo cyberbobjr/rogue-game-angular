@@ -152,7 +152,7 @@ export class Player extends Entity {
   // region Events
   onHit(attacker: Entity, damage: number): Iaction | null {
     EventLog.getInstance().message = `You take ${damage} point of damage`;
-    //this.hp -= damage;
+    // this.hp -= damage;
     return null;
   }
 
@@ -231,5 +231,10 @@ export class Player extends Entity {
 
   setToFullHp() {
     this.hp = this._maxHp;
+  }
+
+  setLevelAndPosition(level: number, position: Position) {
+    this.level = level;
+    this.position = position;
   }
 }

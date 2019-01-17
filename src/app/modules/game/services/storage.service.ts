@@ -2,11 +2,10 @@ import {Injectable} from '@angular/core';
 import {Player} from '../../../core/classes/entities/player';
 import {EntitiesService} from './entities.service';
 import {Entity} from '../../../core/classes/base/entity';
-import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
+import {JsonEntity} from '../../../core/interfaces/json-interfaces';
 import {IdbService} from './idb.service';
 import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
 import {GameMap} from 'src/app/core/classes/base/gameMap';
-import {Iobject} from 'src/app/core/interfaces/iobject';
 
 @Injectable({
               providedIn: 'root'

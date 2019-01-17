@@ -219,7 +219,6 @@ export class GameEngineService {
       EventLog.getInstance().message = `You Win !!!`;
     } else {
       const newLevel: number = player.level + 1;
-      player.level = newLevel;
       this.changeMapLevel(newLevel);
       EventLog.getInstance().message = `You up the stair to level ${newLevel}`;
     }
@@ -231,7 +230,6 @@ export class GameEngineService {
       EventLog.getInstance().message = `You  can't go down !`;
     } else {
       const newLevel: number = player.level - 1;
-      player.level = newLevel;
       this.changeMapLevel(newLevel);
       EventLog.getInstance().message = `You down the stair to level ${newLevel}`;
     }
@@ -245,12 +243,9 @@ export class GameEngineService {
     this._storageService
         .loadMap(newLevel)
         .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap = this._mapEngine.loadRawMap(data);
-          player.level = newLevel;
-          player.position = gameMap.entryPosition;
-          this._storageService.saveGameState(this._mapEngine.getCurrentMap());
-          this.getMapEngine()
-              .setGameMap(gameMap);
+          const gameMap: GameMap = this._mapEngine.setGameMap(this._mapEngine.loadRawMap(data));
+          player.setLevelAndPosition(newLevel, gameMap.entryPosition);
+          this._storageService.saveGameState(gameMap);
         })
         .catch((err) => {
           console.log(err);
