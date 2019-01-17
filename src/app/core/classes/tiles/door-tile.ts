@@ -65,12 +65,6 @@ export class DoorTile extends Tile {
     this._writeStatut();
   }
 
-  closeDoor() {
-    this._isClosed = this._opaque = true;
-    this._setSprite();
-    this._writeStatut();
-  }
-
   flipDoor() {
     this._isClosed = this._opaque = !this._isClosed;
     this._setSprite();

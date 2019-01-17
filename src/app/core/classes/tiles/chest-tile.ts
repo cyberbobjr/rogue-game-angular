@@ -66,11 +66,11 @@ export class ChestTile extends FloorTile {
 
 
   onTake(actor: Entity): void {
-    if (!this._isClosed) {
+    if (this._isClosed) {
+      EventLog.getInstance().message = 'The chest is closed';
+    } else {
       EventLog.getInstance().message = 'You take everything from chest';
       super.onTake(actor);
-    } else {
-      EventLog.getInstance().message = 'The chest is closed';
     }
   }
 }
