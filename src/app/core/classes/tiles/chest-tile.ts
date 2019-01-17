@@ -7,6 +7,7 @@ import {Entity} from '../base/entity';
 import {EventLog} from '../event-log';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObject} from '../gameObjects/game-object';
+import {Utility} from '../utility';
 
 export class ChestTile extends FloorTile {
   protected _type = TileType.CHEST;
@@ -46,18 +47,20 @@ export class ChestTile extends FloorTile {
   getInfo(): string {
     if (this._isClosed) {
       return 'closed chest';
-    } else {
-      return 'open chest with ' + this._getContentInfo();
     }
+    if (this._contents.length === 0) {
+      return 'an empty chest';
+    }
+    return 'opened chest with ' + this._getContentInfo();
   }
 
   openChest() {
     const gameObjectFactory = new GameObjectFactory();
-    const chestObjects: Array<GameObject> = gameObjectFactory.generateRandomObjects(3);
+    const chestObjects: Array<GameObject> = gameObjectFactory.generateRandomObjects(Utility.rolldice(5));
     chestObjects.forEach((gameObject: GameObject) => {
       this.dropOn(gameObject);
     });
-
+    EventLog.getInstance().message = 'You open the chest with ' + this._getContentInfo();
     this._isClosed = false;
   }
 

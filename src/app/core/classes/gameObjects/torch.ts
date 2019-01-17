@@ -13,7 +13,7 @@ export class Torch extends GameObject {
   objectType = 'TORCH';
 
   getInfo(): string {
-    return 'a torch';
+    return 'torch';
   }
 
   getSlots(): Array<SlotType> {
