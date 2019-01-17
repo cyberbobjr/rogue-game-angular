@@ -10,7 +10,6 @@ import {TileType} from 'src/app/core/enums/tile-type.enum';
 import {GameObject} from 'src/app/core/classes/gameObjects/game-object';
 import {GameObjectFactory} from 'src/app/core/factories/game-object-factory';
 import {GameMap} from 'src/app/core/classes/base/gameMap';
-import {Iobject} from 'src/app/core/interfaces/iobject';
 import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';
@@ -18,7 +17,6 @@ import {EntitiesService} from './entities.service';
 import {Config} from '../../../core/config';
 import {Utility} from '../../../core/classes/utility';
 import {FloorTile} from '../../../core/classes/tiles/floor-tile';
-import {ChestTile} from '../../../core/classes/tiles/chest-tile';
 
 @Injectable({
               providedIn: 'root'
@@ -56,10 +54,6 @@ export class MapGenerator {
       if (chestPosition) {
         const chestTile: Tile = TilesFactory.createTile(TileType.CHEST);
         map.setDataAt(chestPosition.x, chestPosition.y, chestTile);
-        const chestObjects: Array<GameObject> = GameObjectFactory.generateRandomObjects(3);
-        chestObjects.forEach((gameObject: GameObject) => {
-          chestTile.dropOn(gameObject);
-        });
       }
     }
   }
@@ -97,11 +91,12 @@ export class MapGenerator {
           const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
           this._loadTileContents(tile, cell.contents);
           if (!cell.position) {
-            debugger;
+            throw new Error('Tile withouh position');
           }
           map.setDataAt(cell.position._x, cell.position._y, tile);
         } catch (e) {
           console.log(e);
+          debugger;
         }
       });
     });
@@ -143,7 +138,7 @@ export class MapGenerator {
       if (excludeRooms.indexOf(nb) !== 0) {
         const entity: Entity = EntitiesFactory.getInstance()
                                               .generateRandomEntities(this._getRoomCenter(rooms[nb]));
-        entity.setNextAction(new IdleAction(entity));
+        entity.setNextAction(new IdleAction());
         monsters.push(entity);
       }
     }
@@ -153,7 +148,7 @@ export class MapGenerator {
   private _createMap(width: number, height: number, seed: number, level: number): GameMap {
     RNG.setSeed(seed);
     const map: GameMap = new GameMap(width, height).setSeed(seed)
-                                                            .setLevel(level);
+                                                   .setLevel(level);
     this._rotEngine = new Digger(width, height);
     this._rotEngine.create((x: number, y: number, value: number) => {
       const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));

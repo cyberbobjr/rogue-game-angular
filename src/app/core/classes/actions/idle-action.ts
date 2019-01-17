@@ -12,7 +12,7 @@ import {Monster} from '../entities/monster';
 export class IdleAction implements Iaction {
   private _info = '';
 
-  constructor(private _actor: Entity) {
+  constructor() {
   }
 
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {

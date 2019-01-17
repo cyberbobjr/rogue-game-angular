@@ -46,7 +46,7 @@ export class EntitiesService {
     this._entities.splice(0);
     jsonEntities.forEach((entity: JsonEntity) => {
       const actor: Entity = EntitiesFactory.createFromJson(entity);
-      actor.setNextAction(new IdleAction(actor));
+      actor.setNextAction(new IdleAction());
       this._entities.push(actor);
     });
   }

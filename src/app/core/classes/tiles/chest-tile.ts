@@ -5,6 +5,8 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {TileType} from '../../enums/tile-type.enum';
 import {Entity} from '../base/entity';
 import {EventLog} from '../event-log';
+import {GameObjectFactory} from '../../factories/game-object-factory';
+import {GameObject} from '../gameObjects/game-object';
 
 export class ChestTile extends FloorTile {
   protected _type = TileType.CHEST;
@@ -50,6 +52,12 @@ export class ChestTile extends FloorTile {
   }
 
   openChest() {
+    const gameObjectFactory = new GameObjectFactory();
+    const chestObjects: Array<GameObject> = gameObjectFactory.generateRandomObjects(3);
+    chestObjects.forEach((gameObject: GameObject) => {
+      this.dropOn(gameObject);
+    });
+
     this._isClosed = false;
   }
 

@@ -90,7 +90,12 @@ export abstract class Tile implements Iobject {
   }
 
   dropOn(gameObject: GameObject) {
-    this._contents.push(gameObject);
+    const existingGameObject = this._contents.find((value: GameObject) => value.id === gameObject.id);
+    if (existingGameObject && existingGameObject.empilable) {
+      existingGameObject.qty += gameObject.qty;
+    } else {
+      this._contents.push(gameObject);
+    }
   }
 
   onTake(actor: Entity) {
@@ -103,7 +108,9 @@ export abstract class Tile implements Iobject {
   protected _getContentInfo() {
     const info: Array<string> = [];
     this._contents.forEach((gameObject: GameObject) => {
-      info.push(`${gameObject.getInfo()}`);
+      let text = `${gameObject.getInfo()}`;
+      text += (gameObject.empilable && gameObject.qty > 1) ? `[${gameObject.qty}]` : ``;
+      info.push(text);
     });
     return info.join(', ');
   }

@@ -21,7 +21,7 @@ export class ChaseAction implements Iaction {
 
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
     if (!subject.sprite.light && !(subject as Monster).canFollowChase()) {
-      subject.setNextAction(new IdleAction(this._subject));
+      subject.setNextAction(new IdleAction());
       return ActionResult.SUCCESS;
     }
     this._gameEngine = gameEngine;

@@ -8,6 +8,7 @@ import {Potion} from '../classes/gameObjects/potion';
 import {GameObjectType} from '../enums/game-object-type.enum';
 import {Torch} from '../classes/gameObjects/torch';
 import {Food} from '../classes/gameObjects/food';
+import {Utility} from '../classes/utility';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -69,12 +70,43 @@ export class GameObjectFactory {
     }
   }
 
-  static generateRandomObjects(nbObjects: number): Array<GameObject> {
+  generateRandomObjects(nbObjects: number): Array<GameObject> {
     const chestContents: Array<GameObject> = [];
     for (let i = 0; i < nbObjects; i++) {
-      chestContents.push(GameObjectFactory.create(GameObjectType.FOOD));
+      chestContents.push(this._createRandomObject(GameObjectType.getRandomType()));
     }
     return chestContents;
+  }
+
+  private _createRandomObject(type: GameObjectType): GameObject {
+    switch (type) {
+      case GameObjectType.GOLD :
+        return new Gold(Utility.rolldice(10));
+      case GameObjectType.TORCH:
+        return new Torch();
+      case GameObjectType.WEAPON:
+        return this._getRandomWeapon();
+      case GameObjectType.ARMOR:
+        return this._getRandomArmor();
+      case GameObjectType.POTION:
+        return new Potion();
+      case GameObjectType.FOOD:
+        return new Food();
+    }
+  }
+
+  private _getRandomWeapon(): GameObject {
+    const weaponCount: number = this._weapons.size;
+    let items: Array<Weapon> = Array.from(this._weapons.values());
+    const key: GameObject = items[Utility.rolldice(weaponCount) - 1];
+    return key;
+  }
+
+  private _getRandomArmor(): GameObject {
+    const armorCount: number = this._armors.size;
+    let items: Array<Armor> = Array.from(this._armors.values());
+    const key: GameObject = items[Utility.rolldice(armorCount) - 1];
+    return key;
   }
 
   getWeaponById(weaponId: string): Weapon | null {
