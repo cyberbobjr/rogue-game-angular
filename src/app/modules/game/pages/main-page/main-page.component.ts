@@ -27,7 +27,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
     console.log('Main page init');
     this._initPlayer()
         .then((player: Player) => {
-          this._entitiesService.player = player;
+          this._entitiesService.setPlayer(player);
           return this._storageService.loadMap(player.level);
         })
         .then((mapData: { map: JsonMap, _entities: Array<JsonEntity> }) => {

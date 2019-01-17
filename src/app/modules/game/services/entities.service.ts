@@ -8,8 +8,8 @@ import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class EntitiesService {
   private _player: Player = null;
   private _entities: Array<Entity> = [];
@@ -19,15 +19,15 @@ export class EntitiesService {
     this._entities = value;
   }
 
-  get player(): Player | null {
-    return this._player;
+  constructor() {
   }
 
-  set player(actor: Player) {
+  setPlayer(actor: Player) {
     this._player = actor;
   }
 
-  constructor() {
+  getPlayer(): Player {
+    return this._player;
   }
 
   getEntities(): Array<Entity> {
@@ -39,7 +39,8 @@ export class EntitiesService {
   }
 
   getAllEntities(): Array<Entity> {
-    return this.getEntities().concat(this.player);
+    return this.getEntities()
+               .concat(this.getPlayer());
   }
 
   loadEntitiesFromJson(jsonEntities: Array<JsonEntity>) {
@@ -53,24 +54,26 @@ export class EntitiesService {
 
   getEntityAt(position: Position): Entity | null {
     let monster: Entity = null;
-    this._entities.concat(this.player).forEach((value: Entity, index: number) => {
-      if (value.position.equal(position)) {
-        monster = value;
-      }
-    });
+    this._entities.concat(this.getPlayer())
+        .forEach((value: Entity, index: number) => {
+          if (value.position.equal(position)) {
+            monster = value;
+          }
+        });
     return monster;
   }
 
   updateEntities(_gameEngine: GameEngineService) {
-    this._entities.concat(this.player).forEach((entity: Entity, index: number) => {
-      entity.update();
-      if (entity.hp <= 0) {
-        entity.onDead(_gameEngine);
-        this._entities.splice(index, 1);
-        if (entity instanceof Player) {
-          _gameEngine.gameOver();
-        }
-      }
-    });
+    this._entities.concat(this.getPlayer())
+        .forEach((entity: Entity, index: number) => {
+          entity.update();
+          if (entity.hp <= 0) {
+            entity.onDead(_gameEngine);
+            this._entities.splice(index, 1);
+            if (entity instanceof Player) {
+              _gameEngine.gameOver();
+            }
+          }
+        });
   }
 }

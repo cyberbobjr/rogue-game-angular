@@ -13,9 +13,9 @@ import {Router} from '@angular/router';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {Player} from '../../../core/classes/entities/player';
 import {GameMap} from '../../../core/classes/base/gameMap';
-import {Iobject} from '../../../core/interfaces/iobject';
 import {EventLog} from '../../../core/classes/event-log';
 import {Config} from '../../../core/config';
+import {Iaction} from '../../../core/interfaces/iaction';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -82,7 +82,7 @@ export class GameEngineService {
   }
 
   handleActionKeyEvent(key: KeyboardEvent): void {
-    const player = this._entitiesService.player as Entity;
+    const player: Entity = this._entitiesService.getPlayer() as Entity;
     switch (key.key) {
       case 'ArrowUp':
         this._commandService.ArrowUp.execute(player, this);
@@ -152,7 +152,8 @@ export class GameEngineService {
   }
 
   private _updateGame() {
-    this._displayService.cameraPosition = this._entitiesService.player.position;
+    const player: Player = this._entitiesService.getPlayer();
+    this._displayService.cameraPosition = player.position;
     this._entitiesService.updateEntities(this);
   }
 
@@ -162,15 +163,16 @@ export class GameEngineService {
 
   gameOver() {
     this.endGameLoop();
+    window.alert('You loose !');
     this._router.navigateByUrl('game/gameover');
   }
 
   processAction() {
     const entities: Array<Entity> = this._entitiesService.getEntities()
-                                        .concat(this._entitiesService.player);
+                                        .concat(this._entitiesService.getPlayer());
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
-      let actorAction = currentActor.getAction();
+      let actorAction: Iaction = currentActor.getAction();
       if (actorAction) {
         while (true) {
           const resultAction: ActionResult = actorAction.execute(currentActor, this);
@@ -196,7 +198,7 @@ export class GameEngineService {
   }
 
   getPlayer(): Player {
-    return this._entitiesService.player;
+    return this._entitiesService.getPlayer();
   }
 
   getEntitiesVisibles(): Array<Entity> {
@@ -212,28 +214,31 @@ export class GameEngineService {
   }
 
   gotoUpStair() {
-    if (this._entitiesService.player.level === Config.maxLevel) {
+    const player: Player = this._entitiesService.getPlayer();
+    if (player.level === Config.maxLevel) {
       EventLog.getInstance().message = `You Win !!!`;
     } else {
-      const newLevel: number = this._entitiesService.player.level + 1;
-      this._entitiesService.player.level = newLevel;
+      const newLevel: number = player.level + 1;
+      player.level = newLevel;
       this.changeMapLevel(newLevel);
       EventLog.getInstance().message = `You up the stair to level ${newLevel}`;
     }
   }
 
   gotoDownStair() {
-    if (this._entitiesService.player.level === 1) {
+    const player: Player = this._entitiesService.getPlayer();
+    if (player.level === 1) {
       EventLog.getInstance().message = `You  can't go down !`;
     } else {
-      const newLevel: number = this._entitiesService.player.level - 1;
-      this._entitiesService.player.level = newLevel;
+      const newLevel: number = player.level - 1;
+      player.level = newLevel;
       this.changeMapLevel(newLevel);
       EventLog.getInstance().message = `You down the stair to level ${newLevel}`;
     }
   }
 
   changeMapLevel(newLevel: number) {
+    const player: Player = this._entitiesService.getPlayer();
     // save current level
     this._storageService.saveGameState(this._mapEngine.getCurrentMap());
     // get level if exist
@@ -241,8 +246,8 @@ export class GameEngineService {
         .loadMap(newLevel)
         .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
           const gameMap: GameMap = this._mapEngine.loadRawMap(data);
-          this._entitiesService.player.level = newLevel;
-          this._entitiesService.player.position = gameMap.entryPosition;
+          player.level = newLevel;
+          player.position = gameMap.entryPosition;
           this._storageService.saveGameState(this._mapEngine.getCurrentMap());
           this.getMapEngine()
               .setGameMap(gameMap);

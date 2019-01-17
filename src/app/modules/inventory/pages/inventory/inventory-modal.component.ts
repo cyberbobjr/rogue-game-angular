@@ -30,7 +30,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._router.url === '/game') {
-      this._player = this._entitiesService.player;
+      this._player = this._entitiesService.getPlayer();
       this.initModalHandler();
     } else {
       this._storageService.loadPlayer()
@@ -53,7 +53,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     this._modalService.getModal('inventoryModal')
         .onOpen
         .subscribe(() => {
-          this._player = this._entitiesService.player;
+          this._player = this._entitiesService.getPlayer();
           this._handleKeyBackup = this._gameEngine.handleKeyEvent;
           this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
         });

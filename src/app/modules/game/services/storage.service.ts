@@ -111,24 +111,11 @@ export class StorageService {
   }
 
   saveGameState(gameMap: GameMap) {
-    this.savePlayer(this._entitiesService.player);
+    this.savePlayer(this._entitiesService.getPlayer());
     this.saveMap(gameMap);
   }
 
   async savePlayer(player: Entity) {
     await this.connection.set('Player', JSON.stringify(player));
   }
-
-  /*private async _saveMap() {
-   const level: number = this._mapEngine.map.level;
-   let entities: Array<Entity> = [];
-   entities = Object.assign(entities, this._entitiesService.entities);
-   entities.shift();
-   await this.connection.insert({
-   into: 'Map',
-   return: true,
-   values: [{level: level, jsonData: JSON.stringify({map: this._mapEngine.map, _entities: entities})}]
-   });
-   window.localStorage.setItem('map_' + level, JSON.stringify({map: this._mapEngine.map, _entities: entities}));
-   }*/
 }

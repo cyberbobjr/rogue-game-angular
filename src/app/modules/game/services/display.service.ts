@@ -52,7 +52,7 @@ export class DisplayService {
   }
 
   draw(gameMap: GameMap) {
-    const player: Player = this._entitiesService.player;
+    const player: Player = this._entitiesService.getPlayer();
     const finalMap: GameMap = gameMap.clone()
                                      .putEntitiesOnMap(this._entitiesService.getAllEntities())
                                      .createFovCasting()

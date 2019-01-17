@@ -16,7 +16,7 @@ export class InventoryPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.player = this._entitiesService.player;
+    this.player = this._entitiesService.getPlayer();
   }
 
   getSlotTypeLabel(slot : SlotType) {
