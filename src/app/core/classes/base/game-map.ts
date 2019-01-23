@@ -111,7 +111,7 @@ export class GameMap {
     return gameMap;
   }
 
-  public putEntitiesOnMap(entities: Array<Entity>): GameMap {
+  public putEntities(entities: Array<Entity>): GameMap {
     entities.forEach((entity: Entity) => {
       this.setDataAt(entity.position.x, entity.position.y, entity);
     });

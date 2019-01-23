@@ -1,4 +1,4 @@
-import {GameMap} from '../../../core/classes/base/gameMap';
+import {GameMap} from '../../../core/classes/base/game-map';
 import {IEffect} from '../../../core/interfaces/i-effect';
 import {Injectable} from '@angular/core';
 

@@ -5,7 +5,7 @@ import {Entity} from '../../../core/classes/base/entity';
 import {JsonEntity} from '../../../core/interfaces/json-interfaces';
 import {IdbService} from './idb.service';
 import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
-import {GameMap} from 'src/app/core/classes/base/gameMap';
+import {GameMap} from 'src/app/core/classes/base/game-map';
 
 @Injectable({
               providedIn: 'root'

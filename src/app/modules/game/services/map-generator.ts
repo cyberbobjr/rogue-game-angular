@@ -9,7 +9,7 @@ import {TilesFactory} from 'src/app/core/factories/tiles-factory';
 import {TileType} from 'src/app/core/enums/tile-type.enum';
 import {GameObject} from 'src/app/core/classes/gameObjects/game-object';
 import {GameObjectFactory} from 'src/app/core/factories/game-object-factory';
-import {GameMap} from 'src/app/core/classes/base/gameMap';
+import {GameMap} from 'src/app/core/classes/base/game-map';
 import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';

@@ -37,6 +37,7 @@ export interface JsonEntity {
   id: string;
   gp: number;
   hp: number;
+  maxHp?: number;
   name: string;
   speed: number;
   size: string;
@@ -53,10 +54,20 @@ export interface JsonEntity {
   wisdom: number;
   charisma: number;
   level: number;
-  inventory: [{ id: string, objectType: string, _jsonData: JsonWeapon }];
-  equipped?: [[SlotType, string]];
+  inventory: Array<JsonInventory>;
+  equipped?: Array<[number, string]>;
   race: JsonRace;
   gameClass: JsonGameClass;
+}
+
+export interface JsonInventory {
+  _id: string;
+  _name: string;
+  _jsonData?: any;
+  _qty: number;
+  _sprite: JsonSprite;
+  objectType: string;
+  empilable: boolean;
 }
 
 export interface JsonArmor {
@@ -129,11 +140,11 @@ export interface JsonGameClass {
     character: string;
     color: string;
   };
-  equipment: [{
+  equipment: Array<{
     id: string;
     type: string;
     qty: number;
-  }];
+  }>;
 }
 
 export interface JsonMonster {

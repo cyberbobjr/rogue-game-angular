@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Position} from '../../../core/classes/base/position';
-import {GameMap} from '../../../core/classes/base/gameMap';
+import {GameMap} from '../../../core/classes/base/game-map';
 import {Sprite} from '../../../core/classes/base/sprite';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
@@ -54,7 +54,7 @@ export class DisplayService {
   draw(gameMap: GameMap) {
     const player: Player = this._entitiesService.getPlayer();
     const finalMap: GameMap = gameMap.clone()
-                                     .putEntitiesOnMap(this._entitiesService.getAllEntities())
+                                     .putEntities(this._entitiesService.getAllEntities())
                                      .createFovCasting()
                                      .computeFOVMap(player.lightRadius, player.lightPower, this.cameraPosition)
                                      .extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
