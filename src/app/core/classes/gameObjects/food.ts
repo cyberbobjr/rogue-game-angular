@@ -21,12 +21,12 @@ export class Food extends GameObject {
     return [];
   }
 
-  static fromJson(): Food {
-    return new this();
+  static fromJson(jsonData: any): Food {
+    return new this(jsonData);
   }
 
-  constructor() {
-    super();
+  constructor(_jsonData?: any) {
+    super(_jsonData);
     this._sprite = SpritesFactory.createSprite(SpriteType.FOOD);
   }
 

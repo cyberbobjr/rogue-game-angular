@@ -25,6 +25,7 @@ export abstract class Entity implements Iobject, IEntity {
   protected _position?: Position;
   protected _name: string;
   protected _sprite?: Sprite;
+  protected _race: string;
 
   protected _hp: number;
   protected _ac: number;
@@ -45,6 +46,14 @@ export abstract class Entity implements Iobject, IEntity {
   lightPower = 3; // max is lighter
 
   attributes: Map<string, number> = new Map<string, number>();
+
+  get race(): string {
+    return this._race;
+  }
+
+  set race(value: string) {
+    this._race = value;
+  }
 
   get ap(): number {
     return this._ap;
@@ -95,12 +104,12 @@ export abstract class Entity implements Iobject, IEntity {
     this._id = value;
   }
 
-  get hitDice(): number {
-    return this._hitDice;
-  }
-
   set hitDice(value: number) {
     this._hitDice = value;
+  }
+
+  get hitDice(): number {
+    return this._hitDice;
   }
 
   get gp(): number {
@@ -234,7 +243,8 @@ export abstract class Entity implements Iobject, IEntity {
       hitDice: this.hitDice,
       inventory: Array.from(this.inventory.values()),
       speed: this.speed,
-      size: this.size
+      size: this.size,
+      race: this._race
     };
   }
 

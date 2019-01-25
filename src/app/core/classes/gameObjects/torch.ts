@@ -5,12 +5,15 @@ import {SlotType} from '../../enums/equiped-type.enum';
 import {EventLog} from '../event-log';
 
 export class Torch extends GameObject {
-  protected _name: string;
   protected _sprite: Sprite = new Sprite('i', '#66bbe2');
-  protected _id = 'torch';
 
-  name = 'Torch';
-  objectType = 'TORCH';
+  static fromJson(jsonData: any): Torch {
+    const torch: Torch = new this();
+    if (jsonData._qty) {
+      torch.qty = jsonData._qty;
+    }
+    return torch;
+  }
 
   getInfo(): string {
     return 'torch';
@@ -36,4 +39,12 @@ export class Torch extends GameObject {
       actor.lightPower = 3;
     }
   }
+
+  constructor() {
+    super();
+    this._name = 'Torch';
+    this._id = 'torch';
+    this._objectType = 'TORCH';
+  }
+
 }

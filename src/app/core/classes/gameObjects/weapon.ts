@@ -1,4 +1,3 @@
-import {Sprite} from '../base/sprite';
 import {JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
@@ -6,16 +5,18 @@ import {Utility} from '../utility';
 import {Entity} from '../base/entity';
 
 export class Weapon extends GameObject {
-  protected _sprite: Sprite;
-  objectType = 'WEAPON';
-  empilable = false;
-
-  get id(): string {
-    return this._jsonData.id;
-  }
+  protected _damage: {
+    type: string,
+    dice: number,
+    mul: number
+  };
+  protected _thrown?: {
+    normal: number;
+    long: number;
+  };
 
   get name(): string {
-    return this._jsonData.name;
+    return this._name;
   }
 
   get properties(): Array<string> {
@@ -23,11 +24,15 @@ export class Weapon extends GameObject {
   }
 
   static fromJson(_jsonData: JsonWeapon): Weapon {
-    return new this(_jsonData);
+    const weapon: Weapon = new this();
+    weapon._damage = _jsonData.damage;
+    weapon._thrown = _jsonData.thrown;
+    return weapon;
   }
 
-  constructor(_jsonData: JsonWeapon) {
-    super(_jsonData);
+  constructor(data?: any) {
+    super();
+    this.objectType = 'WEAPON';
   }
 
   canEquip(): boolean {

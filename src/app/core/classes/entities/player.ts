@@ -5,7 +5,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {JsonEntity, JsonInventory, JsonWeapon} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonInventory} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
@@ -19,32 +19,23 @@ import {GameEngineService} from '../../../modules/game/services/game-engine.serv
 export class Player extends Entity {
   private _level = 1;
   private _mapLevel = 1;
-  private _race: RaceClass;
-  private _gameClass: GameClass;
+  private _gameClass: string;
   private _maxHp: number;
 
-  get maxHp(): number {
-    return this._maxHp;
+  set gameClass(value: string) {
+    this._gameClass = value;
+  }
+
+  get gameClass(): string {
+    return this._gameClass;
   }
 
   set maxHp(value: number) {
     this._maxHp = value;
   }
 
-  set race(value: RaceClass) {
-    this._race = value;
-  }
-
-  set gameClass(value: GameClass) {
-    this._gameClass = value;
-  }
-
-  get gameClass(): GameClass {
-    return this._gameClass;
-  }
-
-  get race(): RaceClass {
-    return this._race;
+  get maxHp(): number {
+    return this._maxHp;
   }
 
   get equippedItem(): Map<SlotType, string> {
@@ -85,7 +76,7 @@ export class Player extends Entity {
 
     if (jsonData.inventory.length > 0) {
       jsonData.inventory.forEach((value: JsonInventory) => {
-        const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
+        const gameObject: GameObject = GameObjectFactory.createFromJson(value._objectType, value);
         gameObject.qty = value._qty;
         entity.addToInventory(gameObject);
       });
@@ -102,14 +93,6 @@ export class Player extends Entity {
       });
     }
 
-    if (jsonData.race) {
-      entity.race = new RaceClass(jsonData.race);
-    }
-
-    if (jsonData.gameClass) {
-      entity.gameClass = new GameClass(jsonData.gameClass);
-    }
-
     return entity;
   }
 
@@ -120,8 +103,7 @@ export class Player extends Entity {
         level: this.level,
         maxHp: this._maxHp,
         equipped: [...this._equippedItem],
-        race: this.race.jsonData,
-        gameClass: this.gameClass.jsonData
+        gameClass: this._gameClass
       }
     };
   }
@@ -187,7 +169,7 @@ export class Player extends Entity {
   }
 
   setRace(race: RaceClass): Player {
-    this._race = race;
+    this._race = race.name;
     return this;
   }
 
@@ -196,7 +178,7 @@ export class Player extends Entity {
     this._hp = this._hitDice + AttributesFactory.getModifier(this.attributes.get('constitution'));
     this._maxHp = this._hp;
     this._gp = gameClass.getGp();
-    this._gameClass = gameClass;
+    this._gameClass = gameClass.name;
     gameClass.getInitialEquipment()
              .forEach((item: GameObject) => {
                this.addToInventory(item);

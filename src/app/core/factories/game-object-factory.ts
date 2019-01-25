@@ -56,15 +56,15 @@ export class GameObjectFactory {
       case 'GOLD' :
         return new Gold(data['_amount']);
       case 'WEAPON' :
-        return Weapon.fromJson(data['_jsonData']);
+        return Weapon.fromJson(data);
       case 'ARMOUR' :
-        return Armor.fromJson(data['_jsonData']);
+        return Armor.fromJson(data);
       case 'POTION' :
-        return new Potion();
+        return Potion.fromJson(data);
       case 'FOOD' :
-        return new Food();
+        return Food.fromJson(data);
       case 'TORCH' :
-        return new Torch();
+        return Torch.fromJson(data);
       default:
         return null;
     }
@@ -97,14 +97,14 @@ export class GameObjectFactory {
 
   private _getRandomWeapon(): GameObject {
     const weaponCount: number = this._weapons.size;
-    let items: Array<Weapon> = Array.from(this._weapons.values());
+    const items: Array<Weapon> = Array.from(this._weapons.values());
     const key: GameObject = items[Utility.rolldice(weaponCount) - 1];
     return key;
   }
 
   private _getRandomArmor(): GameObject {
     const armorCount: number = this._armors.size;
-    let items: Array<Armor> = Array.from(this._armors.values());
+    const items: Array<Armor> = Array.from(this._armors.values());
     const key: GameObject = items[Utility.rolldice(armorCount) - 1];
     return key;
   }

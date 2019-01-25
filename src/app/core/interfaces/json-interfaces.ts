@@ -1,7 +1,5 @@
 import {GameObject} from '../classes/gameObjects/game-object';
-import {SlotType} from '../enums/equiped-type.enum';
-import {IRace} from './i-race';
-import {IGameClass} from './i-game-class';
+import {Sprite} from '../classes/base/sprite';
 
 export interface JsonSprite {
   _color: string;
@@ -56,8 +54,8 @@ export interface JsonEntity {
   level: number;
   inventory: Array<JsonInventory>;
   equipped?: Array<[number, string]>;
-  race: JsonRace;
-  gameClass: JsonGameClass;
+  race: string;
+  gameClass: string;
 }
 
 export interface JsonInventory {
@@ -66,8 +64,8 @@ export interface JsonInventory {
   _jsonData?: any;
   _qty: number;
   _sprite: JsonSprite;
-  objectType: string;
-  empilable: boolean;
+  _objectType: string;
+  _empilable: boolean;
 }
 
 export interface JsonArmor {
@@ -90,7 +88,7 @@ export interface JsonArmor {
     ];
 }
 
-export interface JsonWeapon {
+export interface JsonGameObject {
   id: string;
   name: string;
   type: string;
@@ -99,22 +97,25 @@ export interface JsonWeapon {
     unit: string,
     value: number
   };
+  weight: number;
+  properties: [
+    string
+    ];
+  sprite: {
+    character: string;
+    color: string;
+  };
+}
+
+export interface JsonWeapon {
   damage: {
     type: string,
     dice: number,
     mul: number
   };
-  weight: number;
-  properties: [
-    string
-    ];
   thrown?: {
     normal: number;
     long: number;
-  };
-  sprite: {
-    character: string;
-    color: string;
   };
 }
 
