@@ -68,30 +68,15 @@ export interface JsonInventory {
   _empilable: boolean;
 }
 
-export interface JsonArmor {
-  id: string;
-  name: string;
-  type: string;
-  objectType: string;
+export interface JsonArmor extends JsonGameObject {
   ac: number;
-  cost: {
-    unit: string,
-    value: number
-  };
-  weight: number;
-  sprite: {
-    character: string;
-    color: string;
-  };
-  properties: [
-    string
-    ];
 }
 
 export interface JsonGameObject {
   id: string;
   name: string;
   type: string;
+  empilable: boolean;
   objectType: string;
   cost: {
     unit: string,
@@ -107,7 +92,7 @@ export interface JsonGameObject {
   };
 }
 
-export interface JsonWeapon {
+export interface JsonWeapon extends JsonGameObject {
   damage: {
     type: string,
     dice: number,

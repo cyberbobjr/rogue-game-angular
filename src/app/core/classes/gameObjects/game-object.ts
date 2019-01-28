@@ -1,13 +1,15 @@
 import {Sprite} from '../base/sprite';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
+import {JsonGameObject} from '../../interfaces/json-interfaces';
 
-export abstract class GameObject {
+export abstract class GameObject implements JsonGameObject {
   protected _id: string;
   protected _name: string;
   protected _sprite: Sprite;
   protected _qty = 1;
   protected _empilable = true;
+  protected _type: string;
   protected _objectType: string;
   protected _cost: {
     unit: string,
@@ -15,6 +17,50 @@ export abstract class GameObject {
   };
   protected _weight: number;
   protected _properties: [string];
+
+  get sprite(): Sprite {
+    return this._sprite;
+  }
+
+  set sprite(value: Sprite) {
+    this._sprite = value;
+  }
+
+  get type(): string {
+    return this._type;
+  }
+
+  set type(value: string) {
+    this._type = value;
+  }
+
+  get cost(): { unit: string; value: number } {
+    return this._cost;
+  }
+
+  set cost(value: { unit: string; value: number }) {
+    this._cost = value;
+  }
+
+  get weight(): number {
+    return this._weight;
+  }
+
+  set weight(value: number) {
+    this._weight = value;
+  }
+
+  get properties(): [string] {
+    return this._properties;
+  }
+
+  set properties(value: [string]) {
+    this._properties = value;
+  }
+
+  set id(value: string) {
+    this._id = value;
+  }
 
   get empilable(): boolean {
     return this._empilable;
@@ -88,10 +134,6 @@ export abstract class GameObject {
 
   // endregion
   abstract getSlots(): Array<SlotType>;
-
-  getSprite(): Sprite {
-    return this._sprite;
-  }
 
   constructor(protected _jsonData?: any) {
     if (this._jsonData) {

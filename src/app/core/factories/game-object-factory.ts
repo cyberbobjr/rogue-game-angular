@@ -18,13 +18,10 @@ export class GameObjectFactory {
   constructor() {
     console.log('GameObjectFactory created');
     for (const key of Object.keys(weapons.default)) {
-      this._weapons.set(weapons.default[key]['id'], new Weapon(weapons.default[key]));
-      //this._weapons.set(weapons.default[key]['id'], Object.create(Weapon.prototype, weapons.default[key]));
-      console.log("object created : " + JSON.stringify(weapons.default[key]));
-      console.log(Object.setPrototypeOf(weapons.default[key], Weapon.prototype));
+      this._weapons.set(weapons.default[key]['id'], Weapon.fromJson(weapons.default[key]));
     }
     for (const key of Object.keys(armors.default)) {
-      this._armors.set(armors.default[key]['id'], new Armor(armors.default[key]));
+      this._armors.set(armors.default[key]['id'], Armor.fromJson(armors.default[key]));
     }
   }
 
@@ -45,10 +42,10 @@ export class GameObjectFactory {
         return new Food();
       case GameObjectType.ARMOR:
         return GameObjectFactory.getInstance()
-          .getArmorById(id);
+                                .getArmorById(id);
       case GameObjectType.WEAPON:
         return GameObjectFactory.getInstance()
-          .getWeaponById(id);
+                                .getWeaponById(id);
       default:
         return null;
     }
@@ -101,15 +98,13 @@ export class GameObjectFactory {
   private _getRandomWeapon(): GameObject {
     const weaponCount: number = this._weapons.size;
     const items: Array<Weapon> = Array.from(this._weapons.values());
-    const key: GameObject = items[Utility.rolldice(weaponCount) - 1];
-    return key;
+    return items[Utility.rolldice(weaponCount) - 1];
   }
 
   private _getRandomArmor(): GameObject {
     const armorCount: number = this._armors.size;
     const items: Array<Armor> = Array.from(this._armors.values());
-    const key: GameObject = items[Utility.rolldice(armorCount) - 1];
-    return key;
+    return items[Utility.rolldice(armorCount) - 1];
   }
 
   getWeaponById(weaponId: string): Weapon | null {

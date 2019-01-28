@@ -3,34 +3,45 @@ import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Utility} from '../utility';
 import {Entity} from '../base/entity';
+import {Sprite} from '../base/sprite';
 
-export class Weapon extends GameObject {
-  protected _damage: {
+export class Weapon extends GameObject implements JsonWeapon {
+  private _damage: {
     type: string,
     dice: number,
     mul: number
   };
-  protected _thrown?: {
+  private _thrown?: {
     normal: number;
     long: number;
   };
 
-  get name(): string {
-    return this._name;
+  get damage(): { type: string; dice: number; mul: number } {
+    return this._damage;
   }
 
-  get properties(): Array<string> {
-    return this._jsonData.properties;
+  set damage(value: { type: string; dice: number; mul: number }) {
+    this._damage = value;
+  }
+
+  get thrown(): { normal: number; long: number } {
+    return this._thrown;
+  }
+
+  set thrown(value: { normal: number; long: number }) {
+    this._thrown = value;
   }
 
   static fromJson(_jsonData: JsonWeapon): Weapon {
-    const weapon: Weapon = new this();
-    weapon._damage = _jsonData.damage;
-    weapon._thrown = _jsonData.thrown;
+    let weapon: Weapon = Object.setPrototypeOf(_jsonData, this.prototype);
+    weapon = Object.assign(weapon, _jsonData);
+    if (_jsonData.sprite) {
+      weapon.sprite = new Sprite(_jsonData.sprite.character, _jsonData.sprite.color);
+    }
     return weapon;
   }
 
-  constructor(data?: any) {
+  constructor() {
     super();
     this.objectType = 'WEAPON';
   }
@@ -56,8 +67,8 @@ export class Weapon extends GameObject {
   }
 
   getDamage(): number {
-    if (<JsonWeapon>this._jsonData.damage) {
-      return (this._jsonData.damage.mul * Utility.rolldice(this._jsonData.damage.dice));
+    if (this._damage) {
+      return (this._damage.mul * Utility.rolldice(this._damage.dice));
     }
     return 0;
   }
