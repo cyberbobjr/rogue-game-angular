@@ -132,7 +132,5 @@ describe('Inventorysystem', () => {
     const json: string = inventory.toJSON();
     expect(json)
       .toEqual(JSON.stringify(inventoryJson));
-    console.log(json);
-    console.log(JSON.stringify(inventoryJson));
   });
 });

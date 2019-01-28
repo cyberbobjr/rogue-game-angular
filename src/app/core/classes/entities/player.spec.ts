@@ -80,7 +80,7 @@ describe('Player', () => {
     expect(player.race)
       .toEqual('Human');
     expect(player.gameClass)
-      .toEqual('Human');
+      .toEqual('Barbarian');
   });
 
   it('should generate correct JSON', () => {

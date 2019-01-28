@@ -12,7 +12,6 @@ describe('Weapon object', () => {
 
   it('Create weapon from WeaponClass', () => {
     const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
-    console.log(weapon);
     expect(weapon.name)
       .toEqual('Club');
   });

@@ -19,6 +19,9 @@ export class GameObjectFactory {
     console.log('GameObjectFactory created');
     for (const key of Object.keys(weapons.default)) {
       this._weapons.set(weapons.default[key]['id'], new Weapon(weapons.default[key]));
+      //this._weapons.set(weapons.default[key]['id'], Object.create(Weapon.prototype, weapons.default[key]));
+      console.log("object created : " + JSON.stringify(weapons.default[key]));
+      console.log(Object.setPrototypeOf(weapons.default[key], Weapon.prototype));
     }
     for (const key of Object.keys(armors.default)) {
       this._armors.set(armors.default[key]['id'], new Armor(armors.default[key]));
@@ -42,10 +45,10 @@ export class GameObjectFactory {
         return new Food();
       case GameObjectType.ARMOR:
         return GameObjectFactory.getInstance()
-                                .getArmorById(id);
+          .getArmorById(id);
       case GameObjectType.WEAPON:
         return GameObjectFactory.getInstance()
-                                .getWeaponById(id);
+          .getWeaponById(id);
       default:
         return null;
     }
