@@ -46,7 +46,7 @@ export abstract class Tile implements Iobject {
   get sprite(): Sprite {
     if (this._contents.length > 0) {
       const object: GameObject = this._contents[0];
-      return object.sprite;
+      return object.getSprite();
     }
     return this._sprite;
   }

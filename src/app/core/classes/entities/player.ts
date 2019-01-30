@@ -71,7 +71,7 @@ export class Player extends Entity {
     let entity: Player = new this();
 
     entity = Object.assign(entity, jsonData, {
-      _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color),
+      _sprite: new Sprite(jsonData.sprite.character, jsonData.sprite.color),
     });
 
     if (jsonData.inventory.length > 0) {

@@ -1,12 +1,13 @@
 import {Sprite} from '../base/sprite';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {JsonGameObject} from '../../interfaces/json-interfaces';
+import {JsonGameObject, JsonSprite} from '../../interfaces/json-interfaces';
+import {debug} from 'util';
 
 export abstract class GameObject implements JsonGameObject {
   protected _id: string;
   protected _name: string;
-  protected _sprite: Sprite;
+  protected _sprite: JsonSprite | Sprite;
   protected _qty = 1;
   protected _empilable = true;
   protected _type: string;
@@ -18,12 +19,12 @@ export abstract class GameObject implements JsonGameObject {
   protected _weight: number;
   protected _properties: [string];
 
-  get sprite(): Sprite {
-    return this._sprite;
-  }
-
-  set sprite(value: Sprite) {
-    this._sprite = value;
+  set sprite(value: JsonSprite | Sprite) {
+    if (value instanceof Sprite) {
+      this._sprite = value;
+    } else {
+      this._sprite = new Sprite(value.character, value.color);
+    }
   }
 
   get type(): string {
@@ -134,6 +135,26 @@ export abstract class GameObject implements JsonGameObject {
 
   // endregion
   abstract getSlots(): Array<SlotType>;
+
+  getSprite(): Sprite {
+    return this._sprite as Sprite;
+  }
+
+  toJSON(): any {
+    console.log(this);
+    return {
+      'id': this._id,
+      'name': this._name,
+      'sprite': (this._sprite as Sprite).toJSON(),
+      'qty': this._qty,
+      'empilable': this._empilable,
+      'type': this._type,
+      'objectType': this._objectType,
+      'cost': this._cost,
+      'weight': this._weight,
+      'properties': this._properties
+    };
+  }
 
   constructor(protected _jsonData?: any) {
     if (this._jsonData) {

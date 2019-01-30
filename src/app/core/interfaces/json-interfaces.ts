@@ -2,11 +2,11 @@ import {GameObject} from '../classes/gameObjects/game-object';
 import {Sprite} from '../classes/base/sprite';
 
 export interface JsonSprite {
-  _color: string;
-  _character: string;
-  _bgColor: string;
-  _light: boolean;
-  _visibility: number;
+  color: string;
+  character: string;
+  bgColor: string;
+  light?: boolean;
+  visibility?: number;
 }
 
 export interface JsonPosition {
@@ -86,10 +86,7 @@ export interface JsonGameObject {
   properties: [
     string
     ];
-  sprite: {
-    character: string;
-    color: string;
-  };
+  sprite: JsonSprite | Sprite;
 }
 
 export interface JsonWeapon extends JsonGameObject {

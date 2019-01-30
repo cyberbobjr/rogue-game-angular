@@ -51,7 +51,7 @@ export class GameObjectFactory {
     }
   }
 
-  static createFromJson(objectType: string, data: any): GameObject | null {
+  static createFromJson(objectType: string, data: any): GameObject | undefined {
     switch (objectType) {
       case 'GOLD' :
         return new Gold(data['_amount']);
@@ -66,7 +66,7 @@ export class GameObjectFactory {
       case 'TORCH' :
         return Torch.fromJson(data);
       default:
-        return null;
+        return undefined;
     }
   }
 

@@ -1,4 +1,4 @@
-import {JsonWeapon} from '../../interfaces/json-interfaces';
+import {JsonSprite, JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Utility} from '../utility';
@@ -33,12 +33,25 @@ export class Weapon extends GameObject implements JsonWeapon {
   }
 
   static fromJson(_jsonData: JsonWeapon): Weapon {
-    let weapon: Weapon = Object.setPrototypeOf(_jsonData, this.prototype);
-    weapon = Object.assign(weapon, _jsonData);
+    const weapon: Weapon = new Weapon();
+    for (const key of Object.keys(_jsonData)) {
+      weapon[key] = _jsonData[key];
+    }
+    /*let weapon: Weapon = Object.setPrototypeOf(_jsonData, this.prototype);
+     weapon = Object.assign(weapon, _jsonData);
+     */
     if (_jsonData.sprite) {
-      weapon.sprite = new Sprite(_jsonData.sprite.character, _jsonData.sprite.color);
+      weapon.sprite = new Sprite((_jsonData.sprite as JsonSprite).character, (_jsonData.sprite as JsonSprite).color);
     }
     return weapon;
+  }
+
+  toJSON(): any {
+    return {
+      ...super.toJSON(),
+      damage: this._damage,
+      thrown: this._thrown
+    };
   }
 
   constructor() {

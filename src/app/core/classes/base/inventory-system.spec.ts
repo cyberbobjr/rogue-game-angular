@@ -23,13 +23,13 @@ describe('Inventorysystem', () => {
       '_empilable': false,
       '_id': 'greataxe',
       '_name': 'Greataxe',
-      '_sprite': {'_color': 'white', '_bgColor': '#000000', '_light': false, '_visibility': 0, '_character': '%'},
+      '_sprite': {'color': 'white', 'bgColor': '#000000', 'light': false, 'visibility': 0, 'character': '%'},
       '_objectType': 'WEAPON'
     },
     {
       '_qty': 10,
       '_empilable': true,
-      '_sprite': {'_color': '#66bbe2', '_bgColor': '#000000', '_light': false, '_visibility': 0, '_character': 'i'},
+      '_sprite': {'color': '#66bbe2', 'bgColor': '#000000', 'light': false, 'visibility': 0, 'character': 'i'},
       '_id': 'torch',
       '_name': 'Torch',
       '_objectType': 'TORCH'
@@ -37,7 +37,7 @@ describe('Inventorysystem', () => {
     {
       '_qty': 1,
       '_empilable': true,
-      '_sprite': {'_color': '#66bbe2', '_bgColor': '#000000', '_light': false, '_visibility': 0, '_character': 'i'},
+      '_sprite': {'color': '#66bbe2', 'bgColor': '#000000', 'light': false, 'visibility': 0, 'character': 'i'},
       '_id': 'potion',
       '_name': 'Potion',
       '_objectType': 'POTION'
@@ -49,12 +49,12 @@ describe('Inventorysystem', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
+    inventory = new InventorySystem();
   });
 
-  it('should be created', () => {
-    inventory = new InventorySystem();
-    expect(inventory)
-      .toBeTruthy();
+  it('it should be empty', () => {
+    expect(inventory.getInventorySize())
+      .toEqual(0);
   });
 
   it('a GameObject can be added in inventory', () => {
@@ -128,9 +128,20 @@ describe('Inventorysystem', () => {
       .toEqual(3);
   });
 
-  it('a InventorySystem can generate correct Json Data', () => {
-    const json: string = inventory.toJSON();
-    expect(json)
-      .toEqual(JSON.stringify(inventoryJson));
+  it('a InventorySystem can be cleared', () => {
+    inventory.clear();
+    expect(inventory.getInventorySize())
+      .toEqual(0);
   });
+
+  it('a InventorySystem can generate Json Data', () => {
+    const weapon1: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    inventory.addToInventory(weapon1);
+    const jsonInventory: any = inventory.toJSON();
+    console.log(jsonInventory);
+    const jsonString = JSON.stringify(jsonInventory);
+    expect(jsonString)
+      .toContain('');
+  });
+
 });

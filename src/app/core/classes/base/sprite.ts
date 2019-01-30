@@ -4,7 +4,6 @@ import {ISprite} from 'src/app/core/interfaces/i-sprite';
 
 export class Sprite implements ISprite {
   protected _visibility = 0;
-  protected _character: string;
 
   get visibility(): number {
     return this._visibility;
@@ -32,8 +31,8 @@ export class Sprite implements ISprite {
 
   get color(): string {
     return Color(this._color);
-      /*.darken(this._visibility)
-      .hex();*/
+    /*.darken(this._visibility)
+     .hex();*/
   }
 
   set color(value: string) {
@@ -45,24 +44,29 @@ export class Sprite implements ISprite {
   }
 
   get bgColor(): string {
-    return Color(this._bgColor);/*
-      .darken(this._visibility)
-      .hex();*/
+    return Color(this._bgColor);
   }
 
   static fromJson(jsonData: JsonSprite): Sprite {
-    const {_character, _color, _bgColor, _light, _visibility} = jsonData;
-    const sprite: Sprite = new this(_character, _color, _bgColor);
-    sprite.light = _light;
-    sprite.visibility = _visibility;
+    const {character, color, bgColor, light, visibility} = jsonData;
+    const sprite: Sprite = new this(character, color, bgColor);
+    sprite.light = light;
+    sprite.visibility = visibility;
     return sprite;
   }
 
-  constructor(_character: string,
+  toJSON(): JsonSprite {
+    return {
+      character: this._character,
+      color: this._color,
+      bgColor: this._bgColor
+    };
+  }
+
+  constructor(private _character: string,
               private _color: string = '#afafaf',
               private _bgColor: string = '#000000',
               private _light = false) {
-    this._character = _character;
   }
 
   clone(): Sprite {

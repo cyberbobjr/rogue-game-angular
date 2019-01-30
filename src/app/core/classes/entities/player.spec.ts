@@ -10,7 +10,7 @@ const playerJsonData: JsonEntity = {
   'size': 'm',
   'name': 'Player',
   'position': {'_x': 55, '_y': 20},
-  'sprite': {'_color': '#ffffff', '_bgColor': '#000000', '_light': true, '_visibility': 0, '_character': '@'},
+  'sprite': {'color': '#ffffff', 'bgColor': '#000000', 'light': true, 'visibility': 0, 'character': '@'},
   'strength': 17,
   'dexterity': 16,
   'constitution': 16,
@@ -37,13 +37,13 @@ const playerJsonData: JsonEntity = {
       '_empilable': false,
       '_id': 'greataxe',
       '_name': 'Greataxe',
-      '_sprite': {'_color': 'white', '_bgColor': '#000000', '_light': false, '_visibility': 0, '_character': '%'},
+      '_sprite': {'color': 'white', 'bgColor': '#000000', 'light': false, 'visibility': 0, 'character': '%'},
       '_objectType': 'WEAPON'
     },
     {
       '_qty': 10,
       '_empilable': true,
-      '_sprite': {'_color': '#66bbe2', '_bgColor': '#000000', '_light': false, '_visibility': 0, '_character': 'i'},
+      '_sprite': {'color': '#66bbe2', 'bgColor': '#000000', 'light': false, 'visibility': 0, 'character': 'i'},
       '_id': 'torch',
       '_name': 'Torch',
       '_objectType': 'TORCH'
@@ -51,7 +51,7 @@ const playerJsonData: JsonEntity = {
     {
       '_qty': 1,
       '_empilable': true,
-      '_sprite': {'_color': '#66bbe2', '_bgColor': '#000000', '_light': false, '_visibility': 0, '_character': 'i'},
+      '_sprite': {'color': '#66bbe2', 'bgColor': '#000000', 'light': false, 'visibility': 0, 'character': 'i'},
       '_id': 'potion',
       '_name': 'Potion',
       '_objectType': 'POTION'

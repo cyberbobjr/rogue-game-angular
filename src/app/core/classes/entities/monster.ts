@@ -19,7 +19,7 @@ export class Monster extends Entity {
     let monster: Monster = new this();
     monster = Object.assign(monster, jsonData, {
       _position: new Position(jsonData.position._x, jsonData.position._y),
-      _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color)
+      _sprite: new Sprite(jsonData.sprite.character, jsonData.sprite.color)
     });
 
     if (jsonData.inventory.length > 0) {

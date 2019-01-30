@@ -40,7 +40,7 @@ export class InventorySystem {
 
   public removeFromInventory(letterInventory: string, qty = 1): boolean {
     const gameObject: GameObject = this._inventory.get(letterInventory);
-    if (gameObject.empilable && (gameObject.qty - qty > 0)) {
+    if (gameObject && gameObject.empilable && (gameObject.qty - qty > 0)) {
       gameObject.qty -= qty;
       return (!!this._inventory.set(letterInventory, gameObject));
     } else {
@@ -90,7 +90,17 @@ export class InventorySystem {
     return false;
   }
 
-  public toJSON(): string {
-    return JSON.stringify(Array.from(this._inventory.values()));
+  public toJSON(): any {
+    const jsonObject: Array<any> = [];
+    this._inventory.forEach((item: GameObject) => {
+      jsonObject.push(item.toJSON());
+    });
+    return jsonObject;
+  }
+
+  public clear(): number {
+    const size: number = this._inventory.size;
+    this._inventory.clear();
+    return size;
   }
 }
