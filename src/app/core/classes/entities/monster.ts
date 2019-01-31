@@ -3,7 +3,7 @@ import {Sprite} from '../base/sprite';
 import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
-import {JsonEntity, JsonInventory} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonGameObject, JsonInventory} from '../../interfaces/json-interfaces';
 import {Gold} from '../gameObjects/gold';
 import {GameObject} from '../gameObjects/game-object';
 import {Weapon} from '../gameObjects/weapon';
@@ -23,8 +23,8 @@ export class Monster extends Entity {
     });
 
     if (jsonData.inventory.length > 0) {
-      jsonData.inventory.forEach((value: JsonInventory) => {
-        const letterInventory = monster.addToInventory(GameObjectFactory.createFromJson(value._objectType, value));
+      jsonData.inventory.forEach((value: JsonGameObject) => {
+        const letterInventory = monster.addToInventory(GameObjectFactory.createFromJson(value.objectType, value));
         monster.equipInventory(letterInventory);
       });
     }

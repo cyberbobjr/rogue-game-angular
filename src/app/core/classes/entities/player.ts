@@ -5,7 +5,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {JsonEntity, JsonInventory} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonGameObject, JsonInventory} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
@@ -75,9 +75,9 @@ export class Player extends Entity {
     });
 
     if (jsonData.inventory.length > 0) {
-      jsonData.inventory.forEach((value: JsonInventory) => {
-        const gameObject: GameObject = GameObjectFactory.createFromJson(value._objectType, value);
-        gameObject.qty = value._qty;
+      jsonData.inventory.forEach((value: JsonGameObject) => {
+        const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
+        gameObject.qty = value.qty;
         entity.addToInventory(gameObject);
       });
     }

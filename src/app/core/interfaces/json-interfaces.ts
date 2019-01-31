@@ -52,20 +52,20 @@ export interface JsonEntity {
   wisdom: number;
   charisma: number;
   level: number;
-  inventory: Array<JsonInventory>;
+  inventory: Array<JsonGameObject>;
   equipped?: Array<[number, string]>;
   race: string;
   gameClass: string;
 }
 
 export interface JsonInventory {
-  _id: string;
-  _name: string;
+  id: string;
+  name: string;
   _jsonData?: any;
-  _qty: number;
-  _sprite: JsonSprite;
-  _objectType: string;
-  _empilable: boolean;
+  qty: number;
+  sprite: JsonSprite;
+  objectType: string;
+  empilable: boolean;
 }
 
 export interface JsonArmor extends JsonGameObject {
@@ -87,6 +87,7 @@ export interface JsonGameObject {
     string
     ];
   sprite: JsonSprite | Sprite;
+  qty: number;
 }
 
 export interface JsonWeapon extends JsonGameObject {
