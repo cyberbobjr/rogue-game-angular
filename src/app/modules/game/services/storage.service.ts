@@ -93,7 +93,6 @@ export class StorageService {
   }
 
   async saveMap(gameMap: GameMap) {
-    console.log(this._entitiesService.getEntities());
     return await this.connection.insert({
                                           into: 'Map',
                                           return: true,

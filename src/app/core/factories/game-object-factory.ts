@@ -9,7 +9,7 @@ import {GameObjectType} from '../enums/game-object-type.enum';
 import {Torch} from '../classes/gameObjects/torch';
 import {Food} from '../classes/gameObjects/food';
 import {Utility} from '../classes/utility';
-import {JsonArmor, JsonGameObject, JsonWeapon} from "../interfaces/json-interfaces";
+import {JsonArmor, JsonGameObject, JsonWeapon} from '../interfaces/json-interfaces';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -58,10 +58,10 @@ export class GameObjectFactory {
         return new Gold(data['_amount']);
       case 'WEAPON' :
         return Weapon.fromJson(data as JsonWeapon);
-      case 'ARMOUR' :
+      case 'ARMOR' :
         return Armor.fromJson(data as JsonArmor);
       case 'POTION' :
-        return Potion.fromJson(data);
+        return Potion.fromJson();
       case 'FOOD' :
         return Food.fromJson(data);
       case 'TORCH' :

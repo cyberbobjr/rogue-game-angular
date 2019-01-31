@@ -4,7 +4,7 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectType} from '../../enums/game-object-type.enum';
-import {JsonGameObject, JsonInventory} from '../../interfaces/json-interfaces';
+import {JsonGameObject} from '../../interfaces/json-interfaces';
 
 describe('Inventorysystem', () => {
   let inventoryJson: Array<JsonGameObject> = [];
@@ -92,22 +92,33 @@ describe('Inventorysystem', () => {
   it('a InventorySystem can generate Json Data', () => {
     const weapon1: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     inventory.addToInventory(weapon1);
-    const jsonInventory: any = inventory.toJSON();
     inventoryJson = inventory.toJSON();
-    console.log(jsonInventory);
-    const jsonString = JSON.stringify(jsonInventory);
+    const jsonString = JSON.stringify(inventoryJson);
     expect(jsonString)
-      .toContain('');
+      .toContain('club');
   });
 
   it('a InventorySystem can be created with persisted data', () => {
     inventory = new InventorySystem();
-    inventoryJson.forEach((item: JsonGameObject) => {
-      const gameObject: GameObject = GameObjectFactory.createFromJson(item.objectType, item);
-      inventory.addToInventory(gameObject);
-    });
-    expect(inventory.getInventorySize())
-      .toEqual(3);
+    weapon = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    potion = GameObjectFactory.create(GameObjectType.POTION);
+    const shield: GameObject = GameObjectFactory.create(GameObjectType.ARMOR, 'shield');
+
+    inventory.addToInventory(weapon);
+    inventory.addToInventory(potion);
+    inventory.addToInventory(shield);
+    inventoryJson = inventory.toJSON();
+
+    const weapon1: GameObject = GameObjectFactory.createFromJson(inventoryJson[0].objectType, inventoryJson[0]);
+    const potion1: GameObject = GameObjectFactory.createFromJson(inventoryJson[1].objectType, inventoryJson[1]);
+    const shield1: GameObject = GameObjectFactory.createFromJson(inventoryJson[2].objectType, inventoryJson[2]);
+
+    expect(weapon.toJSON())
+      .toEqual(weapon1.toJSON());
+    expect(potion.toJSON())
+      .toEqual(potion1.toJSON());
+    expect(shield.toJSON())
+      .toEqual(shield1.toJSON());
   });
 
 });

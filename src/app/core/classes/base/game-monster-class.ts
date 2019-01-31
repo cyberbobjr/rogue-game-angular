@@ -8,7 +8,7 @@ export class GameMonsterClass {
 
   get weapons(): Array<Weapon> {
     const weapons: Array<Weapon> = [];
-    this._jsonData.weapons.forEach((weaponId: string) => {
+    this._jsonMonster.weapons.forEach((weaponId: string) => {
       weapons.push(GameObjectFactory.getInstance()
                                     .getWeaponById(weaponId));
     });
@@ -16,69 +16,69 @@ export class GameMonsterClass {
   }
 
   get id(): string {
-    return this._jsonData.id;
+    return this._jsonMonster.id;
   }
 
   get name(): string {
-    return this._jsonData.name;
+    return this._jsonMonster.name;
   }
 
   get ac(): number {
-    return this._jsonData.ac;
+    return this._jsonMonster.ac;
   }
 
   get strength(): number {
-    return this._jsonData.abilities.strength;
+    return this._jsonMonster.abilities.strength;
   }
 
   get dexterity(): number {
-    return this._jsonData.abilities.dexterity;
+    return this._jsonMonster.abilities.dexterity;
   }
 
   get constitution(): number {
-    return this._jsonData.abilities.constitution;
+    return this._jsonMonster.abilities.constitution;
   }
 
   get intelligence(): number {
-    return this._jsonData.abilities.intelligence;
+    return this._jsonMonster.abilities.intelligence;
   }
 
   get wisdom(): number {
-    return this._jsonData.abilities.wisdom;
+    return this._jsonMonster.abilities.wisdom;
   }
 
   get charisma(): number {
-    return this._jsonData.abilities.charisma;
+    return this._jsonMonster.abilities.charisma;
   }
 
   get hp(): number {
-    return this._jsonData.hp.mul * Utility.rolldice(this._jsonData.hp.dice) + this._jsonData.hp.bonus;
+    return this._jsonMonster.hp.mul * Utility.rolldice(this._jsonMonster.hp.dice) + this._jsonMonster.hp.bonus;
   }
 
   get gp(): number {
-    return Utility.rolldice(this._jsonData.gp.dice);
+    return Utility.rolldice(this._jsonMonster.gp.dice);
   }
 
   get sprite(): Sprite {
-    return new Sprite(this._jsonData.sprite.character, this._jsonData.sprite.color);
+    return new Sprite(this._jsonMonster.sprite.character, this._jsonMonster.sprite.color);
   }
 
   get size(): string {
-    return this._jsonData.size;
+    return this._jsonMonster.size;
   }
 
   get speed(): number {
-    return this._jsonData.speed;
+    return this._jsonMonster.speed;
   }
 
   get frequency(): number {
-    return this._jsonData.frequency;
+    return this._jsonMonster.frequency;
   }
 
-  constructor(private _jsonData: JsonMonster) {
+  constructor(private _jsonMonster: JsonMonster) {
   }
 
   toJSON(): any {
-    return this._jsonData;
+    return this._jsonMonster;
   }
 }

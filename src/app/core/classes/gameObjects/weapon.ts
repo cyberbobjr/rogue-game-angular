@@ -32,16 +32,13 @@ export class Weapon extends GameObject implements JsonWeapon {
     this._thrown = value;
   }
 
-  static fromJson(_jsonData: JsonWeapon): Weapon {
+  static fromJson(_jsonWeapon: JsonWeapon): Weapon {
     const weapon: Weapon = new Weapon();
-    for (const key of Object.keys(_jsonData)) {
-      weapon[key] = _jsonData[key];
+    for (const key of Object.keys(_jsonWeapon)) {
+      weapon['_' + key] = _jsonWeapon[key];
     }
-    /*let weapon: Weapon = Object.setPrototypeOf(_jsonData, this.prototype);
-     weapon = Object.assign(weapon, _jsonData);
-     */
-    if (_jsonData.sprite) {
-      weapon.sprite = new Sprite((_jsonData.sprite as JsonSprite).character, (_jsonData.sprite as JsonSprite).color);
+    if (_jsonWeapon.sprite) {
+      weapon.sprite = new Sprite((_jsonWeapon.sprite as JsonSprite).character, (_jsonWeapon.sprite as JsonSprite).color);
     }
     return weapon;
   }

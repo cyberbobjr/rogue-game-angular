@@ -2,7 +2,6 @@ import {Sprite} from '../base/sprite';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {JsonGameObject, JsonSprite} from '../../interfaces/json-interfaces';
-import {debug} from 'util';
 
 export abstract class GameObject implements JsonGameObject {
   protected _id: string;
@@ -140,8 +139,7 @@ export abstract class GameObject implements JsonGameObject {
     return this._sprite as Sprite;
   }
 
-  toJSON(): any {
-    console.log(this);
+  toJSON(): JsonGameObject {
     return {
       'id': this._id,
       'name': this._name,
@@ -156,16 +154,7 @@ export abstract class GameObject implements JsonGameObject {
     };
   }
 
-  constructor(protected _jsonData?: any) {
-    if (this._jsonData) {
-      this._id = _jsonData.id;
-      this._name = _jsonData.name;
-    }
-    if (this._jsonData && this._jsonData.sprite) {
-      this._sprite = new Sprite(_jsonData.sprite.character, _jsonData.sprite.color);
-    }
-    if (this._jsonData && this._jsonData.qty) {
-      this.qty = this._jsonData.qty;
-    }
+  protected constructor() {
+
   }
 }

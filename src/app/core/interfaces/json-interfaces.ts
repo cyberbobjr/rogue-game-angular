@@ -61,7 +61,6 @@ export interface JsonEntity {
 export interface JsonInventory {
   id: string;
   name: string;
-  _jsonData?: any;
   qty: number;
   sprite: JsonSprite;
   objectType: string;

@@ -1,4 +1,4 @@
-import {JsonArmor} from '../../interfaces/json-interfaces';
+import {JsonArmor, JsonSprite} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Entity} from 'src/app/core/classes/base/entity';
@@ -15,11 +15,13 @@ export class Armor extends GameObject implements JsonArmor {
     return this._ac;
   }
 
-  static fromJson(_jsonData: JsonArmor): Armor {
-    let armor: Armor = Object.setPrototypeOf(_jsonData, this.prototype);
-    armor = Object.assign(armor, _jsonData);
-    if (_jsonData.sprite) {
-      armor.sprite = new Sprite(_jsonData.sprite.character, _jsonData.sprite.color);
+  static fromJson(_jsonArmor: JsonArmor): Armor {
+    const armor: Armor = new Armor();
+    for (const key of Object.keys(_jsonArmor)) {
+      armor['_' + key] = _jsonArmor[key];
+    }
+    if (_jsonArmor.sprite) {
+      armor.sprite = new Sprite((_jsonArmor.sprite as JsonSprite).character, (_jsonArmor.sprite as JsonSprite).color);
     }
     return armor;
   }
@@ -27,6 +29,13 @@ export class Armor extends GameObject implements JsonArmor {
   constructor() {
     super();
     this.objectType = 'ARMOR';
+  }
+
+  toJSON(): any {
+    return {
+      ...super.toJSON(),
+      ac: this._ac
+    };
   }
 
   onEquip(actor: Entity, letterInventory?: string) {
