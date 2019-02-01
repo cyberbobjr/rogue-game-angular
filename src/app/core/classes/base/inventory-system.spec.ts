@@ -121,4 +121,11 @@ describe('Inventorysystem', () => {
       .toEqual(shield1.toJSON());
   });
 
+  it('a InventorySystem should return gameObject by Class', () => {
+    const gameObjectClass = 'Weapon';
+    const arrayGameObject: Array<GameObject> = inventory.getGameObjectByClass(gameObjectClass);
+    expect(arrayGameObject.length)
+      .toEqual(1);
+  });
+
 });

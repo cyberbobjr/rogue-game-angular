@@ -103,4 +103,14 @@ export class InventorySystem {
     this._inventory.clear();
     return size;
   }
+
+  public getGameObjectByClass(gameObjectClass: string): Array<GameObject> {
+    const arrayGameObject: Array<GameObject> = [];
+    this._inventory.forEach((item: GameObject) => {
+      if (item.constructor.name === gameObjectClass) {
+        arrayGameObject.push(item);
+      }
+    });
+    return arrayGameObject;
+  }
 }

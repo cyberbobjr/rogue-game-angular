@@ -1,6 +1,10 @@
 import {TestBed} from '@angular/core/testing';
 import {Player} from './player';
 import {JsonEntity} from '../../interfaces/json-interfaces';
+import {InventorySystem} from '../base/inventory-system';
+import {GameObjectFactory} from '../../factories/game-object-factory';
+import {GameObjectType} from '../../enums/game-object-type.enum';
+import {GameObject} from '../gameObjects/game-object';
 
 const playerJsonData: JsonEntity = {
   'id': 'player',
@@ -42,15 +46,31 @@ describe('Player', () => {
   });
 
   it('can be initiated with jsonData', () => {
+    playerJsonData.inventory = generateInventory();
     const player: Player = Player.fromJSON(playerJsonData);
     expect(player.race)
       .toEqual('Human');
     expect(player.gameClass)
       .toEqual('Barbarian');
+    expect(player.isInventoryEquipped('a'))
+      .toBeTruthy();
+    console.log(player);
   });
 
   it('should generate correct JSON', () => {
     const player: Player = new Player();
     const playerJson: string = player.toJSON();
   });
+
+  const generateInventory = function () {
+    const inventory: InventorySystem = new InventorySystem();
+    const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    const potion: GameObject = GameObjectFactory.create(GameObjectType.POTION);
+    const shield: GameObject = GameObjectFactory.create(GameObjectType.ARMOR, 'shield');
+
+    inventory.addToInventory(weapon);
+    inventory.addToInventory(potion);
+    inventory.addToInventory(shield);
+    return inventory.toJSON();
+  };
 });

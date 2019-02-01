@@ -66,7 +66,7 @@ export abstract class Tile implements Iobject {
     };
   }
 
-  constructor(protected _position?: Position) {
+  protected constructor(protected _position?: Position) {
   }
 
   abstract isWalkable(): boolean ;
@@ -85,9 +85,7 @@ export abstract class Tile implements Iobject {
     return null;
   }
 
-  onHit(actor: Entity): Iaction | null {
-    return null;
-  }
+  abstract onHit(actor: Entity): Iaction | null;
 
   dropOn(gameObject: GameObject) {
     const existingGameObject = this._contents.find((value: GameObject) => value.id === gameObject.id);

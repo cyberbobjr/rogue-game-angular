@@ -13,6 +13,7 @@ import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {InventorySystem} from './inventory-system';
 
 @Injectable({
               providedIn: 'root'
@@ -39,7 +40,7 @@ export abstract class Entity implements Iobject, IEntity {
   protected _ap = 0; // action points
   protected _xp = 0; // xp for player or challenge point
 
-  protected _inventory: Map<string, GameObject> = new Map<string, GameObject>();
+  protected _inventory: InventorySystem = new InventorySystem();
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   lightRadius = 20;
@@ -79,21 +80,12 @@ export abstract class Entity implements Iobject, IEntity {
     this._size = value;
   }
 
-  get weapons(): Array<Weapon> {
-    const filteredObjects: Array<Weapon> = [];
-    this._inventory.forEach((gameObject: GameObject, key: string) => {
-      if (gameObject.objectType === 'WEAPON') {
-        filteredObjects.push(gameObject as Weapon);
-      }
-    });
-    return filteredObjects;
-  }
-
-  get inventory(): Map<string, GameObject> {
+  get inventory(): InventorySystem {
     return this._inventory;
   }
 
-  set inventory(value: Map<string, GameObject>) {
+  set inventory(value: InventorySystem) {
+    this._inventory = value;
   }
 
   get id(): string {
@@ -241,7 +233,7 @@ export abstract class Entity implements Iobject, IEntity {
       hp: this.hp,
       gp: this.gp,
       hitDice: this.hitDice,
-      inventory: Array.from(this.inventory.values()),
+      inventory: this._inventory.toJSON(),
       speed: this.speed,
       size: this.size,
       race: this._race
@@ -290,17 +282,7 @@ export abstract class Entity implements Iobject, IEntity {
   // end region
 
   addToInventory(gameObject: GameObject): string {
-    let letterInventory: string = Utility.getLetter(this._inventory.size);
-    if (gameObject.empilable) {
-      const key: string = this._getByInventoryItemId(gameObject.id);
-      if (key) {
-        const gameObjectExisting: GameObject = this._inventory.get(key);
-        gameObject.qty += gameObjectExisting.qty;
-        letterInventory = key;
-      }
-    }
-    this._inventory.set(letterInventory, gameObject);
-    return letterInventory;
+    return this._inventory.addToInventory(gameObject);
   }
 
   setInventory(arrInventory: Array<GameObject>) {
@@ -309,46 +291,20 @@ export abstract class Entity implements Iobject, IEntity {
     });
   }
 
-  useInventory(letterInventory: string, qty = 1) {
-    const gameObject: GameObject = this._inventory.get(letterInventory);
-    if (gameObject.empilable) {
-      gameObject.qty -= qty;
-      if (gameObject.qty <= 0) {
-        this._inventory.delete(letterInventory);
-      } else {
-        this._inventory.set(letterInventory, gameObject);
-      }
-    }
+  useInventory(letterInventory: string, qty = 1): boolean {
+    return this._inventory.removeFromInventory(letterInventory, qty);
   }
 
   getItemByLetter(inventoryLetter: string): GameObject {
-    return this._inventory.get(inventoryLetter);
+    return this._inventory.getGameObjectByInventoryLetter(inventoryLetter);
   }
 
   equipInventory(inventoryletter: string): boolean {
-    let equipped = false;
-    const gameObject: GameObject = this._inventory.get(inventoryletter);
-    if (gameObject) {
-      const slots: Array<SlotType> = gameObject.getSlots();
-      slots.every((slot: SlotType) => {
-        if (this._equippedItem.has(slot)) {
-          return true;
-        }
-        this._equippedItem.set(slot, inventoryletter);
-        equipped = true;
-      });
-    }
-    return equipped;
+    return this._inventory.equip(inventoryletter);
   }
 
   unequipItem(inventoryLetter: string): boolean {
-    for (const [key, value] of this._equippedItem) {
-      if (value === inventoryLetter) {
-        this._equippedItem.delete(key);
-        return true;
-      }
-    }
-    return false;
+    return this._inventory.unequip(inventoryLetter);
   }
 
   getWeaponsDamage(): number {
@@ -361,22 +317,10 @@ export abstract class Entity implements Iobject, IEntity {
     return totalDamage;
   }
 
-  private _getByInventoryItemId(itemId: string): string | null {
-    let gameObjectFind: GameObject | null = null;
-    let keyFind: string | null = null;
-    this._inventory.forEach((value: GameObject, key: string) => {
-      if (value.id === itemId) {
-        gameObjectFind = value;
-        keyFind = key;
-      }
-    });
-    return keyFind;
-  }
-
   private _getEquippedWeapons(): Array<Weapon> {
     const weaponsEquipped: Array<Weapon> = [];
     for (const [key, value] of this._equippedItem) {
-      const gameObject: GameObject = this._inventory.get(value);
+      const gameObject: GameObject = this._inventory.getGameObjectByInventoryLetter(value);
       if ((key === SlotType.TWOHANDS || key === SlotType.RIGHTHAND || key === SlotType.LEFTHAND) && (gameObject instanceof Weapon)) {
         weaponsEquipped.push(gameObject as Weapon);
       }
