@@ -10,10 +10,10 @@ import {Potion} from '../../../../core/classes/gameObjects/potion';
 import {Tile} from '../../../../core/classes/base/tile';
 
 @Component({
-             selector: 'app-inventory-modal',
-             templateUrl: './inventory-modal.component.html',
-             styleUrls: ['./inventory-modal.component.css']
-           })
+  selector: 'app-inventory-modal',
+  templateUrl: './inventory-modal.component.html',
+  styleUrls: ['./inventory-modal.component.css']
+})
 export class InventoryModalComponent implements OnInit, OnDestroy {
   private _handleKeyBackup: any;
   private _listener: any = null;
@@ -67,7 +67,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   keyboardHandler(key: KeyboardEvent) {
     const letter: string = key.key;
     if (!this._selected) {
-      if (this._player.inventory.has(letter)) {
+      if (this._player.inventoryContain(letter)) {
         this._selected = letter;
       }
     } else {
@@ -108,40 +108,40 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   }
 
   isSelectedEquipable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
+    const object: GameObject = this._player.getItemByLetter(this._selected);
     return object.canEquip() && !this._player.isInventoryEquipped(this._selected);
   }
 
   isSelectedUsable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
+    const object: GameObject = this._player.getItemByLetter(this._selected);
     return object.canUse();
   }
 
   isSelectedUnequippable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
+    const object: GameObject = this._player.getItemByLetter(this._selected);
     return object.canEquip() && this._player.isInventoryEquipped(this._selected);
   }
 
   dropObject() {
-    const gameObject: GameObject = this._player.inventory.get(this._selected);
+    const gameObject: GameObject = this._player.getItemByLetter(this._selected);
     const tile: Tile = this._gameEngine.getMapEngine()
                            .getTileAt(this._player.position);
     tile.dropOn(gameObject);
-    this._player.inventory.delete(this._selected);
+    this._player.removeFromInventory(this._selected);
   }
 
   equipObject(inventoryLetter: string) {
-    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    const gameObject: GameObject = this._player.getItemByLetter(inventoryLetter);
     gameObject.onEquip(this._player, inventoryLetter);
   }
 
   unequipObject(inventoryLetter: string) {
-    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    const gameObject: GameObject = this._player.getItemByLetter(inventoryLetter);
     gameObject.onUnequip(this._player, inventoryLetter);
   }
 
   useObject(inventoryLetter: string) {
-    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    const gameObject: GameObject = this._player.getItemByLetter(inventoryLetter);
     gameObject.onUse(this._player, inventoryLetter);
   }
 }

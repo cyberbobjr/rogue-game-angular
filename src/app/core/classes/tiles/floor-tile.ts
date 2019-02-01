@@ -42,4 +42,9 @@ export class FloorTile extends Tile {
     const info = 'floor';
     return info + super.getInfo();
   }
+
+  onHit(actor: Entity): Iaction | null {
+    return null;
+  }
+
 }

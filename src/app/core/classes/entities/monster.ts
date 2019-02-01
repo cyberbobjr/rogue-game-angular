@@ -70,9 +70,10 @@ export class Monster extends Entity {
                                  .getTileAt(this.position);
     tile.dropOn(goldObject);
     // drop weapon
-    this._inventory.forEach((weapon: Weapon) => {
-      tile.dropOn(weapon);
-    });
+    this._inventory.getAllGameObjects()
+        .forEach((item: GameObject) => {
+          tile.dropOn(item);
+        });
     // region debug purpose
     tile.dropOn(GameObjectFactory.create(GameObjectType.POTION));
     // endregion

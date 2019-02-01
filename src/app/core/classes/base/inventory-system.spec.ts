@@ -5,6 +5,7 @@ import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {JsonGameObject} from '../../interfaces/json-interfaces';
+import {Weapon} from "../gameObjects/weapon";
 
 describe('Inventorysystem', () => {
   let inventoryJson: Array<JsonGameObject> = [];
@@ -73,7 +74,7 @@ describe('Inventorysystem', () => {
     weapon = GameObjectFactory.create(GameObjectType.WEAPON, 'greataxe');
     inventoryLetter = inventory.addToInventory(weapon);
     inventory.equipItemAtSlot(SlotType.RIGHTHAND, inventoryLetter);
-    const weaponEquipped: GameObject = inventory.getItemEquippedAtSlot(SlotType.RIGHTHAND);
+    const weaponEquipped: GameObject = inventory.getItemEquippedWithSlot(SlotType.RIGHTHAND);
     expect(weapon)
       .toEqual(weaponEquipped);
   });
@@ -126,6 +127,8 @@ describe('Inventorysystem', () => {
     const arrayGameObject: Array<GameObject> = inventory.getGameObjectByClass(gameObjectClass);
     expect(arrayGameObject.length)
       .toEqual(1);
+    expect(arrayGameObject[0] instanceof Weapon)
+      .toBeTruthy();
   });
 
 });

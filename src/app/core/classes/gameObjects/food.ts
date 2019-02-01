@@ -19,7 +19,7 @@ export class Food extends GameObject {
   }
 
   constructor(_jsonData?: any) {
-    super(_jsonData);
+    super();
     this._sprite = SpritesFactory.createSprite(SpriteType.FOOD);
   }
 

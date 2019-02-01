@@ -16,8 +16,8 @@ import {GameEngineService} from '../../../modules/game/services/game-engine.serv
 import {InventorySystem} from './inventory-system';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export abstract class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
@@ -315,6 +315,14 @@ export abstract class Entity implements Iobject, IEntity {
     });
     totalDamage = Math.max(1, totalDamage);
     return totalDamage;
+  }
+
+  inventoryContain(letterInventory: string): boolean {
+    return this._inventory.hasLetter(letterInventory);
+  }
+
+  removeFromInventory(letterInventory: string): boolean {
+    return this._inventory.removeFromInventory(letterInventory);
   }
 
   private _getEquippedWeapons(): Array<Weapon> {

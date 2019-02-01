@@ -5,7 +5,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {JsonEntity, JsonGameObject, JsonInventory} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonGameObject, JsonSprite} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
@@ -15,6 +15,7 @@ import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {InventorySystem} from "../base/inventory-system";
 
 export class Player extends Entity {
   private _level = 1;
@@ -68,27 +69,32 @@ export class Player extends Entity {
 
   // region Serialization
   static fromJSON(jsonData: JsonEntity): Player {
-    let entity: Player = new this();
 
-    entity = Object.assign(entity, jsonData, {
-      _sprite: new Sprite(jsonData.sprite.character, jsonData.sprite.color),
-    });
+    let entity: Player = new Player();
+    for (const key of Object.keys(jsonData)) {
+      entity['_' + key] = jsonData[key];
+    }
+    entity._inventory = new InventorySystem();
+    if (jsonData.sprite) {
+      entity._sprite = new Sprite((jsonData.sprite as JsonSprite).character, (jsonData.sprite as JsonSprite).color);
+    }
+
+    if (jsonData.position) {
+      entity._position = new Position(jsonData.position._x, jsonData.position._y);
+    }
 
     if (jsonData.inventory.length > 0) {
       jsonData.inventory.forEach((value: JsonGameObject) => {
         const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
         gameObject.qty = value.qty;
-        entity.addToInventory(gameObject);
+        entity._inventory.addToInventory(gameObject);
       });
-    }
-
-    if (jsonData.position) {
-      entity.position = new Position(jsonData.position._x, jsonData.position._y);
     }
 
     if (jsonData.equipped) {
       jsonData.equipped.forEach((value: [SlotType, string]) => {
-        const gameObject: GameObject = entity.inventory.get(value[1]);
+        const gameObject: GameObject = entity.inventory.getGameObjectByInventoryLetter(value[1]);
+        entity._inventory.equipItemAtSlot(value[0], value[1]);
         gameObject.onEquip(entity, value[1]);
       });
     }
@@ -123,7 +129,7 @@ export class Player extends Entity {
   private _getArmorEquipped(): Array<Armor> {
     const armorEquipped: Array<Armor> = [];
     for (const [key, value] of this._equippedItem) {
-      const gameObject: GameObject = this._inventory.get(value);
+      const gameObject: GameObject = this._inventory.getGameObjectByInventoryLetter(value);
       if (gameObject instanceof Armor) {
         armorEquipped.push(gameObject as Armor);
       }
@@ -150,12 +156,7 @@ export class Player extends Entity {
   // endregion
 
   isInventoryEquipped(inventoryLetter: string): boolean {
-    for (const [key, value] of this._equippedItem) {
-      if (value === inventoryLetter) {
-        return true;
-      }
-    }
-    return false;
+    return !!this._inventory.getItemEquippedWithLetter(inventoryLetter);
   }
 
   getSlotTypeForEquipped(inventoryLetter: string): string {

@@ -10,7 +10,7 @@ export class InventorySystem {
 
   }
 
-  addToInventory(gameObject: GameObject): string {
+  public addToInventory(gameObject: GameObject): string {
     let letterInventory: string = Utility.getLetter(this._inventory.size);
     if (gameObject.empilable) {
       const key: string = this._getByInventoryItemId(gameObject.id);
@@ -75,9 +75,18 @@ export class InventorySystem {
     this._equippedItem.set(slot, inventoryletter);
   }
 
-  public getItemEquippedAtSlot(slot: SlotType): GameObject | undefined {
+  public getItemEquippedWithSlot(slot: SlotType): GameObject | undefined {
     const letter: string = this._equippedItem.get(slot);
     return (letter) ? this._inventory.get(letter) : undefined;
+  }
+
+  public getItemEquippedWithLetter(inventoryLetter: string): GameObject | undefined {
+    for (const [key, value] of this._equippedItem) {
+      if (value === inventoryLetter) {
+        return this._inventory.get(value);
+      }
+    }
+    return undefined;
   }
 
   public unequip(inventoryLetter: string): boolean {
@@ -112,5 +121,17 @@ export class InventorySystem {
       }
     });
     return arrayGameObject;
+  }
+
+  public getAllGameObjects(): Array<GameObject> {
+    const gameObjects: Array<GameObject> = [];
+    this._inventory.forEach((item: GameObject) => {
+      gameObjects.push(item);
+    });
+    return gameObjects;
+  }
+
+  public hasLetter(inventoryLetter: string): boolean {
+    return this._inventory.has(inventoryLetter);
   }
 }

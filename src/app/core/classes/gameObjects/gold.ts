@@ -15,7 +15,7 @@ export class Gold extends GameObject {
   }
 
   constructor(private _amount: number) {
-    super(null);
+    super();
     this._sprite = SpritesFactory.createSprite(SpriteType.GOLD);
   }
 
