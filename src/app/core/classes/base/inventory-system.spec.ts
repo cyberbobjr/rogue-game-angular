@@ -5,7 +5,7 @@ import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {JsonGameObject} from '../../interfaces/json-interfaces';
-import {Weapon} from "../gameObjects/weapon";
+import {Weapon} from '../gameObjects/weapon';
 
 describe('Inventorysystem', () => {
   let inventoryJson: Array<JsonGameObject> = [];

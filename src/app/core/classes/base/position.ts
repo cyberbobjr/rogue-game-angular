@@ -22,12 +22,19 @@ export class Position {
   }
 
   static fromJson(jsonData: JsonPosition): Position {
-    return new this(jsonData._x, jsonData._y);
+    return new this(jsonData.x, jsonData.y);
   }
 
   constructor(posX: number, posY: number) {
     this._x = posX;
     this._y = posY;
+  }
+
+  toJson(): JsonPosition {
+    return {
+      x: this._x,
+      y: this._y
+    };
   }
 
   computeDestination(direction: Direction): Position {

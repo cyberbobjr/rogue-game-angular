@@ -26,6 +26,10 @@ export abstract class GameObject implements JsonGameObject {
     }
   }
 
+  get sprite(): JsonSprite | Sprite {
+    return this._sprite;
+  }
+
   get type(): string {
     return this._type;
   }

@@ -10,8 +10,8 @@ export interface JsonSprite {
 }
 
 export interface JsonPosition {
-  _x: number;
-  _y: number;
+  x: number;
+  y: number;
 }
 
 export interface JSonCell {
@@ -51,11 +51,16 @@ export interface JsonEntity {
   intelligence: number;
   wisdom: number;
   charisma: number;
-  level: number;
   inventory: Array<JsonGameObject>;
   equipped?: Array<[number, string]>;
   race: string;
+}
+
+export interface JsonPlayer extends JsonEntity {
+  level: number;
+  mapLevel: number;
   gameClass: string;
+  maxHp: number;
 }
 
 export interface JsonInventory {

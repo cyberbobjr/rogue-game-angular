@@ -62,6 +62,8 @@ describe('Player', () => {
     const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     player.addToInventory(weapon);
     const playerJson: string = player.toJSON();
+    const player1: Player = Player.fromJSON(playerJson);
+
   });
 
   const generateInventory = function () {

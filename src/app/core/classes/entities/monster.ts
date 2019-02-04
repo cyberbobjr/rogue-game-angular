@@ -3,10 +3,9 @@ import {Sprite} from '../base/sprite';
 import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
-import {JsonEntity, JsonGameObject, JsonInventory} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonGameObject} from '../../interfaces/json-interfaces';
 import {Gold} from '../gameObjects/gold';
 import {GameObject} from '../gameObjects/game-object';
-import {Weapon} from '../gameObjects/weapon';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Iaction} from '../../interfaces/iaction';
 import {ChaseAction} from '../actions/chase-action';
@@ -18,7 +17,7 @@ export class Monster extends Entity {
   static fromJSON(jsonData: JsonEntity): Monster {
     let monster: Monster = new this();
     monster = Object.assign(monster, jsonData, {
-      _position: new Position(jsonData.position._x, jsonData.position._y),
+      _position: new Position(jsonData.position.x, jsonData.position.y),
       _sprite: new Sprite(jsonData.sprite.character, jsonData.sprite.color)
     });
 

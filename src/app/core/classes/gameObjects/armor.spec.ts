@@ -15,6 +15,7 @@ describe('Armor object', () => {
 
   it('Create armor from Armor Class', () => {
     const armor: Armor = <Armor>GameObjectFactory.create(GameObjectType.ARMOR, 'shield');
+    console.log(armor);
     expect(armor.ac)
       .toEqual(2);
     expect(armor.name)

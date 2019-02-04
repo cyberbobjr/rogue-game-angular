@@ -5,7 +5,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {JsonEntity, JsonGameObject, JsonSprite} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonGameObject, JsonPlayer, JsonSprite} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
@@ -15,7 +15,7 @@ import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
-import {InventorySystem} from "../base/inventory-system";
+import {InventorySystem} from '../base/inventory-system';
 
 export class Player extends Entity {
   private _level = 1;
@@ -70,7 +70,7 @@ export class Player extends Entity {
   // region Serialization
   static fromJSON(jsonData: JsonEntity): Player {
 
-    let entity: Player = new Player();
+    const entity: Player = new Player();
     for (const key of Object.keys(jsonData)) {
       entity['_' + key] = jsonData[key];
     }
@@ -80,7 +80,7 @@ export class Player extends Entity {
     }
 
     if (jsonData.position) {
-      entity._position = new Position(jsonData.position._x, jsonData.position._y);
+      entity._position = new Position(jsonData.position.x, jsonData.position.y);
     }
 
     if (jsonData.inventory.length > 0) {
@@ -102,14 +102,15 @@ export class Player extends Entity {
     return entity;
   }
 
-  toJSON(): any {
+  toJSON(): JsonPlayer {
     return {
       ...super.toJSON(),
       ...{
         level: this.level,
         maxHp: this._maxHp,
         equipped: [...this._equippedItem],
-        gameClass: this._gameClass
+        gameClass: this._gameClass,
+        mapLevel : this._mapLevel
       }
     };
   }

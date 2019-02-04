@@ -14,10 +14,11 @@ import {Utility} from '../utility';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 import {InventorySystem} from './inventory-system';
+import {JsonEntity, JsonPosition} from '../../interfaces/json-interfaces';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export abstract class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
@@ -216,12 +217,12 @@ export abstract class Entity implements Iobject, IEntity {
     this._xp = value;
   }
 
-  toJSON() {
+  toJSON(): JsonEntity {
     return {
       xp: this.xp,
       name: this.name,
       id: this.id,
-      position: this.position,
+      position: this._position.toJson(),
       sprite: this.sprite,
       strength: this.strength,
       dexterity: this.dexterity,
@@ -236,7 +237,8 @@ export abstract class Entity implements Iobject, IEntity {
       inventory: this._inventory.toJSON(),
       speed: this.speed,
       size: this.size,
-      race: this._race
+      race: this._race,
+      type: this._type,
     };
   }
 
