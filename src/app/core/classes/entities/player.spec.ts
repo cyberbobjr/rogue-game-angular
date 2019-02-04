@@ -59,6 +59,8 @@ describe('Player', () => {
 
   it('should generate correct JSON', () => {
     const player: Player = new Player();
+    const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    player.addToInventory(weapon);
     const playerJson: string = player.toJSON();
   });
 
