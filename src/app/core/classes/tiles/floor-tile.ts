@@ -20,7 +20,7 @@ export class FloorTile extends Tile {
   }
 
   static fromJSON(json: JSonCell): FloorTile {
-    return new this(new Position(json.position._x, json.position._y));
+    return new this(new Position(json.position.x, json.position.y));
   }
 
   constructor(position: Position) {

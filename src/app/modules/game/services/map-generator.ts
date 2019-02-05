@@ -93,10 +93,9 @@ export class MapGenerator {
           if (!cell.position) {
             throw new Error('Tile withouh position');
           }
-          map.setDataAt(cell.position._x, cell.position._y, tile);
+          map.setDataAt(cell.position.x, cell.position.y, tile);
         } catch (e) {
           console.log(e);
-          debugger;
         }
       });
     });

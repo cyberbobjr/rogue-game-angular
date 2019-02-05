@@ -6,7 +6,6 @@ import {StorageService} from '../../game/services/storage.service';
 import {Player} from '../../../core/classes/entities/player';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {GameMap} from '../../../core/classes/base/game-map';
-import {Iobject} from '../../../core/interfaces/iobject';
 import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
 

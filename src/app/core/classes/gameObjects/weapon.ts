@@ -43,7 +43,7 @@ export class Weapon extends GameObject implements JsonWeapon {
     return weapon;
   }
 
-  toJSON(): any {
+  toJSON(): JsonWeapon {
     return {
       ...super.toJSON(),
       damage: this._damage,

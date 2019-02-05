@@ -1,19 +1,20 @@
 import {TestBed} from '@angular/core/testing';
 import {Player} from './player';
-import {JsonEntity} from '../../interfaces/json-interfaces';
+import {JsonPlayer} from '../../interfaces/json-interfaces';
 import {InventorySystem} from '../base/inventory-system';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {GameObject} from '../gameObjects/game-object';
+import {Position} from '../base/position';
 
-const playerJsonData: JsonEntity = {
+const playerJsonData: JsonPlayer = {
   'id': 'player',
   'type': 1,
   'speed': 1,
   'xp': 0,
   'size': 'm',
   'name': 'Player',
-  'position': {'_x': 55, '_y': 20},
+  'position': {'x': 55, 'y': 20},
   'sprite': {'color': '#ffffff', 'bgColor': '#000000', 'light': true, 'visibility': 0, 'character': '@'},
   'strength': 17,
   'dexterity': 16,
@@ -27,6 +28,7 @@ const playerJsonData: JsonEntity = {
   'hitDice': 12,
   'inventory': [],
   'level': 1,
+  'mapLevel': 1,
   'maxHp': 15,
   'equipped': [
     [1, 'a'],
@@ -59,11 +61,17 @@ describe('Player', () => {
 
   it('should generate correct JSON', () => {
     const player: Player = new Player();
+    player.position = new Position(0, 0);
+    player.level = 1;
     const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
-    player.addToInventory(weapon);
-    const playerJson: string = player.toJSON();
+    const letter: string = player.addToInventory(weapon);
+    const playerJson: JsonPlayer = player.toJSON();
     const player1: Player = Player.fromJSON(playerJson);
-
+    const gameObject: GameObject = player1.getItemByLetter(letter);
+    expect(gameObject.name)
+      .toEqual('Club');
+    expect(player1.position.toJson())
+      .toEqual({'x': 0, 'y': 0});
   });
 
   const generateInventory = function () {

@@ -31,7 +31,7 @@ export class Armor extends GameObject implements JsonArmor {
     this.objectType = 'ARMOR';
   }
 
-  toJSON(): any {
+  toJSON(): JsonArmor {
     return {
       ...super.toJSON(),
       ac: this._ac

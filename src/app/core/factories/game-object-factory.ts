@@ -52,7 +52,7 @@ export class GameObjectFactory {
     }
   }
 
-  static createFromJson(objectType: string, data: JsonGameObject): GameObject | undefined {
+  static createFromJson(objectType: string, data: JsonGameObject): GameObject | Armor | Weapon | undefined {
     switch (objectType) {
       case 'GOLD' :
         return new Gold(data['_amount']);

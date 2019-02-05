@@ -19,7 +19,8 @@
     "sprite": {
       "character": "%",
       "color": "white"
-    }
+    },
+    "empilable": false
   },
   {
     "id": "handaxe",
