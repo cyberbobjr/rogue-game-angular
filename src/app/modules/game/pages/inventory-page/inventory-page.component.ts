@@ -19,7 +19,7 @@ export class InventoryPageComponent implements OnInit {
     this.player = this._entitiesService.getPlayer();
   }
 
-  getSlotTypeLabel(slot : SlotType) {
+  getSlotTypeLabel(slot: SlotType) {
     return Utility.getSlotTypeLabel(slot);
   }
 }

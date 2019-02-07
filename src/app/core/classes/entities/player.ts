@@ -16,6 +16,7 @@ import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 import {InventorySystem} from '../base/inventory-system';
+import {EntityType} from '../../enums/entity-type.enum';
 
 export class Player extends Entity {
   private _level = 1;
@@ -69,8 +70,8 @@ export class Player extends Entity {
 
   // region Serialization
   static fromJSON(jsonData: JsonEntity): Player {
-
     const entity: Player = new Player();
+
     for (const key of Object.keys(jsonData)) {
       entity['_' + key] = jsonData[key];
     }
@@ -110,7 +111,7 @@ export class Player extends Entity {
         maxHp: this._maxHp,
         equipped: [...this._equippedItem],
         gameClass: this._gameClass,
-        mapLevel : this._mapLevel
+        mapLevel: this._mapLevel
       }
     };
   }
@@ -125,6 +126,7 @@ export class Player extends Entity {
     this.sprite = sprite ? sprite : SpritesFactory.createSprite(SpriteType.PLAYER);
     this.sprite.light = true;
     this.name = 'Player';
+    this._entityType = EntityType.PLAYER;
   }
 
   private _getArmorEquipped(): Array<Armor> {
@@ -150,7 +152,7 @@ export class Player extends Entity {
   }
 
   onRest() {
-    this.hp += (Utility.rolldice(this._hitDice) + AttributesFactory.getModifier(this.attributes.get('constitution')));
+    this.hp += (Utility.rolldice(this._hitDice) + AttributesFactory.getModifier(this.constitution));
     this.hp = Math.min(this.hp, this._maxHp);
   }
 
@@ -177,7 +179,7 @@ export class Player extends Entity {
 
   setGameClass(gameClass: GameClass): Player {
     this._hitDice = gameClass.getHitDice();
-    this._hp = this._hitDice + AttributesFactory.getModifier(this.attributes.get('constitution'));
+    this._hp = this._hitDice + AttributesFactory.getModifier(this.constitution);
     this._maxHp = this._hp;
     this._gp = gameClass.getGp();
     this._gameClass = gameClass.name;
@@ -192,7 +194,7 @@ export class Player extends Entity {
     let ac = 0;
     let dexterity = false;
     let bonus = 0;
-    const dexterityModifier: number = AttributesFactory.getModifier(this.attributes.get('dexterity'));
+    const dexterityModifier: number = AttributesFactory.getModifier(this.dexterity);
     const armorEquipped: Array<Armor> = this._getArmorEquipped();
     if (armorEquipped.length === 0) {
       return 10 + dexterityModifier;

@@ -30,7 +30,7 @@ export class Position {
     this._y = posY;
   }
 
-  toJson(): JsonPosition {
+  toJSON(): JsonPosition {
     return {
       x: this._x,
       y: this._y

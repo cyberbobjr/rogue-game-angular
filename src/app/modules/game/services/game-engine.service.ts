@@ -242,7 +242,7 @@ export class GameEngineService {
     // get level if exist
     this._storageService
         .loadMap(newLevel)
-        .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
+        .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
           const gameMap: GameMap = this._mapEngine.setGameMap(this._mapEngine.loadRawMap(data));
           player.setLevelAndPosition(newLevel, gameMap.entryPosition);
           this._storageService.saveGameState(gameMap);

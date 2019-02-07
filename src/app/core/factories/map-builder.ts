@@ -1,4 +1,3 @@
-import {Injectable} from '@angular/core';
 import {JSonCell, JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {Entity} from 'src/app/core/classes/base/entity';
 import {EntitiesFactory} from 'src/app/core/factories/entities-factory';
@@ -13,44 +12,109 @@ import {GameMap} from 'src/app/core/classes/base/game-map';
 import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';
-import {EntitiesService} from './entities.service';
-import {Config} from '../../../core/config';
-import {Utility} from '../../../core/classes/utility';
-import {FloorTile} from '../../../core/classes/tiles/floor-tile';
+import {Utility} from '../classes/utility';
+import {FloorTile} from '../classes/tiles/floor-tile';
 
-@Injectable({
-              providedIn: 'root'
-            })
-export class MapGenerator {
+export class MapBuilder {
   private _rotEngine: Digger;
+  private _seed = Math.round(Math.random() * 100);
+  private _height = 80;
+  private _width = 80;
+  private _level = 1;
+  private _jsonMap: JsonMap = null;
+  private _entities: Array<Entity> = [];
+  private _maxChests = 0;
+  private _maxEntities = 0;
 
-  constructor(private _entitiesService: EntitiesService) {
-
-  }
-
-  generateNewMap(level = 1): GameMap {
-    const width = 80;
-    const height = 80;
-    const map: GameMap = this._generateMap(width, height, Math.round(Math.random() * 100), level);
-    this._entitiesService.entities = this._generateMonsters([0]);
-    this._generateChests(map);
-    return map;
-  }
-
-  loadMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap | null {
-    if (jsonData) {
-      const map: GameMap = this._generateMap(jsonData.map._width, jsonData.map._height, jsonData.map._seed);
-      this._loadTiles(map, jsonData.map);
-      this._entitiesService.loadEntitiesFromJson(jsonData._entities);
-      return map;
+  static fromJSON(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
+    if (!jsonData.map || jsonData.entities) {
+      throw new Error('jsonData is empty');
     }
-    return null;
+    const entities: Array<Entity> = [];
+    jsonData.entities.forEach((jsonEntity: JsonEntity) => {
+      entities.push(EntitiesFactory.createFromJson(jsonEntity));
+    });
+    return new MapBuilder().withTile(jsonData.map)
+                           .withSeed(jsonData.map._seed)
+                           .withLevel(jsonData.map._level)
+                           .withEntities(entities)
+                           .build();
   }
 
-  private _generateChests(map: GameMap) {
-    const maxChests: number = Utility.rolldice(Config.maxLevel - map.level + 1);
+  constructor() {
+  }
+
+  withSeed(seed: number): MapBuilder {
+    this._seed = seed;
+    return this;
+  }
+
+  withSize(width: number, height: number): MapBuilder {
+    this._width = width;
+    this._height = height;
+    return this;
+  }
+
+  withRandomEntities(maxEntities: number): MapBuilder {
+    this._maxEntities = maxEntities;
+    return this;
+  }
+
+  withEntities(entities: Array<Entity>): MapBuilder {
+    this._entities = entities;
+    return this;
+  }
+
+  withRandomChests(maxChests: number): MapBuilder {
+    this._maxChests = maxChests;
+    return this;
+  }
+
+  withTile(jsonMap: JsonMap): MapBuilder {
+    this._jsonMap = jsonMap;
+    return this;
+  }
+
+  withLevel(level: number): MapBuilder {
+    this._level = level;
+    return this;
+  }
+
+  build(): GameMap {
+    const gameMap: GameMap = this._generateMap(this._width, this._height, this._seed, this._level);
+    if (this._jsonMap) {
+      this._jsonMap._data.forEach((cells: Array<JSonCell>) => {
+        cells.forEach((cell: JSonCell) => {
+          try {
+            const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
+            this._loadTileContents(tile, cell.contents);
+            if (!cell.position) {
+              throw new Error('Tile withouh position');
+            }
+            gameMap.setDataAt(cell.position.x, cell.position.y, tile);
+          } catch (e) {
+            console.log(e);
+          }
+        });
+      });
+    }
+    if (this._maxEntities > 0) {
+      this._entities = this._generateMonsters([0], this._maxEntities, gameMap);
+    }
+    if (this._entities.length > 0) {
+      gameMap.entities = this._entities;
+    }
+    if (this._maxChests > 0) {
+      this._generateChests(gameMap, this._maxChests);
+    }
+    gameMap.rooms = this._rotEngine.getRooms();
+    gameMap.createFovCasting();
+    return gameMap;
+  }
+
+  private _generateChests(map: GameMap, maxChests: number) {
     for (let chest = 0; chest < maxChests; chest++) {
-      const chestPosition: Position = this._getFreeSlotForRoom(map, Utility.rolldice(this._getRooms().length - 1));
+      const chestPosition: Position = this._getFreeSlotForRoom(map, Utility.rolldice(this._rotEngine.getRooms().length - 1));
       if (chestPosition) {
         const chestTile: Tile = TilesFactory.createTile(TileType.CHEST);
         map.setDataAt(chestPosition.x, chestPosition.y, chestTile);
@@ -84,23 +148,6 @@ export class MapGenerator {
     return [topleft, bottomright];
   }
 
-  private _loadTiles(map: GameMap, mapJson: JsonMap) {
-    mapJson._data.forEach((cells: Array<JSonCell>) => {
-      cells.forEach((cell: JSonCell) => {
-        try {
-          const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
-          this._loadTileContents(tile, cell.contents);
-          if (!cell.position) {
-            throw new Error('Tile withouh position');
-          }
-          map.setDataAt(cell.position.x, cell.position.y, tile);
-        } catch (e) {
-          console.log(e);
-        }
-      });
-    });
-  }
-
   private _loadTileContents(tile: Tile, jsonContent: Array<any>) {
     jsonContent.forEach((content: any) => {
       const gameObject: GameObject = GameObjectFactory.createFromJson(content.objectType, content);
@@ -108,15 +155,6 @@ export class MapGenerator {
         tile.dropOn(gameObject);
       }
     });
-  }
-
-  private _getRooms(): Array<Room> {
-    return this._rotEngine.getRooms();
-  }
-
-  private _getRoomCenter(room: Room): Position {
-    const center: number[] = room.getCenter();
-    return new Position(center[0], center[1]);
   }
 
   private _generateMap(width: number, height: number, seed = 511, level = 1): GameMap {
@@ -127,19 +165,22 @@ export class MapGenerator {
     return map;
   }
 
-  private _generateMonsters(excludeRooms: Array<number> = []): Array<Entity> {
+  private _generateMonsters(excludeRooms: Array<number> = [], maxEntities: number, map: GameMap): Array<Entity> {
     const monsters: Array<Entity> = [];
-    const rooms: Array<Room> = this._getRooms();
+    const rooms: Array<Room> = this._rotEngine.getRooms();
     const nbRooms: number = rooms.length;
+    let roomNumber = 0;
     EntitiesFactory.getInstance()
-                   .setMaxPop(nbRooms);
-    for (let nb = 1; nb < nbRooms - 2; nb++) {
-      if (excludeRooms.indexOf(nb) !== 0) {
-        const entity: Entity = EntitiesFactory.getInstance()
-                                              .generateRandomEntities(this._getRoomCenter(rooms[nb]));
-        entity.setNextAction(new IdleAction());
-        monsters.push(entity);
-      }
+                   .setMaxPop(maxEntities);
+    for (let nb = 0; nb < maxEntities; nb++) {
+      do {
+        roomNumber = Utility.rolldice(nbRooms - 1);
+      } while (excludeRooms.indexOf(roomNumber) !== 0);
+
+      const entityPosition: Position = this._getFreeSlotForRoom(map, roomNumber);
+      const entity: Entity = EntitiesFactory.generateRandomEntities(entityPosition);
+      entity.setNextAction(new IdleAction());
+      monsters.push(entity);
     }
     return monsters;
   }

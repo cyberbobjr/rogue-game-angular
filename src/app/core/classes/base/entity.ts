@@ -13,7 +13,7 @@ import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameEngineService} from '../../../modules/game/services/game-engine.service';
 import {InventorySystem} from './inventory-system';
-import {JsonEntity} from '../../interfaces/json-interfaces';
+import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
 
 @Injectable({
               providedIn: 'root'
@@ -21,7 +21,7 @@ import {JsonEntity} from '../../interfaces/json-interfaces';
 export abstract class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
-  protected _type: EntityType;
+  protected _entityType: EntityType;
   protected _timeDisplaySprite: number;
   protected _position?: Position;
   protected _name: string;
@@ -42,11 +42,18 @@ export abstract class Entity implements Iobject, IEntity {
 
   protected _inventory: InventorySystem = new InventorySystem();
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
+  protected _abilities: JsonAbilities = {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intelligence: 0,
+    wisdom: 0,
+    charisma: 0
+  };
 
   lightRadius = 20;
   lightPower = 3; // max is lighter
 
-  attributes: Map<string, number> = new Map<string, number>();
 
   get race(): string {
     return this._race;
@@ -113,51 +120,51 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   get constitution(): number {
-    return this.attributes.get('constitution');
+    return this._abilities.constitution;
   }
 
   set constitution(value: number) {
-    this.attributes.set('constitution', value);
+    this._abilities['constitution'] = value;
   }
 
   get intelligence(): number {
-    return this.attributes.get('intelligence');
+    return this._abilities.intelligence;
   }
 
   set intelligence(value: number) {
-    this.attributes.set('intelligence', value);
+    this._abilities['intelligence'] = value;
   }
 
   get wisdom(): number {
-    return this.attributes.get('wisdom');
+    return this._abilities.wisdom;
   }
 
   set wisdom(value: number) {
-    this.attributes.set('wisdom', value);
+    this._abilities['wisdom'] = value;
   }
 
   get charisma(): number {
-    return this.attributes.get('charisma');
+    return this._abilities.charisma;
   }
 
   set charisma(value: number) {
-    this.attributes.set('charisma', value);
+    this._abilities['charisma'] = value;
   }
 
   get dexterity(): number {
-    return this.attributes.get('dexterity');
+    return this._abilities.dexterity;
   }
 
   set dexterity(value: number) {
-    this.attributes.set('dexterity', value);
+    this._abilities['dexterity'] = value;
   }
 
   get strength(): number {
-    return this.attributes.get('strength');
+    return this._abilities.strength;
   }
 
   set strength(value: number) {
-    this.attributes.set('strength', value);
+    this._abilities['strength'] = value;
   }
 
   get ac(): number {
@@ -169,11 +176,11 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   get type(): EntityType {
-    return this._type;
+    return this._entityType;
   }
 
   set type(value: EntityType) {
-    this._type = value;
+    this._entityType = value;
   }
 
   get hp(): number {
@@ -221,14 +228,9 @@ export abstract class Entity implements Iobject, IEntity {
       xp: this.xp,
       name: this.name,
       id: this.id,
-      position: this._position.toJson(),
-      sprite: this.sprite,
-      strength: this.strength,
-      dexterity: this.dexterity,
-      constitution: this.constitution,
-      intelligence: this.intelligence,
-      wisdom: this.wisdom,
-      charisma: this.charisma,
+      position: this._position.toJSON(),
+      sprite: this.sprite.toJSON(),
+      abilities: this._abilities,
       ac: this.ac,
       hp: this.hp,
       gp: this.gp,
@@ -237,7 +239,7 @@ export abstract class Entity implements Iobject, IEntity {
       speed: this.speed,
       size: this.size,
       race: this._race,
-      type: this._type,
+      entityType: this._entityType,
     };
   }
 
@@ -324,6 +326,13 @@ export abstract class Entity implements Iobject, IEntity {
 
   removeFromInventory(letterInventory: string): boolean {
     return this._inventory.removeFromInventory(letterInventory);
+  }
+
+  withAbilities(abilities: Map<string, number>): Entity {
+    abilities.forEach((value: number, ability: string) => {
+      this._abilities[ability] = value;
+    });
+    return this;
   }
 
   private _getEquippedWeapons(): Array<Weapon> {

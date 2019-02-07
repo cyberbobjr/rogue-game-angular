@@ -4,17 +4,33 @@ import PreciseShadowcasting from 'rot-js/lib/fov/precise-shadowcasting';
 import {Utility} from '../utility';
 import {Entity} from 'src/app/core/classes/base/entity';
 import {Iobject} from '../../interfaces/iobject';
+import {Room} from 'rot-js/lib/map/features';
+import {ChestTile} from '../tiles/chest-tile';
 
 export class GameMap {
   private _data: Iobject[][];
   private _fovMap: Array<Array<number>>;
   private _seed: number;
   private _level: number;
+  private _rooms: Array<Room> = [];
+  private _entities: Array<Entity> = [];
 
   private _entryPosition: Position;
   private _exitPosition: Position;
 
   private _preciseShadowcasting: PreciseShadowcasting = null;
+
+  set rooms(value: Array<Room>) {
+    this._rooms = value;
+  }
+
+  get entities(): Array<Entity> {
+    return this._entities;
+  }
+
+  set entities(value: Array<Entity>) {
+    this._entities = value;
+  }
 
   get fovMap(): Array<Array<number>> {
     return this._fovMap;
@@ -144,6 +160,28 @@ export class GameMap {
     return this;
   }
 
+  public getTilesAround(position: Position): Array<Array<Iobject>> {
+    const test: GameMap = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap;
+    return test.content;
+  }
+
+  public getTileAt(position: Position): Tile {
+    return this.getDataAt(position.x, position.y) as Tile;
+  }
+
+  public getAllChestsPosition(): Array<Position> {
+    const chestsPositions: Array<Position> = [];
+    this._data.forEach((rows: Array<Iobject>) => {
+      rows.forEach((tile: Iobject) => {
+        if (tile instanceof ChestTile) {
+          const chestTile: ChestTile = (tile as ChestTile);
+          chestsPositions.push(chestTile.position.clone());
+        }
+      });
+    });
+    return chestsPositions;
+  }
+
   private _getRawFovData(startX, startY, width, height) {
     const arrayExtracted: number[][] = Utility.initArrayNumber(width, height);
     let y = 0;
@@ -181,14 +219,5 @@ export class GameMap {
       newArray[index] = new Array(width).fill(fill);
     });
     return newArray;
-  }
-
-  getTilesAround(position: Position): Array<Array<Iobject>> {
-    const test: GameMap = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap;
-    return test.content;
-  }
-
-  getTileAt(position: Position): Tile {
-    return this.getDataAt(position.x, position.y) as Tile;
   }
 }

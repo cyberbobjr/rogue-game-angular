@@ -25,22 +25,31 @@ export class EntitiesFactory {
     return Monster.fromJSON(jsonData);
   }
 
+  static generateRandomEntities(position: Position): Entity {
+    return EntitiesFactory.getInstance()
+                          .createEntity(EntityType.MONSTER, position);
+  }
+
   constructor() {
     console.log('EntitiesFactory created');
     for (const key of Object.keys(gamemonster.default)) {
       this._monstersClass.set(gamemonster.default[key].id, new GameMonsterClass(gamemonster.default[key]));
     }
+    this.setMaxPop(1);
   }
 
-  createEntity(type: EntityType, position?: Position): Entity | null {
+  createEntity(type: EntityType, position?: Position): Entity | undefined {
     switch (type) {
       case EntityType.PLAYER:
         return new Player(position);
       case EntityType.MONSTER:
-        return Monster.fromMonsterClass(this._getRandomMonsterClass())
-                      .setPosition(position);
+        const monster: Monster = Monster.fromMonsterClass(this._getRandomMonsterClass());
+        if (position) {
+          monster.setPosition(position);
+        }
+        return monster;
       default:
-        return null;
+        return undefined;
     }
   }
 
@@ -57,11 +66,6 @@ export class EntitiesFactory {
       this._frequencyPop = this._frequencyPop.fill(key, indexArray, r + indexArray);
       indexArray += r;
     }
-  }
-
-  generateRandomEntities(position: Position): Entity {
-    return Monster.fromMonsterClass(this._getRandomMonsterClass())
-                  .setPosition(position);
   }
 
   private _getRandomMonsterClass(): GameMonsterClass {

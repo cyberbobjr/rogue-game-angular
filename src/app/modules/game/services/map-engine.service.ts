@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
-import {MapGenerator} from 'src/app/modules/game/services/map-generator';
+import {MapBuilder} from 'src/app/core/factories/map-builder';
 import {StorageService} from 'src/app/modules/game/services/storage.service';
 import {Position} from '../../../core/classes/base/position';
 import AStar from 'rot-js/lib/path/astar';
@@ -36,14 +36,14 @@ export class MapEngine {
     this._height = value;
   }
 
-  constructor(private _mapGenerator: MapGenerator,
-              private _storageService: StorageService,
+  constructor(private _storageService: StorageService,
               private _entitiesService: EntitiesService) {
   }
 
   async generateMaps(nbOfMaps: number = 42): Promise<boolean> {
     for (let level = 1; level < nbOfMaps + 1; level++) {
-      const map: GameMap = this._mapGenerator.generateNewMap(level);
+      const map: GameMap = new MapBuilder().withLevel(level)
+                                           .build();
       await this._storageService.saveMap(map);
     }
     return true;
@@ -58,10 +58,9 @@ export class MapEngine {
     return this._currentMap;
   }
 
-  loadRawMap(jsonData: { map: JsonMap, _entities: Array<JsonEntity> }): GameMap {
-    return this._mapGenerator
-               .loadMap(jsonData)
-               .createFovCasting();
+  loadRawMap(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
+    return MapBuilder.fromJSON(jsonData)
+                     .createFovCasting();
   }
 
   getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {

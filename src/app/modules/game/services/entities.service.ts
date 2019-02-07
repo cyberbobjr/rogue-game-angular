@@ -6,6 +6,7 @@ import {GameEngineService} from './game-engine.service';
 import {JsonEntity} from '../../../core/interfaces/json-interfaces';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
+import {GameMap} from '../../../core/classes/base/game-map';
 
 @Injectable({
               providedIn: 'root'
@@ -41,6 +42,10 @@ export class EntitiesService {
   getAllEntities(): Array<Entity> {
     return this.getEntities()
                .concat(this.getPlayer());
+  }
+
+  loadEntitiesFromGameMap(gameMap: GameMap) {
+
   }
 
   loadEntitiesFromJson(jsonEntities: Array<JsonEntity>) {

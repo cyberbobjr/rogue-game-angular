@@ -20,7 +20,7 @@ export class Utility {
   }
 
   static rolldice(sides: number = 10): number {
-    return Math.floor(Math.random() * sides) + 1;
+    return Math.floor(Math.random() * sides);
   }
 
   static alphabetArray(): Array<string> {

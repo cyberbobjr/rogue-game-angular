@@ -1,4 +1,4 @@
-import {JsonMonster} from '../../interfaces/json-interfaces';
+import {JsonMonster, JsonMonsterClass} from '../../interfaces/json-interfaces';
 import {Utility} from '../utility';
 import {Sprite} from './sprite';
 import {Weapon} from '../gameObjects/weapon';
@@ -75,7 +75,7 @@ export class GameMonsterClass {
     return this._jsonMonster.frequency;
   }
 
-  constructor(private _jsonMonster: JsonMonster) {
+  constructor(private _jsonMonster: JsonMonsterClass) {
   }
 
   toJSON(): any {

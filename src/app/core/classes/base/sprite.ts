@@ -30,9 +30,8 @@ export class Sprite implements ISprite {
   }
 
   get color(): string {
-    return Color(this._color);
-    /*.darken(this._visibility)
-     .hex();*/
+    return Color(this._color)
+      .hex();
   }
 
   set color(value: string) {
@@ -44,7 +43,8 @@ export class Sprite implements ISprite {
   }
 
   get bgColor(): string {
-    return Color(this._bgColor);
+    return Color(this._bgColor)
+      .hex();
   }
 
   static fromJson(jsonData: JsonSprite): Sprite {

@@ -29,6 +29,7 @@ export interface JsonMap {
   _height: number;
   _width: number;
   _entities: [JsonEntity];
+  _level: number;
 }
 
 export interface JsonEntity {
@@ -41,16 +42,11 @@ export interface JsonEntity {
   size: string;
   position: JsonPosition;
   sprite: JsonSprite;
-  type: number;
-  strength: number;
+  entityType: number;
+  abilities: JsonAbilities;
   ac: number;
   xp: number;
   hitDice: number;
-  dexterity: number;
-  constitution: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
   inventory: Array<JsonGameObject>;
   equipped?: Array<[number, string]>;
   race: string;
@@ -63,13 +59,8 @@ export interface JsonPlayer extends JsonEntity {
   maxHp: number;
 }
 
-export interface JsonInventory {
-  id: string;
-  name: string;
-  qty: number;
-  sprite: JsonSprite;
-  objectType: string;
-  empilable: boolean;
+export interface JsonMonster extends JsonEntity {
+  frequency: number;
 }
 
 export interface JsonArmor extends JsonGameObject {
@@ -106,6 +97,34 @@ export interface JsonWeapon extends JsonGameObject {
   };
 }
 
+export interface JsonMonsterClass {
+  id: string;
+  name: string;
+  hp: {
+    dice: number;
+    mul: number;
+    bonus: number;
+  };
+  speed: number;
+  size: string;
+  abilities: {
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    wisdom: number;
+    charisma: number;
+  };
+  ac: number;
+  gp: {
+    dice: number;
+  };
+  sprite: JsonSprite;
+  weapons: [string];
+  frequency: number;
+  xp: number;
+}
+
 export interface JsonGameClass {
   id: string;
   name: string;
@@ -135,37 +154,6 @@ export interface JsonGameClass {
   }>;
 }
 
-export interface JsonMonster {
-  id: string;
-  name: string;
-  hp: {
-    dice: number;
-    mul: number;
-    bonus: number;
-  };
-  speed: number;
-  size: string;
-  abilities: {
-    strength: number;
-    dexterity: number;
-    constitution: number;
-    intelligence: number;
-    wisdom: number;
-    charisma: number;
-  };
-  ac: number;
-  gp: {
-    dice: number;
-  };
-  sprite: {
-    character: string;
-    color: string;
-  };
-  weapons: [string];
-  frequency: number;
-  xp: number;
-}
-
 export interface JsonRace {
   id: string;
   name: string;
@@ -179,4 +167,13 @@ export interface JsonRace {
     wisdom: number;
     charisma: number;
   };
+}
+
+export interface JsonAbilities {
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
+  wisdom: number;
+  charisma: number;
 }

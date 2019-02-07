@@ -99,7 +99,7 @@ export class StorageService {
                                           upsert: true,
                                           values: [{
                                             level: gameMap.level,
-                                            jsonData: JSON.stringify({map: gameMap, _entities: this._entitiesService.getEntities()})
+                                            jsonData: JSON.stringify({map: gameMap, entities: this._entitiesService.getEntities()})
                                           }]
                                         });
   }

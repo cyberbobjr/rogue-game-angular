@@ -7,21 +7,23 @@ import {GameObjectType} from '../../enums/game-object-type.enum';
 import {GameObject} from '../gameObjects/game-object';
 import {Position} from '../base/position';
 
-const playerJsonData: JsonPlayer = {
+let playerJsonData: JsonPlayer = {
   'id': 'player',
-  'type': 1,
+  'entityType': 1,
   'speed': 1,
   'xp': 0,
   'size': 'm',
   'name': 'Player',
   'position': {'x': 55, 'y': 20},
   'sprite': {'color': '#ffffff', 'bgColor': '#000000', 'light': true, 'visibility': 0, 'character': '@'},
-  'strength': 17,
-  'dexterity': 16,
-  'constitution': 16,
-  'intelligence': 11,
-  'wisdom': 7,
-  'charisma': 7,
+  'abilities': {
+    'strength': 17,
+    'dexterity': 16,
+    'constitution': 16,
+    'intelligence': 11,
+    'wisdom': 7,
+    'charisma': 7
+  },
   'ac': 13,
   'hp': 15,
   'gp': 51,
@@ -65,13 +67,19 @@ describe('Player', () => {
     player.level = 1;
     const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     const letter: string = player.addToInventory(weapon);
-    const playerJson: JsonPlayer = player.toJSON();
-    const player1: Player = Player.fromJSON(playerJson);
+    playerJsonData = player.toJSON();
+    const player1: Player = Player.fromJSON(playerJsonData);
     const gameObject: GameObject = player1.getItemByLetter(letter);
     expect(gameObject.name)
       .toEqual('Club');
-    expect(player1.position.toJson())
+    expect(player1.position.toJSON())
       .toEqual({'x': 0, 'y': 0});
+  });
+
+  it('should be created with generated Json', () => {
+    const player: Player = Player.fromJSON(playerJsonData);
+    expect(player.toJSON())
+      .toEqual(playerJsonData);
   });
 
   const generateInventory = function () {

@@ -52,8 +52,8 @@ export class CreatePageComponent implements OnInit {
 
   onSave() {
     let player: Player = EntitiesFactory.getInstance()
-                                        .createEntity(EntityType.PLAYER) as Player;
-    player.attributes = this._diceService.attributesScore;
+                                        .createEntity(EntityType.PLAYER)
+                                        .withAbilities(this._diceService.attributesScore) as Player;
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                  .createGameClass(ClassType.BARBARIAN);
     const gameRace: RaceClass = RaceFactory.getInstance()
