@@ -238,17 +238,18 @@ export class GameEngineService {
   changeMapLevel(newLevel: number) {
     const player: Player = this._entitiesService.getPlayer();
     // save current level
-    this._storageService.saveGameState(this._mapEngine.getCurrentMap());
+    this._storageService.saveGameState(this._mapEngine.getCurrentMap(), this.getPlayer());
     // get level if exist
     this._storageService
         .loadMap(newLevel)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
           const gameMap: GameMap = this._mapEngine.setGameMap(this._mapEngine.loadRawMap(data));
           player.setLevelAndPosition(newLevel, gameMap.entryPosition);
-          this._storageService.saveGameState(gameMap);
+          this._storageService.saveGameState(gameMap, this.getPlayer());
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((e) => {
+          console.log(e);
+          console.trace();
         });
   }
 

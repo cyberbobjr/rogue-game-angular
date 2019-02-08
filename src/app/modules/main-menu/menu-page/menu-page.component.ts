@@ -10,10 +10,10 @@ import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
 
 @Component({
-             selector: 'app-menu-page',
-             templateUrl: './menu-page.component.html',
-             styleUrls: ['./menu-page.component.css']
-           })
+  selector: 'app-menu-page',
+  templateUrl: './menu-page.component.html',
+  styleUrls: ['./menu-page.component.css']
+})
 export class MenuPageComponent implements OnInit {
   private _isGameStarted = false;
   private _isPlayerExist = false;
@@ -32,13 +32,17 @@ export class MenuPageComponent implements OnInit {
         .then((player: Player) => {
           this._player = player;
           this._isPlayerExist = !!this._player;
-          return this._storageService.loadMap(this._player.level);
+          this._isGameStarted = !!(this._player.level && this._player.position);
+          if (this._isGameStarted) {
+            this._storageService.loadMap(this._player.level)
+                .then((mapLoaded: { map: JsonMap, _entities: Array<JsonEntity> } | null) => {
+                  this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
+                })
+          }
         })
-        .then((mapLoaded: { map: JsonMap, _entities: Array<JsonEntity> } | null) => {
-          this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
-        })
-        .catch((err: Error) => {
-          console.log(err.message);
+        .catch((e: Error) => {
+          console.log(e.message);
+          console.trace();
         });
   }
 
@@ -51,7 +55,7 @@ export class MenuPageComponent implements OnInit {
         .then(() => {
           this._storageService
               .loadMap(1)
-              .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
+              .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
                 const gameMap: GameMap = this._mapEngine.loadRawMap(data);
                 this._player.level = 1;
                 this._player.position = gameMap.entryPosition;
@@ -59,8 +63,9 @@ export class MenuPageComponent implements OnInit {
                 this._storageService.savePlayer(this._player);
                 this._router.navigateByUrl('game');
               })
-              .catch((err: Error) => {
-                console.log(err.message);
+              .catch((e: Error) => {
+                console.log(e.message);
+                console.trace();
               });
         });
   }

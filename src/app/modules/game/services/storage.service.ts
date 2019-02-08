@@ -8,8 +8,8 @@ import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
 import {GameMap} from 'src/app/core/classes/base/game-map';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class StorageService {
   dbname = 'TsRogue';
 
@@ -39,6 +39,7 @@ export class StorageService {
       }
     } catch (e) {
       console.log(e);
+      console.trace();
     }
   }
 
@@ -71,14 +72,14 @@ export class StorageService {
     return {
       name: this.dbname,
       tables: [tblPlayer,
-               tblMap]
+        tblMap]
     };
   }
 
   async loadPlayer(): Promise<Player> {
     const json: string = await this.connection.get('Player');
     if (!json) {
-      return null;
+      throw new Error("Player not found");
     }
     const playerLoaded: JsonEntity = JSON.parse(json) as JsonEntity;
     return Player.fromJSON(playerLoaded);
@@ -92,25 +93,25 @@ export class StorageService {
     return JSON.parse(gameMap[0]['jsonData']);
   }
 
-  async saveMap(gameMap: GameMap) {
-    return await this.connection.insert({
-                                          into: 'Map',
-                                          return: true,
-                                          upsert: true,
-                                          values: [{
-                                            level: gameMap.level,
-                                            jsonData: JSON.stringify({map: gameMap, entities: this._entitiesService.getEntities()})
-                                          }]
-                                        });
-  }
-
   clearAllMaps(): Promise<null> {
     return this.connection.clear('Map');
   }
 
-  saveGameState(gameMap: GameMap) {
-    this.savePlayer(this._entitiesService.getPlayer());
+  saveGameState(gameMap: GameMap, player: Player) {
+    this.savePlayer(player);
     this.saveMap(gameMap);
+  }
+
+  async saveMap(gameMap: GameMap) {
+    return await this.connection.insert({
+      into: 'Map',
+      return: true,
+      upsert: true,
+      values: [{
+        level: gameMap.level,
+        jsonData: JSON.stringify({map: gameMap, entities: this._entitiesService.getEntities()})
+      }]
+    });
   }
 
   async savePlayer(player: Entity) {

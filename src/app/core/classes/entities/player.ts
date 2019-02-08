@@ -127,6 +127,7 @@ export class Player extends Entity {
     this.sprite.light = true;
     this.name = 'Player';
     this._entityType = EntityType.PLAYER;
+    this._level = 1;
   }
 
   private _getArmorEquipped(): Array<Armor> {

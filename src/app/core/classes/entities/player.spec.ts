@@ -58,7 +58,6 @@ describe('Player', () => {
       .toEqual('Barbarian');
     expect(player.isInventoryEquipped('a'))
       .toBeTruthy();
-    console.log(player);
   });
 
   it('should generate correct JSON', () => {

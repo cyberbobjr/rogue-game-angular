@@ -94,6 +94,7 @@ export class MapBuilder {
             gameMap.setDataAt(cell.position.x, cell.position.y, tile);
           } catch (e) {
             console.log(e);
+            console.trace();
           }
         });
       });

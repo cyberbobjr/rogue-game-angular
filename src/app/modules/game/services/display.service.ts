@@ -81,7 +81,7 @@ export class DisplayService {
       }
     } catch (e) {
       console.log(e);
-      debugger;
+      console.trace();
     }
   }
 
