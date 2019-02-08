@@ -6,6 +6,9 @@ import {GameClassFactory} from "../../../core/factories/game-class-factory";
 import {ClassType} from "../../../core/enums/class-type.enum";
 import {RaceFactory} from "../../../core/factories/race-factory";
 import {RaceType} from "../../../core/enums/race-type.enum";
+import {GameMap} from "../../../core/classes/base/game-map";
+import {MapBuilder} from "../../../core/factories/map-builder";
+import {JsonEntity, JsonMap} from "../../../core/interfaces/json-interfaces";
 
 describe('StorageService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -32,7 +35,7 @@ describe('StorageService', () => {
                                          .setRace(RaceFactory.getInstance()
                                                              .createRace(RaceType.HUMAN))
                                          .withAbilities(abilities) as Player;
-      service.savePlayer(player);
+      await service.savePlayer(player);
       const playerSaved: Player = await service.loadPlayer();
       expect(player.toJSON())
         .toEqual(playerSaved.toJSON());
@@ -41,5 +44,19 @@ describe('StorageService', () => {
     } catch (e) {
       console.log(e);
     }
+  });
+
+  it('should save and load map', async () => {
+    const service: StorageService = TestBed.get(StorageService);
+    const gameMap: GameMap = new MapBuilder().withLevel(1)
+                                             .withSeed(511)
+                                             .build();
+    await service.saveMap(gameMap);
+    const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await service.loadMap(1);
+    const mapLoaded: GameMap = MapBuilder.fromJSON(mapData);
+    expect(mapLoaded.level)
+      .toEqual(gameMap.level);
+    expect(mapLoaded.content)
+      .toEqual(gameMap.content);
   })
 });

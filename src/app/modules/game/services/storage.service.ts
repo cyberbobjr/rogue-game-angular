@@ -11,7 +11,7 @@ import {GameMap} from 'src/app/core/classes/base/game-map';
   providedIn: 'root'
 })
 export class StorageService {
-  dbname = 'TsRogue';
+  private dbname = 'TsRogue';
 
   get connection(): Instance {
     return IdbService.idbCon;

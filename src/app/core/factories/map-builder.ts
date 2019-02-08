@@ -27,18 +27,20 @@ export class MapBuilder {
   private _maxEntities = 0;
 
   static fromJSON(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    if (!jsonData.map || jsonData.entities) {
-      throw new Error('jsonData is empty');
+    if (!jsonData.map) {
+      throw new Error('jsonData map is empty');
     }
-    const entities: Array<Entity> = [];
-    jsonData.entities.forEach((jsonEntity: JsonEntity) => {
-      entities.push(EntitiesFactory.createFromJson(jsonEntity));
-    });
-    return new MapBuilder().withTile(jsonData.map)
-                           .withSeed(jsonData.map._seed)
-                           .withLevel(jsonData.map._level)
-                           .withEntities(entities)
-                           .build();
+    const mapBuilder: MapBuilder = new MapBuilder().withTile(jsonData.map)
+                                                   .withSeed(jsonData.map._seed)
+                                                   .withLevel(jsonData.map._level);
+    if (jsonData.entities.length > 0) {
+      const entities: Array<Entity> = [];
+      jsonData.entities.forEach((jsonEntity: JsonEntity) => {
+        entities.push(EntitiesFactory.createFromJson(jsonEntity));
+      });
+      mapBuilder.withEntities(entities);
+    }
+    return mapBuilder.build();
   }
 
   constructor() {
