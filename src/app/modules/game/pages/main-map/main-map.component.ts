@@ -3,10 +3,10 @@ import {DisplayService} from '../../services/display.service';
 import {GameEngineService} from '../../services/game-engine.service';
 
 @Component({
-             selector: 'app-main-map',
-             templateUrl: './main-map.component.html',
-             styleUrls: ['./main-map.component.css']
-           })
+  selector: 'app-main-map',
+  templateUrl: './main-map.component.html',
+  styleUrls: ['./main-map.component.css']
+})
 export class MainMapComponent implements OnInit, OnDestroy {
   @ViewChild('refMap') refMap: ElementRef;
 

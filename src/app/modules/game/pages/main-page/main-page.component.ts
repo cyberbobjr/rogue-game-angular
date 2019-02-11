@@ -9,10 +9,10 @@ import {NgxSmartModalService} from 'ngx-smart-modal';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 
 @Component({
-             selector: 'app-main-page',
-             templateUrl: './main-page.component.html',
-             styleUrls: ['./main-page.component.css']
-           })
+  selector: 'app-main-page',
+  templateUrl: './main-page.component.html',
+  styleUrls: ['./main-page.component.css']
+})
 export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(private _mapEngine: MapEngine,
@@ -44,11 +44,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   private async _initPlayer() {
-    const playerLoaded: Player = await this._storageService.loadPlayer();
-    if (!playerLoaded || !playerLoaded.position) {
+    try {
+      return await this._storageService.loadPlayer();
+    } catch (e) {
       this._goBackToMenu();
-    } else {
-      return playerLoaded;
     }
   }
 
