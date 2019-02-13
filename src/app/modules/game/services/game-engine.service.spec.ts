@@ -2,8 +2,6 @@ import {TestBed} from '@angular/core/testing';
 
 import {GameEngineService} from './game-engine.service';
 import {SharedModule} from '../../shared/shared.module';
-import {NgxSmartModalModule} from 'ngx-smart-modal';
-import {InventoryModule} from '../../inventory/inventory.module';
 import {RouterTestingModule} from '@angular/router/testing';
 
 describe('GameEngineService', () => {

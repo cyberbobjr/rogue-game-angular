@@ -1,5 +1,5 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {DisplayService} from '../../services/display.service';
+import {DisplayEngine} from '../../services/display-engine.service';
 import {GameEngineService} from '../../services/game-engine.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class MainMapComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  constructor(private _displayService: DisplayService,
+  constructor(private _displayService: DisplayEngine,
               private _gameEngineService: GameEngineService) {
   }
 
@@ -28,7 +28,7 @@ export class MainMapComponent implements OnInit, OnDestroy {
     const maxHeight = Math.round(window.innerHeight / fontsize) - 1;
     this._displayService.options = {height: maxHeight, fontSize: fontsize};
     this.refMap.nativeElement.appendChild(this._displayService.container);
-    this._displayService.computeBounds();
+    this._displayService.computeVisiblesRowsCols();
   }
 
   ngOnDestroy() {

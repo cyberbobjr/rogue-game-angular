@@ -134,4 +134,12 @@ export class InventorySystem {
   public hasLetter(inventoryLetter: string): boolean {
     return this._inventory.has(inventoryLetter);
   }
+
+  public getEquippedItems(): Map<SlotType, GameObject> {
+    const equippedGameObject: Map<SlotType, GameObject> = new Map();
+    this._equippedItem.forEach((letter: string, key: SlotType) => {
+      equippedGameObject.set(key, this._inventory.get(letter));
+    });
+    return equippedGameObject;
+  }
 }

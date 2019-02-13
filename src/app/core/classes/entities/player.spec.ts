@@ -62,8 +62,7 @@ describe('Player', () => {
 
   it('should generate correct JSON', () => {
     const player: Player = new Player();
-    player.position = new Position(0, 0);
-    player.level = 1;
+    player.setMapLevelAndPosition(1, new Position(0, 0));
     const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     const letter: string = player.addToInventory(weapon);
     playerJsonData = player.toJSON();

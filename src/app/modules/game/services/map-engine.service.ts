@@ -11,11 +11,11 @@ import {Entity} from '../../../core/classes/base/entity';
 import {Tile} from '../../../core/classes/base/tile';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
 import {EntitiesService} from './entities.service';
-import {Utility} from "../../../core/classes/utility";
+import {Utility} from '../../../core/classes/utility';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class MapEngine {
   private _width: number;
   private _height: number;

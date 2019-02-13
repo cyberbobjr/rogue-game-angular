@@ -328,7 +328,7 @@ export abstract class Entity implements Iobject, IEntity {
     return this._inventory.removeFromInventory(letterInventory);
   }
 
-  withAbilities(abilities: Map<string, number>): Entity {
+  setAbilities(abilities: Map<string, number>): Entity {
     abilities.forEach((value: number, ability: string) => {
       this._abilities[ability] = value;
     });

@@ -15,8 +15,8 @@ export class AttackDistanceAction implements Iaction {
   }
 
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
-    this._targets = this._getTargets();
     this._gameEngine = gameEngine;
+    this._targets = this._getTargets();
     if (this._targets.length === 0) {
       EventLog.getInstance().message = 'No target in range !';
       return ActionResult.SUCCESS;

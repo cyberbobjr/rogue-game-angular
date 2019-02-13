@@ -40,8 +40,8 @@ export class Player extends Entity {
     return this._maxHp;
   }
 
-  get equippedItem(): Map<SlotType, string> {
-    return this._equippedItem;
+  get equippedItem(): Map<SlotType, GameObject> {
+    return this._inventory.getEquippedItems();
   }
 
   get mapLevel(): number {
@@ -220,8 +220,9 @@ export class Player extends Entity {
     this.hp = this._maxHp;
   }
 
-  setLevelAndPosition(level: number, position: Position) {
-    this.level = level;
+  setMapLevelAndPosition(level: number, position: Position): Player {
+    this.mapLevel = level;
     this.position = position;
+    return this;
   }
 }

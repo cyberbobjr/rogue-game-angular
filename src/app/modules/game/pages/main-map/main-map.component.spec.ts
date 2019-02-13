@@ -29,4 +29,5 @@ describe('MainMapComponent', () => {
     expect(component)
       .toBeTruthy();
   });
+
 });

@@ -14,7 +14,7 @@ export class GameMap {
   private _level: number;
   private _rooms: Array<Room> = [];
   private _entities: Array<Entity> = [];
-
+  private _entitiesVisible: Array<Entity> = [];
   private _entryPosition: Position;
   private _exitPosition: Position;
 
@@ -81,30 +81,30 @@ export class GameMap {
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
   }
 
-  setSeed(seed: number): this {
+  public setSeed(seed: number): this {
     this._seed = seed;
     return this;
   }
 
-  setLevel(level: number): this {
+  public setLevel(level: number): this {
     this._level = level;
     return this;
   }
 
-  getDataAt(x: number, y: number): Iobject {
+  public getDataAt(x: number, y: number): Iobject {
     return this._data[y][x];
   }
 
-  setDataAt(x: number, y: number, data: Iobject) {
+  public setDataAt(x: number, y: number, data: Iobject) {
     this._data[y][x] = data;
     data.position = new Position(x, y);
   }
 
-  clone(): GameMap {
+  public clone(): GameMap {
     return this.extract(0, 0, this._width, this._height);
   }
 
-  extract(startPosX: number, startPosY: number, width: number, height: number): GameMap {
+  public extract(startPosX: number, startPosY: number, width: number, height: number): GameMap {
     if (startPosX < 0) {
       startPosX = 0;
     }
@@ -134,12 +134,19 @@ export class GameMap {
     return this;
   }
 
+  public getEntitiesVisibles(): Array<Entity> {
+    return this._entitiesVisible;
+  }
+
   public computeFOVMap(lightRadius: number, lightPower: number, position: Position): GameMap {
+    this._entitiesVisible = [];
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
         this._fovMap[y][x] = R / lightPower;
         if (this.getDataAt(x, y) instanceof Entity) {
-          (this.getDataAt(x, y) as Entity).sprite.light = (visibility === 1);
+          const entity: Entity = (this.getDataAt(x, y) as Entity);
+          entity.sprite.light = (visibility === 1);
+          this._entitiesVisible.push(entity);
         }
       } catch (e) {
       }

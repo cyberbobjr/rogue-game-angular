@@ -11,7 +11,7 @@ import * as Color from 'color';
 @Injectable({
               providedIn: 'root'
             })
-export class DisplayService {
+export class DisplayEngine {
   private _fontSize = 16;
   private _display: Display = new Display();
   private _cameraPosition: Position;
@@ -45,20 +45,20 @@ export class DisplayService {
   constructor(private _entitiesService: EntitiesService) {
   }
 
-  computeBounds() {
+  public computeVisiblesRowsCols() {
     const [width, height] = (this.display.computeSize(this.container.offsetWidth, this.container.offsetHeight));
     this.maxVisiblesCols = width;
     this.maxVisiblesRows = height;
   }
 
-  draw(gameMap: GameMap) {
+  public draw(gameMap: GameMap) {
     const player: Player = this._entitiesService.getPlayer();
-    const finalMap: GameMap = gameMap.clone()
+    const viewport: GameMap = gameMap.clone()
                                      .putEntities(this._entitiesService.getAllEntities())
                                      .createFovCasting()
                                      .computeFOVMap(player.lightRadius, player.lightPower, this.cameraPosition)
                                      .extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
-    this._drawViewPort(finalMap);
+    this._drawViewPort(viewport);
   }
 
   private _getStartViewPortOfPosition(cameraPosition: Position) {

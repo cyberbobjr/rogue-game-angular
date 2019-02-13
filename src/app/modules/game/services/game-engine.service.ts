@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {EntitiesService} from './entities.service';
 import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';
-import {DisplayService} from './display.service';
+import {DisplayEngine} from './display-engine.service';
 import {CommandsService} from './commands.service';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {StorageService} from './storage.service';
@@ -42,21 +42,21 @@ export class GameEngineService {
   }
 
   get storageEngine(): StorageService {
-    return this._storageService;
+    return this._StorageEngine;
   }
 
-  constructor(private _entitiesService: EntitiesService,
+  constructor(private _entityEngine: EntitiesService,
               private _mapEngine: MapEngine,
               private _logService: LoggingService,
-              private _displayService: DisplayService,
-              private _commandService: CommandsService,
-              private _storageService: StorageService,
+              private _displayEngine: DisplayEngine,
+              private _commandEngine: CommandsService,
+              private _StorageEngine: StorageService,
               private _router: Router) {
     console.log('Game engine created');
     this.restoreGameKeyHandler();
   }
 
-  startGameLoop() {
+  public startGameLoop() {
     console.log('Game loop started');
     this._timeStart = performance.now();
     this._gameLoop = window.requestAnimationFrame((timestamp: any) => {
@@ -64,12 +64,12 @@ export class GameEngineService {
     });
   }
 
-  gameLoop(timestamp: any) {
+  public gameLoop(timestamp: any) {
     if (timestamp - this._timeStart > 50) {
       this._updateGame();
       EffectEngine.getInstance()
                   .tick(timestamp);
-      this._drawMap();
+      this.drawMap();
       this._timeStart = performance.now();
     }
     this._gameLoop = window.requestAnimationFrame((timestamp2: any) => {
@@ -77,99 +77,99 @@ export class GameEngineService {
     });
   }
 
-  endGameLoop() {
+  public endGameLoop() {
     window.cancelAnimationFrame(this._gameLoop);
   }
 
-  handleActionKeyEvent(key: KeyboardEvent): void {
-    const player: Entity = this._entitiesService.getPlayer() as Entity;
+  public handleActionKeyEvent(key: KeyboardEvent): void {
+    const player: Entity = this._entityEngine.getPlayer() as Entity;
     switch (key.key) {
       case 'ArrowUp':
-        this._commandService.ArrowUp.execute(player, this);
+        this._commandEngine.ArrowUp.execute(player, this);
         break;
       case 'ArrowLeft':
-        this._commandService.ArrowLeft.execute(player, this);
+        this._commandEngine.ArrowLeft.execute(player, this);
         break;
       case 'ArrowDown':
-        this._commandService.ArrowDown.execute(player, this);
+        this._commandEngine.ArrowDown.execute(player, this);
         break;
       case 'ArrowRight':
-        this._commandService.ArrowRight.execute(player, this);
+        this._commandEngine.ArrowRight.execute(player, this);
         break;
       case 'q':
-        this._commandService.Keyq.execute(player, this);
+        this._commandEngine.Keyq.execute(player, this);
         break;
       case 'z':
-        this._commandService.Keyz.execute(player, this);
+        this._commandEngine.Keyz.execute(player, this);
         break;
       case 'a':
-        this._commandService.Keya.execute(player, this);
+        this._commandEngine.Keya.execute(player, this);
         break;
       case 'e':
-        this._commandService.Keye.execute(player, this);
+        this._commandEngine.Keye.execute(player, this);
         break;
       case 'w':
-        this._commandService.Keyw.execute(player, this);
+        this._commandEngine.Keyw.execute(player, this);
         break;
       case 'c':
-        this._commandService.Keyc.execute(player, this);
+        this._commandEngine.Keyc.execute(player, this);
         break;
       case 'C':
-        this._commandService.KeyC.execute(player, this);
+        this._commandEngine.KeyC.execute(player, this);
         break;
       case 'x':
-        this._commandService.Keyx.execute(player, this);
+        this._commandEngine.Keyx.execute(player, this);
         break;
       case 'd':
-        this._commandService.Keyd.execute(player, this);
+        this._commandEngine.Keyd.execute(player, this);
         break;
       case 'o':
-        this._commandService.Keyo.execute(player, this);
+        this._commandEngine.Keyo.execute(player, this);
         break;
       case 's':
-        this._commandService.Keys.execute(player, this);
+        this._commandEngine.Keys.execute(player, this);
         break;
       case 't':
-        this._commandService.Keyt.execute(player, this);
+        this._commandEngine.Keyt.execute(player, this);
         break;
       case 'f':
-        this._commandService.Keyf.execute(player, this);
+        this._commandEngine.Keyf.execute(player, this);
         break;
       case 'i':
-        this._commandService.Keyi.execute(player, this);
+        this._commandEngine.Keyi.execute(player, this);
         break;
       case ' ':
-        this._commandService.KeySpace.execute(player, this);
+        this._commandEngine.KeySpace.execute(player, this);
         break;
       case '<':
-        this._commandService.KeyDown.execute(player, this);
+        this._commandEngine.KeyDown.execute(player, this);
         break;
       case '>':
-        this._commandService.KeyUp.execute(player, this);
+        this._commandEngine.KeyUp.execute(player, this);
         break;
     }
     this.processAction();
   }
 
   private _updateGame() {
-    const player: Player = this._entitiesService.getPlayer();
-    this._displayService.cameraPosition = player.position;
-    this._entitiesService.updateEntities(this);
+    const player: Player = this._entityEngine.getPlayer();
+    this._displayEngine.cameraPosition = player.position;
+    this._entityEngine.updateEntities(this);
   }
 
-  private _drawMap() {
-    this._displayService.draw(this._mapEngine.getCurrentMap());
+  public drawMap() {
+    this._displayEngine.draw(this._mapEngine.getCurrentMap());
   }
 
-  gameOver() {
+  public gameOver() {
     this.endGameLoop();
     window.alert('You loose !');
     this._router.navigateByUrl('game/gameover');
   }
 
-  processAction() {
-    const entities: Array<Entity> = this._entitiesService.getEntities()
-                                        .concat(this._entitiesService.getPlayer());
+  public processAction() {
+    const entities: Array<Entity> = this._entityEngine.getEntities()
+                                        .concat(this._entityEngine.getPlayer());
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
       let actorAction: Iaction = currentActor.getAction();
@@ -189,63 +189,65 @@ export class GameEngineService {
     }
   }
 
-  getModalService(): NgxSmartModalService {
+  public getModalService(): NgxSmartModalService {
     return this._modalService;
   }
 
-  setModalService(value: NgxSmartModalService) {
+  public setModalService(value: NgxSmartModalService) {
     this._modalService = value;
   }
 
-  getPlayer(): Player {
-    return this._entitiesService.getPlayer();
+  public getPlayer(): Player {
+    return this._entityEngine.getPlayer();
   }
 
-  getEntitiesVisibles(): Array<Entity> {
-    return this._entitiesService.getEntitiesVisibles();
+  public getEntitiesVisibles(): Array<Entity> {
+    return this._mapEngine
+               .getCurrentMap()
+               .getEntitiesVisibles();
   }
 
-  getMapEngine(): MapEngine {
+  public getMapEngine(): MapEngine {
     return this._mapEngine;
   }
 
-  restoreGameKeyHandler() {
+  public restoreGameKeyHandler() {
     this._handleKeyEvent = this.handleActionKeyEvent;
   }
 
-  gotoUpStair() {
-    const player: Player = this._entitiesService.getPlayer();
-    if (player.level === Config.maxLevel) {
+  public gotoUpStair() {
+    const player: Player = this._entityEngine.getPlayer();
+    if (player.mapLevel === Config.maxLevel) {
       EventLog.getInstance().message = `You Win !!!`;
     } else {
-      const newLevel: number = player.level + 1;
+      const newLevel: number = player.mapLevel + 1;
       this.changeMapLevel(newLevel);
       EventLog.getInstance().message = `You up the stair to level ${newLevel}`;
     }
   }
 
-  gotoDownStair() {
-    const player: Player = this._entitiesService.getPlayer();
-    if (player.level === 1) {
+  public gotoDownStair() {
+    const player: Player = this._entityEngine.getPlayer();
+    if (player.mapLevel === 1) {
       EventLog.getInstance().message = `You  can't go down !`;
     } else {
-      const newLevel: number = player.level - 1;
+      const newLevel: number = player.mapLevel - 1;
       this.changeMapLevel(newLevel);
       EventLog.getInstance().message = `You down the stair to level ${newLevel}`;
     }
   }
 
-  changeMapLevel(newLevel: number) {
-    const player: Player = this._entitiesService.getPlayer();
+  public changeMapLevel(newLevel: number) {
+    const player: Player = this._entityEngine.getPlayer();
     // save current level
-    this._storageService.saveGameState(this._mapEngine.getCurrentMap(), this.getPlayer());
+    this._StorageEngine.saveGameState(this._mapEngine.getCurrentMap(), this.getPlayer());
     // get level if exist
-    this._storageService
+    this._StorageEngine
         .loadMap(newLevel)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
           const gameMap: GameMap = this._mapEngine.setGameMap(this._mapEngine.loadRawMap(data));
-          player.setLevelAndPosition(newLevel, gameMap.entryPosition);
-          this._storageService.saveGameState(gameMap, this.getPlayer());
+          player.setMapLevelAndPosition(newLevel, gameMap.entryPosition);
+          this._StorageEngine.saveGameState(gameMap, this.getPlayer());
         })
         .catch((e) => {
           console.log(e);
@@ -253,4 +255,12 @@ export class GameEngineService {
         });
   }
 
+  public setGameMap(gameMap: GameMap) {
+    this._mapEngine.setGameMap(gameMap);
+    this._entityEngine.entities = gameMap.entities;
+  }
+
+  public setRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }) {
+    this.setGameMap(this._mapEngine.loadRawMap(mapData));
+  }
 }

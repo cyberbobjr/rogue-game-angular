@@ -9,14 +9,13 @@ import {NgxSmartModalService} from 'ngx-smart-modal';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 
 @Component({
-  selector: 'app-main-page',
-  templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css']
-})
+             selector: 'app-main-page',
+             templateUrl: './main-page.component.html',
+             styleUrls: ['./main-page.component.css']
+           })
 export class MainPageComponent implements OnInit, OnDestroy {
 
-  constructor(private _mapEngine: MapEngine,
-              private _gameEngineService: GameEngineService,
+  constructor(private _gameEngineService: GameEngineService,
               private _entitiesService: EntitiesService,
               private _storageService: StorageService,
               private _router: Router,
@@ -28,14 +27,17 @@ export class MainPageComponent implements OnInit, OnDestroy {
     this._initPlayer()
         .then((player: Player) => {
           this._entitiesService.setPlayer(player);
-          return this._storageService.loadMap(player.level);
+          return this._storageService.loadMap(player.mapLevel);
         })
         .then((mapData: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          this._gameEngineService
-              .getMapEngine()
-              .setGameMap(this._mapEngine.loadRawMap(mapData));
+          this._gameEngineService.setRawGameMap(mapData);
           this._gameEngineService.setModalService(this._modalService);
           this._gameEngineService.startGameLoop();
+        })
+        .catch((e) => {
+          console.log(e);
+          console.trace();
+          this._goBackToMenu();
         });
   }
 
@@ -44,11 +46,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   private async _initPlayer() {
-    try {
-      return await this._storageService.loadPlayer();
-    } catch (e) {
-      this._goBackToMenu();
-    }
+    return await this._storageService.loadPlayer();
   }
 
   private _goBackToMenu() {
