@@ -14,7 +14,6 @@ import {GameMap} from '../../../core/classes/base/game-map';
 export class EntitiesService {
   private _player: Player = null;
   private _entities: Array<Entity> = [];
-  private _entitiesVisibles: Array<Entity> = [];
 
   set entities(value: Array<Entity>) {
     this._entities = value;
@@ -33,10 +32,6 @@ export class EntitiesService {
 
   getEntities(): Array<Entity> {
     return this._entities;
-  }
-
-  getEntitiesVisibles(): Array<Entity> {
-    return this._entitiesVisibles;
   }
 
   getAllEntities(): Array<Entity> {

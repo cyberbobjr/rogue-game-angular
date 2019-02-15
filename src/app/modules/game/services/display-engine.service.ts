@@ -85,9 +85,9 @@ export class DisplayEngine {
     }
   }
 
-  private _darkenColor(color: string, darkenValue: number): string {
+  private _darkenColor(color: string, fovValue: number): string {
     return Color(color)
-      .darken(darkenValue)
+      .darken(fovValue)
       .hex();
   }
 }

@@ -42,7 +42,7 @@ export class GameEngineService {
   }
 
   get storageEngine(): StorageService {
-    return this._StorageEngine;
+    return this._storageEngine;
   }
 
   constructor(private _entityEngine: EntitiesService,
@@ -50,7 +50,7 @@ export class GameEngineService {
               private _logService: LoggingService,
               private _displayEngine: DisplayEngine,
               private _commandEngine: CommandsService,
-              private _StorageEngine: StorageService,
+              private _storageEngine: StorageService,
               private _router: Router) {
     console.log('Game engine created');
     this.restoreGameKeyHandler();
@@ -238,16 +238,18 @@ export class GameEngineService {
   }
 
   public changeMapLevel(newLevel: number) {
-    const player: Player = this._entityEngine.getPlayer();
     // save current level
-    this._StorageEngine.saveGameState(this._mapEngine.getCurrentMap(), this.getPlayer());
+    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this.getPlayer());
     // get level if exist
-    this._StorageEngine
-        .loadMap(newLevel)
+    this._loadMapLevel(newLevel);
+  }
+
+  private _loadMapLevel(level: number) {
+    this._storageEngine
+        .loadMap(level)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap = this._mapEngine.setGameMap(this._mapEngine.loadRawMap(data));
-          player.setMapLevelAndPosition(newLevel, gameMap.entryPosition);
-          this._StorageEngine.saveGameState(gameMap, this.getPlayer());
+          const gameMap: GameMap = this.loadRawGameMap(data);
+          this._storageEngine.saveGameState(gameMap, this.getPlayer());
         })
         .catch((e) => {
           console.log(e);
@@ -255,12 +257,14 @@ export class GameEngineService {
         });
   }
 
-  public setGameMap(gameMap: GameMap) {
-    this._mapEngine.setGameMap(gameMap);
-    this._entityEngine.entities = gameMap.entities;
+  public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
+    const gameMap: GameMap = this._mapEngine.loadRawMap(mapData);
+    return this.loadGameMap(gameMap);
   }
 
-  public setRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }) {
-    this.setGameMap(this._mapEngine.loadRawMap(mapData));
+  public loadGameMap(gameMap: GameMap): GameMap {
+    this._mapEngine.setGameMap(gameMap);
+    this._entityEngine.entities = gameMap.entities;
+    return gameMap;
   }
 }

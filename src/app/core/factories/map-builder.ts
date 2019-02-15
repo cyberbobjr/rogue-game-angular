@@ -84,35 +84,36 @@ export class MapBuilder {
 
   build(): GameMap {
     const gameMap: GameMap = this._generateMap(this._width, this._height, this._seed, this._level);
+    gameMap.rooms = this._rotEngine.getRooms();
     if (this._jsonMap) {
-      this._jsonMap._data.forEach((cells: Array<JSonCell>) => {
-        cells.forEach((cell: JSonCell) => {
-          try {
-            const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
-            this._loadTileContents(tile, cell.contents);
-            if (!cell.position) {
-              throw new Error('Tile withouh position');
-            }
-            gameMap.setDataAt(cell.position.x, cell.position.y, tile);
-          } catch (e) {
-            console.log(e);
-            console.trace();
-          }
-        });
-      });
+      this._generateFromJson(gameMap);
     }
     if (this._maxEntities > 0) {
-      this._entities = this._generateMonsters([0], this._maxEntities, gameMap);
-    }
-    if (this._entities.length > 0) {
-      gameMap.entities = this._entities;
+      gameMap.entities = this._generateMonsters([0], this._maxEntities, gameMap);
     }
     if (this._maxChests > 0) {
       this._generateChests(gameMap, this._maxChests);
     }
-    gameMap.rooms = this._rotEngine.getRooms();
     gameMap.createFovCasting();
     return gameMap;
+  }
+
+  private _generateFromJson(gameMap: GameMap) {
+    this._jsonMap._data.forEach((cells: Array<JSonCell>) => {
+      cells.forEach((cell: JSonCell) => {
+        try {
+          const tile: Tile = TilesFactory.createJsonTile(<TileType>cell.type, cell);
+          this._loadTileContents(tile, cell.contents);
+          if (!cell.position) {
+            throw new Error('Tile withouh position');
+          }
+          gameMap.setDataAt(cell.position.x, cell.position.y, tile);
+        } catch (e) {
+          console.log(e);
+          console.trace();
+        }
+      });
+    });
   }
 
   private _generateChests(map: GameMap, maxChests: number) {
@@ -133,7 +134,7 @@ export class MapBuilder {
     let tile: Tile = null;
     let tryCount = 0;
     const roomPosition: [Position, Position] = this._getRoomPosition(roomNumber); // topleft, bottomright
-    while (!validPosition || tryCount < 10) {
+    while (!validPosition || tryCount < 20) {
       randomX = Utility.getRandomInt(roomPosition[0].x, roomPosition[1].x);
       randomY = Utility.getRandomInt(roomPosition[0].y, roomPosition[1].y);
       randomPosition = new Position(randomX, randomY);

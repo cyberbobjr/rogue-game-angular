@@ -1,16 +1,33 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { InfoPageComponent } from './info-page.component';
+import {InfoPageComponent} from './info-page.component';
+import {Player} from '../../../../core/classes/entities/player';
+import {GameClassFactory} from '../../../../core/factories/game-class-factory';
+import {ClassType} from '../../../../core/enums/class-type.enum';
+import {RaceFactory} from '../../../../core/factories/race-factory';
+import {RaceType} from '../../../../core/enums/race-type.enum';
+import {AttributesFactory} from '../../../../core/factories/attributes-factory';
+import {EntitiesService} from '../../services/entities.service';
 
 describe('InfoPageComponent', () => {
   let component: InfoPageComponent;
   let fixture: ComponentFixture<InfoPageComponent>;
 
   beforeEach(async(() => {
+    const attributes: Map<string, number> = new Map<string, number>(AttributesFactory.getAttributes());
+    attributes.set('dexterity', 10);
+    const player: Player = new Player().setGameClass(GameClassFactory.getInstance()
+                                                                     .createGameClass(ClassType.BARBARIAN))
+                                       .setRace(RaceFactory.getInstance()
+                                                           .createRace(RaceType.HUMAN))
+                                       .setAbilities(attributes) as Player;
+
     TestBed.configureTestingModule({
-      declarations: [ InfoPageComponent ]
-    })
-    .compileComponents();
+                                     declarations: [InfoPageComponent]
+                                   })
+           .compileComponents();
+    const entitiesService: EntitiesService = TestBed.get(EntitiesService);
+    entitiesService.setPlayer(player);
   }));
 
   beforeEach(() => {
@@ -20,6 +37,13 @@ describe('InfoPageComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component)
+      .toBeTruthy();
+  });
+
+  it('should display info about player', () => {
+    fixture.detectChanges();
+    expect(fixture.debugElement.nativeElement.innerHTML)
+      .toContain('dexterity : 10');
   });
 });

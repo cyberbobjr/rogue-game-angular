@@ -42,8 +42,10 @@ describe('attack-distance-action', () => {
   });
 
   it('should be succeed without ennemy in range', () => {
+    const entitiesService: EntitiesService = TestBed.get(EntitiesService);
+    entitiesService.setPlayer(player);
     const gameEngineService: GameEngineService = TestBed.get(GameEngineService);
-    gameEngineService.setGameMap(gameMap);
+    gameEngineService.loadGameMap(gameMap);
 
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
     const actionResult: ActionResult = attackAction.execute(player, gameEngineService);
@@ -52,17 +54,21 @@ describe('attack-distance-action', () => {
   });
 
   it('should be waited with ennemy in range', () => {
+    const entitiesService: EntitiesService = TestBed.get(EntitiesService);
+    entitiesService.setPlayer(player);
     const gameEngineService: GameEngineService = TestBed.get(GameEngineService);
     const entities: Array<Entity> = gameMap.entities;
     const entityPosition: Position = entities[0].position;
+    gameEngineService.loadGameMap(gameMap);
     player.setMapLevelAndPosition(1, entityPosition.computeDestination(Direction.E));
-    gameEngineService.setGameMap(gameMap);
+
     gameMap.putEntities(gameMap.entities)
            .createFovCasting()
            .computeFOVMap(player.lightRadius, player.lightPower, player.position);
 
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
     const actionResult: ActionResult = attackAction.execute(player, gameEngineService);
+    console.log(actionResult);
     expect(actionResult.succeeded)
       .toBeFalsy();
   });

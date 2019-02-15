@@ -16,8 +16,8 @@ import {InventorySystem} from './inventory-system';
 import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export abstract class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
@@ -101,10 +101,6 @@ export abstract class Entity implements Iobject, IEntity {
 
   set id(value: string) {
     this._id = value;
-  }
-
-  set hitDice(value: number) {
-    this._hitDice = value;
   }
 
   get hitDice(): number {
@@ -221,6 +217,10 @@ export abstract class Entity implements Iobject, IEntity {
 
   set xp(value: number) {
     this._xp = value;
+  }
+
+  getAttributeValue(attributes: string): number {
+    return this._abilities[attributes];
   }
 
   toJSON(): JsonEntity {

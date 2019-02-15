@@ -93,10 +93,6 @@ export class StorageService {
     return JSON.parse(gameMap[0]['jsonData']);
   }
 
-  clearPlayer(): Promise<null> {
-    return this.connection.isDbExist('player') ? this.connection.clear('player') : new Promise((resolve) => resolve(null));
-  }
-
   clearAllMaps(): Promise<null> {
     return this.connection.isDbExist('Map') ? this.connection.clear('Map') : new Promise((resolve) => resolve(null));
   }
