@@ -251,6 +251,10 @@ export abstract class Entity implements Iobject, IEntity {
     return '';
   }
 
+  getPosition() : Position {
+    return this.position;
+  }
+
   setNextAction(action: Iaction) {
     this._currentAction = action;
   }

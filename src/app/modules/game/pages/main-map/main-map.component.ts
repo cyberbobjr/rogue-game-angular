@@ -24,7 +24,7 @@ export class MainMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const fontsize = 16;
+    const fontsize = 18;
     const maxHeight = Math.round(window.innerHeight / fontsize) - 1;
     this._displayService.options = {height: maxHeight, fontSize: fontsize};
     this.refMap.nativeElement.appendChild(this._displayService.container);

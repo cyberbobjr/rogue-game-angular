@@ -33,13 +33,7 @@ export class MapBuilder {
     const mapBuilder: MapBuilder = new MapBuilder().withTile(jsonData.map)
                                                    .withSeed(jsonData.map._seed)
                                                    .withLevel(jsonData.map._level);
-    if (jsonData.entities.length > 0) {
-      const entities: Array<Entity> = [];
-      jsonData.entities.forEach((jsonEntity: JsonEntity) => {
-        entities.push(EntitiesFactory.createFromJson(jsonEntity));
-      });
-      mapBuilder.withEntities(entities);
-    }
+
     return mapBuilder.build();
   }
 
@@ -94,7 +88,6 @@ export class MapBuilder {
     if (this._maxChests > 0) {
       this._generateChests(gameMap, this._maxChests);
     }
-    gameMap.createFovCasting();
     return gameMap;
   }
 

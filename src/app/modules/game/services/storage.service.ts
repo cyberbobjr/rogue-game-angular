@@ -2,24 +2,28 @@ import {Injectable} from '@angular/core';
 import {Player} from '../../../core/classes/entities/player';
 import {EntitiesService} from './entities.service';
 import {Entity} from '../../../core/classes/base/entity';
-import {JsonEntity} from '../../../core/interfaces/json-interfaces';
-import {IdbService} from './idb.service';
+import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
 import {GameMap} from 'src/app/core/classes/base/game-map';
+import * as JsStore from 'jsstore';
+import * as workerPath from 'file-loader?name=scripts/[name].[hash].js!jsstore/dist/jsstore.worker.min.js';
+
+export const idbCon = new JsStore.Instance(new Worker(workerPath));
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class StorageService {
   private dbname = 'TsRogue';
+  private dbVersion = 3;
 
   get connection(): Instance {
-    return IdbService.idbCon;
+    return idbCon;
   }
 
   constructor(private _entitiesService: EntitiesService) {
     console.log('storage created');
-    this.connection.setLogStatus(false);
+    this.connection.setLogStatus(true);
     this.initJsStore()
         .then(() => {
           console.log('DB init');
@@ -28,15 +32,18 @@ export class StorageService {
 
   async initJsStore() {
     try {
-      const isExist: boolean = await this.connection.isDbExist(this.dbname);
-      if (isExist) {
-        console.log('openDB');
-        this.connection.openDb(this.dbname);
-      } else {
+      const isExist: boolean = await this.connection.isDbExist({
+        dbName: this.dbname,
+        table: {name: 'Map', version: this.dbVersion}
+      });
+      if (!isExist) {
         console.log('createDB');
         const dataBase = this.getDatabase();
-        this.connection.createDb(dataBase);
+        const test: string[] = await this.connection.createDb(dataBase);
+        console.log(test);
       }
+      console.log('openDB');
+      await this.connection.openDb(this.dbname);
     } catch (e) {
       console.log(e);
       console.trace();
@@ -44,35 +51,27 @@ export class StorageService {
   }
 
   private getDatabase(): IDataBase {
-    const tblPlayer: ITable = {
-      name: 'Player',
-      columns: [
-        {
-          name: 'id',
-          primaryKey: true,
-        },
-        {
-          name: 'jsonData',
-          dataType: DATA_TYPE.String
-        }]
-    };
     const tblMap: ITable = {
       name: 'Map',
+      version: this.dbVersion,
       columns: [
         {
           name: 'level',
           primaryKey: true
         },
         {
-          name: 'jsonData',
+          name: 'map',
+          dataType: DATA_TYPE.String
+        },
+        {
+          name: 'entities',
           dataType: DATA_TYPE.String
         }
       ]
     };
     return {
       name: this.dbname,
-      tables: [tblPlayer,
-               tblMap]
+      tables: [tblMap]
     };
   }
 
@@ -90,11 +89,7 @@ export class StorageService {
     if (gameMap.length === 0) {
       throw new Error('No maps in storage');
     }
-    return JSON.parse(gameMap[0]['jsonData']);
-  }
-
-  clearAllMaps(): Promise<null> {
-    return this.connection.isDbExist('Map') ? this.connection.clear('Map') : new Promise((resolve) => resolve(null));
+    return {map: JSON.parse(gameMap[0]['map']), entities: JSON.parse(gameMap[0]['entities'])};
   }
 
   saveGameState(gameMap: GameMap, player: Player) {
@@ -104,14 +99,15 @@ export class StorageService {
 
   async saveMap(gameMap: GameMap) {
     return await this.connection.insert({
-                                          into: 'Map',
-                                          return: true,
-                                          upsert: true,
-                                          values: [{
-                                            level: gameMap.level,
-                                            jsonData: JSON.stringify({map: gameMap, entities: this._entitiesService.getEntities()})
-                                          }]
-                                        });
+      into: 'Map',
+      return: true,
+      upsert: true,
+      values: [{
+        level: gameMap.level,
+        map: JSON.stringify(gameMap),
+        entities: JSON.stringify(this._entitiesService.getEntities())
+      }]
+    });
   }
 
   async savePlayer(player: Entity) {

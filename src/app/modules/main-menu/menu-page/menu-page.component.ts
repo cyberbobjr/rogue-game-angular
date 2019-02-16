@@ -10,10 +10,10 @@ import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
 
 @Component({
-             selector: 'app-menu-page',
-             templateUrl: './menu-page.component.html',
-             styleUrls: ['./menu-page.component.css']
-           })
+  selector: 'app-menu-page',
+  templateUrl: './menu-page.component.html',
+  styleUrls: ['./menu-page.component.css']
+})
 export class MenuPageComponent implements OnInit {
   private _isGameStarted = false;
   private _isPlayerExist = false;
@@ -35,7 +35,7 @@ export class MenuPageComponent implements OnInit {
           this._isGameStarted = !!(this._player.mapLevel && this._player.position);
           if (this._isGameStarted) {
             this._storageService.loadMap(this._player.mapLevel)
-                .then((mapLoaded: { map: JsonMap, _entities: Array<JsonEntity> } | null) => {
+                .then((mapLoaded: { map: JsonMap, entities: Array<JsonEntity> } | null) => {
                   this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
                 });
           }
@@ -47,25 +47,19 @@ export class MenuPageComponent implements OnInit {
   }
 
   async startNewGame() {
-    this._storageService
-        .clearAllMaps()
+    this._mapEngine.generateMaps(Config.maxLevel)
         .then(() => {
-          return this._mapEngine.generateMaps(Config.maxLevel);
+          return this._storageService.loadMap(1);
         })
-        .then(() => {
-          this._storageService
-              .loadMap(1)
-              .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-                const gameMap: GameMap = this._mapEngine.loadRawMap(data);
-                this._player.setMapLevelAndPosition(1, gameMap.entryPosition);
-                this._player.setToFullHp();
-                this._storageService.savePlayer(this._player);
-                this._router.navigateByUrl('game');
-              })
-              .catch((e: Error) => {
-                console.log(e.message);
-                console.trace();
-              });
+        .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
+          const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(data);
+          this._player.setMapLevelAndPosition(1, gameMap.entryPosition);
+          this._player.setToFullHp();
+          this._storageService.savePlayer(this._player);
+          this._router.navigateByUrl('game');
+        })
+        .catch((err) => {
+          console.log(err);
         });
   }
 }

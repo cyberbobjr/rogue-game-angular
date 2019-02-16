@@ -9,31 +9,18 @@ import {Player} from '../../../core/classes/entities/player';
 import * as Color from 'color';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class DisplayEngine {
-  private _fontSize = 16;
   private _display: Display = new Display();
-  private _cameraPosition: Position;
   maxVisiblesCols = 20;
   maxVisiblesRows = 20;
-  cameraStartPosition: Position;
-
-  get cameraPosition(): Position {
-    return this._cameraPosition;
-  }
-
-  set cameraPosition(value: Position) {
-    this._cameraPosition = value;
-    this.cameraStartPosition = this._getStartViewPortOfPosition(value);
-  }
 
   get display(): Display {
     return this._display;
   }
 
   set options(options: Partial<DisplayOptions>) {
-    this._fontSize = this._fontSize || options.fontSize;
     this.display.setOptions(options);
     this.display.clear();
   }
@@ -42,7 +29,7 @@ export class DisplayEngine {
     return this.display.getContainer();
   }
 
-  constructor(private _entitiesService: EntitiesService) {
+  constructor() {
   }
 
   public computeVisiblesRowsCols() {
@@ -51,13 +38,10 @@ export class DisplayEngine {
     this.maxVisiblesRows = height;
   }
 
-  public draw(gameMap: GameMap) {
-    const player: Player = this._entitiesService.getPlayer();
-    const viewport: GameMap = gameMap.clone()
-                                     .putEntities(this._entitiesService.getAllEntities())
-                                     .createFovCasting()
-                                     .computeFOVMap(player.lightRadius, player.lightPower, this.cameraPosition)
-                                     .extract(this.cameraStartPosition.x, this.cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+  public draw(gameMap: GameMap, cameraPosition: Position) {
+    const cameraStartPosition: Position = this._getStartViewPortOfPosition(cameraPosition);
+    const viewport: GameMap = gameMap.extract(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    this._display.clear();
     this._drawViewPort(viewport);
   }
 
@@ -69,7 +53,6 @@ export class DisplayEngine {
 
   private _drawViewPort(viewport: GameMap) {
     try {
-      this.display.clear();
       for (let j = 0; j < viewport.height; j++) {
         for (let i = 0; i < viewport.width; i++) {
           const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;

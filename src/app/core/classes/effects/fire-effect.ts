@@ -43,7 +43,5 @@ export class FireEffect implements IEffect {
   }
 
   unregister_callback() {
-    EffectEngine.getInstance()
-                .removeEffect(this);
   }
 }

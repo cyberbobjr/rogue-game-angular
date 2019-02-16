@@ -62,9 +62,8 @@ export class MapEngine {
     return this._currentMap;
   }
 
-  loadRawMap(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    return MapBuilder.fromJSON(jsonData)
-                     .createFovCasting();
+  convertRawMapToGameMap(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
+    return MapBuilder.fromJSON(jsonData);
   }
 
   getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {

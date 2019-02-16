@@ -42,7 +42,7 @@ export class AttackDistanceAction implements Iaction {
       case 'KeyF':
         this._fire();
         this._restoreGameEngineKeyHandler();
-        this._gameEngine.processAction();
+        //this._gameEngine.processAction();
         break;
       default:
         this._restoreGameEngineKeyHandler();

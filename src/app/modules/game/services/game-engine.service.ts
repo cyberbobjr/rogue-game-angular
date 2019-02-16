@@ -21,10 +21,10 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
 
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class GameEngineService {
-  private _gameLoop: any = null;
+  private _gameLoopTimer: any = null;
   private _timeStart: any = null;
   private _handleKeyEvent: (key: KeyboardEvent) => void = null;
   private _modalService: NgxSmartModalService;
@@ -51,6 +51,7 @@ export class GameEngineService {
               private _displayEngine: DisplayEngine,
               private _commandEngine: CommandsService,
               private _storageEngine: StorageService,
+              private _effectEngine: EffectEngine,
               private _router: Router) {
     console.log('Game engine created');
     this.restoreGameKeyHandler();
@@ -59,26 +60,25 @@ export class GameEngineService {
   public startGameLoop() {
     console.log('Game loop started');
     this._timeStart = performance.now();
-    this._gameLoop = window.requestAnimationFrame((timestamp: any) => {
-      this.gameLoop(timestamp);
-    });
-  }
-
-  public gameLoop(timestamp: any) {
-    if (timestamp - this._timeStart > 50) {
-      this._updateGame();
-      EffectEngine.getInstance()
-                  .tick(timestamp);
-      this.drawMap();
-      this._timeStart = performance.now();
-    }
-    this._gameLoop = window.requestAnimationFrame((timestamp2: any) => {
-      this.gameLoop(timestamp2);
+    this._gameLoopTimer = window.requestAnimationFrame((timestamp: any) => {
+      this._gameLoop(timestamp);
     });
   }
 
   public endGameLoop() {
-    window.cancelAnimationFrame(this._gameLoop);
+    console.log('Game loop stop');
+    window.cancelAnimationFrame(this._gameLoopTimer);
+  }
+
+  private _gameLoop(timestamp: any) {
+    if (timestamp - this._timeStart > 50) {
+      this._updateGame(timestamp);
+      this._drawGame();
+      this._timeStart = performance.now();
+    }
+    this._gameLoopTimer = window.requestAnimationFrame((timestamp2: any) => {
+      this._gameLoop(timestamp2);
+    });
   }
 
   public handleActionKeyEvent(key: KeyboardEvent): void {
@@ -148,45 +148,27 @@ export class GameEngineService {
         this._commandEngine.KeyUp.execute(player, this);
         break;
     }
-    this.processAction();
   }
 
-  private _updateGame() {
-    const player: Player = this._entityEngine.getPlayer();
-    this._displayEngine.cameraPosition = player.position;
+  private _updateGame(timestamp: number) {
     this._entityEngine.updateEntities(this);
+    this._entityEngine.processAction(this);
+    this._effectEngine.updateEffects(timestamp);
   }
 
-  public drawMap() {
-    this._displayEngine.draw(this._mapEngine.getCurrentMap());
+  private _drawGame() {
+    const player: Player = this._entityEngine.getPlayer();
+    const gameMap: GameMap = this._mapEngine.getCurrentMap()
+                                 .clone();
+    this._entityEngine.drawEntities(gameMap);
+    this._effectEngine.drawEffects(gameMap);
+    this._displayEngine.draw(gameMap.computeLOSMap(player), player.position);
   }
 
   public gameOver() {
     this.endGameLoop();
     window.alert('You loose !');
     this._router.navigateByUrl('game/gameover');
-  }
-
-  public processAction() {
-    const entities: Array<Entity> = this._entityEngine.getEntities()
-                                        .concat(this._entityEngine.getPlayer());
-    for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
-      const currentActor: Entity = entities[currentActorIndex];
-      let actorAction: Iaction = currentActor.getAction();
-      if (actorAction) {
-        while (true) {
-          const resultAction: ActionResult = actorAction.execute(currentActor, this);
-          if (resultAction.succeeded) {
-            break;
-          }
-          if (!resultAction.alternative) {
-            return;
-          }
-          actorAction = Object.create(resultAction.alternative);
-          resultAction.alternative = null;
-        }
-      }
-    }
   }
 
   public getModalService(): NgxSmartModalService {
@@ -258,13 +240,14 @@ export class GameEngineService {
   }
 
   public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    const gameMap: GameMap = this._mapEngine.loadRawMap(mapData);
-    return this.loadGameMap(gameMap);
+    const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(mapData);
+    const entities: Array<Entity> = this._entityEngine.convertRawMapToEntities(mapData);
+    return this.loadGameMap(gameMap, entities);
   }
 
-  public loadGameMap(gameMap: GameMap): GameMap {
+  public loadGameMap(gameMap: GameMap, entities: Array<Entity>): GameMap {
     this._mapEngine.setGameMap(gameMap);
-    this._entityEngine.entities = gameMap.entities;
+    this._entityEngine.entities = entities;
     return gameMap;
   }
 }

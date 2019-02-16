@@ -22,7 +22,7 @@ export class EffectEngine {
     }
   }
 
-  tick(timestamp: number) {
+  updateEffects(timestamp: number) {
     this._effects.forEach((effect: IEffect) => {
       effect.tick(timestamp);
     });

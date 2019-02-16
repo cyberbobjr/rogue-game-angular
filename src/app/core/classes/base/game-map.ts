@@ -138,7 +138,11 @@ export class GameMap {
     return this._entitiesVisible;
   }
 
-  public computeFOVMap(lightRadius: number, lightPower: number, position: Position): GameMap {
+  public computeLOSMap(mainActor: Entity): GameMap {
+    const position: Position = mainActor.getPosition();
+    const lightRadius: number = mainActor.lightRadius;
+    const lightPower: number = mainActor.lightPower;
+    this._createLOS();
     this._entitiesVisible = [];
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
@@ -155,7 +159,7 @@ export class GameMap {
     return this;
   }
 
-  public createFovCasting(): GameMap {
+  private _createLOS(): GameMap {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info: Iobject = this.getDataAt(x, y);
@@ -168,8 +172,8 @@ export class GameMap {
   }
 
   public getTilesAround(position: Position): Array<Array<Iobject>> {
-    const test: GameMap = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap;
-    return test.content;
+    const tilesAround: GameMap = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap;
+    return tilesAround.content;
   }
 
   public getTileAt(position: Position): Tile {
