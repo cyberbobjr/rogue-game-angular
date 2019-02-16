@@ -23,10 +23,6 @@ export abstract class Tile implements Iobject {
     return this._opaque;
   }
 
-  set opaque(value: boolean) {
-    this._opaque = value;
-  }
-
   get name(): string {
     return this._name;
   }

@@ -45,7 +45,7 @@ describe('attack-distance-action', () => {
     const entitiesService: EntitiesService = TestBed.get(EntitiesService);
     entitiesService.setPlayer(player);
     const gameEngineService: GameEngineService = TestBed.get(GameEngineService);
-    gameEngineService.loadGameMap(gameMap);
+    gameEngineService.loadGameMap(gameMap, entitiesService.getEntities());
 
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
     const actionResult: ActionResult = attackAction.execute(player, gameEngineService);
@@ -59,10 +59,10 @@ describe('attack-distance-action', () => {
     const gameEngineService: GameEngineService = TestBed.get(GameEngineService);
     const entities: Array<Entity> = gameMap.entities;
     const entityPosition: Position = entities[0].position;
-    gameEngineService.loadGameMap(gameMap);
+    gameEngineService.loadGameMap(gameMap,entities);
     player.setMapLevelAndPosition(1, entityPosition.computeDestination(Direction.E));
     entitiesService.drawEntities(gameMap);
-    gameMap.computeLOSMap(player.lightRadius, player.lightPower, player.position);
+    gameMap.computeLOSMap(player);
 
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
     const actionResult: ActionResult = attackAction.execute(player, gameEngineService);

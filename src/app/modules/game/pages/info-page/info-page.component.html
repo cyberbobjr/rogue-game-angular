@@ -4,13 +4,13 @@
     <div class="row-fluid">
       <div class="span6" style="border-right: yellow solid 1px">
         <div *ngFor="let attribute of attributes">
-          {{attribute}} : {{player?.getAttributeValue(attribute)}}
+          {{attribute}} : {{entitiesService.getPlayer()?.getAttributeValue(attribute)}}
         </div>
       </div>
       <div class="span6">
-        Gold : {{player?.gp}}<br/>
-        AC : {{player?.ac}}<br/>
-        HP : {{player?.hp}}
+        Gold : {{entitiesService.getPlayer()?.gp}}<br/>
+        AC : {{entitiesService.getPlayer()?.ac}}<br/>
+        HP : {{entitiesService.getPlayer()?.hp}}
       </div>
     </div>
     <br/>
