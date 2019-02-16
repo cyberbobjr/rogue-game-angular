@@ -6,7 +6,6 @@ import {Router} from '@angular/router';
 import {EntitiesService} from '../../../game/services/entities.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameObject} from '../../../../core/classes/gameObjects/game-object';
-import {Potion} from '../../../../core/classes/gameObjects/potion';
 import {Tile} from '../../../../core/classes/base/tile';
 
 @Component({
@@ -19,6 +18,10 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   private _listener: any = null;
   private _selected: string = null;
   private _player: Player = null;
+
+  get entitiesService(): EntitiesService {
+    return this._entitiesService;
+  }
 
   constructor(private _modalService: NgxSmartModalService,
               private _gameEngine: GameEngineService,

@@ -3,7 +3,7 @@ import {SlotType} from '../../enums/equiped-type.enum';
 import {Utility} from '../utility';
 
 export class InventorySystem {
-  protected _inventory: Map<string, GameObject> = new Map<string, GameObject>();
+  private _inventory: Map<string, GameObject> = new Map<string, GameObject>();
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
 
   constructor() {
@@ -129,6 +129,10 @@ export class InventorySystem {
       gameObjects.push(item);
     });
     return gameObjects;
+  }
+
+  public getAllInventoryWithLetter(): Map<string, GameObject> {
+    return this._inventory;
   }
 
   public hasLetter(inventoryLetter: string): boolean {
