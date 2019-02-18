@@ -5,6 +5,6 @@ import {OpenChestAction} from '../actions/open-chest-action';
 
 export class OpenChestCommand implements Command {
   execute(actor: Entity, gameEngine: GameEngineService) {
-    actor.setNextAction(new OpenChestAction(actor, gameEngine.mapEngine));
+    actor.setNextAction(new OpenChestAction(actor));
   }
 }

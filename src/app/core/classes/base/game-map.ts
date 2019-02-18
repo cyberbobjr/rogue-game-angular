@@ -159,18 +159,6 @@ export class GameMap {
     return this;
   }
 
-  private _createLOS(): GameMap {
-    this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
-      try {
-        const info: Iobject = this.getDataAt(x, y);
-        return (info instanceof Tile) ? !info.opaque : true;
-      } catch (e) {
-        return false;
-      }
-    }, {topology: 8});
-    return this;
-  }
-
   public getTilesAround(position: Position): Array<Array<Iobject>> {
     const tilesAround: GameMap = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap;
     return tilesAround.content;
@@ -191,6 +179,18 @@ export class GameMap {
       });
     });
     return chestsPositions;
+  }
+
+  private _createLOS(): GameMap {
+    this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
+      try {
+        const info: Iobject = this.getDataAt(x, y);
+        return (info instanceof Tile) ? !info.opaque : true;
+      } catch (e) {
+        return false;
+      }
+    }, {topology: 8});
+    return this;
   }
 
   private _getRawFovData(startX, startY, width, height) {

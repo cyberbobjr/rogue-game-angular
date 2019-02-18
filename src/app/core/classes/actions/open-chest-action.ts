@@ -8,11 +8,12 @@ import {Tile} from '../base/tile';
 import {ChestTile} from '../tiles/chest-tile';
 
 export class OpenChestAction implements Iaction {
-  constructor(private _actor: Entity, private _mapEngine: MapEngine) {
+  constructor(private _actor: Entity) {
   }
 
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
-    const tile: Tile = this._mapEngine.getTileAt(this._actor.position);
+    const mapEngine: MapEngine = gameEngine.getMapEngine();
+    const tile: Tile = mapEngine.getTileAt(this._actor.position);
     if (tile instanceof ChestTile) {
       EventLog.getInstance().message = 'You trying to open chest';
       tile.openChest();
