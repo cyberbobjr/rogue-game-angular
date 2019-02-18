@@ -23,7 +23,7 @@ export class StorageService {
 
   constructor(private _entitiesService: EntitiesService) {
     console.log('storage created');
-    this.connection.setLogStatus(true);
+    this.connection.setLogStatus(false);
     this.initJsStore()
         .then(() => {
           console.log('DB init');

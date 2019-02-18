@@ -10,14 +10,10 @@ import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
 import {EntitiesService} from '../../../modules/game/services/entities.service';
-import {Position} from '../base/position';
-import {TakeAction} from './take-action';
-import {Tile} from '../base/tile';
-import {GameObjectFactory} from '../../factories/game-object-factory';
-import {GameObjectType} from '../../enums/game-object-type.enum';
-import {GameObject} from '../gameObjects/game-object';
+import {WalkAction} from './walk-action';
+import {Direction} from '../../enums/direction.enum';
 
-describe('take-action', () => {
+describe('walk-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
 
@@ -37,24 +33,9 @@ describe('take-action', () => {
   });
 
   it('should be created', () => {
-    const takeAction: TakeAction = new TakeAction(player);
-    expect(takeAction)
+    const walkAction: WalkAction = new WalkAction(Direction.E);
+    expect(walkAction)
       .toBeTruthy();
   });
 
-  it('should take objects from tile', () => {
-    const inventorySize: number = player.inventory.getInventorySize();
-    const freePosition: Position = gameMap.getFreeSlotForRoom(0);
-    const tile: Tile = gameMap.getTileAt(freePosition);
-    const gameObject: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
-    tile.dropOn(gameObject);
-    const gameEngine: GameEngineService = TestBed.get(GameEngineService);
-    gameEngine.loadGameMap(gameMap);
-    player.setMapLevelAndPosition(1, freePosition);
-    const takeAction: TakeAction = new TakeAction(player);
-    takeAction.execute(player, gameEngine);
-    const inventoryFinalSize: number = player.inventory.getInventorySize();
-    expect(inventorySize + 1)
-      .toEqual(inventoryFinalSize);
-  });
 });

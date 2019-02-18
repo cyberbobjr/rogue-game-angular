@@ -66,7 +66,6 @@ describe('attack-distance-action', () => {
 
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
     const actionResult: ActionResult = attackAction.execute(player, gameEngineService);
-    console.log(actionResult);
     expect(actionResult.succeeded)
       .toBeFalsy();
   });

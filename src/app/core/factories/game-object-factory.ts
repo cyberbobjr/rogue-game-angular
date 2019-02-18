@@ -99,13 +99,13 @@ export class GameObjectFactory {
   private _getRandomWeapon(): GameObject {
     const weaponCount: number = this._weapons.size;
     const items: Array<Weapon> = Array.from(this._weapons.values());
-    return items[Utility.rolldice(weaponCount) - 1];
+    return items[Utility.rolldice(weaponCount - 1)];
   }
 
   private _getRandomArmor(): GameObject {
     const armorCount: number = this._armors.size;
     const items: Array<Armor> = Array.from(this._armors.values());
-    return items[Utility.rolldice(armorCount) - 1];
+    return items[Utility.rolldice(armorCount - 1)];
   }
 
   getWeaponById(weaponId: string): Weapon | null {

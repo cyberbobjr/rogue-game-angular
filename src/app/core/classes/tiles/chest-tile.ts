@@ -61,8 +61,13 @@ export class ChestTile extends FloorTile {
     chestObjects.forEach((gameObject: GameObject) => {
       this.dropOn(gameObject);
     });
-    EventLog.getInstance().message = 'You open the chest with ' + this._getContentInfo();
-    this._isClosed = false;
+    try {
+      EventLog.getInstance().message = 'You open the chest with ' + this._getContentInfo();
+      this._isClosed = false;
+    } catch (e) {
+      console.log(e);
+      console.log(chestObjects);
+    }
   }
 
 

@@ -84,11 +84,17 @@ export abstract class Tile implements Iobject {
   abstract onHit(actor: Entity): Iaction | null;
 
   dropOn(gameObject: GameObject) {
-    const existingGameObject = this._contents.find((value: GameObject) => value.id === gameObject.id);
-    if (existingGameObject && existingGameObject.empilable) {
-      existingGameObject.qty += gameObject.qty;
-    } else {
-      this._contents.push(gameObject);
+    try {
+      const existingGameObject = this._contents.find((value: GameObject) => value.id === gameObject.id);
+      if (existingGameObject && existingGameObject.empilable) {
+        existingGameObject.qty += gameObject.qty;
+      } else {
+        this._contents.push(gameObject);
+      }
+    } catch (e) {
+      console.log(gameObject);
+      console.log(this._contents);
+      console.log(e);
     }
   }
 
