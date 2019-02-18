@@ -6,6 +6,7 @@ import {Entity} from 'src/app/core/classes/base/entity';
 import {Iobject} from '../../interfaces/iobject';
 import {Room} from 'rot-js/lib/map/features';
 import {ChestTile} from '../tiles/chest-tile';
+import {FloorTile} from '../tiles/floor-tile';
 
 export class GameMap {
   private _data: Iobject[][];
@@ -179,6 +180,32 @@ export class GameMap {
       });
     });
     return chestsPositions;
+  }
+
+  public getFreeSlotForRoom(roomNumber: number): Position | null {
+    let validPosition = false;
+    let randomPosition: Position = null;
+    let randomX: number;
+    let randomY: number;
+    let tile: Tile = null;
+    let tryCount = 0;
+    const roomPosition: [Position, Position] = this._getRoomPosition(roomNumber); // topleft, bottomright
+    while (!validPosition || tryCount < 20) {
+      randomX = Utility.getRandomInt(roomPosition[0].x, roomPosition[1].x);
+      randomY = Utility.getRandomInt(roomPosition[0].y, roomPosition[1].y);
+      randomPosition = new Position(randomX, randomY);
+      tile = this.getTileAt(randomPosition);
+      validPosition = (tile instanceof FloorTile);
+      tryCount++;
+    }
+    return randomPosition;
+  }
+
+  private _getRoomPosition(roomNumber: number): [Position, Position] {
+    const room: Room = this._rooms[roomNumber];
+    const topleft: Position = new Position(room.getLeft(), room.getTop());
+    const bottomright: Position = new Position(room.getRight(), room.getBottom());
+    return [topleft, bottomright];
   }
 
   private _createLOS(): GameMap {

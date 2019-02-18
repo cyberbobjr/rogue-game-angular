@@ -6,9 +6,11 @@ import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Gold extends GameObject {
-  protected _sprite: Sprite;
   name = 'Gold';
-  objectType = 'GOLD';
+
+  get id(): string {
+    return 'GOLD';
+  }
 
   get amount(): number {
     return this._amount;
@@ -17,6 +19,7 @@ export class Gold extends GameObject {
   constructor(private _amount: number) {
     super();
     this._sprite = SpritesFactory.createSprite(SpriteType.GOLD);
+    this.objectType = 'GOLD';
   }
 
   getInfo(): string {

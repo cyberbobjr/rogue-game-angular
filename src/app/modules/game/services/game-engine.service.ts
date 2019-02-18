@@ -21,8 +21,8 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
 
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class GameEngineService {
   private _gameLoopTimer: any = null;
   private _timeStart: any = null;
@@ -245,7 +245,7 @@ export class GameEngineService {
     return this.loadGameMap(gameMap, entities);
   }
 
-  public loadGameMap(gameMap: GameMap, entities: Array<Entity>): GameMap {
+  public loadGameMap(gameMap: GameMap, entities: Array<Entity> = []): GameMap {
     this._mapEngine.setGameMap(gameMap);
     this._entityEngine.entities = entities;
     return gameMap;

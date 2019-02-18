@@ -8,7 +8,6 @@ import {EventLog} from '../event-log';
 
 export class Food extends GameObject {
   protected _name = 'food';
-  protected _objectType = 'FOOD';
 
   get id(): string {
     return 'FOOD';
@@ -21,6 +20,7 @@ export class Food extends GameObject {
   constructor(_jsonData?: any) {
     super();
     this._sprite = SpritesFactory.createSprite(SpriteType.FOOD);
+    this._objectType = 'FOOD';
   }
 
   getInfo(): string {

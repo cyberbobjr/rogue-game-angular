@@ -78,7 +78,6 @@ export class MapBuilder {
 
   build(): GameMap {
     const gameMap: GameMap = this._generateMap(this._width, this._height, this._seed, this._level);
-    gameMap.rooms = this._rotEngine.getRooms();
     if (this._jsonMap) {
       this._generateFromJson(gameMap);
     }
@@ -111,38 +110,12 @@ export class MapBuilder {
 
   private _generateChests(map: GameMap, maxChests: number) {
     for (let chest = 0; chest < maxChests; chest++) {
-      const chestPosition: Position = this._getFreeSlotForRoom(map, Utility.rolldice(this._rotEngine.getRooms().length - 1));
+      const chestPosition: Position = map.getFreeSlotForRoom(Utility.rolldice(this._rotEngine.getRooms().length - 1));
       if (chestPosition) {
         const chestTile: Tile = TilesFactory.createTile(TileType.CHEST);
         map.setDataAt(chestPosition.x, chestPosition.y, chestTile);
       }
     }
-  }
-
-  private _getFreeSlotForRoom(map: GameMap, roomNumber: number): Position | null {
-    let validPosition = false;
-    let randomPosition: Position = null;
-    let randomX: number;
-    let randomY: number;
-    let tile: Tile = null;
-    let tryCount = 0;
-    const roomPosition: [Position, Position] = this._getRoomPosition(roomNumber); // topleft, bottomright
-    while (!validPosition || tryCount < 20) {
-      randomX = Utility.getRandomInt(roomPosition[0].x, roomPosition[1].x);
-      randomY = Utility.getRandomInt(roomPosition[0].y, roomPosition[1].y);
-      randomPosition = new Position(randomX, randomY);
-      tile = map.getTileAt(randomPosition);
-      validPosition = (tile instanceof FloorTile);
-      tryCount++;
-    }
-    return randomPosition;
-  }
-
-  private _getRoomPosition(roomNumber: number): [Position, Position] {
-    const room: Room = this._rotEngine.getRooms()[roomNumber];
-    const topleft: Position = new Position(room.getLeft(), room.getTop());
-    const bottomright: Position = new Position(room.getRight(), room.getBottom());
-    return [topleft, bottomright];
   }
 
   private _loadTileContents(tile: Tile, jsonContent: Array<any>) {
@@ -159,6 +132,7 @@ export class MapBuilder {
     this._createDoor(map, this._rotEngine);
     this._generateEntryPoint(map, this._rotEngine);
     this._generateExitPoint(map, this._rotEngine);
+    map.rooms = this._rotEngine.getRooms();
     return map;
   }
 
@@ -174,7 +148,7 @@ export class MapBuilder {
         roomNumber = Utility.rolldice(nbRooms - 1);
       } while (excludeRooms.indexOf(roomNumber) !== 0);
 
-      const entityPosition: Position = this._getFreeSlotForRoom(map, roomNumber);
+      const entityPosition: Position = map.getFreeSlotForRoom(roomNumber);
       const entity: Entity = EntitiesFactory.generateRandomEntities(entityPosition);
       entity.setNextAction(new IdleAction());
       monsters.push(entity);

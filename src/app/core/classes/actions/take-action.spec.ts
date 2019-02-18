@@ -1,0 +1,61 @@
+import {Player} from '../entities/player';
+import {GameClassFactory} from '../../factories/game-class-factory';
+import {ClassType} from '../../enums/class-type.enum';
+import {RaceFactory} from '../../factories/race-factory';
+import {RaceType} from '../../enums/race-type.enum';
+import {GameMap} from '../base/game-map';
+import {MapBuilder} from '../../factories/map-builder';
+import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {TestBed} from '@angular/core/testing';
+import {SharedModule} from '../../../modules/shared/shared.module';
+import {RouterTestingModule} from '@angular/router/testing';
+import {EntitiesService} from '../../../modules/game/services/entities.service';
+import {Position} from '../base/position';
+import {TakeAction} from './take-action';
+import {Tile} from '../base/tile';
+import {GameObjectFactory} from '../../factories/game-object-factory';
+import {GameObjectType} from '../../enums/game-object-type.enum';
+import {Weapon} from '../gameObjects/weapon';
+import {GameObject} from '../gameObjects/game-object';
+
+describe('take-action', () => {
+  let player: Player = null;
+  let gameMap: GameMap;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+                                     imports: [SharedModule,
+                                               RouterTestingModule],
+                                     providers: [EntitiesService, GameEngineService]
+                                   });
+    gameMap = new MapBuilder().withRandomChests(5)
+                              .build();
+    player = new Player().setGameClass(GameClassFactory.getInstance()
+                                                       .createGameClass(ClassType.BARBARIAN))
+                         .setRace(RaceFactory.getInstance()
+                                             .createRace(RaceType.HUMAN))
+                         .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+  });
+
+  it('should be created', () => {
+    const takeAction: TakeAction = new TakeAction(player);
+    expect(takeAction)
+      .toBeTruthy();
+  });
+
+  it('should take objects from tile', () => {
+    const inventorySize: number = player.inventory.getInventorySize();
+    const freePosition: Position = gameMap.getFreeSlotForRoom(0);
+    const tile: Tile = gameMap.getTileAt(freePosition);
+    const gameObject: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    tile.dropOn(gameObject);
+    const gameEngine: GameEngineService = TestBed.get(GameEngineService);
+    gameEngine.loadGameMap(gameMap);
+    player.setMapLevelAndPosition(1, freePosition);
+    const takeAction: TakeAction = new TakeAction(player);
+    takeAction.execute(player, gameEngine);
+    const inventoryFinalSize: number = player.inventory.getInventorySize();
+    expect(inventorySize + 1)
+      .toEqual(inventoryFinalSize);
+  });
+});
