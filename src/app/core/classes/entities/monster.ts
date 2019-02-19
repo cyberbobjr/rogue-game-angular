@@ -107,7 +107,7 @@ export class Monster extends Entity {
     // endregion
   }
 
-  onHit(actor: Entity, damage: number) {
+  onHit(actor: Entity, damage: number): void {
     const currentAction: Iaction = this.getAction();
     super.onHit(actor, damage);
     if (!currentAction || currentAction instanceof IdleAction) {

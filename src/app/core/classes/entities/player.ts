@@ -142,10 +142,9 @@ export class Player extends Entity {
   }
 
   // region Events
-  onHit(attacker: Entity, damage: number): Iaction | null {
+  onHit(attacker: Entity, damage: number): void {
     EventLog.getInstance().message = `You take ${damage} point of damage`;
     // this.hp -= damage;
-    return null;
   }
 
   onDead(_gameEngine: GameEngineService): void {

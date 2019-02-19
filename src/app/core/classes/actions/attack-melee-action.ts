@@ -11,10 +11,10 @@ export class AttackMeleeAction implements Iaction {
   constructor(private _target: Entity) {
   }
 
-  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
-    EventLog.getInstance().message = `${subject.name} attack`;
-    const damage: number = CombatResolver.HandToHandAttack(subject, this._target);
-    this._target.onHit(subject, damage);
+  execute(attacker: Entity, gameEngine: GameEngineService): ActionResult {
+    EventLog.getInstance().message = `${attacker.name} attack`;
+    const damage: number = CombatResolver.HandToHandAttack(attacker, this._target);
+    this._target.onHit(attacker, damage);
     return ActionResult.SUCCESS;
   }
 
