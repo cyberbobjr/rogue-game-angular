@@ -11,8 +11,8 @@ import * as workerPath from 'file-loader?name=scripts/[name].[hash].js!jsstore/d
 export const idbCon = new JsStore.Instance(new Worker(workerPath));
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class StorageService {
   private dbname = 'TsRogue';
   private dbVersion = 3;
@@ -33,9 +33,9 @@ export class StorageService {
   async initJsStore() {
     try {
       const isExist: boolean = await this.connection.isDbExist({
-        dbName: this.dbname,
-        table: {name: 'Map', version: this.dbVersion}
-      });
+                                                                 dbName: this.dbname,
+                                                                 table: {name: 'Map', version: this.dbVersion}
+                                                               });
       if (!isExist) {
         console.log('createDB');
         const dataBase = this.getDatabase();
@@ -94,20 +94,20 @@ export class StorageService {
 
   saveGameState(gameMap: GameMap, player: Player) {
     this.savePlayer(player);
-    this.saveMap(gameMap);
+    this.saveMapWithEntities(gameMap, this._entitiesService.getEntities());
   }
 
-  async saveMap(gameMap: GameMap) {
+  async saveMapWithEntities(gameMap: GameMap, entities: Array<Entity>) {
     return await this.connection.insert({
-      into: 'Map',
-      return: true,
-      upsert: true,
-      values: [{
-        level: gameMap.level,
-        map: JSON.stringify(gameMap),
-        entities: JSON.stringify(this._entitiesService.getEntities())
-      }]
-    });
+                                          into: 'Map',
+                                          return: true,
+                                          upsert: true,
+                                          values: [{
+                                            level: gameMap.level,
+                                            map: JSON.stringify(gameMap),
+                                            entities: JSON.stringify(entities)
+                                          }]
+                                        });
   }
 
   async savePlayer(player: Entity) {

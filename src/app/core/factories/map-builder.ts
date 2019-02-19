@@ -26,14 +26,13 @@ export class MapBuilder {
   private _maxChests = 0;
   private _maxEntities = 0;
 
-  static fromJSON(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    if (!jsonData.map) {
+  static fromJSON(jsonMap: JsonMap): GameMap {
+    if (!jsonMap) {
       throw new Error('jsonData map is empty');
     }
-    const mapBuilder: MapBuilder = new MapBuilder().withTile(jsonData.map)
-                                                   .withSeed(jsonData.map._seed)
-                                                   .withLevel(jsonData.map._level);
-
+    const mapBuilder: MapBuilder = new MapBuilder().withTile(jsonMap)
+                                                   .withSeed(jsonMap._seed)
+                                                   .withLevel(jsonMap._level);
     return mapBuilder.build();
   }
 

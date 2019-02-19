@@ -8,12 +8,13 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
+import {Entity} from '../../../core/classes/base/entity';
 
 @Component({
-  selector: 'app-menu-page',
-  templateUrl: './menu-page.component.html',
-  styleUrls: ['./menu-page.component.css']
-})
+             selector: 'app-menu-page',
+             templateUrl: './menu-page.component.html',
+             styleUrls: ['./menu-page.component.css']
+           })
 export class MenuPageComponent implements OnInit {
   private _isGameStarted = false;
   private _isPlayerExist = false;
@@ -52,7 +53,8 @@ export class MenuPageComponent implements OnInit {
           return this._storageService.loadMap(1);
         })
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(data);
+          const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(data.map);
+          this._entitiesServices.entities = this._entitiesServices.convertRawEntitiesToEntities(data.entities);
           this._player.setMapLevelAndPosition(1, gameMap.entryPosition);
           this._player.setToFullHp();
           this._storageService.savePlayer(this._player);

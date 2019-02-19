@@ -7,12 +7,12 @@ import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {GameMap} from '../../../core/classes/base/game-map';
-import {Iaction} from "../../../core/interfaces/iaction";
-import {ActionResult} from "../../../core/classes/actions/action-result";
+import {Iaction} from '../../../core/interfaces/iaction';
+import {ActionResult} from '../../../core/classes/actions/action-result';
 
 @Injectable({
-  providedIn: 'root'
-})
+              providedIn: 'root'
+            })
 export class EntitiesService {
   private _player: Player = null;
   private _entities: Array<Entity> = [];
@@ -52,10 +52,10 @@ export class EntitiesService {
     return monster;
   }
 
-  convertRawMapToEntities(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): Array<Entity> {
-    if (jsonData.entities.length > 0) {
+  convertRawEntitiesToEntities(jsonEntities: Array<JsonEntity>): Array<Entity> {
+    if (jsonEntities.length > 0) {
       const entities: Array<Entity> = [];
-      jsonData.entities.forEach((jsonEntity: JsonEntity) => {
+      jsonEntities.forEach((jsonEntity: JsonEntity) => {
         entities.push(EntitiesFactory.createFromJson(jsonEntity));
       });
       return entities;

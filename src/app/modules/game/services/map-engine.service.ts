@@ -12,6 +12,7 @@ import {Tile} from '../../../core/classes/base/tile';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
 import {EntitiesService} from './entities.service';
 import {Utility} from '../../../core/classes/utility';
+import {json} from '@angular-devkit/core';
 
 @Injectable({
               providedIn: 'root'
@@ -48,7 +49,7 @@ export class MapEngine {
                                            .withRandomEntities(level)
                                            .withRandomChests(nbOfMaps - level)
                                            .build();
-      await this._storageService.saveMap(map);
+      await this._storageService.saveMapWithEntities(map, map.entities);
     }
     return true;
   }
@@ -62,8 +63,8 @@ export class MapEngine {
     return this._currentMap;
   }
 
-  convertRawMapToGameMap(jsonData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    return MapBuilder.fromJSON(jsonData);
+  convertRawMapToGameMap(jsonMap: JsonMap): GameMap {
+    return MapBuilder.fromJSON(jsonMap);
   }
 
   getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {

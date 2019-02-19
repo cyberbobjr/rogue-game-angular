@@ -240,8 +240,8 @@ export class GameEngineService {
   }
 
   public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(mapData);
-    const entities: Array<Entity> = this._entityEngine.convertRawMapToEntities(mapData);
+    const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(mapData.map);
+    const entities: Array<Entity> = this._entityEngine.convertRawEntitiesToEntities(mapData.entities);
     return this.loadGameMap(gameMap, entities);
   }
 

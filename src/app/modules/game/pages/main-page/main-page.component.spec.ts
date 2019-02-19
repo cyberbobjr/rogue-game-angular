@@ -60,7 +60,7 @@ describe('MainPageComponent', () => {
                                                            .createRace(RaceType.HUMAN));
     const map: GameMap = new MapBuilder().build();
     player.setMapLevelAndPosition(map.level, map.entryPosition);
-    storageService.saveMap(map);
+    storageService.saveMapWithEntities(map, []);
     storageService.savePlayer(player);
     fixture.detectChanges();
     expect(component)
