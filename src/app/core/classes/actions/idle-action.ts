@@ -18,7 +18,7 @@ export class IdleAction implements Iaction {
   execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
     if (subject.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      subject.setNextAction(new ChaseAction(subject as Monster));
+      subject.setNextAction(new ChaseAction());
     } else {
       const direction: Direction = this._getRandomDirection();
       const destPosition: Position = subject.position.computeDestination(direction);

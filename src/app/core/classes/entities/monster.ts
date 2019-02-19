@@ -111,7 +111,7 @@ export class Monster extends Entity {
     const currentAction: Iaction = this.getAction();
     super.onHit(actor, damage);
     if (!currentAction || currentAction instanceof IdleAction) {
-      this.setNextAction(new ChaseAction(this as Entity));
+      this.setNextAction(new ChaseAction());
     }
   }
 
