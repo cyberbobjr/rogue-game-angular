@@ -148,11 +148,11 @@ export class GameEngineService {
         this._commandEngine.KeyUp.execute(player, this);
         break;
     }
+    this._entityEngine.processAction(this);
   }
 
   private _updateGame(timestamp: number) {
     this._entityEngine.updateEntities(this);
-    this._entityEngine.processAction(this);
     this._effectEngine.updateEffects(timestamp);
   }
 

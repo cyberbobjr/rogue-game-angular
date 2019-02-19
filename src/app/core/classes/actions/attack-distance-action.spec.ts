@@ -22,10 +22,10 @@ describe('attack-distance-action', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SharedModule,
-        RouterTestingModule],
-      providers: [EntitiesService, GameEngineService]
-    });
+                                     imports: [SharedModule,
+                                               RouterTestingModule],
+                                     providers: [EntitiesService, GameEngineService]
+                                   });
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
     player = new Player().setGameClass(GameClassFactory.getInstance()
@@ -59,14 +59,14 @@ describe('attack-distance-action', () => {
     const gameEngineService: GameEngineService = TestBed.get(GameEngineService);
     const entities: Array<Entity> = gameMap.entities;
     const entityPosition: Position = entities[0].position;
-    gameEngineService.loadGameMap(gameMap,entities);
+    gameEngineService.loadGameMap(gameMap, entities);
     player.setMapLevelAndPosition(1, entityPosition.computeDestination(Direction.E));
     entitiesService.drawEntities(gameMap);
     gameMap.computeLOSMap(player);
 
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
     const actionResult: ActionResult = attackAction.execute(player, gameEngineService);
-    expect(actionResult.succeeded)
-      .toBeFalsy();
+    expect(actionResult)
+      .toEqual(ActionResult.WAIT);
   });
 });

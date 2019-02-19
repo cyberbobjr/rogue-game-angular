@@ -56,7 +56,8 @@ export class EntitiesService {
     if (jsonEntities.length > 0) {
       const entities: Array<Entity> = [];
       jsonEntities.forEach((jsonEntity: JsonEntity) => {
-        entities.push(EntitiesFactory.createFromJson(jsonEntity));
+        entities.push(EntitiesFactory.createFromJson(jsonEntity)
+                                     .setNextAction(new IdleAction()));
       });
       return entities;
     }
