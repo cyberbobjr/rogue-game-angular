@@ -128,13 +128,6 @@ export class GameMap {
     return gameMap;
   }
 
-  public putEntities(entities: Array<Entity>): GameMap {
-    entities.forEach((entity: Entity) => {
-      this.setDataAt(entity.position.x, entity.position.y, entity);
-    });
-    return this;
-  }
-
   public getEntitiesVisibles(): Array<Entity> {
     return this._entitiesVisible;
   }
