@@ -84,7 +84,7 @@ export class StorageService {
     return Player.fromJSON(playerLoaded);
   }
 
-  async loadMap(level: number) {
+  async loadRawMap(level: number) {
     const gameMap: Array<any> = await this.connection.select({from: 'Map', limit: 1, where: {level: level}});
     if (gameMap.length === 0) {
       throw new Error('No maps in storage');

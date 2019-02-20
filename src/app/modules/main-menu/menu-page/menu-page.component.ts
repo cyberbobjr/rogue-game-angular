@@ -9,6 +9,7 @@ import {GameMap} from '../../../core/classes/base/game-map';
 import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
 import {Entity} from '../../../core/classes/base/entity';
+import {MapBuilder} from '../../../core/factories/map-builder';
 
 @Component({
              selector: 'app-menu-page',
@@ -26,7 +27,6 @@ export class MenuPageComponent implements OnInit {
               private _router: Router) {
   }
 
-
   ngOnInit() {
     this._storageService
         .loadPlayer()
@@ -35,7 +35,7 @@ export class MenuPageComponent implements OnInit {
           this._isPlayerExist = !!this._player;
           this._isGameStarted = !!(this._player.mapLevel && this._player.position);
           if (this._isGameStarted) {
-            this._storageService.loadMap(this._player.mapLevel)
+            this._storageService.loadRawMap(this._player.mapLevel)
                 .then((mapLoaded: { map: JsonMap, entities: Array<JsonEntity> } | null) => {
                   this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
                 });
@@ -50,11 +50,10 @@ export class MenuPageComponent implements OnInit {
   async startNewGame() {
     this._mapEngine.generateMaps(Config.maxLevel)
         .then(() => {
-          return this._storageService.loadMap(1);
+          return this._storageService.loadRawMap(1);
         })
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(data.map);
-          this._entitiesServices.entities = this._entitiesServices.convertRawEntitiesToEntities(data.entities);
+          const gameMap: GameMap = MapBuilder.fromJSON(data.map);
           this._player.setMapLevelAndPosition(1, gameMap.entryPosition);
           this._player.setToFullHp();
           this._storageService.savePlayer(this._player);

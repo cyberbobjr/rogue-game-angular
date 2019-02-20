@@ -15,21 +15,29 @@ import {EntitiesService} from '../../../modules/game/services/entities.service';
 import {Entity} from '../base/entity';
 import {Position} from '../base/position';
 import {Direction} from '../../enums/direction.enum';
+import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {StorageService} from '../../../modules/game/services/storage.service';
 
 describe('attack-distance-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
   let entitiesService: EntitiesService;
+  let gameEngine: GameEngineService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesService, GameEngineService]
+                                     providers: [EntitiesService,
+                                                 GameEngineService,
+                                                 MapEngine,
+                                                 StorageService]
                                    });
+    entitiesService = TestBed.get(EntitiesService);
+    gameEngine = TestBed.get(GameEngineService);
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
-    entitiesService = TestBed.get(EntitiesService);
-    entitiesService.entities = gameMap.entities;
+    gameEngine.loadGameMap(gameMap, gameMap.entities);
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()

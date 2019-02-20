@@ -16,6 +16,7 @@ import {GameMap} from '../../../core/classes/base/game-map';
 import {EventLog} from '../../../core/classes/event-log';
 import {Config} from '../../../core/config';
 import {Iaction} from '../../../core/interfaces/iaction';
+import {MapBuilder} from '../../../core/factories/map-builder';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -35,10 +36,6 @@ export class GameEngineService {
 
   set handleKeyEvent(value: (key: KeyboardEvent) => void) {
     this._handleKeyEvent = value;
-  }
-
-  get mapEngine(): MapEngine {
-    return this._mapEngine;
   }
 
   get storageEngine(): StorageService {
@@ -228,7 +225,7 @@ export class GameEngineService {
 
   private _loadMapLevel(level: number) {
     this._storageEngine
-        .loadMap(level)
+        .loadRawMap(level)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
           const gameMap: GameMap = this.loadRawGameMap(data);
           this._storageEngine.saveGameState(gameMap, this.getPlayer());
@@ -240,14 +237,15 @@ export class GameEngineService {
   }
 
   public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    const gameMap: GameMap = this._mapEngine.convertRawMapToGameMap(mapData.map);
-    const entities: Array<Entity> = this._entityEngine.convertRawEntitiesToEntities(mapData.entities);
-    return this.loadGameMap(gameMap, entities);
+    const gameMap: GameMap = MapBuilder.fromJSON(mapData.map);
+    const entities: Array<Entity> = EntitiesService.convertRawEntitiesToEntities(mapData.entities);
+    this.loadGameMap(gameMap, entities);
+    return gameMap;
   }
 
   public loadGameMap(gameMap: GameMap, entities: Array<Entity> = []): GameMap {
     this._mapEngine.setGameMap(gameMap);
-    this._entityEngine.entities = entities;
+    this._entityEngine.setEntities(entities);
     return gameMap;
   }
 }

@@ -54,7 +54,7 @@ describe('StorageService', () => {
                                              .withSeed(511)
                                              .build();
     await service.saveMapWithEntities(gameMap, []);
-    const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await service.loadMap(1);
+    const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await service.loadRawMap(1);
     const mapLoaded: GameMap = MapBuilder.fromJSON(mapData.map);
     expect(mapLoaded.level)
       .toEqual(gameMap.level);

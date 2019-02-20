@@ -38,8 +38,7 @@ export class MapEngine {
     this._height = value;
   }
 
-  constructor(private _storageService: StorageService,
-              private _entitiesService: EntitiesService) {
+  constructor(private _storageService: StorageService, private _entitiesService: EntitiesService) {
   }
 
   async generateMaps(nbOfMaps: number = 42): Promise<boolean> {
@@ -61,10 +60,6 @@ export class MapEngine {
 
   getCurrentMap(): GameMap {
     return this._currentMap;
-  }
-
-  convertRawMapToGameMap(jsonMap: JsonMap): GameMap {
-    return MapBuilder.fromJSON(jsonMap);
   }
 
   getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {

@@ -17,16 +17,19 @@ describe('attack-melee-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
   let entitiesService: EntitiesService;
+  let gameEngine: GameEngineService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
                                      providers: [EntitiesService, GameEngineService]
                                    });
+    entitiesService = TestBed.get(EntitiesService);
+    gameEngine = TestBed.get(GameEngineService);
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
-    entitiesService = TestBed.get(EntitiesService);
-    entitiesService.entities = gameMap.entities;
+    gameEngine.loadGameMap(gameMap, gameMap.entities);
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
@@ -41,7 +44,6 @@ describe('attack-melee-action', () => {
   });
 
   it('should do a attack on entity', () => {
-    const gameEngine: GameEngineService = TestBed.get(GameEngineService);
     player.onHit = function (subject: Entity, damage: number) {
       player.hp = 0;
     };

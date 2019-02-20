@@ -1,4 +1,4 @@
-import {JSonCell, JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
+import {JSonCell, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {Entity} from 'src/app/core/classes/base/entity';
 import {EntitiesFactory} from 'src/app/core/factories/entities-factory';
 import {IdleAction} from 'src/app/core/classes/actions/idle-action';
@@ -13,7 +13,6 @@ import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';
 import {Utility} from '../classes/utility';
-import {FloorTile} from '../classes/tiles/floor-tile';
 
 export class MapBuilder {
   private _rotEngine: Digger;
@@ -26,13 +25,13 @@ export class MapBuilder {
   private _maxChests = 0;
   private _maxEntities = 0;
 
-  static fromJSON(jsonMap: JsonMap): GameMap {
-    if (!jsonMap) {
+  static fromJSON(map: JsonMap): GameMap {
+    if (!map) {
       throw new Error('jsonData map is empty');
     }
-    const mapBuilder: MapBuilder = new MapBuilder().withTile(jsonMap)
-                                                   .withSeed(jsonMap._seed)
-                                                   .withLevel(jsonMap._level);
+    const mapBuilder: MapBuilder = new MapBuilder().withTile(map)
+                                                   .withSeed(map._seed)
+                                                   .withLevel(map._level);
     return mapBuilder.build();
   }
 

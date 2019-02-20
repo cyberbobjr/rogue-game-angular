@@ -9,6 +9,7 @@ import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {Iaction} from '../../../core/interfaces/iaction';
 import {ActionResult} from '../../../core/classes/actions/action-result';
+import {MapEngine} from './map-engine.service';
 
 @Injectable({
               providedIn: 'root'
@@ -17,8 +18,16 @@ export class EntitiesService {
   private _player: Player = null;
   private _entities: Array<Entity> = [];
 
-  set entities(value: Array<Entity>) {
-    this._entities = value;
+  static convertRawEntitiesToEntities(jsonEntities: Array<JsonEntity>): Array<Entity> {
+    if (jsonEntities.length > 0) {
+      const entities: Array<Entity> = [];
+      jsonEntities.forEach((jsonEntity: JsonEntity) => {
+        entities.push(EntitiesFactory.createFromJson(jsonEntity)
+                                     .setNextAction(new IdleAction()));
+      });
+      return entities;
+    }
+    return [];
   }
 
   constructor() {
@@ -36,6 +45,10 @@ export class EntitiesService {
     return this._entities;
   }
 
+  setEntities(entities: Array<Entity>) {
+    this._entities = entities;
+  }
+
   getAllEntities(): Array<Entity> {
     return this.getEntities()
                .concat(this.getPlayer());
@@ -43,7 +56,7 @@ export class EntitiesService {
 
   getEntityAt(position: Position): Entity | null {
     let monster: Entity = null;
-    this._entities.concat(this.getPlayer())
+    this.getAllEntities()
         .forEach((value: Entity, index: number) => {
           if (value.position.equal(position)) {
             monster = value;
@@ -52,25 +65,14 @@ export class EntitiesService {
     return monster;
   }
 
-  convertRawEntitiesToEntities(jsonEntities: Array<JsonEntity>): Array<Entity> {
-    if (jsonEntities.length > 0) {
-      const entities: Array<Entity> = [];
-      jsonEntities.forEach((jsonEntity: JsonEntity) => {
-        entities.push(EntitiesFactory.createFromJson(jsonEntity)
-                                     .setNextAction(new IdleAction()));
-      });
-      return entities;
-    }
-    return [];
-  }
-
   updateEntities(gameEngine: GameEngineService) {
-    this._entities.concat(this.getPlayer())
+    this.getAllEntities()
         .forEach((entity: Entity, index: number) => {
           entity.update();
           if (entity.hp <= 0) {
             entity.onDead(gameEngine);
-            this._entities.splice(index, 1);
+            this._entities
+                .splice(index, 1);
             if (entity instanceof Player) {
               gameEngine.gameOver();
             }
@@ -79,8 +81,7 @@ export class EntitiesService {
   }
 
   processAction(gameEngine: GameEngineService) {
-    const entities: Array<Entity> = this.getEntities()
-                                        .concat(this.getPlayer());
+    const entities: Array<Entity> = this.getAllEntities();
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
       let actorAction: Iaction = currentActor.getAction();
@@ -107,6 +108,5 @@ export class EntitiesService {
           gameMap.setDataAt(entity.position.x, entity.position.y, entity);
         });
     return this;
-
   }
 }

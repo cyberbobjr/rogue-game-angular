@@ -7,7 +7,6 @@ import {GameEngineService} from '../../../modules/game/services/game-engine.serv
 import {Position} from '../base/position';
 import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
-import {Monster} from '../entities/monster';
 
 export class IdleAction implements Iaction {
   private _info = '';
@@ -20,8 +19,7 @@ export class IdleAction implements Iaction {
       EventLog.getInstance().message = 'Player in sight !';
       subject.setNextAction(new ChaseAction());
     } else {
-      const direction: Direction = this._getRandomDirection();
-      const destPosition: Position = subject.position.computeDestination(direction);
+      const destPosition: Position = this._getRandomPosition(subject);
       const tile: Tile = <Tile>gameEngine.getMapEngine()
                                          .getTileOrEntityAt(destPosition);
       if (tile instanceof Tile && tile.isWalkable()) {
@@ -34,6 +32,11 @@ export class IdleAction implements Iaction {
 
   getInfo(): string {
     return this._info;
+  }
+
+  private _getRandomPosition(subject: Entity): Position {
+    const direction: Direction = this._getRandomDirection();
+    return subject.position.computeDestination(direction);
   }
 
   private _getRandomDirection(): Direction {
