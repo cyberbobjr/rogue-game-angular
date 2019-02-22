@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EntitiesService} from '../../game/services/entities.service';
+import {EntitiesManager} from '../../game/services/entities-manager.service';
 import {Router} from '@angular/router';
 import {MapEngine} from '../../game/services/map-engine.service';
 import {StorageService} from '../../game/services/storage.service';
@@ -21,7 +21,7 @@ export class MenuPageComponent implements OnInit {
   private _isPlayerExist = false;
   private _player: Player = null;
 
-  constructor(private _entitiesServices: EntitiesService,
+  constructor(private _entitiesServices: EntitiesManager,
               private _storageService: StorageService,
               private _mapEngine: MapEngine,
               private _router: Router) {

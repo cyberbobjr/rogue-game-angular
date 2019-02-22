@@ -6,7 +6,7 @@ import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {AttackMeleeAction} from './attack-melee-action';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Monster} from '../entities/monster';
 
 export class WalkAction implements Iaction {
@@ -15,7 +15,7 @@ export class WalkAction implements Iaction {
   constructor(private _direction: Direction) {
   }
 
-  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
+  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
     const destPosition: Position = subject.position.computeDestination(this._direction);
     const tile: Tile = <Tile>gameEngine.getMapEngine()
                                        .getTileOrEntityAt(destPosition);

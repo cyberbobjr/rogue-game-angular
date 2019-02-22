@@ -6,7 +6,7 @@ import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
 import {AttackMeleeAction} from './attack-melee-action';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Iobject} from '../../interfaces/iobject';
 import {DoorTile} from '../tiles/door-tile';
 import {Monster} from '../entities/monster';
@@ -14,12 +14,12 @@ import {IdleAction} from './idle-action';
 
 export class ChaseAction implements Iaction {
   private _info = '';
-  private _gameEngine: GameEngineService = null;
+  private _gameEngine: GameEngine = null;
 
   constructor() {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
     if (!actor.sprite.light && !(actor as Monster).canFollowChase()) {
       actor.setNextAction(new IdleAction());
       return ActionResult.SUCCESS;

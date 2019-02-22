@@ -5,28 +5,28 @@ import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
 import {GameMap} from '../base/game-map';
 import {MapBuilder} from '../../factories/map-builder';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntitiesService} from '../../../modules/game/services/entities.service';
+import {EntitiesManager} from '../../../modules/game/services/entities-manager.service';
 import {AttackMeleeAction} from './attack-melee-action';
 import {Entity} from '../base/entity';
 
 describe('attack-melee-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
-  let entitiesService: EntitiesService;
-  let gameEngine: GameEngineService;
+  let entitiesService: EntitiesManager;
+  let gameEngine: GameEngine;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesService, GameEngineService]
+                                     providers: [EntitiesManager, GameEngine]
                                    });
-    entitiesService = TestBed.get(EntitiesService);
-    gameEngine = TestBed.get(GameEngineService);
+    entitiesService = TestBed.get(EntitiesManager);
+    gameEngine = TestBed.get(GameEngine);
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
     gameEngine.loadGameMap(gameMap, gameMap.entities);

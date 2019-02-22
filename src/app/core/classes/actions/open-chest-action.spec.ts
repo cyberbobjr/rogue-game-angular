@@ -5,12 +5,12 @@ import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
 import {GameMap} from '../base/game-map';
 import {MapBuilder} from '../../factories/map-builder';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ActionResult} from './action-result';
-import {EntitiesService} from '../../../modules/game/services/entities.service';
+import {EntitiesManager} from '../../../modules/game/services/entities-manager.service';
 import {Position} from '../base/position';
 import {OpenChestAction} from './open-chest-action';
 import {ChestTile} from '../tiles/chest-tile';
@@ -23,7 +23,7 @@ describe('open-chest-action', () => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesService, GameEngineService]
+                                     providers: [EntitiesManager, GameEngine]
                                    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
@@ -43,7 +43,7 @@ describe('open-chest-action', () => {
   it('should open chest', () => {
     const openChestAction: OpenChestAction = new OpenChestAction(player);
     const chestsPosition: Array<Position> = gameMap.getAllChestsPosition();
-    const gameEngine: GameEngineService = TestBed.get(GameEngineService);
+    const gameEngine: GameEngine = TestBed.get(GameEngine);
     gameEngine.loadGameMap(gameMap, []);
     player.setMapLevelAndPosition(gameMap.level, chestsPosition[0]);
     const resultAction: ActionResult = openChestAction.execute(player, gameEngine);

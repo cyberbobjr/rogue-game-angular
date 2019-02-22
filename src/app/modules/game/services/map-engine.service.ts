@@ -10,7 +10,7 @@ import {Path} from 'rot-js';
 import {Entity} from '../../../core/classes/base/entity';
 import {Tile} from '../../../core/classes/base/tile';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
-import {EntitiesService} from './entities.service';
+import {EntitiesManager} from './entities-manager.service';
 import {Utility} from '../../../core/classes/utility';
 import {json} from '@angular-devkit/core';
 
@@ -38,7 +38,8 @@ export class MapEngine {
     this._height = value;
   }
 
-  constructor(private _storageService: StorageService, private _entitiesService: EntitiesService) {
+  constructor(private _storageService: StorageService,
+              private _entitiesService: EntitiesManager) {
   }
 
   async generateMaps(nbOfMaps: number = 42): Promise<boolean> {
@@ -91,8 +92,8 @@ export class MapEngine {
     if (entity) {
       return entity;
     }
-    return <Iobject>this.getCurrentMap()
-                        .getDataAt(position.x, position.y);
+    return this.getCurrentMap()
+               .getDataAt(position.x, position.y);
   }
 
   getTilesAround(position: Position): Array<Array<Iobject>> {
@@ -103,5 +104,10 @@ export class MapEngine {
   getTileAt(position: Position): Tile {
     return <Tile>this.getCurrentMap()
                      .getTileAt(position);
+  }
+
+  computeLOSMap(actorLOS: Entity) {
+    this.getCurrentMap()
+        .computeLOSMap(actorLOS);
   }
 }

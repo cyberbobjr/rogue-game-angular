@@ -7,7 +7,7 @@ import {ClassType} from '../../../../core/enums/class-type.enum';
 import {RaceFactory} from '../../../../core/factories/race-factory';
 import {RaceType} from '../../../../core/enums/race-type.enum';
 import {AttributesFactory} from '../../../../core/factories/attributes-factory';
-import {EntitiesService} from '../../services/entities.service';
+import {EntitiesManager} from '../../services/entities-manager.service';
 
 describe('InfoPageComponent', () => {
   let component: InfoPageComponent;
@@ -26,7 +26,7 @@ describe('InfoPageComponent', () => {
                                      declarations: [InfoPageComponent]
                                    })
            .compileComponents();
-    const entitiesService: EntitiesService = TestBed.get(EntitiesService);
+    const entitiesService: EntitiesManager = TestBed.get(EntitiesManager);
     entitiesService.setPlayer(player);
   }));
 

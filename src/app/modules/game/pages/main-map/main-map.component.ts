@@ -1,6 +1,6 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DisplayEngine} from '../../services/display-engine.service';
-import {GameEngineService} from '../../services/game-engine.service';
+import {GameEngine} from '../../services/game-engine.service';
 
 @Component({
   selector: 'app-main-map',
@@ -20,7 +20,7 @@ export class MainMapComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _displayService: DisplayEngine,
-              private _gameEngineService: GameEngineService) {
+              private _gameEngineService: GameEngine) {
   }
 
   ngOnInit() {

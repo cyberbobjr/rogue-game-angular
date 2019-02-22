@@ -11,7 +11,7 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {InventorySystem} from './inventory-system';
 import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
 
@@ -279,7 +279,7 @@ export abstract class Entity implements Iobject, IEntity {
     }
   }
 
-  onDead(_gameEngine: GameEngineService): void {
+  onDead(_gameEngine: GameEngine): void {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 

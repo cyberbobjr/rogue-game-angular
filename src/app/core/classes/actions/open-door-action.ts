@@ -3,7 +3,7 @@ import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {DoorTile} from '../tiles/door-tile';
 import {EventLog} from '../event-log';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 
 export class OpenDoorAction implements Iaction {
   private _info = '';
@@ -11,7 +11,7 @@ export class OpenDoorAction implements Iaction {
   constructor(private _tile: DoorTile) {
   }
 
-  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
+  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
     EventLog.getInstance().message = 'You trying to open door';
     this._tile.flipDoor();
     subject.setNextAction(null);

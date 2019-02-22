@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {EntitiesService} from './entities.service';
+import {EntitiesManager} from './entities-manager.service';
 import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';
 import {DisplayEngine} from './display-engine.service';
@@ -24,7 +24,7 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
 @Injectable({
               providedIn: 'root'
             })
-export class GameEngineService {
+export class GameEngine {
   private _gameLoopTimer: any = null;
   private _timeStart: any = null;
   private _handleKeyEvent: (key: KeyboardEvent) => void = null;
@@ -42,7 +42,7 @@ export class GameEngineService {
     return this._storageEngine;
   }
 
-  constructor(private _entityEngine: EntitiesService,
+  constructor(private _entityEngine: EntitiesManager,
               private _mapEngine: MapEngine,
               private _logService: LoggingService,
               private _displayEngine: DisplayEngine,
@@ -149,17 +149,19 @@ export class GameEngineService {
   }
 
   private _updateGame(timestamp: number) {
+    const player: Player = this._entityEngine.getPlayer();
     this._entityEngine.updateEntities(this);
     this._effectEngine.updateEffects(timestamp);
+    this._mapEngine.computeLOSMap(player);
   }
 
   private _drawGame() {
     const player: Player = this._entityEngine.getPlayer();
     const gameMap: GameMap = this._mapEngine.getCurrentMap()
                                  .clone();
-    this._entityEngine.drawEntities(gameMap);
-    this._effectEngine.drawEffects(gameMap);
-    this._displayEngine.draw(gameMap.computeLOSMap(player), player.position);
+    this._displayEngine.drawEntities(this._entityEngine.getAllEntities(), gameMap);
+    this._displayEngine.drawEffects(this._effectEngine.getAllEffects(), gameMap);
+    this._displayEngine.draw(gameMap, player.position);
   }
 
   public gameOver() {
@@ -181,9 +183,7 @@ export class GameEngineService {
   }
 
   public getEntitiesVisibles(): Array<Entity> {
-    return this._mapEngine
-               .getCurrentMap()
-               .getEntitiesVisibles();
+    return this._entityEngine.getEntitiesVisibles(this._mapEngine.getCurrentMap());
   }
 
   public getMapEngine(): MapEngine {
@@ -238,7 +238,7 @@ export class GameEngineService {
 
   public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
     const gameMap: GameMap = MapBuilder.fromJSON(mapData.map);
-    const entities: Array<Entity> = EntitiesService.convertRawEntitiesToEntities(mapData.entities);
+    const entities: Array<Entity> = EntitiesManager.convertRawEntitiesToEntities(mapData.entities);
     this.loadGameMap(gameMap, entities);
     return gameMap;
   }

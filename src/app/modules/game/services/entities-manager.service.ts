@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Entity} from '../../../core/classes/base/entity';
 import {Position} from '../../../core/classes/base/position';
 import {Player} from '../../../core/classes/entities/player';
-import {GameEngineService} from './game-engine.service';
+import {GameEngine} from './game-engine.service';
 import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
@@ -14,7 +14,7 @@ import {MapEngine} from './map-engine.service';
 @Injectable({
               providedIn: 'root'
             })
-export class EntitiesService {
+export class EntitiesManager {
   private _player: Player = null;
   private _entities: Array<Entity> = [];
 
@@ -65,7 +65,7 @@ export class EntitiesService {
     return monster;
   }
 
-  updateEntities(gameEngine: GameEngineService) {
+  updateEntities(gameEngine: GameEngine) {
     this.getAllEntities()
         .forEach((entity: Entity, index: number) => {
           entity.update();
@@ -80,7 +80,7 @@ export class EntitiesService {
         });
   }
 
-  processAction(gameEngine: GameEngineService) {
+  processAction(gameEngine: GameEngine) {
     const entities: Array<Entity> = this.getAllEntities();
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
@@ -101,12 +101,11 @@ export class EntitiesService {
     }
   }
 
-  drawEntities(gameMap: GameMap) {
-    this.getEntities()
-        .concat(this.getPlayer())
-        .forEach((entity: Entity) => {
-          gameMap.setDataAt(entity.position.x, entity.position.y, entity);
-        });
-    return this;
+  getEntitiesVisibles(gameMap: GameMap): Array<Entity> {
+    return this.getEntities()
+               .filter((entity: Entity) => {
+                 const entityPosition: Position = entity.getPosition();
+                 return (gameMap.losMap[entityPosition.y][entityPosition.x] > 0);
+               });
   }
 }

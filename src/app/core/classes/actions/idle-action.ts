@@ -3,7 +3,7 @@ import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
 import {ChaseAction} from './chase-action';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Position} from '../base/position';
 import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
@@ -14,7 +14,7 @@ export class IdleAction implements Iaction {
   constructor() {
   }
 
-  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
+  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
     if (subject.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
       subject.setNextAction(new ChaseAction());

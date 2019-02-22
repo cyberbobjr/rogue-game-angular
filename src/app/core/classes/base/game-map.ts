@@ -10,12 +10,12 @@ import {FloorTile} from '../tiles/floor-tile';
 
 export class GameMap {
   private _data: Iobject[][];
-  private _fovMap: Array<Array<number>>;
+  private _losMap: Array<Array<number>>;
+  private _visibilityMap: Array<Array<number>>;
   private _seed: number;
   private _level: number;
   private _rooms: Array<Room> = [];
   private _entities: Array<Entity> = [];
-  private _entitiesVisible: Array<Entity> = [];
   private _entryPosition: Position;
   private _exitPosition: Position;
 
@@ -33,8 +33,12 @@ export class GameMap {
     this._entities = value;
   }
 
-  get fovMap(): Array<Array<number>> {
-    return this._fovMap;
+  get losMap(): Array<Array<number>> {
+    return this._losMap;
+  }
+
+  get visibilityMap(): Array<Array<number>> {
+    return this._visibilityMap;
   }
 
   get entryPosition(): Position {
@@ -78,7 +82,8 @@ export class GameMap {
   }
 
   constructor(private _width?: number, private _height?: number, data?: Tile[][]) {
-    this._fovMap = Utility.initArrayNumber(this.width, this.height);
+    this._losMap = Utility.initArrayNumber(this.width, this.height);
+    this._visibilityMap = Utility.initArrayNumber(this.width, this.height);
     this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
   }
 
@@ -123,33 +128,26 @@ export class GameMap {
     const arrayExtracted: Tile[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
 
     const gameMap: GameMap = new GameMap(finalWidth, finalHeight, arrayExtracted);
-    gameMap._fovMap = this._getRawFovData(startPosX, startPosY, finalWidth, finalHeight);
+    gameMap._losMap = this._getRawFovData(startPosX, startPosY, finalWidth, finalHeight);
     gameMap._preciseShadowcasting = this._preciseShadowcasting;
     return gameMap;
-  }
-
-  public getEntitiesVisibles(): Array<Entity> {
-    return this._entitiesVisible;
   }
 
   public computeLOSMap(mainActor: Entity): GameMap {
     const position: Position = mainActor.getPosition();
     const lightRadius: number = mainActor.lightRadius;
     const lightPower: number = mainActor.lightPower;
-    this._createLOS();
-    this._entitiesVisible = [];
+    this._createLOSEngine();
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
-        this._fovMap[y][x] = R / lightPower;
-        if (this.getDataAt(x, y) instanceof Entity) {
-          const entity: Entity = (this.getDataAt(x, y) as Entity);
-          entity.sprite.light = (visibility === 1);
-          this._entitiesVisible.push(entity);
-        }
+        this._losMap[y][x] = R / lightPower;
+        this._visibilityMap[y][x] = visibility;
       } catch (e) {
+        console.log(e);
+        console.trace();
       }
     });
-    this._fovMap[position.y][position.x] = 0.001;
+    this._losMap[position.y][position.x] = 0.33;
     return this;
   }
 
@@ -201,7 +199,7 @@ export class GameMap {
     return [topleft, bottomright];
   }
 
-  private _createLOS(): GameMap {
+  private _createLOSEngine(): GameMap {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info: Iobject = this.getDataAt(x, y);
@@ -219,7 +217,7 @@ export class GameMap {
     let x = 0;
     for (let j = startY; j < startY + height; j++) {
       for (let i = startX; i < startX + width; i++) {
-        arrayExtracted[y][x] = this._fovMap[j][i];
+        arrayExtracted[y][x] = this._losMap[j][i];
         x++;
       }
       y++;

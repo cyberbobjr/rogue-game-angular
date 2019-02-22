@@ -12,24 +12,24 @@ import {GameMap} from '../../../../core/classes/base/game-map';
 import {MapBuilder} from '../../../../core/factories/map-builder';
 import {GameObjectFactory} from '../../../../core/factories/game-object-factory';
 import {GameObjectType} from '../../../../core/enums/game-object-type.enum';
-import {EntitiesService} from '../../services/entities.service';
+import {EntitiesManager} from '../../services/entities-manager.service';
 
 describe('InventoryPageComponent', () => {
   let component: InventoryPageComponent;
   let fixture: ComponentFixture<InventoryPageComponent>;
-  let entitiesService: EntitiesService;
+  let entitiesService: EntitiesManager;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
                                      declarations: [InventoryPageComponent],
-                                     providers: [EntitiesService]
+                                     providers: [EntitiesManager]
                                    })
            .compileComponents();
   }));
 
   beforeEach(() => {
     const gameMap: GameMap = new MapBuilder().build();
-    entitiesService = TestBed.get(EntitiesService);
+    entitiesService = TestBed.get(EntitiesManager);
 
     let player: Player = EntitiesFactory.getInstance()
                                         .createEntity(EntityType.PLAYER) as Player;

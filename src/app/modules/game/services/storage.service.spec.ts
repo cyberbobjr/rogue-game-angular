@@ -9,10 +9,10 @@ import {RaceType} from '../../../core/enums/race-type.enum';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {MapBuilder} from '../../../core/factories/map-builder';
 import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
-import {EntitiesService} from './entities.service';
+import {EntitiesManager} from './entities-manager.service';
 
 describe('StorageService', () => {
-  beforeEach(() => TestBed.configureTestingModule({providers: [EntitiesService]}));
+  beforeEach(() => TestBed.configureTestingModule({providers: [EntitiesManager]}));
 
   it('should be created', () => {
     const service: StorageService = TestBed.get(StorageService);

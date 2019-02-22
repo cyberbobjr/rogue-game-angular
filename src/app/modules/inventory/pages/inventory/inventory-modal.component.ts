@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {StorageService} from '../../../game/services/storage.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
-import {GameEngineService} from '../../../game/services/game-engine.service';
+import {GameEngine} from '../../../game/services/game-engine.service';
 import {Router} from '@angular/router';
-import {EntitiesService} from '../../../game/services/entities.service';
+import {EntitiesManager} from '../../../game/services/entities-manager.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameObject} from '../../../../core/classes/gameObjects/game-object';
 import {Tile} from '../../../../core/classes/base/tile';
@@ -19,13 +19,13 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   private _selected: string = null;
   private _player: Player = null;
 
-  get entitiesService(): EntitiesService {
+  get entitiesService(): EntitiesManager {
     return this._entitiesService;
   }
 
   constructor(private _modalService: NgxSmartModalService,
-              private _gameEngine: GameEngineService,
-              private _entitiesService: EntitiesService,
+              private _gameEngine: GameEngine,
+              private _entitiesService: EntitiesManager,
               private _router: Router,
               private _storageService: StorageService,
               private _renderer: Renderer2) {

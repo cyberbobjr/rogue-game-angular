@@ -1,6 +1,6 @@
 import {Entity} from '../base/entity';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 
 export interface Command {
-  execute(actor: Entity, gameEngine: GameEngineService);
+  execute(actor: Entity, gameEngine: GameEngine);
 }

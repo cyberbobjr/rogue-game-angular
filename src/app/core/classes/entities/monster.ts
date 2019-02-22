@@ -11,7 +11,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {ChaseAction} from '../actions/chase-action';
 import {IdleAction} from '../actions/idle-action';
 import {GameObjectType} from '../../enums/game-object-type.enum';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {InventorySystem} from '../base/inventory-system';
 import {EntityType} from '../../enums/entity-type.enum';
 
@@ -91,7 +91,7 @@ export class Monster extends Entity {
   }
 
   // region events
-  onDead(gameEngine: GameEngineService): void {
+  onDead(gameEngine: GameEngine): void {
     // drop gold
     const goldObject: GameObject = new Gold(this.gp);
     const tile: Tile = gameEngine.getMapEngine()

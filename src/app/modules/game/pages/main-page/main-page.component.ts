@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MapEngine} from '../../services/map-engine.service';
-import {GameEngineService} from '../../services/game-engine.service';
-import {EntitiesService} from '../../services/entities.service';
+import {GameEngine} from '../../services/game-engine.service';
+import {EntitiesManager} from '../../services/entities-manager.service';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
@@ -15,11 +15,12 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
            })
 export class MainPageComponent implements OnInit, OnDestroy {
 
-  constructor(private _gameEngineService: GameEngineService,
-              private _entitiesService: EntitiesService,
+  constructor(private _gameEngineService: GameEngine,
+              private _entitiesService: EntitiesManager,
               private _storageService: StorageService,
               private _router: Router,
               private _modalService: NgxSmartModalService) {
+    this._gameEngineService.setModalService(this._modalService);
   }
 
   ngOnInit() {
@@ -31,7 +32,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
         })
         .then((mapData: { map: JsonMap, entities: Array<JsonEntity> }) => {
           this._gameEngineService.loadRawGameMap(mapData);
-          this._gameEngineService.setModalService(this._modalService);
           this._gameEngineService.startGameLoop();
         })
         .catch((e) => {
