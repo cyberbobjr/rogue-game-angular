@@ -44,11 +44,12 @@ export class DisplayEngine {
     entities
       .forEach((entity: Entity) => {
         const entityPosition: Position = entity.getPosition();
-        if (gameMap.visibilityMap[entityPosition.y][entityPosition.x] > 0) {
+        const losValue: number = gameMap.losMap[entityPosition.y][entityPosition.x];
+        if (losValue > 0) {
           gameMap.setDataAt(entityPosition.x, entityPosition.y, entity);
         }
       });
-    return this;
+    return this
   }
 
   public drawEffects(effects: Array<IEffect>, gameMap: GameMap) {
@@ -75,9 +76,9 @@ export class DisplayEngine {
       for (let j = 0; j < viewport.height; j++) {
         for (let i = 0; i < viewport.width; i++) {
           const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
-          const fovValue: number = viewport.losMap[j][i];
-          if (sprite && fovValue !== 0) {
-            this.display.draw(i, j, sprite.character, this._darkenColor(sprite.color, fovValue), this._darkenColor(sprite.bgColor, fovValue));
+          const losValue: number = viewport.losMap[j][i];
+          if (sprite && losValue > 0) {
+            this._display.draw(i, j, sprite.character, this._darkenColor(sprite.color, losValue), this._darkenColor(sprite.bgColor, losValue));
           }
         }
       }

@@ -65,10 +65,6 @@ export class GameMap {
     this._level = value;
   }
 
-  set content(data: Iobject[][]) {
-    this._data = data;
-  }
-
   get content(): Iobject[][] {
     return this._data;
   }
@@ -128,8 +124,8 @@ export class GameMap {
     const arrayExtracted: Tile[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
 
     const gameMap: GameMap = new GameMap(finalWidth, finalHeight, arrayExtracted);
-    gameMap._losMap = this._getRawFovData(startPosX, startPosY, finalWidth, finalHeight);
-    gameMap._preciseShadowcasting = this._preciseShadowcasting;
+    gameMap._losMap = this._copyRawData(startPosX, startPosY, finalWidth, finalHeight, this._losMap);
+    gameMap._visibilityMap = this._copyRawData(startPosX, startPosY, finalWidth, finalHeight, this._visibilityMap);
     return gameMap;
   }
 
@@ -203,6 +199,8 @@ export class GameMap {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info: Iobject = this.getDataAt(x, y);
+        this._losMap[y][x] = 0;
+        this._visibilityMap[y][x] = 0;
         return (info instanceof Tile) ? !info.opaque : true;
       } catch (e) {
         return false;
@@ -211,13 +209,13 @@ export class GameMap {
     return this;
   }
 
-  private _getRawFovData(startX, startY, width, height) {
+  private _copyRawData(startX, startY, width, height, rawData: Array<Array<number>>): Array<Array<number>> {
     const arrayExtracted: number[][] = Utility.initArrayNumber(width, height);
     let y = 0;
     let x = 0;
     for (let j = startY; j < startY + height; j++) {
       for (let i = startX; i < startX + width; i++) {
-        arrayExtracted[y][x] = this._losMap[j][i];
+        arrayExtracted[y][x] = rawData[j][i];
         x++;
       }
       y++;

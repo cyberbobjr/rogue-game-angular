@@ -8,7 +8,7 @@ import {EventLog} from '../event-log';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
-import {Iaction} from "../../interfaces/iaction";
+import {Iaction} from '../../interfaces/iaction';
 
 export class ChestTile extends FloorTile {
   protected _type = TileType.CHEST;

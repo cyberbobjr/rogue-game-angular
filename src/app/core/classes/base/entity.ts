@@ -283,7 +283,7 @@ export abstract class Entity implements Iobject, IEntity {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 
-  onRest() : void {
+  onRest(): void {
 
   }
 

@@ -1,6 +1,5 @@
 <div class="row">
-  <div class="span8 offset5">
-    <pre style="padding-left: 30px">
+    <pre>
  ___________    __________
  \__    ___/____\______   \ ____   ____  __ __   ____
    |    | /  ___/|       _//  _ \ / ___\|  |  \_/ __ \
@@ -8,14 +7,11 @@
    |____|/____  >|____|_  /\____/\___  /|____/  \___  >
               \/        \/      /_____/             \/
     </pre>
-  </div>
 </div>
 <div class="row">
-  <div class="span8 offset5">
     <ul class="nav nav-list">
       <li><a routerLink="/create">Create new player</a></li>
       <li *ngIf="_isGameStarted"><a routerLink="/game">Continue game</a></li>
       <li *ngIf="_isPlayerExist"><a (click)="startNewGame()">New game</a></li>
     </ul>
-  </div>
 </div>

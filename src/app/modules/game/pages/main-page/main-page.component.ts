@@ -1,5 +1,4 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MapEngine} from '../../services/map-engine.service';
 import {GameEngine} from '../../services/game-engine.service';
 import {EntitiesManager} from '../../services/entities-manager.service';
 import {StorageService} from '../../services/storage.service';
@@ -20,7 +19,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
               private _storageService: StorageService,
               private _router: Router,
               private _modalService: NgxSmartModalService) {
-    this._gameEngineService.setModalService(this._modalService);
   }
 
   ngOnInit() {
@@ -33,6 +31,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
         .then((mapData: { map: JsonMap, entities: Array<JsonEntity> }) => {
           this._gameEngineService.loadRawGameMap(mapData);
           this._gameEngineService.startGameLoop();
+          this._gameEngineService.setModalService(this._modalService);
         })
         .catch((e) => {
           console.log(e);

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Player} from '../../../core/classes/entities/player';
 import {EntitiesManager} from './entities-manager.service';
 import {Entity} from '../../../core/classes/base/entity';
-import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
+import {JsonEntity} from '../../../core/interfaces/json-interfaces';
 import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
 import {GameMap} from 'src/app/core/classes/base/game-map';
 import * as JsStore from 'jsstore';
