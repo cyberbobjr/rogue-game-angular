@@ -134,6 +134,8 @@ export class GameMap {
     const lightRadius: number = mainActor.lightRadius;
     const lightPower: number = mainActor.lightPower;
     this._createLOSEngine();
+    this._losMap = Utility.initArrayNumber(this.width, this.height);
+    this._visibilityMap = Utility.initArrayNumber(this.width, this.height);
     this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
         this._losMap[y][x] = R / lightPower;
@@ -199,8 +201,6 @@ export class GameMap {
     this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info: Iobject = this.getDataAt(x, y);
-        this._losMap[y][x] = 0;
-        this._visibilityMap[y][x] = 0;
         return (info instanceof Tile) ? !info.opaque : true;
       } catch (e) {
         return false;
