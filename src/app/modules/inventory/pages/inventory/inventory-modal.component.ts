@@ -14,6 +14,13 @@ import {Tile} from '../../../../core/classes/base/tile';
   styleUrls: ['./inventory-modal.component.css']
 })
 export class InventoryModalComponent implements OnInit, OnDestroy {
+  get selected(): string {
+    return this._selected;
+  }
+
+  get player(): Player {
+    return this._player;
+  }
   private _handleKeyBackup: any;
   private _listener: any = null;
   private _selected: string = null;

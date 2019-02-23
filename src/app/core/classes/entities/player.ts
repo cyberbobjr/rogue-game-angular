@@ -41,7 +41,7 @@ export class Player extends Entity {
   }
 
   get equippedItem(): Map<SlotType, GameObject> {
-    return this._inventory.getEquippedItems();
+    return this._inventory.getEquippedGameObject();
   }
 
   get mapLevel(): number {
@@ -164,11 +164,12 @@ export class Player extends Entity {
 
   getSlotTypeForEquipped(inventoryLetter: string): string {
     let slotEquipped: SlotType;
-    this._equippedItem.forEach((value: string, slot: SlotType) => {
-      if (value === inventoryLetter) {
-        slotEquipped = slot;
-      }
-    });
+    this._inventory.equippedItem
+        .forEach((value: string, slot: SlotType) => {
+          if (value === inventoryLetter) {
+            slotEquipped = slot;
+          }
+        });
     return Utility.getSlotTypeLabel(slotEquipped);
   }
 

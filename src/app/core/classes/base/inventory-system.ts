@@ -4,7 +4,11 @@ import {Utility} from '../utility';
 
 export class InventorySystem {
   private _inventory: Map<string, GameObject> = new Map<string, GameObject>();
-  protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
+  private _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
+
+  get equippedItem(): Map<SlotType, string> {
+    return this._equippedItem;
+  }
 
   constructor() {
 
@@ -139,7 +143,7 @@ export class InventorySystem {
     return this._inventory.has(inventoryLetter);
   }
 
-  public getEquippedItems(): Map<SlotType, GameObject> {
+  public getEquippedGameObject(): Map<SlotType, GameObject> {
     const equippedGameObject: Map<SlotType, GameObject> = new Map();
     this._equippedItem.forEach((letter: string, key: SlotType) => {
       equippedGameObject.set(key, this._inventory.get(letter));
