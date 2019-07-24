@@ -9,27 +9,28 @@ import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntitiesManager} from '../../../modules/game/services/entities-manager.service';
+import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
 import {AttackMeleeAction} from './attack-melee-action';
 import {Entity} from '../base/entity';
+import {GameEntities} from '../base/game-entities';
 
 describe('attack-melee-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
-  let entitiesService: EntitiesManager;
+  let entitiesService: EntitiesEngine;
   let gameEngine: GameEngine;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesManager, GameEngine]
+                                     providers: [EntitiesEngine, GameEngine]
                                    });
-    entitiesService = TestBed.get(EntitiesManager);
+    entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngine);
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
-    gameEngine.loadGameMap(gameMap, gameMap.entities);
+    gameEngine.loadGameMap(gameMap);
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
@@ -48,7 +49,7 @@ describe('attack-melee-action', () => {
       player.hp = 0;
     };
     const attackAction: AttackMeleeAction = new AttackMeleeAction(player);
-    const entity: Entity = entitiesService.getEntities()[0];
+    const entity: Entity = gameMap.gameEntities.getEntities()[0];
     attackAction.execute(entity, gameEngine);
     expect(player.hp)
       .toEqual(0);

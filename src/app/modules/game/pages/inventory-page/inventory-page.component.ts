@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EntitiesManager} from '../../services/entities-manager.service';
+import {EntitiesEngine} from '../../services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {SlotType} from '../../../../core/enums/equiped-type.enum';
 import {Utility} from '../../../../core/classes/utility';
@@ -10,7 +10,7 @@ import {Utility} from '../../../../core/classes/utility';
   styleUrls: ['./inventory-page.component.css']
 })
 export class InventoryPageComponent implements OnInit {
-  constructor(private _entitiesService: EntitiesManager) {
+  constructor(private _entitiesService: EntitiesEngine) {
   }
 
   ngOnInit() {

@@ -10,7 +10,7 @@ import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ActionResult} from './action-result';
-import {EntitiesManager} from '../../../modules/game/services/entities-manager.service';
+import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
 import {Position} from '../base/position';
 import {OpenChestAction} from './open-chest-action';
 import {ChestTile} from '../tiles/chest-tile';
@@ -23,7 +23,7 @@ describe('open-chest-action', () => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesManager, GameEngine]
+                                     providers: [EntitiesEngine, GameEngine]
                                    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
@@ -44,7 +44,7 @@ describe('open-chest-action', () => {
     const openChestAction: OpenChestAction = new OpenChestAction(player);
     const chestsPosition: Array<Position> = gameMap.getAllChestsPosition();
     const gameEngine: GameEngine = TestBed.get(GameEngine);
-    gameEngine.loadGameMap(gameMap, []);
+    gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(gameMap.level, chestsPosition[0]);
     const resultAction: ActionResult = openChestAction.execute(player, gameEngine);
     expect(resultAction.succeeded)

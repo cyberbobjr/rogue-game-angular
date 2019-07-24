@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EntitiesManager} from '../../game/services/entities-manager.service';
+import {EntitiesEngine} from '../../game/services/entities-engine.service';
 import {Router} from '@angular/router';
 import {MapEngine} from '../../game/services/map-engine.service';
 import {StorageService} from '../../game/services/storage.service';
@@ -21,7 +21,7 @@ export class MenuPageComponent implements OnInit {
   private _isPlayerExist = false;
   private _player: Player = null;
 
-  constructor(private _entitiesServices: EntitiesManager,
+  constructor(private _entitiesServices: EntitiesEngine,
               private _storageService: StorageService,
               private _mapEngine: MapEngine,
               private _router: Router) {
@@ -48,19 +48,21 @@ export class MenuPageComponent implements OnInit {
   }
 
   async startNewGame() {
-    this._mapEngine.generateMaps(Config.maxLevel)
-        .then(() => {
-          return this._storageService.loadRawMap(1);
-        })
-        .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap = MapBuilder.fromJSON(data.map);
-          this._player.setMapLevelAndPosition(1, gameMap.entryPosition);
-          this._player.setToFullHp();
-          this._storageService.savePlayer(this._player);
-          this._router.navigateByUrl('game');
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    const maps: Array<GameMap> = this._mapEngine.generateMaps(Config.maxLevel);
+    const saveMapPromise: Promise<void>[] = maps.map(map => this._storageService.saveMap(map));
+    await Promise.all(saveMapPromise)
+                 .then(() => {
+                   return this._storageService.loadRawMap(1);
+                 })
+                 .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
+                   const gameMap: GameMap = MapBuilder.fromJSON(data.map);
+                   this._player.setMapLevelAndPosition(1, gameMap.entryPosition);
+                   this._player.setToFullHp();
+                   this._storageService.savePlayer(this._player);
+                   this._router.navigateByUrl('game');
+                 })
+                 .catch((err) => {
+                   console.log(err);
+                 });
   }
 }

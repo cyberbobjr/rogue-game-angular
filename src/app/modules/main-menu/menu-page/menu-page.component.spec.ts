@@ -6,7 +6,7 @@ import {SharedModule} from 'src/app/modules/shared/shared.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
 import {NgxSmartModalModule} from 'ngx-smart-modal';
-import {EntitiesManager} from 'src/app/modules/game/services/entities-manager.service';
+import {EntitiesEngine} from 'src/app/modules/game/services/entities-engine.service';
 import {StorageService} from 'src/app/modules/game/services/storage.service';
 import {MapEngine} from 'src/app/modules/game/services/map-engine.service';
 import {MapBuilder} from 'src/app/core/factories/map-builder';
@@ -27,7 +27,7 @@ describe('MenuPageComponent', () => {
                                                MainMenuRoutingModule,
                                                RouterTestingModule,
                                                NgxSmartModalModule.forRoot()],
-                                     providers: [EntitiesManager,
+                                     providers: [EntitiesEngine,
                                                  StorageService,
                                                  MapEngine,
                                                  MapBuilder]

@@ -10,7 +10,7 @@ import {InfoPageComponent} from '../info-page/info-page.component';
 import {InventoryPageComponent} from '../inventory-page/inventory-page.component';
 import {LogPageComponent} from '../log-page/log-page.component';
 import {StorageService} from '../../services/storage.service';
-import {EntitiesManager} from '../../services/entities-manager.service';
+import {EntitiesEngine} from '../../services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameClassFactory} from '../../../../core/factories/game-class-factory';
 import {ClassType} from '../../../../core/enums/class-type.enum';
@@ -36,7 +36,7 @@ describe('MainPageComponent', () => {
                                                     InventoryPageComponent,
                                                     LogPageComponent],
                                      providers: [StorageService,
-                                                 EntitiesManager]
+                                                 EntitiesEngine]
                                    })
            .compileComponents();
   }));
@@ -60,7 +60,7 @@ describe('MainPageComponent', () => {
                                                            .createRace(RaceType.HUMAN));
     const map: GameMap = new MapBuilder().build();
     player.setMapLevelAndPosition(map.level, map.entryPosition);
-    storageService.saveMapWithEntities(map, []);
+    storageService.saveMap(map);
     storageService.savePlayer(player);
     fixture.detectChanges();
     expect(component)

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {EntitiesManager} from './entities-manager.service';
+import {EntitiesEngine} from './entities-engine.service';
 import {MapEngine} from './map-engine.service';
 import {LoggingService} from './logging.service';
 import {DisplayEngine} from './display-engine.service';
@@ -17,6 +17,7 @@ import {EventLog} from '../../../core/classes/event-log';
 import {Config} from '../../../core/config';
 import {Iaction} from '../../../core/interfaces/iaction';
 import {MapBuilder} from '../../../core/factories/map-builder';
+import {GameEntities} from '../../../core/classes/base/game-entities';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -42,7 +43,15 @@ export class GameEngine {
     return this._storageEngine;
   }
 
-  constructor(private _entityEngine: EntitiesManager,
+  get gameEntities(): GameEntities {
+    return this._entityEngine.getGameEntities();
+  }
+
+  get gameMap(): GameMap {
+    return this._mapEngine.getCurrentMap();
+  }
+
+  constructor(private _entityEngine: EntitiesEngine,
               private _mapEngine: MapEngine,
               private _logService: LoggingService,
               private _displayEngine: DisplayEngine,
@@ -145,7 +154,7 @@ export class GameEngine {
         this._commandEngine.KeyUp.execute(player, this);
         break;
     }
-    this._entityEngine.processAction(this);
+    this._entityEngine.executeEntitiesActions(this);
   }
 
   private _updateGame(timestamp: number) {
@@ -156,12 +165,8 @@ export class GameEngine {
   }
 
   private _drawGame() {
-    const player: Player = this._entityEngine.getPlayer();
-    const gameMap: GameMap = this._mapEngine.getCurrentMap()
-                                 .clone();
-    this._displayEngine.drawEntities(this._entityEngine.getAllEntities(), gameMap);
-    this._displayEngine.drawEffects(this._effectEngine.getAllEffects(), gameMap);
-    this._displayEngine.draw(gameMap, player.position);
+    const gameMap: GameMap = this._mapEngine.getCurrentMap();
+    this._displayEngine.drawGameMap(gameMap);
   }
 
   public gameOver() {
@@ -183,7 +188,9 @@ export class GameEngine {
   }
 
   public getEntitiesVisibles(): Array<Entity> {
-    return this._entityEngine.getEntitiesVisibles(this._mapEngine.getCurrentMap());
+    return this._mapEngine
+               .getCurrentMap()
+               .getEntitiesVisibles();
   }
 
   public getMapEngine(): MapEngine {
@@ -218,7 +225,7 @@ export class GameEngine {
 
   public changeMapLevel(newLevel: number) {
     // save current level
-    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this.getPlayer());
+    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
     // get level if exist
     this._loadMapLevel(newLevel);
   }
@@ -228,7 +235,7 @@ export class GameEngine {
         .loadRawMap(level)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
           const gameMap: GameMap = this.loadRawGameMap(data);
-          this._storageEngine.saveGameState(gameMap, this.getPlayer());
+          this._storageEngine.saveGameState(gameMap, this._entityEngine.getGameEntities());
         })
         .catch((e) => {
           console.log(e);
@@ -238,14 +245,14 @@ export class GameEngine {
 
   public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
     const gameMap: GameMap = MapBuilder.fromJSON(mapData.map);
-    const entities: Array<Entity> = EntitiesManager.convertRawEntitiesToEntities(mapData.entities);
-    this.loadGameMap(gameMap, entities);
+    gameMap.gameEntities = GameEntities.convertRawEntitiesToGameEntities(mapData.entities);
+    this.loadGameMap(gameMap);
     return gameMap;
   }
 
-  public loadGameMap(gameMap: GameMap, entities: Array<Entity> = []): GameMap {
+  public loadGameMap(gameMap: GameMap): GameMap {
     this._mapEngine.setGameMap(gameMap);
-    this._entityEngine.setEntities(entities);
+    this._entityEngine.setGameEntities(gameMap.gameEntities);
     return gameMap;
   }
 }

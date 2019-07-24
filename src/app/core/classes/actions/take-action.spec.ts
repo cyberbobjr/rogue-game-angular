@@ -9,13 +9,14 @@ import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntitiesManager} from '../../../modules/game/services/entities-manager.service';
+import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
 import {Position} from '../base/position';
 import {TakeAction} from './take-action';
 import {Tile} from '../base/tile';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {GameObject} from '../gameObjects/game-object';
+import {GameEntities} from '../base/game-entities';
 
 describe('take-action', () => {
   let player: Player = null;
@@ -25,7 +26,7 @@ describe('take-action', () => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesManager, GameEngine]
+                                     providers: [EntitiesEngine, GameEngine]
                                    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();

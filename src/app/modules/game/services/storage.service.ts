@@ -1,12 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Player} from '../../../core/classes/entities/player';
-import {EntitiesManager} from './entities-manager.service';
+import {EntitiesEngine} from './entities-engine.service';
 import {Entity} from '../../../core/classes/base/entity';
-import {JsonEntity} from '../../../core/interfaces/json-interfaces';
+import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {DATA_TYPE, IDataBase, Instance, ITable} from 'jsstore';
 import {GameMap} from 'src/app/core/classes/base/game-map';
 import * as JsStore from 'jsstore';
 import * as workerPath from 'file-loader?name=scripts/[name].[hash].js!jsstore/dist/jsstore.worker.min.js';
+import {GameEntities} from '../../../core/classes/base/game-entities';
 
 export const idbCon = new JsStore.Instance(new Worker(workerPath));
 
@@ -21,7 +22,7 @@ export class StorageService {
     return idbCon;
   }
 
-  constructor(private _entitiesService: EntitiesManager) {
+  constructor(private _entitiesService: EntitiesEngine) {
     console.log('storage created');
     this.connection.setLogStatus(false);
     this.initJsStore()
@@ -84,7 +85,7 @@ export class StorageService {
     return Player.fromJSON(playerLoaded);
   }
 
-  async loadRawMap(level: number) {
+  async loadRawMap(level: number): Promise<{ map: JsonMap, entities: Array<JsonEntity> }> {
     const gameMap: Array<any> = await this.connection.select({from: 'Map', limit: 1, where: {level: level}});
     if (gameMap.length === 0) {
       throw new Error('No maps in storage');
@@ -92,12 +93,12 @@ export class StorageService {
     return {map: JSON.parse(gameMap[0]['map']), entities: JSON.parse(gameMap[0]['entities'])};
   }
 
-  saveGameState(gameMap: GameMap, player: Player) {
-    this.savePlayer(player);
-    this.saveMapWithEntities(gameMap, this._entitiesService.getEntities());
+  saveGameState(gameMap: GameMap, gameEntities: GameEntities) {
+    this.savePlayer(gameEntities.getPlayer());
+    this.saveMap(gameMap);
   }
 
-  async saveMapWithEntities(gameMap: GameMap, entities: Array<Entity>) {
+  async saveMap(gameMap: GameMap): Promise<any> {
     return await this.connection.insert({
                                           into: 'Map',
                                           return: true,
@@ -105,7 +106,7 @@ export class StorageService {
                                           values: [{
                                             level: gameMap.level,
                                             map: JSON.stringify(gameMap),
-                                            entities: JSON.stringify(entities)
+                                            entities: JSON.stringify(gameMap.entities)
                                           }]
                                         });
   }

@@ -13,6 +13,8 @@ import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';
 import {Utility} from '../classes/utility';
+import {EntitiesEngine} from '../../modules/game/services/entities-engine.service';
+import {GameEntities} from '../classes/base/game-entities';
 
 export class MapBuilder {
   private _rotEngine: Digger;
@@ -21,7 +23,6 @@ export class MapBuilder {
   private _width = 80;
   private _level = 1;
   private _jsonMap: JsonMap = null;
-  private _entities: Array<Entity> = [];
   private _maxChests = 0;
   private _maxEntities = 0;
 
@@ -54,11 +55,6 @@ export class MapBuilder {
     return this;
   }
 
-  withEntities(entities: Array<Entity>): MapBuilder {
-    this._entities = entities;
-    return this;
-  }
-
   withRandomChests(maxChests: number): MapBuilder {
     this._maxChests = maxChests;
     return this;
@@ -80,12 +76,16 @@ export class MapBuilder {
       this._generateFromJson(gameMap);
     }
     if (this._maxEntities > 0) {
-      gameMap.entities = this._generateMonsters([0], this._maxEntities, gameMap);
+      this._generateEntities(gameMap, this._maxEntities);
     }
     if (this._maxChests > 0) {
       this._generateChests(gameMap, this._maxChests);
     }
     return gameMap;
+  }
+
+  private _generateEntities(gameMap: GameMap, maxEntities: number) {
+    gameMap.entities = this._generateMonsters([0], maxEntities, gameMap);
   }
 
   private _generateFromJson(gameMap: GameMap) {

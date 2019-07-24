@@ -11,7 +11,7 @@ import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ActionResult} from './action-result';
-import {EntitiesManager} from '../../../modules/game/services/entities-manager.service';
+import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
 import {Entity} from '../base/entity';
 import {Direction} from '../../enums/direction.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
@@ -20,23 +20,23 @@ import {StorageService} from '../../../modules/game/services/storage.service';
 describe('attack-distance-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
-  let entitiesService: EntitiesManager;
+  let entitiesService: EntitiesEngine;
   let gameEngine: GameEngine;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesManager,
+                                     providers: [EntitiesEngine,
                                                  GameEngine,
                                                  MapEngine,
                                                  StorageService]
                                    });
-    entitiesService = TestBed.get(EntitiesManager);
+    entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngine);
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
-    gameEngine.loadGameMap(gameMap, gameMap.entities);
+    gameEngine.loadGameMap(gameMap);
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
@@ -59,17 +59,10 @@ describe('attack-distance-action', () => {
   });
 
   it('should be waited with ennemy in range', () => {
-    const entities: Array<Entity> = entitiesService.getEntities();
-    gameEngine.loadGameMap(gameMap, entities);
+    const entities: Array<Entity> = gameMap.gameEntities.getEntities();
+    gameEngine.loadGameMap(gameMap);
     gameMap.computeLOSMap(player);
     entities[0].position = gameMap.entryPosition.computeDestination(Direction.N);
-    console.log(gameEngine.getEntitiesVisibles());
-    console.log(entities);
-    console.log(player);
-    console.log(gameMap.losMap);
-    console.log(gameMap.visibilityMap);
-    console.log(gameMap.content);
-
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
     const actionResult: ActionResult = attackAction.execute(player, gameEngine);
     expect(actionResult)

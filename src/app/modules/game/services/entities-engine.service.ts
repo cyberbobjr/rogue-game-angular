@@ -10,59 +10,35 @@ import {GameMap} from '../../../core/classes/base/game-map';
 import {Iaction} from '../../../core/interfaces/iaction';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {MapEngine} from './map-engine.service';
+import {GameEntities} from '../../../core/classes/base/game-entities';
 
 @Injectable({
               providedIn: 'root'
             })
-export class EntitiesManager {
-  private _player: Player = null;
-  private _entities: Array<Entity> = [];
-
-  static convertRawEntitiesToEntities(jsonEntities: Array<JsonEntity>): Array<Entity> {
-    if (jsonEntities.length > 0) {
-      const entities: Array<Entity> = [];
-      jsonEntities.forEach((jsonEntity: JsonEntity) => {
-        entities.push(EntitiesFactory.createFromJson(jsonEntity)
-                                     .setNextAction(new IdleAction()));
-      });
-      return entities;
-    }
-    return [];
-  }
+export class EntitiesEngine {
+  private _gameEntities: GameEntities;
 
   constructor() {
   }
 
   setPlayer(actor: Player) {
-    this._player = actor;
+    this._gameEntities.setPlayer(actor);
   }
 
-  getPlayer(): Player {
-    return this._player;
+  getPlayer(): Player | undefined {
+    return this._gameEntities ? this._gameEntities.getPlayer() : undefined;
   }
 
-  getEntities(): Array<Entity> {
-    return this._entities;
+  setGameEntities(gameEntities: GameEntities) {
+    this._gameEntities = gameEntities;
   }
 
-  setEntities(entities: Array<Entity>) {
-    this._entities = entities;
+  getGameEntities(): GameEntities {
+    return this._gameEntities;
   }
 
   getAllEntities(): Array<Entity> {
-    return this.getEntities()
-               .concat(this.getPlayer());
-  }
-
-  getEntityAt(position: Position): Entity | null {
-    let monster: Entity = null;
-    this.getAllEntities()
-        .forEach((value: Entity, index: number) => {
-          if (value.position.equal(position)) {
-            monster = value;
-          }
-        });
-    return monster;
+    return this._gameEntities.getAllEntities();
   }
 
   updateEntities(gameEngine: GameEngine) {
@@ -71,8 +47,7 @@ export class EntitiesManager {
           entity.update();
           if (entity.hp <= 0) {
             entity.onDead(gameEngine);
-            this._entities
-                .splice(index, 1);
+            this._gameEntities.removeEntity(index);
             if (entity instanceof Player) {
               gameEngine.gameOver();
             }
@@ -80,7 +55,7 @@ export class EntitiesManager {
         });
   }
 
-  processAction(gameEngine: GameEngine) {
+  executeEntitiesActions(gameEngine: GameEngine) {
     const entities: Array<Entity> = this.getAllEntities();
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
@@ -99,13 +74,5 @@ export class EntitiesManager {
         }
       }
     }
-  }
-
-  getEntitiesVisibles(gameMap: GameMap): Array<Entity> {
-    return this.getEntities()
-               .filter((entity: Entity) => {
-                 const entityPosition: Position = entity.getPosition();
-                 return (gameMap.losMap[entityPosition.y][entityPosition.x] > 0);
-               });
   }
 }

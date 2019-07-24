@@ -12,32 +12,34 @@ import {GameMap} from '../../../../core/classes/base/game-map';
 import {MapBuilder} from '../../../../core/factories/map-builder';
 import {GameObjectFactory} from '../../../../core/factories/game-object-factory';
 import {GameObjectType} from '../../../../core/enums/game-object-type.enum';
-import {EntitiesManager} from '../../services/entities-manager.service';
+import {EntitiesEngine} from '../../services/entities-engine.service';
+import {GameEntities} from '../../../../core/classes/base/game-entities';
 
 describe('InventoryPageComponent', () => {
   let component: InventoryPageComponent;
   let fixture: ComponentFixture<InventoryPageComponent>;
-  let entitiesService: EntitiesManager;
+  let entitiesService: EntitiesEngine;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
                                      declarations: [InventoryPageComponent],
-                                     providers: [EntitiesManager]
+                                     providers: [EntitiesEngine]
                                    })
            .compileComponents();
   }));
 
   beforeEach(() => {
-    const gameMap: GameMap = new MapBuilder().build();
-    entitiesService = TestBed.get(EntitiesManager);
+    const gameEntities: GameEntities = new GameEntities();
+
+    entitiesService = TestBed.get(EntitiesEngine);
+    entitiesService.setGameEntities(gameEntities);
 
     let player: Player = EntitiesFactory.getInstance()
                                         .createEntity(EntityType.PLAYER) as Player;
     player = player.setRace(RaceFactory.getInstance()
                                        .createRace(RaceType.HUMAN))
                    .setGameClass(GameClassFactory.getInstance()
-                                                 .createGameClass(ClassType.BARBARIAN))
-                   .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+                                                 .createGameClass(ClassType.BARBARIAN));
     const letter: string = player.addToInventory(GameObjectFactory.create(GameObjectType.ARMOR, 'shield'));
     player.equipInventory(letter);
     entitiesService.setPlayer(player);

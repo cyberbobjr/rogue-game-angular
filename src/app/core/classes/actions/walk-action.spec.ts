@@ -9,7 +9,7 @@ import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntitiesManager} from '../../../modules/game/services/entities-manager.service';
+import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
 import {WalkAction} from './walk-action';
 import {Direction} from '../../enums/direction.enum';
 import {Position} from '../base/position';
@@ -19,13 +19,12 @@ describe('walk-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
   let gameEngine: GameEngine;
-  let entitiesService: EntitiesManager;
-
+  let entitiesService: EntitiesEngine;
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesManager, GameEngine]
+                                     providers: [EntitiesEngine, GameEngine]
                                    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
@@ -36,7 +35,7 @@ describe('walk-action', () => {
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
     gameEngine = TestBed.get(GameEngine);
     gameEngine.loadGameMap(gameMap);
-    entitiesService = TestBed.get(EntitiesManager);
+    entitiesService = TestBed.get(EntitiesEngine);
     entitiesService.setPlayer(player);
   });
 

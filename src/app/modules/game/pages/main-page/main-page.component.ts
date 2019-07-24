@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GameEngine} from '../../services/game-engine.service';
-import {EntitiesManager} from '../../services/entities-manager.service';
+import {EntitiesEngine} from '../../services/entities-engine.service';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
@@ -15,7 +15,7 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(private _gameEngineService: GameEngine,
-              private _entitiesService: EntitiesManager,
+              private _entitiesService: EntitiesEngine,
               private _storageService: StorageService,
               private _router: Router,
               private _modalService: NgxSmartModalService) {
@@ -23,29 +23,30 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('Main page init');
-    this._initPlayer()
-        .then((player: Player) => {
-          this._entitiesService.setPlayer(player);
-          return this._storageService.loadRawMap(player.mapLevel);
-        })
-        .then((mapData: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          this._gameEngineService.loadRawGameMap(mapData);
-          this._gameEngineService.startGameLoop();
-          this._gameEngineService.setModalService(this._modalService);
-        })
-        .catch((e) => {
-          console.log(e);
-          console.trace();
-          this._goBackToMenu();
-        });
+    this._initGame();
+  }
+
+  private async _initGame() {
+    try {
+      const player: Player = await this._initPlayer();
+      const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await this._storageService.loadRawMap(player.mapLevel);
+      this._gameEngineService.loadRawGameMap(mapData);
+      this._entitiesService.setPlayer(player);
+      this._gameEngineService.startGameLoop();
+      this._gameEngineService.setModalService(this._modalService);
+    } catch (e) {
+      console.log(e);
+      console.trace();
+      this._goBackToMenu();
+    }
   }
 
   ngOnDestroy() {
     this._gameEngineService.endGameLoop();
   }
 
-  private async _initPlayer() {
-    return await this._storageService.loadPlayer();
+  private _initPlayer(): Promise<Player> {
+    return this._storageService.loadPlayer();
   }
 
   private _goBackToMenu() {

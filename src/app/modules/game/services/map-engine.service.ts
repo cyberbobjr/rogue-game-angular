@@ -10,48 +10,30 @@ import {Path} from 'rot-js';
 import {Entity} from '../../../core/classes/base/entity';
 import {Tile} from '../../../core/classes/base/tile';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
-import {EntitiesManager} from './entities-manager.service';
+import {EntitiesEngine} from './entities-engine.service';
 import {Utility} from '../../../core/classes/utility';
 import {json} from '@angular-devkit/core';
+import {GameEntities} from '../../../core/classes/base/game-entities';
 
 @Injectable({
               providedIn: 'root'
             })
 export class MapEngine {
-  private _width: number;
-  private _height: number;
   private _currentMap: GameMap = null;
 
-  get width(): number {
-    return this._width;
+  constructor() {
   }
 
-  set width(value: number) {
-    this._width = value;
-  }
-
-  get height(): number {
-    return this._height;
-  }
-
-  set height(value: number) {
-    this._height = value;
-  }
-
-  constructor(private _storageService: StorageService,
-              private _entitiesService: EntitiesManager) {
-  }
-
-  async generateMaps(nbOfMaps: number = 42): Promise<boolean> {
+  generateMaps(nbOfMaps: number = 42): Array<GameMap> {
+    const maps: Array<GameMap> = [];
     for (let level = 1; level < nbOfMaps + 1; level++) {
-      const map: GameMap = new MapBuilder().withLevel(level)
-                                           .withSeed(Utility.rolldice(level * 100))
-                                           .withRandomEntities(level)
-                                           .withRandomChests(nbOfMaps - level)
-                                           .build();
-      await this._storageService.saveMapWithEntities(map, map.entities);
+      maps.push(new MapBuilder().withLevel(level)
+                                .withSeed(Utility.rolldice(level * 100))
+                                .withRandomEntities(level)
+                                .withRandomChests(nbOfMaps - level)
+                                .build());
     }
-    return true;
+    return maps;
   }
 
   setGameMap(value: GameMap): GameMap {
@@ -64,31 +46,13 @@ export class MapEngine {
   }
 
   getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
-    const astar: AStar = new Path.AStar(destPosition.x, destPosition.y, (x: number, y: number) => {
-      const info: Iobject = this.getTileOrEntityAt(new Position(x, y));
-      if (info instanceof Entity) {
-        return true;
-      }
-      if (info instanceof Tile && info.isWalkable()) {
-        return true;
-      }
-      return info instanceof DoorTile && (info as DoorTile).isClosed;
-    });
-
-    let target: Position = null;
-    let count = 0;
-    astar.compute(originPosition.x, originPosition.y, (x: number, y: number) => {
-      count++;
-      if (count !== 2) {
-        return;
-      }
-      target = new Position(x, y);
-    });
-    return target;
+    return this.getCurrentMap()
+               .getDirectionFromPositionToPosition(originPosition, destPosition);
   }
 
   getTileOrEntityAt(position: Position): Iobject {
-    const entity: Iobject = this._entitiesService.getEntityAt(position);
+    const gameEntities: GameEntities = this.getCurrentMap().gameEntities;
+    const entity: Iobject = gameEntities.getEntityAt(position);
     if (entity) {
       return entity;
     }

@@ -7,30 +7,42 @@ import {Iobject} from '../../interfaces/iobject';
 import {Room} from 'rot-js/lib/map/features';
 import {ChestTile} from '../tiles/chest-tile';
 import {FloorTile} from '../tiles/floor-tile';
+import AStar from 'rot-js/lib/path/astar';
+import {Path} from 'rot-js';
+import {DoorTile} from '../tiles/door-tile';
+import {GameEntities} from './game-entities';
 
 export class GameMap {
-  private _data: Iobject[][];
+  private readonly _data: Iobject[][];
   private _losMap: Array<Array<number>>;
   private _visibilityMap: Array<Array<number>>;
   private _seed: number;
   private _level: number;
   private _rooms: Array<Room> = [];
-  private _entities: Array<Entity> = [];
+  private _gameEntities: GameEntities = new GameEntities();
   private _entryPosition: Position;
   private _exitPosition: Position;
 
   private _preciseShadowcasting: PreciseShadowcasting = null;
+
+  set gameEntities(value: GameEntities) {
+    this._gameEntities = value;
+  }
+
+  get gameEntities(): GameEntities {
+    return this._gameEntities;
+  }
 
   set rooms(value: Array<Room>) {
     this._rooms = value;
   }
 
   get entities(): Array<Entity> {
-    return this._entities;
+    return this._gameEntities.getEntities();
   }
 
   set entities(value: Array<Entity>) {
-    this._entities = value;
+    this._gameEntities.setEntities(value);
   }
 
   get losMap(): Array<Array<number>> {
@@ -102,11 +114,19 @@ export class GameMap {
     data.position = new Position(x, y);
   }
 
-  public clone(): GameMap {
-    return this.extract(0, 0, this._width, this._height);
+  public extractLosMap(startPosX: number, startPosY: number, width: number, height: number): number[][] {
+    return this._extract<number>(this._losMap, startPosX, startPosY, width, height);
   }
 
-  public extract(startPosX: number, startPosY: number, width: number, height: number): GameMap {
+  public extractVisibilityMap(startPosX: number, startPosY: number, width: number, height: number): number[][] {
+    return this._extract<number>(this._visibilityMap, startPosX, startPosY, width, height);
+  }
+
+  public extractTiles(startPosX: number, startPosY: number, width: number, height: number): Tile[][] {
+    return this._extract<Tile>(this._data, startPosX, startPosY, width, height);
+  }
+
+  private _extract<T>(source: any[][], startPosX: number, startPosY: number, width: number, height: number): T[][] {
     if (startPosX < 0) {
       startPosX = 0;
     }
@@ -114,19 +134,17 @@ export class GameMap {
     if (startPosY < 0) {
       startPosY = 0;
     }
+    const {finalWidth, finalHeight} = this.calculateBounds(startPosX, startPosY, width, height);
+    return this._getRawData(source, startPosX, startPosY, finalWidth, finalHeight);
+  }
 
+  private calculateBounds(startPosX: number, startPosY: number, width: number, height: number): { endPosX: number, endPosY: number, finalWidth: number, finalHeight: number } {
     const endPosX = ((startPosX + width) > this._width) ? this._width : (startPosX + width);
     const endPosY = ((startPosY + height) > this._height) ? this._height : (startPosY + height);
 
     const finalWidth: number = endPosX - startPosX;
     const finalHeight: number = endPosY - startPosY;
-
-    const arrayExtracted: Tile[][] = this._getRawData(startPosX, startPosY, finalWidth, finalHeight);
-
-    const gameMap: GameMap = new GameMap(finalWidth, finalHeight, arrayExtracted);
-    gameMap._losMap = this._copyRawData(startPosX, startPosY, finalWidth, finalHeight, this._losMap);
-    gameMap._visibilityMap = this._copyRawData(startPosX, startPosY, finalWidth, finalHeight, this._visibilityMap);
-    return gameMap;
+    return {endPosX, endPosY, finalWidth, finalHeight};
   }
 
   public computeLOSMap(mainActor: Entity): GameMap {
@@ -149,9 +167,12 @@ export class GameMap {
     return this;
   }
 
+  getLosForPosition(position: Position): number {
+    return this._losMap[position.y][position.x];
+  }
+
   public getTilesAround(position: Position): Array<Array<Iobject>> {
-    const tilesAround: GameMap = this.extract(position.x - 1, position.y - 1, 3, 3) as GameMap;
-    return tilesAround.content;
+    return this._extract<Iobject>(this._data, position.x - 1, position.y - 1, 3, 3);
   }
 
   public getTileAt(position: Position): Tile {
@@ -209,13 +230,13 @@ export class GameMap {
     return this;
   }
 
-  private _copyRawData(startX, startY, width, height, rawData: Array<Array<number>>): Array<Array<number>> {
-    const arrayExtracted: number[][] = Utility.initArrayNumber(width, height);
+  private _getRawData<T>(source: any[][], startX: number, startY: number, width: number, height: number): T[][] {
+    const arrayExtracted: T[][] = this._initArray(width, height);
     let y = 0;
     let x = 0;
     for (let j = startY; j < startY + height; j++) {
       for (let i = startX; i < startX + width; i++) {
-        arrayExtracted[y][x] = rawData[j][i];
+        arrayExtracted[y][x] = source[j][i] as T;
         x++;
       }
       y++;
@@ -224,22 +245,7 @@ export class GameMap {
     return arrayExtracted;
   }
 
-  private _getRawData(startX, startY, width, height): Tile[][] {
-    const arrayExtracted: Tile[][] = this._initArray(width, height);
-    let y = 0;
-    let x = 0;
-    for (let j = startY; j < startY + height; j++) {
-      for (let i = startX; i < startX + width; i++) {
-        arrayExtracted[y][x] = Object.create(this._data[j][i]) as Tile;
-        x++;
-      }
-      y++;
-      x = 0;
-    }
-    return arrayExtracted;
-  }
-
-  private _initArray(width: number, height: number, fill = '.'): Tile[][] {
+  private _initArray(width: number, height: number, fill = '.'): [][] {
     const newArray = new Array(height);
     newArray.fill(fill);
     newArray.forEach((value: any, index: number) => {
@@ -247,4 +253,38 @@ export class GameMap {
     });
     return newArray;
   }
+
+  getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
+    const astar: AStar = new Path.AStar(destPosition.x, destPosition.y, (x: number, y: number) => {
+      const info: Iobject = this.getTileAt(new Position(x, y));
+      if (info instanceof Entity) {
+        return true;
+      }
+      if (info instanceof Tile && info.isWalkable()) {
+        return true;
+      }
+      return info instanceof DoorTile && (info as DoorTile).isClosed;
+    });
+
+    let target: Position = null;
+    let count = 0;
+    astar.compute(originPosition.x, originPosition.y, (x: number, y: number) => {
+      count++;
+      if (count !== 2) {
+        return;
+      }
+      target = new Position(x, y);
+    });
+    return target;
+  }
+
+  getEntitiesVisibles(): Array<Entity> {
+    return this._gameEntities
+               .getAllEntities()
+               .filter((entity: Entity) => {
+                 const entityPosition: Position = entity.getPosition();
+                 return this.getLosForPosition(entityPosition) > 0;
+               });
+  }
+
 }

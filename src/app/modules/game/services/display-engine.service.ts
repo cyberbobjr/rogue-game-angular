@@ -4,11 +4,18 @@ import {GameMap} from '../../../core/classes/base/game-map';
 import {Sprite} from '../../../core/classes/base/sprite';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
-import {EntitiesManager} from './entities-manager.service';
+import {EntitiesEngine} from './entities-engine.service';
 import {Player} from '../../../core/classes/entities/player';
 import * as Color from 'color';
 import {Entity} from '../../../core/classes/base/entity';
 import {IEffect} from '../../../core/interfaces/i-effect';
+import {Utility} from '../../../core/classes/utility';
+import {Tile} from '../../../core/classes/base/tile';
+
+interface BufferTile {
+  sprite: Sprite;
+  los: number;
+}
 
 @Injectable({
               providedIn: 'root'
@@ -17,6 +24,7 @@ export class DisplayEngine {
   private _display: Display = new Display();
   maxVisiblesCols = 20;
   maxVisiblesRows = 20;
+  buffer: Array<Array<BufferTile | number>>;
 
   get display(): Display {
     return this._display;
@@ -32,6 +40,7 @@ export class DisplayEngine {
   }
 
   constructor() {
+    this.buffer = Utility.initArrayNumber(this.maxVisiblesCols, this.maxVisiblesRows);
   }
 
   public computeVisiblesRowsCols() {
@@ -40,7 +49,7 @@ export class DisplayEngine {
     this.maxVisiblesRows = height;
   }
 
-  public drawEntities(entities: Array<Entity>, gameMap: GameMap) {
+  private _drawEntities(entities: Array<Entity>, gameMap: GameMap) {
     entities
       .forEach((entity: Entity) => {
         const entityPosition: Position = entity.getPosition();
@@ -49,20 +58,41 @@ export class DisplayEngine {
           gameMap.setDataAt(entityPosition.x, entityPosition.y, entity);
         }
       });
-    return this
   }
 
-  public drawEffects(effects: Array<IEffect>, gameMap: GameMap) {
+  private _drawEffects(effects: Array<IEffect>, gameMap: GameMap) {
     effects.forEach((effect: IEffect) => {
       effect.draw_callback(gameMap);
     });
   }
 
-  public draw(gameMap: GameMap, cameraPosition: Position) {
+  public drawGameMap(gameMap: GameMap) {
+    // prepare map for drawing
+    const cameraPosition = gameMap.gameEntities.getPlayer().position;
     const cameraStartPosition: Position = this._getStartViewPortOfPosition(cameraPosition);
-    const viewport: GameMap = gameMap.extract(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    // get map data
+    const bufferTile: Tile[][] = gameMap.extractTiles(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    const bufferVisibility: number[][] = gameMap.extractVisibilityMap(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    const bufferLos: number[][] = gameMap.extractLosMap(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
+    const entities: Array<Entity> = gameMap.getEntitiesVisibles();
+    // build buffer
+    const buffer: Array<Array<BufferTile>> = this._buildBuffer(bufferTile, bufferVisibility, bufferLos, entities);
+
     this._display.clear();
-    this._drawViewPort(viewport);
+    this._drawBuffer(buffer);
+  }
+
+  private _buildBuffer(bufferTile: Tile[][], bufferVisibility: number[][], bufferLos: number[][], entities: Array<Entity>): Array<Array<BufferTile>> {
+    const buffer: Array<Array<BufferTile>> = new Array(bufferTile.length);
+    for (let y = 0; y < bufferTile.length; y++) {
+      buffer[y] = new Array(bufferTile[y].length);
+      for (let x = 0; x < bufferTile[y].length; x++) {
+        const tile: Tile = bufferTile[y][x];
+        const entityPresent: Entity | undefined = entities.find(entity => entity.position.equal(tile.position));
+        buffer[y][x] = {sprite: entityPresent ? entityPresent.sprite : tile.sprite, los: bufferLos[y][x]};
+      }
+    }
+    return buffer;
   }
 
   private _getStartViewPortOfPosition(cameraPosition: Position) {
@@ -71,12 +101,12 @@ export class DisplayEngine {
     return new Position(x, y);
   }
 
-  private _drawViewPort(viewport: GameMap) {
+  private _drawBuffer(buffer: Array<Array<BufferTile>>) {
     try {
-      for (let j = 0; j < viewport.height; j++) {
-        for (let i = 0; i < viewport.width; i++) {
-          const sprite: Sprite = <Sprite>viewport.getDataAt(i, j).sprite;
-          const losValue: number = viewport.losMap[j][i];
+      for (let j = 0; j < buffer.length; j++) {
+        for (let i = 0; i < buffer[j].length; i++) {
+          const sprite: Sprite = buffer[j][i].sprite;
+          const losValue: number = buffer[j][i].los;
           if (sprite && losValue > 0) {
             this._display.draw(i, j, sprite.character, this._darkenColor(sprite.color, losValue), this._darkenColor(sprite.bgColor, losValue));
           }

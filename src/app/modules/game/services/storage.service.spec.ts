@@ -9,10 +9,10 @@ import {RaceType} from '../../../core/enums/race-type.enum';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {MapBuilder} from '../../../core/factories/map-builder';
 import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
-import {EntitiesManager} from './entities-manager.service';
+import {EntitiesEngine} from './entities-engine.service';
 
 describe('StorageService', () => {
-  beforeEach(() => TestBed.configureTestingModule({providers: [EntitiesManager]}));
+  beforeEach(() => TestBed.configureTestingModule({providers: [EntitiesEngine]}));
 
   it('should be created', () => {
     const service: StorageService = TestBed.get(StorageService);
@@ -49,12 +49,13 @@ describe('StorageService', () => {
   });
 
   it('should save and load map', async (done) => {
+    const level = 1;
     const service: StorageService = TestBed.get(StorageService);
-    const gameMap: GameMap = new MapBuilder().withLevel(1)
+    const gameMap: GameMap = new MapBuilder().withLevel(level)
                                              .withSeed(511)
                                              .build();
-    await service.saveMapWithEntities(gameMap, []);
-    const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await service.loadRawMap(1);
+    await service.saveMap(gameMap);
+    const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await service.loadRawMap(level);
     const mapLoaded: GameMap = MapBuilder.fromJSON(mapData.map);
     expect(mapLoaded.level)
       .toEqual(gameMap.level);
