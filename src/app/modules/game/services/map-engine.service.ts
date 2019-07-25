@@ -47,7 +47,7 @@ export class MapEngine {
 
   getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
     return this.getCurrentMap()
-               .getDirectionFromPositionToPosition(originPosition, destPosition);
+               .getNextPosition(originPosition, destPosition);
   }
 
   getTileOrEntityAt(position: Position): Iobject {

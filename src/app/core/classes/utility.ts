@@ -10,6 +10,15 @@ export class Utility {
     return newArray;
   }
 
+  static initArrayString(width: number, height: number, fill = '.'): [][] {
+    const newArray = new Array(height);
+    newArray.fill(fill);
+    newArray.forEach((value: any, index: number) => {
+      newArray[index] = new Array(width).fill(fill);
+    });
+    return newArray;
+  }
+
   static rolldice(sides: number = 10): number {
     return Math.floor(Math.random() * sides);
   }

@@ -190,7 +190,7 @@ export class GameEngine {
   public getEntitiesVisibles(): Array<Entity> {
     return this._mapEngine
                .getCurrentMap()
-               .getEntitiesVisibles();
+               .getEntitiesVisiblesOnMap();
   }
 
   public getMapEngine(): MapEngine {

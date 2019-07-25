@@ -1,6 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 import {MapBuilder} from 'src/app/core/factories/map-builder';
 import {GameMap} from 'src/app/core/classes/base/game-map';
+import {ChestTile} from '../classes/tiles/chest-tile';
 
 describe('MapBuilder', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
@@ -13,7 +14,7 @@ describe('MapBuilder', () => {
       .toEqual(1);
     expect(map.entities.length)
       .toEqual(0);
-    expect(map.getAllChestsPosition().length)
+    expect(map.getAllPosition<ChestTile>(ChestTile).length)
       .toEqual(0);
   });
 
@@ -25,10 +26,11 @@ describe('MapBuilder', () => {
   });
 
   it('map created with Chests', () => {
-    const map: GameMap = new MapBuilder().withRandomChests(10)
+    const nbChest = 5;
+    const map: GameMap = new MapBuilder().withRandomChests(nbChest)
                                          .build();
-    expect(map.getAllChestsPosition().length)
-      .toEqual(10);
+    expect(map.getAllPosition<ChestTile>(ChestTile).length)
+      .toEqual(nbChest);
   });
 
   it('map created with size', () => {

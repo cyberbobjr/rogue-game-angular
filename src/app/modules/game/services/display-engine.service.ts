@@ -49,40 +49,22 @@ export class DisplayEngine {
     this.maxVisiblesRows = height;
   }
 
-  private _drawEntities(entities: Array<Entity>, gameMap: GameMap) {
-    entities
-      .forEach((entity: Entity) => {
-        const entityPosition: Position = entity.getPosition();
-        const losValue: number = gameMap.losMap[entityPosition.y][entityPosition.x];
-        if (losValue > 0) {
-          gameMap.setDataAt(entityPosition.x, entityPosition.y, entity);
-        }
-      });
-  }
-
-  private _drawEffects(effects: Array<IEffect>, gameMap: GameMap) {
-    effects.forEach((effect: IEffect) => {
-      effect.draw_callback(gameMap);
-    });
-  }
-
   public drawGameMap(gameMap: GameMap) {
     // prepare map for drawing
     const cameraPosition = gameMap.gameEntities.getPlayer().position;
     const cameraStartPosition: Position = this._getStartViewPortOfPosition(cameraPosition);
     // get map data
     const bufferTile: Tile[][] = gameMap.extractTiles(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
-    const bufferVisibility: number[][] = gameMap.extractVisibilityMap(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
     const bufferLos: number[][] = gameMap.extractLosMap(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
-    const entities: Array<Entity> = gameMap.getEntitiesVisibles();
+    const entities: Array<Entity> = gameMap.getEntitiesVisiblesOnMap();
     // build buffer
-    const buffer: Array<Array<BufferTile>> = this._buildBuffer(bufferTile, bufferVisibility, bufferLos, entities);
+    const buffer: Array<Array<BufferTile>> = this._buildBuffer(bufferTile, bufferLos, entities);
 
     this._display.clear();
     this._drawBuffer(buffer);
   }
 
-  private _buildBuffer(bufferTile: Tile[][], bufferVisibility: number[][], bufferLos: number[][], entities: Array<Entity>): Array<Array<BufferTile>> {
+  private _buildBuffer(bufferTile: Tile[][], bufferLos: number[][], entities: Array<Entity>): Array<Array<BufferTile>> {
     const buffer: Array<Array<BufferTile>> = new Array(bufferTile.length);
     for (let y = 0; y < bufferTile.length; y++) {
       buffer[y] = new Array(bufferTile[y].length);

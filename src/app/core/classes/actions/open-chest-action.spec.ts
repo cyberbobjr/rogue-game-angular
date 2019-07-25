@@ -42,7 +42,7 @@ describe('open-chest-action', () => {
 
   it('should open chest', () => {
     const openChestAction: OpenChestAction = new OpenChestAction(player);
-    const chestsPosition: Array<Position> = gameMap.getAllChestsPosition();
+    const chestsPosition: Array<Position> = gameMap.getAllPosition<ChestTile>(ChestTile);
     const gameEngine: GameEngine = TestBed.get(GameEngine);
     gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(gameMap.level, chestsPosition[0]);

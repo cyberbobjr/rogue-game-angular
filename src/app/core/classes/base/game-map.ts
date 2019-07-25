@@ -5,12 +5,11 @@ import {Utility} from '../utility';
 import {Entity} from 'src/app/core/classes/base/entity';
 import {Iobject} from '../../interfaces/iobject';
 import {Room} from 'rot-js/lib/map/features';
-import {ChestTile} from '../tiles/chest-tile';
-import {FloorTile} from '../tiles/floor-tile';
 import AStar from 'rot-js/lib/path/astar';
 import {Path} from 'rot-js';
 import {DoorTile} from '../tiles/door-tile';
 import {GameEntities} from './game-entities';
+import {Rooms} from './rooms';
 
 export class GameMap {
   private readonly _data: Iobject[][];
@@ -18,12 +17,12 @@ export class GameMap {
   private _visibilityMap: Array<Array<number>>;
   private _seed: number;
   private _level: number;
-  private _rooms: Array<Room> = [];
+  private _rooms: Rooms;
   private _gameEntities: GameEntities = new GameEntities();
   private _entryPosition: Position;
   private _exitPosition: Position;
 
-  private _preciseShadowcasting: PreciseShadowcasting = null;
+  private _shadowCasting: PreciseShadowcasting = null;
 
   set gameEntities(value: GameEntities) {
     this._gameEntities = value;
@@ -34,7 +33,7 @@ export class GameMap {
   }
 
   set rooms(value: Array<Room>) {
-    this._rooms = value;
+    this._rooms = new Rooms(value);
   }
 
   get entities(): Array<Entity> {
@@ -92,7 +91,7 @@ export class GameMap {
   constructor(private _width?: number, private _height?: number, data?: Tile[][]) {
     this._losMap = Utility.initArrayNumber(this.width, this.height);
     this._visibilityMap = Utility.initArrayNumber(this.width, this.height);
-    this._data = data ? Object.create(data) : this._initArray(this._width, this._height);
+    this._data = data ? Object.create(data) : Utility.initArrayString(this._width, this._height);
   }
 
   public setSeed(seed: number): this {
@@ -112,6 +111,13 @@ export class GameMap {
   public setDataAt(x: number, y: number, data: Iobject) {
     this._data[y][x] = data;
     data.position = new Position(x, y);
+  }
+
+  public setTile(tile: Tile) {
+    if (!tile.position) {
+      throw new Error('Position not found in tile ! ' + JSON.stringify(tile));
+    }
+    this.setDataAt(tile.position.x, tile.position.y, tile);
   }
 
   public extractLosMap(startPosX: number, startPosY: number, width: number, height: number): number[][] {
@@ -148,13 +154,13 @@ export class GameMap {
   }
 
   public computeLOSMap(mainActor: Entity): GameMap {
-    const position: Position = mainActor.getPosition();
+    const mainActorPosition: Position = mainActor.getPosition();
     const lightRadius: number = mainActor.lightRadius;
     const lightPower: number = mainActor.lightPower;
-    this._createLOSEngine();
+    this._createShadowCasting();
     this._losMap = Utility.initArrayNumber(this.width, this.height);
     this._visibilityMap = Utility.initArrayNumber(this.width, this.height);
-    this._preciseShadowcasting.compute(position.x, position.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
+    this._shadowCasting.compute(mainActorPosition.x, mainActorPosition.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
       try {
         this._losMap[y][x] = R / lightPower;
         this._visibilityMap[y][x] = visibility;
@@ -163,63 +169,41 @@ export class GameMap {
         console.trace();
       }
     });
-    this._losMap[position.y][position.x] = 0.33;
+    this._losMap[mainActorPosition.y][mainActorPosition.x] = 0.33;
     return this;
   }
 
-  getLosForPosition(position: Position): number {
+  public getLosForPosition(position: Position): number {
     return this._losMap[position.y][position.x];
   }
 
-  public getTilesAround(position: Position): Array<Array<Iobject>> {
-    return this._extract<Iobject>(this._data, position.x - 1, position.y - 1, 3, 3);
+  public getTilesAround(position: Position): Array<Array<Tile>> {
+    return this._extract<Tile>(this._data, position.x - 1, position.y - 1, 3, 3);
   }
 
   public getTileAt(position: Position): Tile {
     return this.getDataAt(position.x, position.y) as Tile;
   }
 
-  public getAllChestsPosition(): Array<Position> {
-    const chestsPositions: Array<Position> = [];
+  public getAllPosition<T>(ctor: { new(...args: any[]): T }): Array<Position> {
+    const allPositions: Array<Position> = [];
     this._data.forEach((rows: Array<Iobject>) => {
       rows.forEach((tile: Iobject) => {
-        if (tile instanceof ChestTile) {
-          const chestTile: ChestTile = (tile as ChestTile);
-          chestsPositions.push(chestTile.position.clone());
+        if (tile instanceof ctor) {
+          const chestTile: Tile & T = (tile as Tile & T);
+          allPositions.push(chestTile.position.clone());
         }
       });
     });
-    return chestsPositions;
+    return allPositions;
   }
 
   public getFreeSlotForRoom(roomNumber: number): Position | null {
-    let validPosition = false;
-    let randomPosition: Position = null;
-    let randomX: number;
-    let randomY: number;
-    let tile: Tile = null;
-    let tryCount = 0;
-    const roomPosition: [Position, Position] = this._getRoomPosition(roomNumber); // topleft, bottomright
-    while (!validPosition || tryCount < 20) {
-      randomX = Utility.getRandomInt(roomPosition[0].x, roomPosition[1].x);
-      randomY = Utility.getRandomInt(roomPosition[0].y, roomPosition[1].y);
-      randomPosition = new Position(randomX, randomY);
-      tile = this.getTileAt(randomPosition);
-      validPosition = (tile instanceof FloorTile);
-      tryCount++;
-    }
-    return randomPosition;
+    return this._rooms.getFreeSlotForRoom(roomNumber);
   }
 
-  private _getRoomPosition(roomNumber: number): [Position, Position] {
-    const room: Room = this._rooms[roomNumber];
-    const topleft: Position = new Position(room.getLeft(), room.getTop());
-    const bottomright: Position = new Position(room.getRight(), room.getBottom());
-    return [topleft, bottomright];
-  }
-
-  private _createLOSEngine(): GameMap {
-    this._preciseShadowcasting = new PreciseShadowcasting((x: number, y: number) => {
+  private _createShadowCasting(): GameMap {
+    this._shadowCasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info: Iobject = this.getDataAt(x, y);
         return (info instanceof Tile) ? !info.opaque : true;
@@ -230,8 +214,8 @@ export class GameMap {
     return this;
   }
 
-  private _getRawData<T>(source: any[][], startX: number, startY: number, width: number, height: number): T[][] {
-    const arrayExtracted: T[][] = this._initArray(width, height);
+  private _getRawData<T>(source: T[][], startX: number, startY: number, width: number, height: number): T[][] {
+    const arrayExtracted: T[][] = Utility.initArrayString(width, height);
     let y = 0;
     let x = 0;
     for (let j = startY; j < startY + height; j++) {
@@ -245,16 +229,7 @@ export class GameMap {
     return arrayExtracted;
   }
 
-  private _initArray(width: number, height: number, fill = '.'): [][] {
-    const newArray = new Array(height);
-    newArray.fill(fill);
-    newArray.forEach((value: any, index: number) => {
-      newArray[index] = new Array(width).fill(fill);
-    });
-    return newArray;
-  }
-
-  getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
+  public getNextPosition(originPosition: Position, destPosition: Position): Position | null {
     const astar: AStar = new Path.AStar(destPosition.x, destPosition.y, (x: number, y: number) => {
       const info: Iobject = this.getTileAt(new Position(x, y));
       if (info instanceof Entity) {
@@ -278,12 +253,15 @@ export class GameMap {
     return target;
   }
 
-  getEntitiesVisibles(): Array<Entity> {
+  public isPositionVisible(position: Position): boolean {
+    return this.getLosForPosition(position) > 0;
+  }
+
+  public getEntitiesVisiblesOnMap(): Array<Entity> {
     return this._gameEntities
                .getAllEntities()
                .filter((entity: Entity) => {
-                 const entityPosition: Position = entity.getPosition();
-                 return this.getLosForPosition(entityPosition) > 0;
+                 return this.isPositionVisible(entity.getPosition());
                });
   }
 
