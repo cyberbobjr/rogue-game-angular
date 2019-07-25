@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {AttributesFactory} from '../../../../core/factories/attributes-factory';
-import {EntitiesService} from '../../services/entities.service';
+import {EntitiesEngine} from '../../services/entities-engine.service';
 
 @Component({
              selector: 'app-info-page',
@@ -11,7 +11,11 @@ export class InfoPageComponent implements OnInit {
   message: string = null;
   attributes: Array<string> = [];
 
-  constructor(private _entitiesService: EntitiesService) {
+  get entitiesService(): EntitiesEngine {
+    return this._entitiesService;
+  }
+
+  constructor(private _entitiesService: EntitiesEngine) {
   }
 
   ngOnInit() {
@@ -19,5 +23,4 @@ export class InfoPageComponent implements OnInit {
       this.attributes.push(attribute);
     }
   }
-
 }

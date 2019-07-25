@@ -10,9 +10,10 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObject} from '../gameObjects/game-object';
-import {Utility} from '../utility';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {InventorySystem} from './inventory-system';
+import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
 
 @Injectable({
               providedIn: 'root'
@@ -20,11 +21,12 @@ import {GameEngineService} from '../../../modules/game/services/game-engine.serv
 export abstract class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Iaction = null;
-  protected _type: EntityType;
+  protected _entityType: EntityType;
   protected _timeDisplaySprite: number;
   protected _position?: Position;
   protected _name: string;
   protected _sprite?: Sprite;
+  protected _race: string;
 
   protected _hp: number;
   protected _ac: number;
@@ -38,13 +40,28 @@ export abstract class Entity implements Iobject, IEntity {
   protected _ap = 0; // action points
   protected _xp = 0; // xp for player or challenge point
 
-  protected _inventory: Map<string, GameObject> = new Map<string, GameObject>();
+  protected _inventory: InventorySystem = new InventorySystem();
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
+  protected _abilities: JsonAbilities = {
+    strength: 0,
+    dexterity: 0,
+    constitution: 0,
+    intelligence: 0,
+    wisdom: 0,
+    charisma: 0
+  };
 
   lightRadius = 20;
   lightPower = 3; // max is lighter
 
-  attributes: Map<string, number> = new Map<string, number>();
+
+  get race(): string {
+    return this._race;
+  }
+
+  set race(value: string) {
+    this._race = value;
+  }
 
   get ap(): number {
     return this._ap;
@@ -70,21 +87,12 @@ export abstract class Entity implements Iobject, IEntity {
     this._size = value;
   }
 
-  get weapons(): Array<Weapon> {
-    const filteredObjects: Array<Weapon> = [];
-    this._inventory.forEach((gameObject: GameObject, key: string) => {
-      if (gameObject.objectType === 'WEAPON') {
-        filteredObjects.push(gameObject as Weapon);
-      }
-    });
-    return filteredObjects;
-  }
-
-  get inventory(): Map<string, GameObject> {
+  get inventory(): InventorySystem {
     return this._inventory;
   }
 
-  set inventory(value: Map<string, GameObject>) {
+  set inventory(value: InventorySystem) {
+    this._inventory = value;
   }
 
   get id(): string {
@@ -99,10 +107,6 @@ export abstract class Entity implements Iobject, IEntity {
     return this._hitDice;
   }
 
-  set hitDice(value: number) {
-    this._hitDice = value;
-  }
-
   get gp(): number {
     return this._gp;
   }
@@ -112,51 +116,51 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   get constitution(): number {
-    return this.attributes.get('constitution');
+    return this._abilities.constitution;
   }
 
   set constitution(value: number) {
-    this.attributes.set('constitution', value);
+    this._abilities['constitution'] = value;
   }
 
   get intelligence(): number {
-    return this.attributes.get('intelligence');
+    return this._abilities.intelligence;
   }
 
   set intelligence(value: number) {
-    this.attributes.set('intelligence', value);
+    this._abilities['intelligence'] = value;
   }
 
   get wisdom(): number {
-    return this.attributes.get('wisdom');
+    return this._abilities.wisdom;
   }
 
   set wisdom(value: number) {
-    this.attributes.set('wisdom', value);
+    this._abilities['wisdom'] = value;
   }
 
   get charisma(): number {
-    return this.attributes.get('charisma');
+    return this._abilities.charisma;
   }
 
   set charisma(value: number) {
-    this.attributes.set('charisma', value);
+    this._abilities['charisma'] = value;
   }
 
   get dexterity(): number {
-    return this.attributes.get('dexterity');
+    return this._abilities.dexterity;
   }
 
   set dexterity(value: number) {
-    this.attributes.set('dexterity', value);
+    this._abilities['dexterity'] = value;
   }
 
   get strength(): number {
-    return this.attributes.get('strength');
+    return this._abilities.strength;
   }
 
   set strength(value: number) {
-    this.attributes.set('strength', value);
+    this._abilities['strength'] = value;
   }
 
   get ac(): number {
@@ -168,11 +172,11 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   get type(): EntityType {
-    return this._type;
+    return this._entityType;
   }
 
   set type(value: EntityType) {
-    this._type = value;
+    this._entityType = value;
   }
 
   get hp(): number {
@@ -215,26 +219,27 @@ export abstract class Entity implements Iobject, IEntity {
     this._xp = value;
   }
 
-  toJSON() {
+  getAttributeValue(attributes: string): number {
+    return this._abilities[attributes];
+  }
+
+  toJSON(): JsonEntity {
     return {
       xp: this.xp,
       name: this.name,
       id: this.id,
-      position: this.position,
-      sprite: this.sprite,
-      strength: this.strength,
-      dexterity: this.dexterity,
-      constitution: this.constitution,
-      intelligence: this.intelligence,
-      wisdom: this.wisdom,
-      charisma: this.charisma,
+      position: this._position ? this._position.toJSON() : null,
+      sprite: this.sprite ? this.sprite.toJSON() : null,
+      abilities: this._abilities,
       ac: this.ac,
       hp: this.hp,
       gp: this.gp,
       hitDice: this.hitDice,
-      inventory: Array.from(this.inventory.values()),
+      inventory: this._inventory.toJSON(),
       speed: this.speed,
-      size: this.size
+      size: this.size,
+      race: this._race,
+      entityType: this._entityType,
     };
   }
 
@@ -246,8 +251,13 @@ export abstract class Entity implements Iobject, IEntity {
     return '';
   }
 
-  setNextAction(action: Iaction) {
+  getPosition(): Position {
+    return this.position;
+  }
+
+  setNextAction(action: Iaction): Entity {
     this._currentAction = action;
+    return this;
   }
 
   update() {
@@ -259,7 +269,7 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   // region Events
-  onHit(actor: Entity, damage: number) {
+  onHit(subject: Entity, damage: number): void {
     EventLog.getInstance().message = `${this.name} take ${damage} points of damage`;
     this.hp -= damage;
     if (!this._backupSprite) {
@@ -269,28 +279,18 @@ export abstract class Entity implements Iobject, IEntity {
     }
   }
 
-  onDead(_gameEngine: GameEngineService): void {
+  onDead(_gameEngine: GameEngine): void {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 
-  onRest() {
+  onRest(): void {
 
   }
 
   // end region
 
   addToInventory(gameObject: GameObject): string {
-    let letterInventory: string = Utility.getLetter(this._inventory.size);
-    if (gameObject.empilable) {
-      const key: string = this._getByInventoryItemId(gameObject.id);
-      if (key) {
-        const gameObjectExisting: GameObject = this._inventory.get(key);
-        gameObject.qty += gameObjectExisting.qty;
-        letterInventory = key;
-      }
-    }
-    this._inventory.set(letterInventory, gameObject);
-    return letterInventory;
+    return this._inventory.addToInventory(gameObject);
   }
 
   setInventory(arrInventory: Array<GameObject>) {
@@ -299,46 +299,20 @@ export abstract class Entity implements Iobject, IEntity {
     });
   }
 
-  useInventory(letterInventory: string, qty = 1) {
-    const gameObject: GameObject = this._inventory.get(letterInventory);
-    if (gameObject.empilable) {
-      gameObject.qty -= qty;
-      if (gameObject.qty <= 0) {
-        this._inventory.delete(letterInventory);
-      } else {
-        this._inventory.set(letterInventory, gameObject);
-      }
-    }
+  useInventory(letterInventory: string, qty = 1): boolean {
+    return this._inventory.removeFromInventory(letterInventory, qty);
   }
 
   getItemByLetter(inventoryLetter: string): GameObject {
-    return this._inventory.get(inventoryLetter);
+    return this._inventory.getGameObjectByInventoryLetter(inventoryLetter);
   }
 
   equipInventory(inventoryletter: string): boolean {
-    let equipped = false;
-    const gameObject: GameObject = this._inventory.get(inventoryletter);
-    if (gameObject) {
-      const slots: Array<SlotType> = gameObject.getSlots();
-      slots.every((slot: SlotType) => {
-        if (this._equippedItem.has(slot)) {
-          return true;
-        }
-        this._equippedItem.set(slot, inventoryletter);
-        equipped = true;
-      });
-    }
-    return equipped;
+    return this._inventory.equip(inventoryletter);
   }
 
   unequipItem(inventoryLetter: string): boolean {
-    for (const [key, value] of this._equippedItem) {
-      if (value === inventoryLetter) {
-        this._equippedItem.delete(key);
-        return true;
-      }
-    }
-    return false;
+    return this._inventory.unequip(inventoryLetter);
   }
 
   getWeaponsDamage(): number {
@@ -351,22 +325,25 @@ export abstract class Entity implements Iobject, IEntity {
     return totalDamage;
   }
 
-  private _getByInventoryItemId(itemId: string): string | null {
-    let gameObjectFind: GameObject | null = null;
-    let keyFind: string | null = null;
-    this._inventory.forEach((value: GameObject, key: string) => {
-      if (value.id === itemId) {
-        gameObjectFind = value;
-        keyFind = key;
-      }
+  inventoryContain(letterInventory: string): boolean {
+    return this._inventory.hasLetter(letterInventory);
+  }
+
+  removeFromInventory(letterInventory: string): boolean {
+    return this._inventory.removeFromInventory(letterInventory);
+  }
+
+  setAbilities(abilities: Map<string, number>): Entity {
+    abilities.forEach((value: number, ability: string) => {
+      this._abilities[ability] = value;
     });
-    return keyFind;
+    return this;
   }
 
   private _getEquippedWeapons(): Array<Weapon> {
     const weaponsEquipped: Array<Weapon> = [];
     for (const [key, value] of this._equippedItem) {
-      const gameObject: GameObject = this._inventory.get(value);
+      const gameObject: GameObject = this._inventory.getGameObjectByInventoryLetter(value);
       if ((key === SlotType.TWOHANDS || key === SlotType.RIGHTHAND || key === SlotType.LEFTHAND) && (gameObject instanceof Weapon)) {
         weaponsEquipped.push(gameObject as Weapon);
       }

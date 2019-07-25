@@ -6,12 +6,17 @@ import {Player} from '../entities/player';
 import {EventLog} from '../event-log';
 
 export class Potion extends GameObject {
-  protected _name: string;
-  protected _sprite: Sprite = new Sprite('i', '#66bbe2');
-  protected _id = 'potion';
+  static fromJson(): Potion {
+    return new this();
+  }
 
-  name = 'Potion';
-  objectType = 'POTION';
+  constructor() {
+    super();
+    this._id = 'potion';
+    this._objectType = 'POTION';
+    this._name = 'Potion';
+    this._sprite = new Sprite('i', '#66bbe2');
+  }
 
   getInfo(): string {
     return `a potion`;

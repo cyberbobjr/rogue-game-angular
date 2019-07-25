@@ -30,7 +30,7 @@ export class AttributesFactory {
   }
 
   static getModifier(score: number): number | null {
-    let modifier: { min, max, modifier } | null = AttributesFactory.modifiers.find((value: { min, max, modifier }) => {
+    const modifier: { min, max, modifier } | null = AttributesFactory.modifiers.find((value: { min, max, modifier }) => {
       return (score >= value.min && score <= value.max);
     });
     return modifier ? modifier.modifier : null;

@@ -1,14 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {EntitiesService} from '../../game/services/entities.service';
+import {EntitiesEngine} from '../../game/services/entities-engine.service';
 import {Router} from '@angular/router';
 import {MapEngine} from '../../game/services/map-engine.service';
 import {StorageService} from '../../game/services/storage.service';
 import {Player} from '../../../core/classes/entities/player';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
-import {GameMap} from '../../../core/classes/base/gameMap';
-import {Iobject} from '../../../core/interfaces/iobject';
+import {GameMap} from '../../../core/classes/base/game-map';
 import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
+import {Entity} from '../../../core/classes/base/entity';
+import {MapBuilder} from '../../../core/factories/map-builder';
 
 @Component({
              selector: 'app-menu-page',
@@ -20,12 +21,11 @@ export class MenuPageComponent implements OnInit {
   private _isPlayerExist = false;
   private _player: Player = null;
 
-  constructor(private _entitiesServices: EntitiesService,
+  constructor(private _entitiesServices: EntitiesEngine,
               private _storageService: StorageService,
               private _mapEngine: MapEngine,
               private _router: Router) {
   }
-
 
   ngOnInit() {
     this._storageService
@@ -33,36 +33,36 @@ export class MenuPageComponent implements OnInit {
         .then((player: Player) => {
           this._player = player;
           this._isPlayerExist = !!this._player;
-          return this._storageService.loadMap(this._player.level);
+          this._isGameStarted = !!(this._player.mapLevel && this._player.position);
+          if (this._isGameStarted) {
+            this._storageService.loadRawMap(this._player.mapLevel)
+                .then((mapLoaded: { map: JsonMap, entities: Array<JsonEntity> } | null) => {
+                  this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
+                });
+          }
         })
-        .then((mapLoaded: { map: JsonMap, _entities: Array<JsonEntity> } | null) => {
-          this._isGameStarted = this._isPlayerExist ? (!!this._player.position && !!mapLoaded) : false;
-        })
-        .catch((err: Error) => {
-          console.log(err.message);
+        .catch((e: Error) => {
+          console.log(e.message);
+          console.trace();
         });
   }
 
   async startNewGame() {
-    this._storageService
-        .clearAllMaps()
-        .then(() => {
-          return this._mapEngine.generateMaps(Config.maxLevel);
-        })
-        .then(() => {
-          this._storageService
-              .loadMap(1)
-              .then((data: { map: JsonMap, _entities: Array<JsonEntity> }) => {
-                const gameMap: GameMap = this._mapEngine.loadRawMap(data);
-                this._player.level = 1;
-                this._player.position = gameMap.entryPosition;
-                this._player.setToFullHp();
-                this._storageService.savePlayer(this._player);
-                this._router.navigateByUrl('game');
-              })
-              .catch((err: Error) => {
-                console.log(err.message);
-              });
-        });
+    const maps: Array<GameMap> = this._mapEngine.generateMaps(Config.maxLevel);
+    const saveMapPromise: Promise<void>[] = maps.map(map => this._storageService.saveMap(map));
+    await Promise.all(saveMapPromise)
+                 .then(() => {
+                   return this._storageService.loadRawMap(1);
+                 })
+                 .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
+                   const gameMap: GameMap = MapBuilder.fromJSON(data.map);
+                   this._player.setMapLevelAndPosition(1, gameMap.entryPosition);
+                   this._player.setToFullHp();
+                   this._storageService.savePlayer(this._player);
+                   this._router.navigateByUrl('game');
+                 })
+                 .catch((err) => {
+                   console.log(err);
+                 });
   }
 }

@@ -1,6 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LogPageComponent } from './log-page.component';
+import {LogPageComponent} from './log-page.component';
+import {EventLog} from '../../../../core/classes/event-log';
 
 describe('LogPageComponent', () => {
   let component: LogPageComponent;
@@ -8,9 +9,9 @@ describe('LogPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LogPageComponent ]
-    })
-    .compileComponents();
+                                     declarations: [LogPageComponent]
+                                   })
+           .compileComponents();
   }));
 
   beforeEach(() => {
@@ -20,6 +21,16 @@ describe('LogPageComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component)
+      .toBeTruthy();
+  });
+
+  it('should display log info', () => {
+    const message = 'DISPLAY LOG TEST';
+    EventLog.getInstance().message = message;
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.debugElement.nativeElement;
+    expect(element.innerText)
+      .toContain(message);
   });
 });

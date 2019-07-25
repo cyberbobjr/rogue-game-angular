@@ -2,18 +2,18 @@
   <div class="row">
     <div class="span6">
       <ul>
-        <li *ngFor="let gameObject of _entitiesService.player?.inventory | keyvalue; let i = index"
-            [class.selected]="gameObject.key == _selected">
+        <li *ngFor="let gameObject of player?.inventory.getAllInventoryWithLetter() | keyvalue; let i = index"
+            [class.selected]="gameObject.key == selected">
           {{gameObject.key}} - {{gameObject.value.name}} - Qty : {{gameObject.value.qty}}
-          <span *ngIf="_entitiesService.player.isInventoryEquipped(gameObject.key)">
-            ({{_entitiesService.player.getSlotTypeForEquipped(gameObject.key)}})
+          <span *ngIf="player.isInventoryEquipped(gameObject.key)">
+            ({{player.getSlotTypeForEquipped(gameObject.key)}})
           </span>
         </li>
       </ul>
     </div>
     <div class="span6"></div>
   </div>
-  <div class="row" *ngIf="_selected">
+  <div class="row" *ngIf="selected">
     <span>[c]ancel</span>&nbsp;
     <span *ngIf="isDroppable()">[d]rop</span>&nbsp;
     <span *ngIf="isSelectedEquipable()">[e]quip&nbsp;</span>

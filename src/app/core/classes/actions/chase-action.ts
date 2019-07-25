@@ -6,7 +6,7 @@ import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
 import {AttackMeleeAction} from './attack-melee-action';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Iobject} from '../../interfaces/iobject';
 import {DoorTile} from '../tiles/door-tile';
 import {Monster} from '../entities/monster';
@@ -14,21 +14,21 @@ import {IdleAction} from './idle-action';
 
 export class ChaseAction implements Iaction {
   private _info = '';
-  private _gameEngine: GameEngineService = null;
+  private _gameEngine: GameEngine = null;
 
-  constructor(private _subject: Entity) {
+  constructor() {
   }
 
-  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
-    if (!subject.sprite.light && !(subject as Monster).canFollowChase()) {
-      subject.setNextAction(new IdleAction());
+  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+    if (!actor.sprite.light && !(actor as Monster).canFollowChase()) {
+      actor.setNextAction(new IdleAction());
       return ActionResult.SUCCESS;
     }
     this._gameEngine = gameEngine;
-    EventLog.getInstance().message = `${this._subject.name} chasing`;
-    const destPosition: Position = this._getPathToPlayer(subject);
+    EventLog.getInstance().message = `${actor.name} chasing`;
+    const destPosition: Position = this._getPathToPlayer(actor);
     if (destPosition) {
-      return this._moveActor(destPosition);
+      return this._moveActor(actor, destPosition);
     }
     return ActionResult.SUCCESS;
   }
@@ -43,7 +43,7 @@ export class ChaseAction implements Iaction {
                .getDirectionFromPositionToPosition(actor.position, player.position);
   }
 
-  private _moveActor(destPosition: Position): ActionResult {
+  private _moveActor(actor: Entity, destPosition: Position): ActionResult {
     const info: Iobject = this._gameEngine.getMapEngine()
                               .getTileOrEntityAt(destPosition);
     if (info instanceof Player) {
@@ -52,13 +52,13 @@ export class ChaseAction implements Iaction {
       return result;
     }
     if (info instanceof Tile && info.isWalkable()) {
-      info.onWalk(this._subject);
-      this._subject.position = destPosition;
+      info.onWalk(actor);
+      actor.position = destPosition;
       return ActionResult.SUCCESS;
     }
-    if (info instanceof DoorTile && (info as DoorTile).isClosed && (this._subject as Monster).canOpenDoor()) {
+    if (info instanceof DoorTile && (info as DoorTile).isClosed && (actor as Monster).canOpenDoor()) {
       info.openDoor();
-      EventLog.getInstance().message = `${this._subject.name} open the door !`;
+      EventLog.getInstance().message = `${actor.name} open the door !`;
     }
     return ActionResult.SUCCESS;
   }

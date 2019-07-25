@@ -23,10 +23,6 @@ export abstract class Tile implements Iobject {
     return this._opaque;
   }
 
-  set opaque(value: boolean) {
-    this._opaque = value;
-  }
-
   get name(): string {
     return this._name;
   }
@@ -66,7 +62,7 @@ export abstract class Tile implements Iobject {
     };
   }
 
-  constructor(protected _position?: Position) {
+  protected constructor(protected _position?: Position) {
   }
 
   abstract isWalkable(): boolean ;
@@ -85,16 +81,20 @@ export abstract class Tile implements Iobject {
     return null;
   }
 
-  onHit(actor: Entity): Iaction | null {
-    return null;
-  }
+  abstract onHit(actor: Entity): Iaction | null;
 
   dropOn(gameObject: GameObject) {
-    const existingGameObject = this._contents.find((value: GameObject) => value.id === gameObject.id);
-    if (existingGameObject && existingGameObject.empilable) {
-      existingGameObject.qty += gameObject.qty;
-    } else {
-      this._contents.push(gameObject);
+    try {
+      const existingGameObject = this._contents.find((value: GameObject) => value.id === gameObject.id);
+      if (existingGameObject && existingGameObject.empilable) {
+        existingGameObject.qty += gameObject.qty;
+      } else {
+        this._contents.push(gameObject);
+      }
+    } catch (e) {
+      console.log(gameObject);
+      console.log(this._contents);
+      console.log(e);
     }
   }
 

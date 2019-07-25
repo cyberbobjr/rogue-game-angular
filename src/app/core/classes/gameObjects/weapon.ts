@@ -1,33 +1,59 @@
-import {Sprite} from '../base/sprite';
-import {JsonWeapon} from '../../interfaces/json-interfaces';
+import {JsonSprite, JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Utility} from '../utility';
 import {Entity} from '../base/entity';
+import {Sprite} from '../base/sprite';
 
-export class Weapon extends GameObject {
-  protected _sprite: Sprite;
-  objectType = 'WEAPON';
-  empilable = false;
+export class Weapon extends GameObject implements JsonWeapon {
+  private _damage: {
+    type: string,
+    dice: number,
+    mul: number
+  };
+  private _thrown?: {
+    normal: number;
+    long: number;
+  };
 
-  get id(): string {
-    return this._jsonData.id;
+  get damage(): { type: string; dice: number; mul: number } {
+    return this._damage;
   }
 
-  get name(): string {
-    return this._jsonData.name;
+  set damage(value: { type: string; dice: number; mul: number }) {
+    this._damage = value;
   }
 
-  get properties(): Array<string> {
-    return this._jsonData.properties;
+  get thrown(): { normal: number; long: number } {
+    return this._thrown;
   }
 
-  static fromJson(_jsonData: JsonWeapon): Weapon {
-    return new this(_jsonData);
+  set thrown(value: { normal: number; long: number }) {
+    this._thrown = value;
   }
 
-  constructor(_jsonData: JsonWeapon) {
-    super(_jsonData);
+  static fromJson(_jsonWeapon: JsonWeapon): Weapon {
+    const weapon: Weapon = new Weapon();
+    for (const key of Object.keys(_jsonWeapon)) {
+      weapon['_' + key] = _jsonWeapon[key];
+    }
+    if (_jsonWeapon.sprite) {
+      weapon.sprite = new Sprite((_jsonWeapon.sprite as JsonSprite).character, (_jsonWeapon.sprite as JsonSprite).color);
+    }
+    return weapon;
+  }
+
+  toJSON(): JsonWeapon {
+    return {
+      ...super.toJSON(),
+      damage: this._damage,
+      thrown: this._thrown
+    };
+  }
+
+  constructor() {
+    super();
+    this.objectType = 'WEAPON';
   }
 
   canEquip(): boolean {
@@ -51,8 +77,8 @@ export class Weapon extends GameObject {
   }
 
   getDamage(): number {
-    if (<JsonWeapon>this._jsonData.damage) {
-      return (this._jsonData.damage.mul * Utility.rolldice(this._jsonData.damage.dice));
+    if (this._damage) {
+      return (this._damage.mul * Utility.rolldice(this._damage.dice));
     }
     return 0;
   }

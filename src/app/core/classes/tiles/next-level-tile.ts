@@ -2,6 +2,8 @@ import {Tile} from '../base/tile';
 import {Sprite} from '../base/sprite';
 import {TileType} from '../../enums/tile-type.enum';
 import {Position} from '../base/position';
+import {Iaction} from '../../interfaces/iaction';
+import {Entity} from '../base/entity';
 
 export class NextLevelTile extends Tile {
   name = 'Stair';
@@ -24,4 +26,10 @@ export class NextLevelTile extends Tile {
   getInfo(): string {
     return this._type === TileType.STAIRUP ? 'Stair up' : 'Stair down';
   }
+
+  onHit(actor: Entity): Iaction | null {
+    return null;
+  }
+
+
 }

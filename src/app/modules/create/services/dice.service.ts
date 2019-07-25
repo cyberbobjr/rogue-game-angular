@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IDice} from '../interface/idice';
 import {AttributesFactory} from '../../../core/factories/attributes-factory';
+import {JsonAbilities} from '../../../core/interfaces/json-interfaces';
 
 @Injectable({
               providedIn: 'root'

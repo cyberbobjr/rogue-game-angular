@@ -1,4 +1,3 @@
-import {Sprite} from '../base/sprite';
 import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
@@ -8,26 +7,20 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {EventLog} from '../event-log';
 
 export class Food extends GameObject {
-  protected _sprite: Sprite;
   protected _name = 'food';
-
-  objectType = 'FOOD';
 
   get id(): string {
     return 'FOOD';
   }
 
-  get properties(): Array<string> {
-    return [];
-  }
-
-  static fromJson(): Food {
+  static fromJson(jsonData: any): Food {
     return new this();
   }
 
   constructor() {
     super();
     this._sprite = SpritesFactory.createSprite(SpriteType.FOOD);
+    this._objectType = 'FOOD';
   }
 
   getInfo(): string {

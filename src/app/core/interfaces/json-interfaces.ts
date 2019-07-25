@@ -1,19 +1,17 @@
 import {GameObject} from '../classes/gameObjects/game-object';
-import {SlotType} from '../enums/equiped-type.enum';
-import {IRace} from './i-race';
-import {IGameClass} from './i-game-class';
+import {Sprite} from '../classes/base/sprite';
 
 export interface JsonSprite {
-  _color: string;
-  _character: string;
-  _bgColor: string;
-  _light: boolean;
-  _visibility: number;
+  color: string;
+  character: string;
+  bgColor: string;
+  light?: boolean;
+  visibility?: number;
 }
 
 export interface JsonPosition {
-  _x: number;
-  _y: number;
+  x: number;
+  y: number;
 }
 
 export interface JSonCell {
@@ -31,80 +29,100 @@ export interface JsonMap {
   _height: number;
   _width: number;
   _entities: [JsonEntity];
+  _level: number;
 }
 
 export interface JsonEntity {
   id: string;
   gp: number;
   hp: number;
+  maxHp?: number;
   name: string;
   speed: number;
   size: string;
   position: JsonPosition;
   sprite: JsonSprite;
-  type: number;
-  strength: number;
+  entityType: number;
+  abilities: JsonAbilities;
   ac: number;
   xp: number;
   hitDice: number;
-  dexterity: number;
-  constitution: number;
-  intelligence: number;
-  wisdom: number;
-  charisma: number;
-  level: number;
-  inventory: [{ id: string, objectType: string, _jsonData: JsonWeapon }];
-  equipped?: [[SlotType, string]];
-  race: JsonRace;
-  gameClass: JsonGameClass;
+  inventory: Array<JsonGameObject>;
+  equipped?: Array<[number, string]>;
+  race: string;
 }
 
-export interface JsonArmor {
+export interface JsonPlayer extends JsonEntity {
+  level: number;
+  mapLevel: number;
+  gameClass: string;
+  maxHp: number;
+}
+
+export interface JsonMonster extends JsonEntity {
+  frequency: number;
+}
+
+export interface JsonArmor extends JsonGameObject {
+  ac: number;
+}
+
+export interface JsonGameObject {
   id: string;
   name: string;
   type: string;
+  empilable: boolean;
   objectType: string;
-  ac: number;
   cost: {
     unit: string,
     value: number
   };
   weight: number;
-  sprite: {
-    character: string;
-    color: string;
-  };
   properties: [
     string
     ];
+  sprite: JsonSprite | Sprite;
+  qty: number;
 }
 
-export interface JsonWeapon {
-  id: string;
-  name: string;
-  type: string;
-  objectType: string;
-  cost: {
-    unit: string,
-    value: number
-  };
+export interface JsonWeapon extends JsonGameObject {
   damage: {
     type: string,
     dice: number,
     mul: number
   };
-  weight: number;
-  properties: [
-    string
-    ];
   thrown?: {
     normal: number;
     long: number;
   };
-  sprite: {
-    character: string;
-    color: string;
+}
+
+export interface JsonMonsterClass {
+  id: string;
+  name: string;
+  hp: {
+    dice: number;
+    mul: number;
+    bonus: number;
   };
+  speed: number;
+  size: string;
+  abilities: {
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    wisdom: number;
+    charisma: number;
+  };
+  ac: number;
+  gp: {
+    dice: number;
+  };
+  sprite: JsonSprite;
+  weapons: [string];
+  frequency: number;
+  xp: number;
 }
 
 export interface JsonGameClass {
@@ -129,42 +147,11 @@ export interface JsonGameClass {
     character: string;
     color: string;
   };
-  equipment: [{
+  equipment: Array<{
     id: string;
     type: string;
     qty: number;
-  }];
-}
-
-export interface JsonMonster {
-  id: string;
-  name: string;
-  hp: {
-    dice: number;
-    mul: number;
-    bonus: number;
-  };
-  speed: number;
-  size: string;
-  abilities: {
-    strength: number;
-    dexterity: number;
-    constitution: number;
-    intelligence: number;
-    wisdom: number;
-    charisma: number;
-  };
-  ac: number;
-  gp: {
-    dice: number;
-  };
-  sprite: {
-    character: string;
-    color: string;
-  };
-  weapons: [string];
-  frequency: number;
-  xp: number;
+  }>;
 }
 
 export interface JsonRace {
@@ -180,4 +167,13 @@ export interface JsonRace {
     wisdom: number;
     charisma: number;
   };
+}
+
+export interface JsonAbilities {
+  strength: number;
+  dexterity: number;
+  constitution: number;
+  intelligence: number;
+  wisdom: number;
+  charisma: number;
 }

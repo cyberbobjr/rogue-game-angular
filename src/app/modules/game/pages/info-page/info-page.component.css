@@ -1,0 +1,9 @@
+ul.info-list-player {
+  -webkit-padding-start: 0;
+  padding-inline-start: 0;
+}
+
+ul.info-list-player > li {
+  display: inline-block;
+  padding-right: 20px;
+}

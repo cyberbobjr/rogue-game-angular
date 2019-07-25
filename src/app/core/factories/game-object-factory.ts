@@ -9,6 +9,7 @@ import {GameObjectType} from '../enums/game-object-type.enum';
 import {Torch} from '../classes/gameObjects/torch';
 import {Food} from '../classes/gameObjects/food';
 import {Utility} from '../classes/utility';
+import {JsonArmor, JsonGameObject, JsonWeapon} from '../interfaces/json-interfaces';
 
 export class GameObjectFactory {
   private static instance: GameObjectFactory;
@@ -18,10 +19,10 @@ export class GameObjectFactory {
   constructor() {
     console.log('GameObjectFactory created');
     for (const key of Object.keys(weapons.default)) {
-      this._weapons.set(weapons.default[key]['id'], new Weapon(weapons.default[key]));
+      this._weapons.set(weapons.default[key]['id'], Weapon.fromJson(weapons.default[key]));
     }
     for (const key of Object.keys(armors.default)) {
-      this._armors.set(armors.default[key]['id'], new Armor(armors.default[key]));
+      this._armors.set(armors.default[key]['id'], Armor.fromJson(armors.default[key]));
     }
   }
 
@@ -51,22 +52,22 @@ export class GameObjectFactory {
     }
   }
 
-  static createFromJson(objectType: string, data: any): GameObject | null {
+  static createFromJson(objectType: string, data: JsonGameObject): GameObject | Armor | Weapon | undefined {
     switch (objectType) {
       case 'GOLD' :
         return new Gold(data['_amount']);
       case 'WEAPON' :
-        return Weapon.fromJson(data['_jsonData']);
-      case 'ARMOUR' :
-        return Armor.fromJson(data['_jsonData']);
+        return Weapon.fromJson(data as JsonWeapon);
+      case 'ARMOR' :
+        return Armor.fromJson(data as JsonArmor);
       case 'POTION' :
-        return new Potion();
+        return Potion.fromJson();
       case 'FOOD' :
-        return new Food();
+        return Food.fromJson(data);
       case 'TORCH' :
-        return new Torch();
+        return Torch.fromJson(data);
       default:
-        return null;
+        return undefined;
     }
   }
 
@@ -97,16 +98,14 @@ export class GameObjectFactory {
 
   private _getRandomWeapon(): GameObject {
     const weaponCount: number = this._weapons.size;
-    let items: Array<Weapon> = Array.from(this._weapons.values());
-    const key: GameObject = items[Utility.rolldice(weaponCount) - 1];
-    return key;
+    const items: Array<Weapon> = Array.from(this._weapons.values());
+    return items[Utility.rolldice(weaponCount - 1)];
   }
 
   private _getRandomArmor(): GameObject {
     const armorCount: number = this._armors.size;
-    let items: Array<Armor> = Array.from(this._armors.values());
-    const key: GameObject = items[Utility.rolldice(armorCount) - 1];
-    return key;
+    const items: Array<Armor> = Array.from(this._armors.values());
+    return items[Utility.rolldice(armorCount - 1)];
   }
 
   getWeaponById(weaponId: string): Weapon | null {

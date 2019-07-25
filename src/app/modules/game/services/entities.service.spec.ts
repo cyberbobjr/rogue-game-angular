@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { EntitiesService } from './entities.service';
+import { EntitiesEngine } from './entities-engine.service';
 
-describe('EntitiesService', () => {
+describe('EntitiesEngine', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: EntitiesService = TestBed.get(EntitiesService);
+    const service: EntitiesEngine = TestBed.get(EntitiesEngine);
     expect(service).toBeTruthy();
   });
 });

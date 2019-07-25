@@ -1,28 +1,38 @@
 import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {StorageService} from '../../../game/services/storage.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
-import {GameEngineService} from '../../../game/services/game-engine.service';
+import {GameEngine} from '../../../game/services/game-engine.service';
 import {Router} from '@angular/router';
-import {EntitiesService} from '../../../game/services/entities.service';
+import {EntitiesEngine} from '../../../game/services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameObject} from '../../../../core/classes/gameObjects/game-object';
-import {Potion} from '../../../../core/classes/gameObjects/potion';
 import {Tile} from '../../../../core/classes/base/tile';
 
 @Component({
-             selector: 'app-inventory-modal',
-             templateUrl: './inventory-modal.component.html',
-             styleUrls: ['./inventory-modal.component.css']
-           })
+  selector: 'app-inventory-modal',
+  templateUrl: './inventory-modal.component.html',
+  styleUrls: ['./inventory-modal.component.css']
+})
 export class InventoryModalComponent implements OnInit, OnDestroy {
+  get selected(): string {
+    return this._selected;
+  }
+
+  get player(): Player {
+    return this._player;
+  }
   private _handleKeyBackup: any;
   private _listener: any = null;
   private _selected: string = null;
   private _player: Player = null;
 
+  get entitiesService(): EntitiesEngine {
+    return this._entitiesService;
+  }
+
   constructor(private _modalService: NgxSmartModalService,
-              private _gameEngine: GameEngineService,
-              private _entitiesService: EntitiesService,
+              private _gameEngine: GameEngine,
+              private _entitiesService: EntitiesEngine,
               private _router: Router,
               private _storageService: StorageService,
               private _renderer: Renderer2) {
@@ -30,7 +40,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this._router.url === '/game') {
-      this._player = this._entitiesService.player;
+      this._player = this._entitiesService.getPlayer();
       this.initModalHandler();
     } else {
       this._storageService.loadPlayer()
@@ -53,7 +63,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
     this._modalService.getModal('inventoryModal')
         .onOpen
         .subscribe(() => {
-          this._player = this._entitiesService.player;
+          this._player = this._entitiesService.getPlayer();
           this._handleKeyBackup = this._gameEngine.handleKeyEvent;
           this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
         });
@@ -67,7 +77,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   keyboardHandler(key: KeyboardEvent) {
     const letter: string = key.key;
     if (!this._selected) {
-      if (this._player.inventory.has(letter)) {
+      if (this._player.inventoryContain(letter)) {
         this._selected = letter;
       }
     } else {
@@ -108,40 +118,40 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   }
 
   isSelectedEquipable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
+    const object: GameObject = this._player.getItemByLetter(this._selected);
     return object.canEquip() && !this._player.isInventoryEquipped(this._selected);
   }
 
   isSelectedUsable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
+    const object: GameObject = this._player.getItemByLetter(this._selected);
     return object.canUse();
   }
 
   isSelectedUnequippable(): boolean {
-    const object: GameObject = this._player.inventory.get(this._selected);
+    const object: GameObject = this._player.getItemByLetter(this._selected);
     return object.canEquip() && this._player.isInventoryEquipped(this._selected);
   }
 
   dropObject() {
-    const gameObject: GameObject = this._player.inventory.get(this._selected);
+    const gameObject: GameObject = this._player.getItemByLetter(this._selected);
     const tile: Tile = this._gameEngine.getMapEngine()
                            .getTileAt(this._player.position);
     tile.dropOn(gameObject);
-    this._player.inventory.delete(this._selected);
+    this._player.removeFromInventory(this._selected);
   }
 
   equipObject(inventoryLetter: string) {
-    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    const gameObject: GameObject = this._player.getItemByLetter(inventoryLetter);
     gameObject.onEquip(this._player, inventoryLetter);
   }
 
   unequipObject(inventoryLetter: string) {
-    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    const gameObject: GameObject = this._player.getItemByLetter(inventoryLetter);
     gameObject.onUnequip(this._player, inventoryLetter);
   }
 
   useObject(inventoryLetter: string) {
-    const gameObject: GameObject = this._player.inventory.get(inventoryLetter);
+    const gameObject: GameObject = this._player.getItemByLetter(inventoryLetter);
     gameObject.onUse(this._player, inventoryLetter);
   }
 }

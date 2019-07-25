@@ -1,5 +1,5 @@
 import {Position} from '../classes/base/position';
-import {GameMap} from '../classes/base/gameMap';
+import {GameMap} from '../classes/base/game-map';
 
 export interface IEffect {
   type: string;

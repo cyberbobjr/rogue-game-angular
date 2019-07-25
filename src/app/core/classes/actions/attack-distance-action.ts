@@ -1,7 +1,7 @@
 import {Iaction} from '../../interfaces/iaction';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {EventLog} from '../event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
 
@@ -9,14 +9,17 @@ export class AttackDistanceAction implements Iaction {
   private _currentTargetIndex: number;
   private _targets: Array<Entity> = [];
   private _bgColorBackup: string;
-  private _gameEngine: GameEngineService = null;
+  private _gameEngine: GameEngine = null;
 
   constructor(private _actor: Entity) {
   }
 
-  execute(subject: Entity, gameEngine: GameEngineService): ActionResult {
-    this._targets = this._getTargets();
+  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
     this._gameEngine = gameEngine;
+    this._targets = gameEngine.getEntitiesVisibles();
+    console.log('Targets :');
+    console.log('=========');
+    console.log(this._targets);
     if (this._targets.length === 0) {
       EventLog.getInstance().message = 'No target in range !';
       return ActionResult.SUCCESS;
@@ -42,7 +45,6 @@ export class AttackDistanceAction implements Iaction {
       case 'KeyF':
         this._fire();
         this._restoreGameEngineKeyHandler();
-        this._gameEngine.processAction();
         break;
       default:
         this._restoreGameEngineKeyHandler();
@@ -62,10 +64,6 @@ export class AttackDistanceAction implements Iaction {
   private _setTargetBgColor() {
     this._bgColorBackup = this._targets[this._currentTargetIndex].sprite.bgColor;
     this._targets[this._currentTargetIndex].sprite.bgColor = 'green';
-  }
-
-  private _getTargets(): Array<Entity> {
-    return this._gameEngine.getEntitiesVisibles();
   }
 
   private _setNextTarget() {

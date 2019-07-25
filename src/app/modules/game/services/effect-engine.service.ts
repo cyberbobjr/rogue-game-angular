@@ -1,4 +1,3 @@
-import {GameMap} from '../../../core/classes/base/gameMap';
 import {IEffect} from '../../../core/interfaces/i-effect';
 import {Injectable} from '@angular/core';
 
@@ -22,7 +21,7 @@ export class EffectEngine {
     }
   }
 
-  tick(timestamp: number) {
+  updateEffects(timestamp: number) {
     this._effects.forEach((effect: IEffect) => {
       effect.tick(timestamp);
     });
@@ -36,10 +35,7 @@ export class EffectEngine {
     this._effects.delete(effect.type);
   }
 
-  drawEffects(gameMap: GameMap): GameMap {
-    this._effects.forEach((effect: IEffect) => {
-      effect.draw_callback(gameMap);
-    });
-    return gameMap;
+  getAllEffects(): Array<IEffect> {
+    return Array.from(this._effects.values());
   }
 }

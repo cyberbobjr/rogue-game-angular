@@ -3,7 +3,7 @@
     "id": "shield",
     "name": "Shield",
     "type": "shield",
-    "ac": "2",
+    "ac": 2,
     "cost": {
       "unit": "gp",
       "value": 10

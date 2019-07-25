@@ -1,16 +1,15 @@
-<div class="panel">
-  <div class="panel-heading">Player Info</div>
-  <div class="panel-body">
-    <div class="row-fluid">
-      <div class="span6" style="border-right: yellow solid 1px">
-        <div *ngFor="let attribute of attributes">{{attribute}} : {{_entitiesService.player?.attributes.get(attribute)}}</div>
-      </div>
-      <div class="span6">
-        Gold : {{_entitiesService.player?.gp}}<br/>
-        AC : {{_entitiesService.player?.ac}}<br/>
-        HP : {{_entitiesService.player?.hp}}
-      </div>
-    </div>
-    <br/>
-  </div>
-</div>
+<div class="panel-title">Player Info</div>
+<ul class="info-list-player">
+  <li *ngFor="let attribute of attributes">
+    {{attribute}} : {{entitiesService.getPlayer()?.getAttributeValue(attribute)}}
+  </li>
+  <li>
+    Gold : {{entitiesService.getPlayer()?.gp}}
+  </li>
+  <li>
+    AC : {{entitiesService.getPlayer()?.ac}}</li>
+  <li>
+    HP : {{entitiesService.getPlayer()?.hp}}
+  </li>
+</ul>
+{{entitiesService.getPlayer()?.position | json}}

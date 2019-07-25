@@ -8,6 +8,7 @@ import {EventLog} from '../event-log';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
+import {Iaction} from '../../interfaces/iaction';
 
 export class ChestTile extends FloorTile {
   protected _type = TileType.CHEST;
@@ -60,8 +61,13 @@ export class ChestTile extends FloorTile {
     chestObjects.forEach((gameObject: GameObject) => {
       this.dropOn(gameObject);
     });
-    EventLog.getInstance().message = 'You open the chest with ' + this._getContentInfo();
-    this._isClosed = false;
+    try {
+      EventLog.getInstance().message = 'You open the chest with ' + this._getContentInfo();
+      this._isClosed = false;
+    } catch (e) {
+      console.log(e);
+      console.log(chestObjects);
+    }
   }
 
 
@@ -72,5 +78,9 @@ export class ChestTile extends FloorTile {
       EventLog.getInstance().message = 'You take everything from chest';
       super.onTake(actor);
     }
+  }
+
+  onHit(actor: Entity): Iaction | null {
+    return null;
   }
 }

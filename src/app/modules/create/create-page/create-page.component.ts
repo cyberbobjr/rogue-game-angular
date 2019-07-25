@@ -15,10 +15,10 @@ import {RaceClass} from '../../../core/classes/base/race';
 import {Player} from '../../../core/classes/entities/player';
 
 @Component({
-             selector: 'app-create-page',
-             templateUrl: './create-page.component.html',
-             styleUrls: ['./create-page.component.css']
-           })
+  selector: 'app-create-page',
+  templateUrl: './create-page.component.html',
+  styleUrls: ['./create-page.component.css']
+})
 export class CreatePageComponent implements OnInit {
   nbDices = 4;
   attributesKeys: Array<string> = [];
@@ -52,8 +52,8 @@ export class CreatePageComponent implements OnInit {
 
   onSave() {
     let player: Player = EntitiesFactory.getInstance()
-                                        .createEntity(EntityType.PLAYER) as Player;
-    player.attributes = this._diceService.attributesScore;
+                                        .createEntity(EntityType.PLAYER)
+                                        .setAbilities(this._diceService.attributesScore) as Player;
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                  .createGameClass(ClassType.BARBARIAN);
     const gameRace: RaceClass = RaceFactory.getInstance()
@@ -61,7 +61,9 @@ export class CreatePageComponent implements OnInit {
 
     player = player.setRace(gameRace)
                    .setGameClass(gameClass);
-    this._storageService.savePlayer(player);
-    this._router.navigateByUrl('main');
+    this._storageService.savePlayer(player)
+        .then(() => {
+          this._router.navigateByUrl('main');
+        });
   }
 }

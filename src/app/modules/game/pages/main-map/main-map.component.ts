@@ -1,12 +1,12 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {DisplayService} from '../../services/display.service';
-import {GameEngineService} from '../../services/game-engine.service';
+import {DisplayEngine} from '../../services/display-engine.service';
+import {GameEngine} from '../../services/game-engine.service';
 
 @Component({
-             selector: 'app-main-map',
-             templateUrl: './main-map.component.html',
-             styleUrls: ['./main-map.component.css']
-           })
+  selector: 'app-main-map',
+  templateUrl: './main-map.component.html',
+  styleUrls: ['./main-map.component.css']
+})
 export class MainMapComponent implements OnInit, OnDestroy {
   @ViewChild('refMap') refMap: ElementRef;
 
@@ -19,16 +19,16 @@ export class MainMapComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  constructor(private _displayService: DisplayService,
-              private _gameEngineService: GameEngineService) {
+  constructor(private _displayService: DisplayEngine,
+              private _gameEngineService: GameEngine) {
   }
 
   ngOnInit() {
-    const fontsize = 16;
+    const fontsize = 18;
     const maxHeight = Math.round(window.innerHeight / fontsize) - 1;
     this._displayService.options = {height: maxHeight, fontSize: fontsize};
     this.refMap.nativeElement.appendChild(this._displayService.container);
-    this._displayService.computeBounds();
+    this._displayService.computeVisiblesRowsCols();
   }
 
   ngOnDestroy() {

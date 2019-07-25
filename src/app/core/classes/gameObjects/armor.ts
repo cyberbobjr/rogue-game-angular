@@ -1,36 +1,41 @@
-import {Sprite} from '../base/sprite';
-import {JsonArmor} from '../../interfaces/json-interfaces';
+import {JsonArmor, JsonSprite} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Entity} from 'src/app/core/classes/base/entity';
+import {Sprite} from '../base/sprite';
 
-export class Armor extends GameObject {
-  protected _sprite: Sprite;
-  objectType = 'ARMOUR';
-  empilable = false;
+export class Armor extends GameObject implements JsonArmor {
+  private _ac: number;
+
+  set ac(value: number) {
+    this._ac = value;
+  }
 
   get ac(): number {
-    return +this._jsonData.ac;
+    return this._ac;
   }
 
-  get id(): string {
-    return this._jsonData.id;
+  static fromJson(_jsonArmor: JsonArmor): Armor {
+    const armor: Armor = new Armor();
+    for (const key of Object.keys(_jsonArmor)) {
+      armor['_' + key] = _jsonArmor[key];
+    }
+    if (_jsonArmor.sprite) {
+      armor.sprite = new Sprite((_jsonArmor.sprite as JsonSprite).character, (_jsonArmor.sprite as JsonSprite).color);
+    }
+    return armor;
   }
 
-  get name(): string {
-    return this._jsonData.name;
+  constructor() {
+    super();
+    this.objectType = 'ARMOR';
   }
 
-  get properties(): Array<string> {
-    return this._jsonData.properties;
-  }
-
-  static fromJson(_jsonData: JsonArmor): Armor {
-    return new this(_jsonData);
-  }
-
-  constructor(_jsonData: JsonArmor) {
-    super(_jsonData);
+  toJSON(): JsonArmor {
+    return {
+      ...super.toJSON(),
+      ac: this._ac
+    };
   }
 
   onEquip(actor: Entity, letterInventory?: string) {

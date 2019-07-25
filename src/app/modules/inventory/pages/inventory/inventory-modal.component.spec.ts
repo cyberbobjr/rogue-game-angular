@@ -1,5 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {InventoryModalComponent} from 'src/app/modules/inventory/pages/inventory/inventory-modal.component';
+import {SharedModule} from '../../../shared/shared.module';
+import {NgxSmartModalModule} from 'ngx-smart-modal';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('InventoryComponent', () => {
   let component: InventoryModalComponent;
@@ -7,9 +10,12 @@ describe('InventoryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [InventoryModalComponent ]
-    })
-    .compileComponents();
+                                     imports: [SharedModule,
+                                               NgxSmartModalModule,
+                                               RouterTestingModule],
+                                     declarations: [InventoryModalComponent]
+                                   })
+           .compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,6 +25,7 @@ describe('InventoryComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component)
+      .toBeTruthy();
   });
 });

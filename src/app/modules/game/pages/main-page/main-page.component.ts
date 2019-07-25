@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MapEngine} from '../../services/map-engine.service';
-import {GameEngineService} from '../../services/game-engine.service';
-import {EntitiesService} from '../../services/entities.service';
+import {GameEngine} from '../../services/game-engine.service';
+import {EntitiesEngine} from '../../services/entities-engine.service';
 import {StorageService} from '../../services/storage.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
@@ -15,9 +14,8 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
            })
 export class MainPageComponent implements OnInit, OnDestroy {
 
-  constructor(private _mapEngine: MapEngine,
-              private _gameEngineService: GameEngineService,
-              private _entitiesService: EntitiesService,
+  constructor(private _gameEngineService: GameEngine,
+              private _entitiesService: EntitiesEngine,
               private _storageService: StorageService,
               private _router: Router,
               private _modalService: NgxSmartModalService) {
@@ -25,31 +23,30 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log('Main page init');
-    this._initPlayer()
-        .then((player: Player) => {
-          this._entitiesService.player = player;
-          return this._storageService.loadMap(player.level);
-        })
-        .then((mapData: { map: JsonMap, _entities: Array<JsonEntity> }) => {
-          this._gameEngineService
-              .getMapEngine()
-              .setGameMap(this._mapEngine.loadRawMap(mapData));
-          this._gameEngineService.setModalService(this._modalService);
-          this._gameEngineService.startGameLoop();
-        });
+    this._initGame();
+  }
+
+  private async _initGame() {
+    try {
+      const player: Player = await this._initPlayer();
+      const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await this._storageService.loadRawMap(player.mapLevel);
+      this._gameEngineService.loadRawGameMap(mapData);
+      this._entitiesService.setPlayer(player);
+      this._gameEngineService.startGameLoop();
+      this._gameEngineService.setModalService(this._modalService);
+    } catch (e) {
+      console.log(e);
+      console.trace();
+      this._goBackToMenu();
+    }
   }
 
   ngOnDestroy() {
     this._gameEngineService.endGameLoop();
   }
 
-  private async _initPlayer() {
-    const playerLoaded: Player = await this._storageService.loadPlayer();
-    if (!playerLoaded || !playerLoaded.position) {
-      this._goBackToMenu();
-    } else {
-      return playerLoaded;
-    }
+  private _initPlayer(): Promise<Player> {
+    return this._storageService.loadPlayer();
   }
 
   private _goBackToMenu() {

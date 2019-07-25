@@ -5,7 +5,7 @@ import {Iaction} from '../../interfaces/iaction';
 import {EventLog} from '../event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {JsonEntity, JsonWeapon} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonGameObject, JsonPlayer, JsonSprite} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../utility';
@@ -14,41 +14,34 @@ import {GameClass} from '../base/game-class';
 import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
-import {GameEngineService} from '../../../modules/game/services/game-engine.service';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {InventorySystem} from '../base/inventory-system';
+import {EntityType} from '../../enums/entity-type.enum';
 
 export class Player extends Entity {
   private _level = 1;
   private _mapLevel = 1;
-  private _race: RaceClass;
-  private _gameClass: GameClass;
+  private _gameClass: string;
   private _maxHp: number;
 
-  get maxHp(): number {
-    return this._maxHp;
+  set gameClass(value: string) {
+    this._gameClass = value;
+  }
+
+  get gameClass(): string {
+    return this._gameClass;
   }
 
   set maxHp(value: number) {
     this._maxHp = value;
   }
 
-  set race(value: RaceClass) {
-    this._race = value;
+  get maxHp(): number {
+    return this._maxHp;
   }
 
-  set gameClass(value: GameClass) {
-    this._gameClass = value;
-  }
-
-  get gameClass(): GameClass {
-    return this._gameClass;
-  }
-
-  get race(): RaceClass {
-    return this._race;
-  }
-
-  get equippedItem(): Map<SlotType, string> {
-    return this._equippedItem;
+  get equippedItem(): Map<SlotType, GameObject> {
+    return this._inventory.getEquippedGameObject();
   }
 
   get mapLevel(): number {
@@ -77,51 +70,48 @@ export class Player extends Entity {
 
   // region Serialization
   static fromJSON(jsonData: JsonEntity): Player {
-    let entity: Player = new this();
+    const entity: Player = new Player();
 
-    entity = Object.assign(entity, jsonData, {
-      _sprite: new Sprite(jsonData.sprite._character, jsonData.sprite._color),
-    });
-
-    if (jsonData.inventory.length > 0) {
-      jsonData.inventory.forEach((value: { id: string, objectType: string, _jsonData: JsonWeapon, _qty: number }, index: number) => {
-        const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
-        gameObject.qty = value._qty;
-        entity.addToInventory(gameObject);
-      });
+    for (const key of Object.keys(jsonData)) {
+      entity['_' + key] = jsonData[key];
+    }
+    entity._inventory = new InventorySystem();
+    if (jsonData.sprite) {
+      entity._sprite = new Sprite((jsonData.sprite as JsonSprite).character, (jsonData.sprite as JsonSprite).color);
     }
 
     if (jsonData.position) {
-      entity.position = new Position(jsonData.position._x, jsonData.position._y);
+      entity._position = new Position(jsonData.position.x, jsonData.position.y);
+    }
+
+    if (jsonData.inventory.length > 0) {
+      jsonData.inventory.forEach((value: JsonGameObject) => {
+        const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
+        gameObject.qty = value.qty;
+        entity._inventory.addToInventory(gameObject);
+      });
     }
 
     if (jsonData.equipped) {
       jsonData.equipped.forEach((value: [SlotType, string]) => {
-        const gameObject: GameObject = entity.inventory.get(value[1]);
+        const gameObject: GameObject = entity.inventory.getGameObjectByInventoryLetter(value[1]);
+        entity._inventory.equipItemAtSlot(value[0], value[1]);
         gameObject.onEquip(entity, value[1]);
       });
-    }
-
-    if (jsonData.race) {
-      entity.race = new RaceClass(jsonData.race);
-    }
-
-    if (jsonData.gameClass) {
-      entity.gameClass = new GameClass(jsonData.gameClass);
     }
 
     return entity;
   }
 
-  toJSON(): any {
+  toJSON(): JsonPlayer {
     return {
       ...super.toJSON(),
       ...{
         level: this.level,
         maxHp: this._maxHp,
         equipped: [...this._equippedItem],
-        race: this.race.jsonData,
-        gameClass: this.gameClass.jsonData
+        gameClass: this._gameClass,
+        mapLevel: this._mapLevel
       }
     };
   }
@@ -136,12 +126,14 @@ export class Player extends Entity {
     this.sprite = sprite ? sprite : SpritesFactory.createSprite(SpriteType.PLAYER);
     this.sprite.light = true;
     this.name = 'Player';
+    this._entityType = EntityType.PLAYER;
+    this._level = 1;
   }
 
   private _getArmorEquipped(): Array<Armor> {
     const armorEquipped: Array<Armor> = [];
     for (const [key, value] of this._equippedItem) {
-      const gameObject: GameObject = this._inventory.get(value);
+      const gameObject: GameObject = this._inventory.getGameObjectByInventoryLetter(value);
       if (gameObject instanceof Armor) {
         armorEquipped.push(gameObject as Armor);
       }
@@ -150,53 +142,48 @@ export class Player extends Entity {
   }
 
   // region Events
-  onHit(attacker: Entity, damage: number): Iaction | null {
+  onHit(attacker: Entity, damage: number): void {
     EventLog.getInstance().message = `You take ${damage} point of damage`;
-    //this.hp -= damage;
-    return null;
+    // this.hp -= damage;
   }
 
-  onDead(_gameEngine: GameEngineService): void {
+  onDead(_gameEngine: GameEngine): void {
     super.onDead(_gameEngine);
   }
 
   onRest() {
-    this.hp += (Utility.rolldice(this._hitDice) + AttributesFactory.getModifier(this.attributes.get('constitution')));
+    this.hp += (Utility.rolldice(this._hitDice) + AttributesFactory.getModifier(this.constitution));
     this.hp = Math.min(this.hp, this._maxHp);
   }
 
   // endregion
 
   isInventoryEquipped(inventoryLetter: string): boolean {
-    for (const [key, value] of this._equippedItem) {
-      if (value === inventoryLetter) {
-        return true;
-      }
-    }
-    return false;
+    return !!this._inventory.getItemEquippedWithLetter(inventoryLetter);
   }
 
   getSlotTypeForEquipped(inventoryLetter: string): string {
     let slotEquipped: SlotType;
-    this._equippedItem.forEach((value: string, slot: SlotType) => {
-      if (value === inventoryLetter) {
-        slotEquipped = slot;
-      }
-    });
+    this._inventory.equippedItem
+        .forEach((value: string, slot: SlotType) => {
+          if (value === inventoryLetter) {
+            slotEquipped = slot;
+          }
+        });
     return Utility.getSlotTypeLabel(slotEquipped);
   }
 
   setRace(race: RaceClass): Player {
-    this._race = race;
+    this._race = race.name;
     return this;
   }
 
   setGameClass(gameClass: GameClass): Player {
     this._hitDice = gameClass.getHitDice();
-    this._hp = this._hitDice + AttributesFactory.getModifier(this.attributes.get('constitution'));
+    this._hp = this._hitDice + AttributesFactory.getModifier(this.constitution);
     this._maxHp = this._hp;
     this._gp = gameClass.getGp();
-    this._gameClass = gameClass;
+    this._gameClass = gameClass.name;
     gameClass.getInitialEquipment()
              .forEach((item: GameObject) => {
                this.addToInventory(item);
@@ -208,7 +195,7 @@ export class Player extends Entity {
     let ac = 0;
     let dexterity = false;
     let bonus = 0;
-    const dexterityModifier: number = AttributesFactory.getModifier(this.attributes.get('dexterity'));
+    const dexterityModifier: number = AttributesFactory.getModifier(this.dexterity);
     const armorEquipped: Array<Armor> = this._getArmorEquipped();
     if (armorEquipped.length === 0) {
       return 10 + dexterityModifier;
@@ -231,5 +218,11 @@ export class Player extends Entity {
 
   setToFullHp() {
     this.hp = this._maxHp;
+  }
+
+  setMapLevelAndPosition(level: number, position: Position): Player {
+    this.mapLevel = level;
+    this.position = position;
+    return this;
   }
 }

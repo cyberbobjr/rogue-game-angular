@@ -1,6 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CreatePageComponent } from './create-page.component';
+import {CreatePageComponent} from './create-page.component';
+import {RouterTestingModule} from '@angular/router/testing';
+import {SharedModule} from '../../shared/shared.module';
+import {AbilityComponent} from '../ui/ability/ability.component';
+import {DicesComponent} from '../ui/dices/dices.component';
+import {RollDicesComponent} from '../ui/roll-dices/roll-dices.component';
 
 describe('CreatePageComponent', () => {
   let component: CreatePageComponent;
@@ -8,9 +13,16 @@ describe('CreatePageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreatePageComponent ]
-    })
-    .compileComponents();
+                                     imports: [
+                                       RouterTestingModule,
+                                       SharedModule
+                                     ],
+                                     declarations: [CreatePageComponent,
+                                                    AbilityComponent,
+                                                    DicesComponent,
+                                                    RollDicesComponent]
+                                   })
+           .compileComponents();
   }));
 
   beforeEach(() => {
@@ -20,6 +32,7 @@ describe('CreatePageComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component)
+      .toBeTruthy();
   });
 });

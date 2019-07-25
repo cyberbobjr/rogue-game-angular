@@ -1,15 +1,6 @@
 import {SlotType} from '../enums/equiped-type.enum';
 
 export class Utility {
-  static initArray(width: number, height: number, fill = '.'): string[][] {
-    const newArray = new Array(height);
-    newArray.fill([fill]);
-    newArray.forEach((value: any, index: number) => {
-      newArray[index] = new Array(width).fill(fill);
-    });
-    return newArray;
-  }
-
   static initArrayNumber(width: number, height: number, fill = 0): number[][] {
     const newArray = new Array(height);
     newArray.fill([fill]);
@@ -19,8 +10,17 @@ export class Utility {
     return newArray;
   }
 
+  static initArrayString(width: number, height: number, fill = '.'): [][] {
+    const newArray = new Array(height);
+    newArray.fill(fill);
+    newArray.forEach((value: any, index: number) => {
+      newArray[index] = new Array(width).fill(fill);
+    });
+    return newArray;
+  }
+
   static rolldice(sides: number = 10): number {
-    return Math.floor(Math.random() * sides) + 1;
+    return Math.floor(Math.random() * sides);
   }
 
   static alphabetArray(): Array<string> {

@@ -9,23 +9,23 @@ export class GameClass implements IGameClass {
   private _name: string;
 
   get jsonData(): JsonGameClass {
-    return this._jsonData;
+    return this._jsonGameClass;
   }
 
   get name(): string {
-    return this._jsonData.name;
+    return this._jsonGameClass.name;
   }
 
   getAC(): number {
-    return this._jsonData.ac;
+    return this._jsonGameClass.ac;
   }
 
   getGp(): number {
-    return this._jsonData.gp.mul * Utility.rolldice(this._jsonData.gp.dice) * this._jsonData.gp.bonus;
+    return this._jsonGameClass.gp.mul * Utility.rolldice(this._jsonGameClass.gp.dice) * this._jsonGameClass.gp.bonus;
   }
 
   getHitDice(): number {
-    return this._jsonData.hitDice;
+    return this._jsonGameClass.hitDice;
   }
 
   getHp(): number {
@@ -33,13 +33,13 @@ export class GameClass implements IGameClass {
   }
 
   getModifier(ability: string): number {
-    return this._jsonData.modifiers[ability];
+    return this._jsonGameClass.modifiers[ability];
   }
 
   getInitialEquipment(): Array<GameObject> {
     const equipments: Array<GameObject> = [];
-    if (this._jsonData.equipment) {
-      this._jsonData.equipment.forEach((equipment: { id: string, type: string, qty: number }) => {
+    if (this._jsonGameClass.equipment) {
+      this._jsonGameClass.equipment.forEach((equipment: { id: string, type: string, qty: number }) => {
         const item: GameObject = GameObjectFactory.create(GameObjectType.getFromString(equipment.type), equipment.id);
         if (item) {
           item.qty = equipment.qty;
@@ -50,7 +50,7 @@ export class GameClass implements IGameClass {
     return equipments;
   }
 
-  constructor(private _jsonData: JsonGameClass) {
-    this._name = _jsonData.name;
+  constructor(private _jsonGameClass: JsonGameClass) {
+    this._name = _jsonGameClass.name;
   }
 }
