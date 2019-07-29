@@ -44,14 +44,6 @@ export class GameMap {
     this._gameEntities.setEntities(value);
   }
 
-  get losMap(): Array<Array<number>> {
-    return this._losMap;
-  }
-
-  get visibilityMap(): Array<Array<number>> {
-    return this._visibilityMap;
-  }
-
   get entryPosition(): Position {
     return this._entryPosition;
   }
@@ -108,9 +100,8 @@ export class GameMap {
     return this._data[y][x];
   }
 
-  public setDataAt(x: number, y: number, data: Iobject) {
+  private setDataAt(x: number, y: number, data: Iobject) {
     this._data[y][x] = data;
-    data.position = new Position(x, y);
   }
 
   public setTile(tile: Tile) {
@@ -122,10 +113,6 @@ export class GameMap {
 
   public extractLosMap(startPosX: number, startPosY: number, width: number, height: number): number[][] {
     return this._extract<number>(this._losMap, startPosX, startPosY, width, height);
-  }
-
-  public extractVisibilityMap(startPosX: number, startPosY: number, width: number, height: number): number[][] {
-    return this._extract<number>(this._visibilityMap, startPosX, startPosY, width, height);
   }
 
   public extractTiles(startPosX: number, startPosY: number, width: number, height: number): Tile[][] {
@@ -157,7 +144,7 @@ export class GameMap {
     const mainActorPosition: Position = mainActor.getPosition();
     const lightRadius: number = mainActor.lightRadius;
     const lightPower: number = mainActor.lightPower;
-    this._createShadowCasting();
+    this._createShadowCastingEngine();
     this._losMap = Utility.initArrayNumber(this.width, this.height);
     this._visibilityMap = Utility.initArrayNumber(this.width, this.height);
     this._shadowCasting.compute(mainActorPosition.x, mainActorPosition.y, lightRadius, (x: number, y: number, R: number, visibility: number) => {
@@ -202,7 +189,7 @@ export class GameMap {
     return this._rooms.getFreeSlotForRoom(roomNumber);
   }
 
-  private _createShadowCasting(): GameMap {
+  private _createShadowCastingEngine() {
     this._shadowCasting = new PreciseShadowcasting((x: number, y: number) => {
       try {
         const info: Iobject = this.getDataAt(x, y);
@@ -211,7 +198,6 @@ export class GameMap {
         return false;
       }
     }, {topology: 8});
-    return this;
   }
 
   private _getRawData<T>(source: T[][], startX: number, startY: number, width: number, height: number): T[][] {
@@ -253,7 +239,7 @@ export class GameMap {
     return target;
   }
 
-  public isPositionVisible(position: Position): boolean {
+  private isPositionVisible(position: Position): boolean {
     return this.getLosForPosition(position) > 0;
   }
 

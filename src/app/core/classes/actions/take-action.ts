@@ -7,14 +7,20 @@ import {Tile} from '../base/tile';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 
 export class TakeAction implements Iaction {
-  constructor(private _actor: Entity) {
+  private _subject: Entity;
+
+  set subject(value: Entity) {
+    this._subject = value;
   }
 
-  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
+  constructor() {
+  }
+
+  execute(gameEngine: GameEngine): ActionResult {
     const mapEngine: MapEngine = gameEngine.getMapEngine();
-    const tile: Tile = mapEngine.getTileAt(subject.position) as Tile;
+    const tile: Tile = mapEngine.getTileAt(this._subject.position) as Tile;
     EventLog.getInstance().message = 'Take object';
-    tile.onTake(subject);
+    tile.onTake(this._subject);
     return ActionResult.SUCCESS;
   }
 

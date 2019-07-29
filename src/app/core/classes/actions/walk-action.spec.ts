@@ -49,7 +49,8 @@ describe('walk-action', () => {
     const currentPosition: Position = player.getPosition();
     const expectedPosition: Position = new Position(currentPosition.x + 1, currentPosition.y);
     const walkAction: WalkAction = new WalkAction(Direction.E);
-    const actionResult: ActionResult = walkAction.execute(player, gameEngine);
+    walkAction.subject = player;
+    const actionResult: ActionResult = walkAction.execute(gameEngine);
     expect(actionResult.succeeded)
       .toBeTruthy();
     const newPosition: Position = player.getPosition();

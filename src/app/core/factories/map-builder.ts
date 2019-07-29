@@ -97,7 +97,8 @@ export class MapBuilder {
           if (!cell.position) {
             throw new Error('Tile withouh position');
           }
-          gameMap.setDataAt(cell.position.x, cell.position.y, tile);
+          tile.position = new Position(cell.position.x, cell.position.y);
+          gameMap.setTile(tile);
         } catch (e) {
           console.log(e);
           console.trace();
@@ -111,7 +112,8 @@ export class MapBuilder {
       const chestPosition: Position = map.getFreeSlotForRoom(Utility.rolldice(this._rotEngine.getRooms().length - 1));
       if (chestPosition) {
         const chestTile: Tile = TilesFactory.createTile(TileType.CHEST);
-        map.setDataAt(chestPosition.x, chestPosition.y, chestTile);
+        chestTile.position = new Position(chestPosition.x, chestPosition.y);
+        map.setTile(chestTile);
       }
     }
   }
@@ -161,7 +163,7 @@ export class MapBuilder {
     this._rotEngine = new Digger(width, height);
     this._rotEngine.create((x: number, y: number, value: number) => {
       const tile: Tile = TilesFactory.createTile((value === 1) ? TileType.WALL : TileType.FLOOR, new Position(x, y));
-      map.setDataAt(x, y, tile);
+      map.setTile(tile);
     });
     return map;
   }
@@ -172,7 +174,7 @@ export class MapBuilder {
     const center: number[] = lastRoom.getCenter();
     map.exitPosition = new Position(center[0], center[1]);
     const tile: Tile = TilesFactory.createTile(TileType.STAIRUP, map.exitPosition);
-    map.setDataAt(center[0], center[1], tile);
+    map.setTile(tile);
   }
 
   private _generateEntryPoint(map: GameMap, rotMap: Digger) {
@@ -181,7 +183,7 @@ export class MapBuilder {
     const center: number[] = firstRoom.getCenter();
     map.entryPosition = new Position(center[0], center[1]);
     const tile: Tile = TilesFactory.createTile(TileType.STAIRDOWN, map.entryPosition);
-    map.setDataAt(center[0], center[1], tile);
+    map.setTile(tile);
   }
 
   private _createDoor(map: GameMap, rotMap: Digger) {
@@ -191,7 +193,7 @@ export class MapBuilder {
       room = rooms[i];
       room.getDoors((x: number, y: number) => {
         const tile: Tile = TilesFactory.createTile(TileType.DOOR, new Position(x, y));
-        map.setDataAt(x, y, tile);
+        map.setTile(tile);
       });
     }
   }

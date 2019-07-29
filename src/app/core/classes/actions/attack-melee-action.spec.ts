@@ -45,12 +45,13 @@ describe('attack-melee-action', () => {
   });
 
   it('should do a attack on entity', () => {
-    player.onHit = function (subject: Entity, damage: number) {
+    player.onHit = function (damage: number) {
       player.hp = 0;
     };
     const attackAction: AttackMeleeAction = new AttackMeleeAction(player);
+    attackAction.subject = player;
     const entity: Entity = gameMap.gameEntities.getEntities()[0];
-    attackAction.execute(entity, gameEngine);
+    attackAction.execute(gameEngine);
     expect(player.hp)
       .toEqual(0);
   });

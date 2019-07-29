@@ -11,28 +11,43 @@ import {Monster} from '../entities/monster';
 
 export class WalkAction implements Iaction {
   private _info = '';
+  private _subject: Entity;
+
+  set subject(value: Entity) {
+    this._subject = value;
+  }
 
   constructor(private _direction: Direction) {
   }
 
-  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
-    const destPosition: Position = subject.position.computeDestination(this._direction);
-    const tile: Tile = <Tile>gameEngine.getMapEngine()
-                                       .getTileOrEntityAt(destPosition);
+  /**
+   * TODO : refactor to FSM
+   * @param gameEngine GameEngine
+   */
+  execute(gameEngine: GameEngine): ActionResult {
+    const destPosition: Position = this._subject.position.computeDestination(this._direction);
+    const tile: Tile | Entity = <Tile | Entity>gameEngine.getMapEngine()
+                                                         .getTileOrEntityAt(destPosition);
     if (tile instanceof Tile && tile.isWalkable()) {
-      subject.position = destPosition;
-      tile.onWalk(subject);
-      subject.setNextAction(null);
+      tile.onWalk(this._subject);
+      this._subject.position = destPosition;
+      this._subject.setNextAction(null);
       return ActionResult.SUCCESS;
     }
     const result = ActionResult.FAILURE;
     if (tile instanceof Monster) {
       EventLog.getInstance().message = `You hit ${tile.name}`;
-      result.alternative = new AttackMeleeAction(tile as Monster);
+      result.alternative = new AttackMeleeAction(tile as Entity);
       return result;
     }
-    result.alternative = tile.onHit(subject);
-    return result;
+    if (tile instanceof Tile) {
+      result.alternative = tile.onHit(this._subject as Entity);
+      return result;
+    }
+    if (tile instanceof Entity) {
+      this._subject.setNextAction(null);
+      return ActionResult.SUCCESS;
+    }
   }
 
   getInfo(): string {

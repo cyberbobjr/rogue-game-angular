@@ -38,7 +38,8 @@ describe('take-action', () => {
   });
 
   it('should be created', () => {
-    const takeAction: TakeAction = new TakeAction(player);
+    const takeAction: TakeAction = new TakeAction();
+    takeAction.subject = player;
     expect(takeAction)
       .toBeTruthy();
   });
@@ -52,8 +53,9 @@ describe('take-action', () => {
     const gameEngine: GameEngine = TestBed.get(GameEngine);
     gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(1, freePosition);
-    const takeAction: TakeAction = new TakeAction(player);
-    takeAction.execute(player, gameEngine);
+    const takeAction: TakeAction = new TakeAction();
+    takeAction.subject = player;
+    takeAction.execute(gameEngine);
     const inventoryFinalSize: number = player.inventory.getInventorySize();
     expect(inventorySize + 1)
       .toEqual(inventoryFinalSize);

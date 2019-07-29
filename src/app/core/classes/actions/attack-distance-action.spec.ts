@@ -46,25 +46,26 @@ describe('attack-distance-action', () => {
   });
 
   it('should be created', () => {
-    const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
+    const attackAction: AttackDistanceAction = new AttackDistanceAction();
     expect(attackAction)
       .toBeTruthy();
   });
 
   it('should be succeed without ennemy in range', () => {
-    const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
-    const actionResult: ActionResult = attackAction.execute(player, gameEngine);
+    const attackAction: AttackDistanceAction = new AttackDistanceAction();
+    const actionResult: ActionResult = attackAction.execute(gameEngine);
     expect(actionResult)
       .toEqual(ActionResult.SUCCESS);
   });
 
   it('should be waited with ennemy in range', () => {
     const entities: Array<Entity> = gameMap.gameEntities.getEntities();
+    const mainActor: Entity = (player as Entity);
     gameEngine.loadGameMap(gameMap);
-    gameMap.computeLOSMap(player);
+    gameMap.computeLOSMap(mainActor);
     entities[0].position = gameMap.entryPosition.computeDestination(Direction.N);
-    const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
-    const actionResult: ActionResult = attackAction.execute(player, gameEngine);
+    const attackAction: AttackDistanceAction = new AttackDistanceAction();
+    const actionResult: ActionResult = attackAction.execute(gameEngine);
     expect(actionResult)
       .toEqual(ActionResult.WAIT);
   });

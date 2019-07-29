@@ -10,21 +10,26 @@ import {Tile} from '../base/tile';
 
 export class IdleAction implements Iaction {
   private _info = '';
+  private _subject: Entity;
+
+  set subject(value: Entity) {
+    this._subject = value;
+  }
 
   constructor() {
   }
 
-  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
-    if (subject.sprite.light) {
+  execute(gameEngine: GameEngine): ActionResult {
+    if (this._subject.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      subject.setNextAction(new ChaseAction());
+      this._subject.setNextAction(new ChaseAction());
     } else {
-      const destPosition: Position = this._getRandomPosition(subject);
+      const destPosition: Position = this._getRandomPosition(this._subject);
       const tile: Tile = <Tile>gameEngine.getMapEngine()
                                          .getTileOrEntityAt(destPosition);
       if (tile instanceof Tile && tile.isWalkable()) {
-        subject.position = destPosition;
-        tile.onWalk(subject);
+        this._subject.position = destPosition;
+        tile.onWalk(this._subject);
       }
     }
     return ActionResult.SUCCESS;

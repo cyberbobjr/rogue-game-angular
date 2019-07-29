@@ -15,20 +15,27 @@ import {IdleAction} from './idle-action';
 export class ChaseAction implements Iaction {
   private _info = '';
   private _gameEngine: GameEngine = null;
+  private _subject: Entity;
+
+  set subject(value: Entity) {
+    this._subject = value;
+  }
 
   constructor() {
   }
 
-  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
-    if (!actor.sprite.light && !(actor as Monster).canFollowChase()) {
-      actor.setNextAction(new IdleAction());
-      return ActionResult.SUCCESS;
+  execute(gameEngine: GameEngine): ActionResult {
+    if (!this._subject.sprite.light && (this._subject instanceof Monster)) {
+      if ((this._subject as Monster).canFollowChase()) {
+        this._subject.setNextAction(new IdleAction());
+        return ActionResult.SUCCESS;
+      }
     }
     this._gameEngine = gameEngine;
-    EventLog.getInstance().message = `${actor.name} chasing`;
-    const destPosition: Position = this._getPathToPlayer(actor);
+    EventLog.getInstance().message = `${this._subject.name} chasing`;
+    const destPosition: Position = this._getPathToPlayer(this._subject);
     if (destPosition) {
-      return this._moveActor(actor, destPosition);
+      return this._moveActor(this._subject, destPosition);
     }
     return ActionResult.SUCCESS;
   }
@@ -44,8 +51,8 @@ export class ChaseAction implements Iaction {
   }
 
   private _moveActor(actor: Entity, destPosition: Position): ActionResult {
-    const info: Iobject = this._gameEngine.getMapEngine()
-                              .getTileOrEntityAt(destPosition);
+    const info: Entity | Tile = <Entity | Tile>this._gameEngine.getMapEngine()
+                                                   .getTileOrEntityAt(destPosition);
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
       result.alternative = new AttackMeleeAction(info as Entity);
@@ -56,9 +63,11 @@ export class ChaseAction implements Iaction {
       actor.position = destPosition;
       return ActionResult.SUCCESS;
     }
-    if (info instanceof DoorTile && (info as DoorTile).isClosed && (actor as Monster).canOpenDoor()) {
-      info.openDoor();
-      EventLog.getInstance().message = `${actor.name} open the door !`;
+    if (info instanceof DoorTile && (info as DoorTile).isClosed && (this._subject instanceof Monster)) {
+      if ((this._subject as Monster).canOpenDoor()) {
+        info.openDoor();
+        EventLog.getInstance().message = `${actor.name} open the door !`;
+      }
     }
     return ActionResult.SUCCESS;
   }

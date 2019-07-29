@@ -257,6 +257,9 @@ export abstract class Entity implements Iobject, IEntity {
 
   setNextAction(action: Iaction): Entity {
     this._currentAction = action;
+    if (action) {
+      this._currentAction.subject = this;
+    }
     return this;
   }
 
@@ -269,7 +272,7 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   // region Events
-  onHit(subject: Entity, damage: number): void {
+  onHit(damage: number): void {
     EventLog.getInstance().message = `${this.name} take ${damage} points of damage`;
     this.hp -= damage;
     if (!this._backupSprite) {

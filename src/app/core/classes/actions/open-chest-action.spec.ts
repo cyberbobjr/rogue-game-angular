@@ -35,18 +35,19 @@ describe('open-chest-action', () => {
   });
 
   it('should be created', () => {
-    const openChestAction: OpenChestAction = new OpenChestAction(player);
+    const openChestAction: OpenChestAction = new OpenChestAction();
     expect(openChestAction)
       .toBeTruthy();
   });
 
   it('should open chest', () => {
-    const openChestAction: OpenChestAction = new OpenChestAction(player);
     const chestsPosition: Array<Position> = gameMap.getAllPosition<ChestTile>(ChestTile);
     const gameEngine: GameEngine = TestBed.get(GameEngine);
     gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(gameMap.level, chestsPosition[0]);
-    const resultAction: ActionResult = openChestAction.execute(player, gameEngine);
+    const openChestAction: OpenChestAction = new OpenChestAction();
+    openChestAction.subject = player;
+    const resultAction: ActionResult = openChestAction.execute(gameEngine);
     expect(resultAction.succeeded)
       .toBeTruthy();
     const tileChest: ChestTile = gameMap.getTileAt(player.position) as ChestTile;

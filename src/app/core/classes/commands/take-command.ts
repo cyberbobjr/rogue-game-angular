@@ -5,6 +5,6 @@ import {TakeAction} from '../actions/take-action';
 
 export class TakeCommand implements Command {
   execute(actor: Entity, gameEngine: GameEngine) {
-    actor.setNextAction(new TakeAction(actor));
+    actor.setNextAction(new TakeAction());
   }
 }

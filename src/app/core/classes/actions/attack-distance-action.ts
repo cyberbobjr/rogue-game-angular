@@ -10,11 +10,16 @@ export class AttackDistanceAction implements Iaction {
   private _targets: Array<Entity> = [];
   private _bgColorBackup: string;
   private _gameEngine: GameEngine = null;
+  private _subject: Entity;
 
-  constructor(private _actor: Entity) {
+  set subject(value: Entity) {
+    this._subject = value;
   }
 
-  execute(subject: Entity, gameEngine: GameEngine): ActionResult {
+  constructor() {
+  }
+
+  execute(gameEngine: GameEngine): ActionResult {
     this._gameEngine = gameEngine;
     this._targets = gameEngine.getEntitiesVisibles();
     console.log('Targets :');
@@ -88,8 +93,8 @@ export class AttackDistanceAction implements Iaction {
     EventLog.getInstance().message = 'Fire !!!';
     this._restoreBgColor();
     const target: Entity = this._targets[this._currentTargetIndex];
-    const damage: number = CombatResolver.DistanceAttack(this._actor, target);
-    target.onHit(this._actor, damage);
-    this._actor.setNextAction(null);
+    const damage: number = CombatResolver.DistanceAttack(this._subject, target);
+    target.onHit(damage);
+    this._subject.setNextAction(null);
   }
 }
