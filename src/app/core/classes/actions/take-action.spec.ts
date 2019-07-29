@@ -54,8 +54,7 @@ describe('take-action', () => {
     gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(1, freePosition);
     const takeAction: TakeAction = new TakeAction();
-    takeAction.subject = player;
-    takeAction.execute(gameEngine);
+    takeAction.execute(player, gameEngine);
     const inventoryFinalSize: number = player.inventory.getInventorySize();
     expect(inventorySize + 1)
       .toEqual(inventoryFinalSize);

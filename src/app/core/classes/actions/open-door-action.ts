@@ -1,25 +1,20 @@
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {DoorTile} from '../tiles/door-tile';
 import {EventLog} from '../event-log';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 
-export class OpenDoorAction implements Iaction {
+export class OpenDoorAction implements Action {
   private _info = '';
-  private _subject: Entity;
-
-  set subject(value: Entity) {
-    this._subject = value;
-  }
 
   constructor(private _tile: DoorTile) {
   }
 
-  execute(gameEngine: GameEngine): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
     EventLog.getInstance().message = 'You trying to open door';
     this._tile.flipDoor();
-    this._subject.setNextAction(null);
+    actor.setNextAction(null);
     return ActionResult.SUCCESS;
   }
 

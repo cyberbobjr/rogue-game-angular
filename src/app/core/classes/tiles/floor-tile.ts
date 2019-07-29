@@ -4,7 +4,7 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Position} from '../base/position';
 import {TileType} from '../../enums/tile-type.enum';
 import {Entity} from '../base/entity';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {JSonCell} from '../../interfaces/json-interfaces';
 
 export class FloorTile extends Tile {
@@ -34,7 +34,7 @@ export class FloorTile extends Tile {
     return true;
   }
 
-  onWalk(actor: Entity): Iaction | null {
+  onWalk(actor: Entity): Action | null {
     return super.onWalk(actor);
   }
 
@@ -43,7 +43,7 @@ export class FloorTile extends Tile {
     return info + super.getInfo();
   }
 
-  onHit(actor: Entity): Iaction | null {
+  onHit(actor: Entity): Action | null {
     return null;
   }
 

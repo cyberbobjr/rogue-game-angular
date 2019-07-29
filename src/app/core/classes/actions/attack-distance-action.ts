@@ -1,25 +1,22 @@
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {EventLog} from '../event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
 
-export class AttackDistanceAction implements Iaction {
+export class AttackDistanceAction implements Action {
   private _currentTargetIndex: number;
   private _targets: Array<Entity> = [];
   private _bgColorBackup: string;
   private _gameEngine: GameEngine = null;
-  private _subject: Entity;
-
-  set subject(value: Entity) {
-    this._subject = value;
-  }
+  private _actor: Entity;
 
   constructor() {
   }
 
-  execute(gameEngine: GameEngine): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+    this._actor = actor;
     this._gameEngine = gameEngine;
     this._targets = gameEngine.getEntitiesVisibles();
     console.log('Targets :');
@@ -93,8 +90,8 @@ export class AttackDistanceAction implements Iaction {
     EventLog.getInstance().message = 'Fire !!!';
     this._restoreBgColor();
     const target: Entity = this._targets[this._currentTargetIndex];
-    const damage: number = CombatResolver.DistanceAttack(this._subject, target);
+    const damage: number = CombatResolver.DistanceAttack(this._actor, target);
     target.onHit(damage);
-    this._subject.setNextAction(null);
+    this._actor.setNextAction(null);
   }
 }

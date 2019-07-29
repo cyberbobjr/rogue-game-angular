@@ -1,4 +1,4 @@
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
 import {Entity} from '../base/entity';
@@ -9,13 +9,8 @@ import {AttackMeleeAction} from './attack-melee-action';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Monster} from '../entities/monster';
 
-export class WalkAction implements Iaction {
+export class WalkAction implements Action {
   private _info = '';
-  private _subject: Entity;
-
-  set subject(value: Entity) {
-    this._subject = value;
-  }
 
   constructor(private _direction: Direction) {
   }
@@ -24,14 +19,14 @@ export class WalkAction implements Iaction {
    * TODO : refactor to FSM
    * @param gameEngine GameEngine
    */
-  execute(gameEngine: GameEngine): ActionResult {
-    const destPosition: Position = this._subject.position.computeDestination(this._direction);
+  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+    const destPosition: Position = actor.position.computeDestination(this._direction);
     const tile: Tile | Entity = <Tile | Entity>gameEngine.getMapEngine()
                                                          .getTileOrEntityAt(destPosition);
     if (tile instanceof Tile && tile.isWalkable()) {
-      tile.onWalk(this._subject);
-      this._subject.position = destPosition;
-      this._subject.setNextAction(null);
+      tile.onWalk(actor);
+      actor.position = destPosition;
+      actor.setNextAction(null);
       return ActionResult.SUCCESS;
     }
     const result = ActionResult.FAILURE;
@@ -41,11 +36,11 @@ export class WalkAction implements Iaction {
       return result;
     }
     if (tile instanceof Tile) {
-      result.alternative = tile.onHit(this._subject as Entity);
+      result.alternative = tile.onHit(actor as Entity);
       return result;
     }
     if (tile instanceof Entity) {
-      this._subject.setNextAction(null);
+      actor.setNextAction(null);
       return ActionResult.SUCCESS;
     }
   }

@@ -1,4 +1,4 @@
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {EventLog} from '../event-log';
@@ -8,28 +8,23 @@ import {Position} from '../base/position';
 import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
 
-export class IdleAction implements Iaction {
+export class IdleAction implements Action {
   private _info = '';
-  private _subject: Entity;
-
-  set subject(value: Entity) {
-    this._subject = value;
-  }
 
   constructor() {
   }
 
-  execute(gameEngine: GameEngine): ActionResult {
-    if (this._subject.sprite.light) {
+  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+    if (actor.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      this._subject.setNextAction(new ChaseAction());
+      actor.setNextAction(new ChaseAction());
     } else {
-      const destPosition: Position = this._getRandomPosition(this._subject);
+      const destPosition: Position = this._getRandomPosition(actor);
       const tile: Tile = <Tile>gameEngine.getMapEngine()
                                          .getTileOrEntityAt(destPosition);
       if (tile instanceof Tile && tile.isWalkable()) {
-        this._subject.position = destPosition;
-        tile.onWalk(this._subject);
+        actor.position = destPosition;
+        tile.onWalk(actor);
       }
     }
     return ActionResult.SUCCESS;

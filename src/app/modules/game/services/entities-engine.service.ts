@@ -7,7 +7,7 @@ import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {IdleAction} from '../../../core/classes/actions/idle-action';
 import {GameMap} from '../../../core/classes/base/game-map';
-import {Iaction} from '../../../core/interfaces/iaction';
+import {Action} from '../../../core/interfaces/action';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {MapEngine} from './map-engine.service';
 import {GameEntities} from '../../../core/classes/base/game-entities';
@@ -59,7 +59,7 @@ export class EntitiesEngine {
     const entities: Array<Entity> = this.getAllEntities();
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];
-      let actorAction: Iaction = currentActor.getAction();
+      let actorAction: Action = currentActor.getAction();
       if (actorAction) {
         while (true) {
           const resultAction: ActionResult = actorAction.execute(gameEngine);

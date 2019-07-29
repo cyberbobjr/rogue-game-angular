@@ -7,7 +7,7 @@ import {JsonEntity, JsonGameObject, JsonMonster, JsonSprite} from '../../interfa
 import {Gold} from '../gameObjects/gold';
 import {GameObject} from '../gameObjects/game-object';
 import {GameObjectFactory} from '../../factories/game-object-factory';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {ChaseAction} from '../actions/chase-action';
 import {IdleAction} from '../actions/idle-action';
 import {GameObjectType} from '../../enums/game-object-type.enum';
@@ -108,7 +108,7 @@ export class Monster extends Entity {
   }
 
   onHit(damage: number): void {
-    const currentAction: Iaction = this.getAction();
+    const currentAction: Action = this.getAction();
     super.onHit(damage);
     if (!currentAction || currentAction instanceof IdleAction) {
       this.setNextAction(new ChaseAction());

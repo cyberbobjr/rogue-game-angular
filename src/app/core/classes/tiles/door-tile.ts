@@ -2,7 +2,7 @@ import {Tile} from '../base/tile';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from '../base/entity';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Position} from '../base/position';
 import {EventLog} from '../event-log';
 import {TileType} from '../../enums/tile-type.enum';
@@ -42,12 +42,12 @@ export class DoorTile extends Tile {
     return !this._isClosed;
   }
 
-  onWalk(actor: Entity): Iaction | null {
+  onWalk(actor: Entity): Action | null {
     EventLog.getInstance().message = 'You walk on ' + this.getInfo();
     return null;
   }
 
-  onHit(actor: Entity): Iaction | null {
+  onHit(actor: Entity): Action | null {
     if (this._isClosed) {
       this.openDoor();
     }

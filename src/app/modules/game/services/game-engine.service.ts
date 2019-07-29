@@ -15,7 +15,7 @@ import {Player} from '../../../core/classes/entities/player';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {EventLog} from '../../../core/classes/event-log';
 import {Config} from '../../../core/config';
-import {Iaction} from '../../../core/interfaces/iaction';
+import {Action} from '../../../core/interfaces/action';
 import {MapBuilder} from '../../../core/factories/map-builder';
 import {GameEntities} from '../../../core/classes/base/game-entities';
 

@@ -1,7 +1,7 @@
 import {Entity} from './entity';
 import {Position} from './position';
 import {Sprite} from './sprite';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Iobject} from '../../interfaces/iobject';
 import {TileType} from '../../enums/tile-type.enum';
 import {GameObject} from '../gameObjects/game-object';
@@ -74,14 +74,14 @@ export abstract class Tile implements Iobject {
     return '';
   }
 
-  onWalk(actor: Entity): Iaction | null {
+  onWalk(actor: Entity): Action | null {
     if (actor instanceof Player) {
       EventLog.getInstance().message = `You walk on ${this.getInfo()} `;
     }
     return null;
   }
 
-  abstract onHit(actor: Entity): Iaction | null;
+  abstract onHit(actor: Entity): Action | null;
 
   dropOn(gameObject: GameObject) {
     try {

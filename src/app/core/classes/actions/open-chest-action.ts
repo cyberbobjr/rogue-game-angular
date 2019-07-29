@@ -1,4 +1,4 @@
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {ActionResult} from './action-result';
@@ -7,27 +7,21 @@ import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Tile} from '../base/tile';
 import {ChestTile} from '../tiles/chest-tile';
 
-export class OpenChestAction implements Iaction {
-  private _subject: Entity;
-
-  set subject(value: Entity) {
-    this._subject = value;
-  }
-
+export class OpenChestAction implements Action {
   constructor() {
   }
 
-  execute(gameEngine: GameEngine): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
     const mapEngine: MapEngine = gameEngine.getMapEngine();
-    const tile: Tile = mapEngine.getTileAt(this._subject.position);
+    const tile: Tile = mapEngine.getTileAt(actor.position);
     if (tile instanceof ChestTile) {
       EventLog.getInstance().message = 'You trying to open chest';
       tile.openChest();
-      this._subject.setNextAction(null);
+      actor.setNextAction(null);
       return ActionResult.SUCCESS;
     } else {
       EventLog.getInstance().message = 'What ?!?!';
-      this._subject.setNextAction(null);
+      actor.setNextAction(null);
       return ActionResult.SUCCESS;
     }
   }

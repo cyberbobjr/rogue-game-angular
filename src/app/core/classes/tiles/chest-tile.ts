@@ -8,7 +8,7 @@ import {EventLog} from '../event-log';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObject} from '../gameObjects/game-object';
 import {Utility} from '../utility';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 
 export class ChestTile extends FloorTile {
   protected _type = TileType.CHEST;
@@ -80,7 +80,7 @@ export class ChestTile extends FloorTile {
     }
   }
 
-  onHit(actor: Entity): Iaction | null {
+  onHit(actor: Entity): Action | null {
     return null;
   }
 }

@@ -3,7 +3,6 @@ import {Position} from '../../classes/base/position';
 import {Entity} from '../../classes/base/entity';
 import {CombatResolver} from './combat-resolver';
 import {Utility} from '../../classes/utility';
-import {EntityType} from '../../enums/entity-type.enum';
 
 describe('Combat resolver', () => {
 

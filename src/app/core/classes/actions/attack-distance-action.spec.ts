@@ -53,7 +53,7 @@ describe('attack-distance-action', () => {
 
   it('should be succeed without ennemy in range', () => {
     const attackAction: AttackDistanceAction = new AttackDistanceAction();
-    const actionResult: ActionResult = attackAction.execute(gameEngine);
+    const actionResult: ActionResult = attackAction.execute(player, gameEngine);
     expect(actionResult)
       .toEqual(ActionResult.SUCCESS);
   });
@@ -65,7 +65,7 @@ describe('attack-distance-action', () => {
     gameMap.computeLOSMap(mainActor);
     entities[0].position = gameMap.entryPosition.computeDestination(Direction.N);
     const attackAction: AttackDistanceAction = new AttackDistanceAction();
-    const actionResult: ActionResult = attackAction.execute(gameEngine);
+    const actionResult: ActionResult = attackAction.execute(player, gameEngine);
     expect(actionResult)
       .toEqual(ActionResult.WAIT);
   });

@@ -4,7 +4,7 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {Position} from '../base/position';
 import {TileType} from '../../enums/tile-type.enum';
 import {JSonCell} from '../../interfaces/json-interfaces';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 
 export class WallTile extends Tile {
@@ -26,7 +26,7 @@ export class WallTile extends Tile {
     return false;
   }
 
-  onHit(actor: Entity): Iaction | null {
+  onHit(actor: Entity): Action | null {
     return null;
   }
 }

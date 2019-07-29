@@ -1,6 +1,6 @@
 import {Position} from './position';
 import {Injectable} from '@angular/core';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Sprite} from './sprite';
 import {Iobject} from '../../interfaces/iobject';
 import {IEntity} from '../../interfaces/ientity';
@@ -20,7 +20,7 @@ import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
             })
 export abstract class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
-  protected _currentAction: Iaction = null;
+  protected _currentAction: Action = null;
   protected _entityType: EntityType;
   protected _timeDisplaySprite: number;
   protected _position?: Position;
@@ -243,7 +243,7 @@ export abstract class Entity implements Iobject, IEntity {
     };
   }
 
-  getAction(): Iaction | null {
+  getAction(): Action | null {
     return (this._currentAction) ? this._currentAction : null;
   }
 
@@ -255,11 +255,8 @@ export abstract class Entity implements Iobject, IEntity {
     return this.position;
   }
 
-  setNextAction(action: Iaction): Entity {
+  setNextAction(action: Action): Entity {
     this._currentAction = action;
-    if (action) {
-      this._currentAction.subject = this;
-    }
     return this;
   }
 

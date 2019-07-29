@@ -1,7 +1,7 @@
 import {Tile} from '../base/tile';
 import {Sprite} from '../base/sprite';
 import {TileType} from '../../enums/tile-type.enum';
-import {Iaction} from '../../interfaces/iaction';
+import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 
 export class TrapTile extends Tile {
@@ -17,7 +17,7 @@ export class TrapTile extends Tile {
     return true;
   }
 
-  onHit(actor: Entity): Iaction | null {
+  onHit(actor: Entity): Action | null {
     return null;
   }
 }
