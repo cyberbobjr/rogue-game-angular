@@ -5,7 +5,7 @@ import {Sprite} from './sprite';
 import {Iobject} from '../../interfaces/iobject';
 import {IEntity} from '../../interfaces/ientity';
 import {EntityType} from '../../enums/entity-type.enum';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Weapon} from '../gameObjects/weapon';

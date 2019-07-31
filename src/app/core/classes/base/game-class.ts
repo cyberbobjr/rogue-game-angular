@@ -1,6 +1,6 @@
 import {IGameClass} from '../../interfaces/i-game-class';
 import {JsonGameClass} from '../../interfaces/json-interfaces';
-import {Utility} from '../utility';
+import {Utility} from '../Utility/utility';
 import {GameObject} from '../gameObjects/game-object';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObjectType} from '../../enums/game-object-type.enum';

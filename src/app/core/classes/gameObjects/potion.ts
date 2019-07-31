@@ -3,7 +3,7 @@ import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Player} from '../entities/player';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 
 export class Potion extends GameObject {
   static fromJson(): Potion {

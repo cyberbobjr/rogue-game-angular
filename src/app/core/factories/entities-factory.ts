@@ -6,7 +6,7 @@ import {Position} from '../classes/base/position';
 import {JsonEntity} from '../interfaces/json-interfaces';
 import {GameMonsterClass} from '../classes/base/game-monster-class';
 import * as gamemonster from '../rules/race/monster.json';
-import {Utility} from '../classes/utility';
+import {Utility} from '../classes/Utility/utility';
 
 export class EntitiesFactory {
   private static instance: EntitiesFactory;

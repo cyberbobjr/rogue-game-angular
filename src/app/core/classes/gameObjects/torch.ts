@@ -2,7 +2,7 @@ import {GameObject} from './game-object';
 import {Entity} from '../base/entity';
 import {Sprite} from '../base/sprite';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 
 export class Torch extends GameObject {
   protected _sprite: Sprite = new Sprite('i', '#66bbe2');

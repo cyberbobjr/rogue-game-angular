@@ -13,7 +13,7 @@ import {Router} from '@angular/router';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {Player} from '../../../core/classes/entities/player';
 import {GameMap} from '../../../core/classes/base/game-map';
-import {EventLog} from '../../../core/classes/event-log';
+import {EventLog} from '../../../core/classes/Utility/event-log';
 import {Config} from '../../../core/config';
 import {Action} from '../../../core/interfaces/action';
 import {MapBuilder} from '../../../core/factories/map-builder';

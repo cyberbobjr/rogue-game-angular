@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EntitiesEngine} from '../../services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {SlotType} from '../../../../core/enums/equiped-type.enum';
-import {Utility} from '../../../../core/classes/utility';
+import {Utility} from '../../../../core/classes/Utility/utility';
 
 @Component({
   selector: 'app-inventory-page',

@@ -11,7 +11,7 @@ import {Entity} from '../../../core/classes/base/entity';
 import {Tile} from '../../../core/classes/base/tile';
 import {DoorTile} from '../../../core/classes/tiles/door-tile';
 import {EntitiesEngine} from './entities-engine.service';
-import {Utility} from '../../../core/classes/utility';
+import {Utility} from '../../../core/classes/Utility/utility';
 import {json} from '@angular-devkit/core';
 import {GameEntities} from '../../../core/classes/base/game-entities';
 
@@ -45,7 +45,7 @@ export class MapEngine {
     return this._currentMap;
   }
 
-  getDirectionFromPositionToPosition(originPosition: Position, destPosition: Position): Position | null {
+  getNextPosition(originPosition: Position, destPosition: Position): Position | null {
     return this.getCurrentMap()
                .getNextPosition(originPosition, destPosition);
   }

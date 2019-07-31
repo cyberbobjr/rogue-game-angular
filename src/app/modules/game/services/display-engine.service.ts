@@ -9,7 +9,7 @@ import {Player} from '../../../core/classes/entities/player';
 import * as Color from 'color';
 import {Entity} from '../../../core/classes/base/entity';
 import {IEffect} from '../../../core/interfaces/i-effect';
-import {Utility} from '../../../core/classes/utility';
+import {Utility} from '../../../core/classes/Utility/utility';
 import {Tile} from '../../../core/classes/base/tile';
 
 interface BufferTile {

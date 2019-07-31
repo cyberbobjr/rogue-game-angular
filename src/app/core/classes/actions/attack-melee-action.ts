@@ -1,7 +1,7 @@
 import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 

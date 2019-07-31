@@ -1,7 +1,7 @@
 import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {ChaseAction} from './chase-action';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Position} from '../base/position';
@@ -17,7 +17,7 @@ export class IdleAction implements Action {
   execute(actor: Entity, gameEngine: GameEngine): ActionResult {
     if (actor.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      actor.setNextAction(new ChaseAction());
+      actor.setNextAction(new ChaseAction(gameEngine.gameEntities.getPlayer()));
     } else {
       const destPosition: Position = this._getRandomPosition(actor);
       const tile: Tile = <Tile>gameEngine.getMapEngine()

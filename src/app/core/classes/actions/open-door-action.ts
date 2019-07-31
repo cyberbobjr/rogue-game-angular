@@ -2,7 +2,7 @@ import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {DoorTile} from '../tiles/door-tile';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 
 export class OpenDoorAction implements Action {

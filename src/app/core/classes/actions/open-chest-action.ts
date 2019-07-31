@@ -2,7 +2,7 @@ import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {ActionResult} from './action-result';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {Tile} from '../base/tile';
 import {ChestTile} from '../tiles/chest-tile';

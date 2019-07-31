@@ -28,8 +28,8 @@ export class GameEntities {
   }
 
   getAllEntities(): Array<Entity> {
-    return this.getEntities()
-               .concat(this.getPlayer());
+    return this.getPlayer() ? this.getEntities()
+                                  .concat(this.getPlayer()) : this.getEntities();
   }
 
   setPlayer(actor: Player) {

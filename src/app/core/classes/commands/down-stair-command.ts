@@ -3,7 +3,7 @@ import {Entity} from '../base/entity';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Tile} from '../base/tile';
 import {TileType} from '../../enums/tile-type.enum';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 
 export class DownStairCommand implements Command {
   execute(actor: Entity, gameEngine: GameEngine) {

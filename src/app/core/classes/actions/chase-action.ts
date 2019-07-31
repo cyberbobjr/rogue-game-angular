@@ -1,7 +1,7 @@
 import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
@@ -11,24 +11,26 @@ import {Iobject} from '../../interfaces/iobject';
 import {DoorTile} from '../tiles/door-tile';
 import {Monster} from '../entities/monster';
 import {IdleAction} from './idle-action';
+import {GameMap} from '../base/game-map';
+import {MapEngine} from '../../../modules/game/services/map-engine.service';
 
 export class ChaseAction implements Action {
-  private _info = '';
-  private _gameEngine: GameEngine = null;
+  private _info = 'Chase Action';
+  private _mapEngine: MapEngine = null;
 
-  constructor() {
+  constructor(private _target: Entity) {
   }
 
   execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+    this._mapEngine = gameEngine.getMapEngine();
     if (!actor.sprite.light && (actor instanceof Monster)) {
       if ((actor as Monster).canFollowChase()) {
         actor.setNextAction(new IdleAction());
         return ActionResult.SUCCESS;
       }
     }
-    this._gameEngine = gameEngine;
     EventLog.getInstance().message = `${actor.name} chasing`;
-    const destPosition: Position = this._getPathToPlayer(actor);
+    const destPosition: Position = this._getNextPositionToPlayer(actor);
     if (destPosition) {
       return this._moveActor(actor, destPosition);
     }
@@ -39,15 +41,12 @@ export class ChaseAction implements Action {
     return this._info;
   }
 
-  private _getPathToPlayer(actor: Entity): Position {
-    const player: Player = this._gameEngine.getPlayer();
-    return this._gameEngine.getMapEngine()
-               .getDirectionFromPositionToPosition(actor.position, player.position);
+  private _getNextPositionToPlayer(actor: Entity): Position {
+    return this._mapEngine.getNextPosition(actor.position, this._target.position);
   }
 
   private _moveActor(actor: Entity, destPosition: Position): ActionResult {
-    const info: Entity | Tile = <Entity | Tile>this._gameEngine.getMapEngine()
-                                                   .getTileOrEntityAt(destPosition);
+    const info: Entity | Tile = <Entity | Tile>this._mapEngine.getTileOrEntityAt(destPosition);
     if (info instanceof Player) {
       const result = ActionResult.FAILURE;
       result.alternative = new AttackMeleeAction(info as Entity);

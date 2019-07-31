@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Utility} from '../../../core/classes/utility';
+import {Utility} from '../../../core/classes/Utility/utility';
 import {DiceService} from '../services/dice.service';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {EntityType} from '../../../core/enums/entity-type.enum';

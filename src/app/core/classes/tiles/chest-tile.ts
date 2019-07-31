@@ -4,10 +4,10 @@ import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {TileType} from '../../enums/tile-type.enum';
 import {Entity} from '../base/entity';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObject} from '../gameObjects/game-object';
-import {Utility} from '../utility';
+import {Utility} from '../Utility/utility';
 import {Action} from '../../interfaces/action';
 
 export class ChestTile extends FloorTile {

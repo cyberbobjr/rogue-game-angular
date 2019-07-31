@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {LogPageComponent} from './log-page.component';
-import {EventLog} from '../../../../core/classes/event-log';
+import {EventLog} from '../../../../core/classes/Utility/event-log';
 
 describe('LogPageComponent', () => {
   let component: LogPageComponent;

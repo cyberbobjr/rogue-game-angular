@@ -1,5 +1,5 @@
 import {JsonMonster, JsonMonsterClass} from '../../interfaces/json-interfaces';
-import {Utility} from '../utility';
+import {Utility} from '../Utility/utility';
 import {Sprite} from './sprite';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObjectFactory} from '../../factories/game-object-factory';

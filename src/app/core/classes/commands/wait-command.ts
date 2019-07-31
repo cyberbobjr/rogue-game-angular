@@ -1,7 +1,7 @@
 import {Command} from './command';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Entity} from '../base/entity';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 
 export class WaitCommand implements Command {
   constructor() {

@@ -50,7 +50,7 @@ describe('attack-melee-action', () => {
     };
     const attackAction: AttackMeleeAction = new AttackMeleeAction(player);
     const entity: Entity = gameMap.gameEntities.getEntities()[0];
-    attackAction.execute(player, gameEngine);
+    attackAction.execute(entity, gameEngine);
     expect(player.hp)
       .toEqual(0);
   });

@@ -1,6 +1,6 @@
 import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {Utility} from '../utility';
+import {Utility} from '../Utility/utility';
 
 export class InventorySystem {
   private _inventory: Map<string, GameObject> = new Map<string, GameObject>();

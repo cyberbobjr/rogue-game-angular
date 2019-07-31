@@ -1,6 +1,6 @@
 import {Room} from 'rot-js/lib/map/features';
 import {Position} from './position';
-import {Utility} from '../utility';
+import {Utility} from '../Utility/utility';
 
 export class Rooms {
   private _rooms: Array<Room> = [];

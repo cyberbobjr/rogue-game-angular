@@ -4,7 +4,7 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from '../base/entity';
 import {Action} from '../../interfaces/action';
 import {Position} from '../base/position';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {TileType} from '../../enums/tile-type.enum';
 
 export class DoorTile extends Tile {

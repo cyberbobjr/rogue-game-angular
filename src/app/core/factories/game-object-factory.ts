@@ -8,7 +8,7 @@ import {Potion} from '../classes/gameObjects/potion';
 import {GameObjectType} from '../enums/game-object-type.enum';
 import {Torch} from '../classes/gameObjects/torch';
 import {Food} from '../classes/gameObjects/food';
-import {Utility} from '../classes/utility';
+import {Utility} from '../classes/Utility/utility';
 import {JsonArmor, JsonGameObject, JsonWeapon} from '../interfaces/json-interfaces';
 
 export class GameObjectFactory {

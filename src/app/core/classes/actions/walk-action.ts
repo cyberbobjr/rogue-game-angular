@@ -3,7 +3,7 @@ import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {Position} from '../base/position';
 import {AttackMeleeAction} from './attack-melee-action';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';

@@ -1,7 +1,7 @@
 import {JsonSprite, JsonWeapon} from '../../interfaces/json-interfaces';
 import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {Utility} from '../utility';
+import {Utility} from '../Utility/utility';
 import {Entity} from '../base/entity';
 import {Sprite} from '../base/sprite';
 

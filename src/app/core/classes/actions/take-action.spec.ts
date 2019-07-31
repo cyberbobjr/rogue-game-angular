@@ -39,7 +39,6 @@ describe('take-action', () => {
 
   it('should be created', () => {
     const takeAction: TakeAction = new TakeAction();
-    takeAction.subject = player;
     expect(takeAction)
       .toBeTruthy();
   });
@@ -57,6 +56,6 @@ describe('take-action', () => {
     takeAction.execute(player, gameEngine);
     const inventoryFinalSize: number = player.inventory.getInventorySize();
     expect(inventorySize + 1)
-      .toEqual(inventoryFinalSize);
+      .toBeCloseTo(inventoryFinalSize);
   });
 });

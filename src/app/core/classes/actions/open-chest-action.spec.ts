@@ -46,7 +46,6 @@ describe('open-chest-action', () => {
     gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(gameMap.level, chestsPosition[0]);
     const openChestAction: OpenChestAction = new OpenChestAction();
-    openChestAction.subject = player;
     const resultAction: ActionResult = openChestAction.execute(player, gameEngine);
     expect(resultAction.succeeded)
       .toBeTruthy();

@@ -110,9 +110,9 @@ export class Monster extends Entity {
   onHit(damage: number): void {
     const currentAction: Action = this.getAction();
     super.onHit(damage);
-    if (!currentAction || currentAction instanceof IdleAction) {
+/*    if (!currentAction || currentAction instanceof IdleAction) {
       this.setNextAction(new ChaseAction());
-    }
+    }*/
   }
 
   // endregion

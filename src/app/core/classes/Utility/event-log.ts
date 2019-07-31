@@ -10,6 +10,7 @@ export class EventLog {
 
   set message(value: string) {
     this._messageSubject$.next(value);
+    console.log(value);
   }
 
   constructor() {
@@ -21,5 +22,4 @@ export class EventLog {
     }
     return EventLog.instance;
   }
-
 }

@@ -1,7 +1,7 @@
 import {Entity} from '../../classes/base/entity';
-import {Utility} from '../../classes/utility';
+import {Utility} from '../../classes/Utility/utility';
 import {AttributesFactory} from '../../factories/attributes-factory';
-import {EventLog} from '../../classes/event-log';
+import {EventLog} from '../../classes/Utility/event-log';
 
 export class CombatResolver {
   constructor() {

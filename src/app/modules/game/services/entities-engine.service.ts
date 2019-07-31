@@ -62,7 +62,7 @@ export class EntitiesEngine {
       let actorAction: Action = currentActor.getAction();
       if (actorAction) {
         while (true) {
-          const resultAction: ActionResult = actorAction.execute(gameEngine);
+          const resultAction: ActionResult = actorAction.execute(currentActor, gameEngine);
           if (resultAction.succeeded) {
             break;
           }

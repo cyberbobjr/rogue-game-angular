@@ -4,7 +4,7 @@ import {SlotType} from '../../enums/equiped-type.enum';
 import {Player} from '../entities/player';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 
 export class Food extends GameObject {
   protected _name = 'food';

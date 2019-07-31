@@ -5,7 +5,7 @@ import {Action} from '../../interfaces/action';
 import {Iobject} from '../../interfaces/iobject';
 import {TileType} from '../../enums/tile-type.enum';
 import {GameObject} from '../gameObjects/game-object';
-import {EventLog} from '../event-log';
+import {EventLog} from '../Utility/event-log';
 import {Player} from '../entities/player';
 
 export abstract class Tile implements Iobject {

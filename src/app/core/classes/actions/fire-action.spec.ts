@@ -1,24 +1,23 @@
 import {Player} from '../entities/player';
-import {GameMap} from '../base/game-map';
-import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
-import {TestBed} from '@angular/core/testing';
-import {SharedModule} from '../../../modules/shared/shared.module';
-import {RouterTestingModule} from '@angular/router/testing';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {StorageService} from '../../../modules/game/services/storage.service';
-import {MapBuilder} from '../../factories/map-builder';
 import {GameClassFactory} from '../../factories/game-class-factory';
 import {ClassType} from '../../enums/class-type.enum';
 import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
-import {AttackDistanceAction} from './attack-distance-action';
-import {EntitiesFactory} from '../../factories/entities-factory';
-import {EntityType} from '../../enums/entity-type.enum';
+import {GameMap} from '../base/game-map';
+import {MapBuilder} from '../../factories/map-builder';
+import {FireAction} from './fire-action';
+import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {TestBed} from '@angular/core/testing';
+import {SharedModule} from '../../../modules/shared/shared.module';
+import {RouterTestingModule} from '@angular/router/testing';
+import {ActionResult} from './action-result';
+import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
 import {Entity} from '../base/entity';
-import {AttackMeleeAction} from './attack-melee-action';
+import {Direction} from '../../enums/direction.enum';
+import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {StorageService} from '../../../modules/game/services/storage.service';
 
-describe('Attack distance action', () => {
+describe('Fire action', () => {
   let player: Player = null;
   let gameMap: GameMap;
   let entitiesService: EntitiesEngine;
@@ -47,22 +46,32 @@ describe('Attack distance action', () => {
   });
 
   it('should be created', () => {
-    const monster: Entity = EntitiesFactory.getInstance()
-                                           .createEntity(EntityType.MONSTER);
-    const attackAction: AttackDistanceAction = new AttackDistanceAction(monster);
+    const attackAction: FireAction = new FireAction();
     expect(attackAction)
       .toBeTruthy();
   });
 
-  it('should do damage on entity', () => {
-    const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
-    const entity: Entity = gameMap.gameEntities.getEntities()[0];
-    entity.dexterity = 100;
-    player.onHit = function (damage: number) {
-      player.hp = 0;
-    };
-    attackAction.execute(entity, gameEngine);
-    expect(player.hp)
-      .toEqual(0);
+  it('should be succeed without ennemy in range', () => {
+    const attackAction: FireAction = new FireAction();
+    const actionResult: ActionResult = attackAction.execute(player, gameEngine);
+    expect(actionResult)
+      .toEqual(ActionResult.SUCCESS);
+  });
+
+  it('should be waited with ennemy in range', () => {
+    const entities: Array<Entity> = gameMap.gameEntities.getEntities();
+    const mainActor: Entity = (player as Entity);
+    gameEngine.loadGameMap(gameMap);
+    gameMap.computeLOSMap(mainActor);
+    entities[0].position = gameMap.entryPosition.computeDestination(Direction.N);
+    const attackAction: FireAction = new FireAction();
+    const actionResult: ActionResult = attackAction.execute(player, gameEngine);
+    expect(actionResult)
+      .toEqual(ActionResult.WAIT);
+  });
+
+  it('should get info', () => {
+    expect((new FireAction()).getInfo())
+      .toEqual('Fire action');
   });
 });

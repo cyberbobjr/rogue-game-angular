@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {EventLog} from '../../../../core/classes/event-log';
+import {EventLog} from '../../../../core/classes/Utility/event-log';
 
 @Component({
              selector: 'app-log-page',

@@ -12,7 +12,7 @@ import {GameMap} from 'src/app/core/classes/base/game-map';
 import {Room} from 'rot-js/lib/map/features';
 import {RNG} from 'rot-js';
 import Digger from 'rot-js/lib/map/digger';
-import {Utility} from '../classes/utility';
+import {Utility} from '../classes/Utility/utility';
 import {EntitiesEngine} from '../../modules/game/services/entities-engine.service';
 import {GameEntities} from '../classes/base/game-entities';
 

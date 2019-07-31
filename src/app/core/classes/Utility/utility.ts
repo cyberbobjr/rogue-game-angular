@@ -1,4 +1,4 @@
-import {SlotType} from '../enums/equiped-type.enum';
+import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Utility {
   static initArrayNumber(width: number, height: number, fill = 0): number[][] {
