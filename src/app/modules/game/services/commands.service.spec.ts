@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {CommandsService} from './commands.service';
-import {Command} from '../../../core/classes/commands/command';
+import {Command} from '../../../core/interfaces/command';
 import {MoveE} from '../../../core/classes/commands/move';
 
 describe('CommandsService', () => {

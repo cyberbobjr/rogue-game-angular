@@ -1,4 +1,4 @@
-import {Command} from './command';
+import {Command} from '../../interfaces/command';
 import {Entity} from '../base/entity';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {Tile} from '../base/tile';

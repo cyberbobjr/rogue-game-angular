@@ -50,6 +50,7 @@ export interface JsonEntity {
   inventory: Array<JsonGameObject>;
   equipped?: Array<[number, string]>;
   race: string;
+  gameClass?: string;
 }
 
 export interface JsonPlayer extends JsonEntity {
@@ -80,7 +81,7 @@ export interface JsonGameObject {
   weight: number;
   properties: [
     string
-    ];
+  ];
   sprite: JsonSprite | Sprite;
   qty: number;
 }

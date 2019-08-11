@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Command} from '../../../core/classes/commands/command';
+import {Command} from '../../../core/interfaces/command';
 import {MoveE, MoveN, MoveNE, MoveNW, MoveS, MoveSE, MoveSW, MoveW} from '../../../core/classes/commands/move';
 import {SaveCommand} from '../../../core/classes/commands/save-command';
 import {OpenDoorCommand} from '../../../core/classes/commands/open-door-command';

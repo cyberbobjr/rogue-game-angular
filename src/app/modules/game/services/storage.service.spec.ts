@@ -10,6 +10,7 @@ import {GameMap} from '../../../core/classes/base/game-map';
 import {MapBuilder} from '../../../core/factories/map-builder';
 import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {EntitiesEngine} from './entities-engine.service';
+import {AttributeSystem} from '../../../core/classes/base/AttributeSystem';
 
 describe('StorageService', () => {
   beforeEach(() => TestBed.configureTestingModule({providers: [EntitiesEngine]}));
@@ -23,19 +24,14 @@ describe('StorageService', () => {
   it('should save and load Player', async (done) => {
     try {
       const service: StorageService = TestBed.get(StorageService);
-      const abilities: Map<string, number> = new Map([
-                                                       ['strength', 10],
-                                                       ['dexterity', 11],
-                                                       ['constitution', 12],
-                                                       ['intelligence', 13],
-                                                       ['wisdom', 14],
-                                                       ['charisma', 15]
-                                                     ]);
+      const abilities = new AttributeSystem({
+                                              strength: 10, dexterity: 11, constitution: 12, intelligence: 13, wisdom: 14, charisma: 15
+                                            });
       const player: Player = new Player().setGameClass(GameClassFactory.getInstance()
                                                                        .createGameClass(ClassType.BARBARIAN))
                                          .setRace(RaceFactory.getInstance()
                                                              .createRace(RaceType.HUMAN))
-                                         .setAbilities(abilities) as Player;
+                                         .setAttributes(abilities) as Player;
       await service.savePlayer(player);
       const playerSaved: Player = await service.loadPlayer();
       expect(player.toJSON())

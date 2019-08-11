@@ -6,10 +6,12 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {GameObject} from '../gameObjects/game-object';
 import {Position} from '../base/position';
+import {EntitiesFactory} from '../../factories/entities-factory';
+import {EntityType} from '../../enums/entity-type.enum';
 
 let playerJsonData: JsonPlayer = {
   'id': 'player',
-  'entityType': 1,
+  'entityType': EntityType.PLAYER,
   'speed': 1,
   'xp': 0,
   'size': 'm',
@@ -51,7 +53,9 @@ describe('Player', () => {
 
   it('can be initiated with jsonData', () => {
     playerJsonData.inventory = generateInventory();
-    const player: Player = Player.fromJSON(playerJsonData);
+    const player: Player = EntitiesFactory.getInstance()
+                                          .createEntityFromJson(playerJsonData) as Player;
+    console.log(player.inventory.getAllGameObjects());
     expect(player.race)
       .toEqual('Human');
     expect(player.gameClass)
@@ -66,7 +70,8 @@ describe('Player', () => {
     const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     const letter: string = player.addToInventory(weapon);
     playerJsonData = player.toJSON();
-    const player1: Player = Player.fromJSON(playerJsonData);
+    const player1: Player = EntitiesFactory.getInstance()
+                                          .createEntityFromJson(playerJsonData) as Player;
     const gameObject: GameObject = player1.getItemByLetter(letter);
     expect(gameObject.name)
       .toEqual('Club');
@@ -75,7 +80,8 @@ describe('Player', () => {
   });
 
   it('should be created with generated Json', () => {
-    const player: Player = Player.fromJSON(playerJsonData);
+    const player: Player = EntitiesFactory.getInstance()
+                                          .createEntityFromJson(playerJsonData) as Player;
     expect(player.toJSON())
       .toEqual(playerJsonData);
   });

@@ -18,7 +18,6 @@ export class TakeAction implements Action {
     return ActionResult.SUCCESS;
   }
 
-
   getInfo(): string {
     return '';
   }

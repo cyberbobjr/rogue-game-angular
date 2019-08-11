@@ -15,7 +15,8 @@ export class GameEntities {
     if (jsonEntities.length > 0) {
       const entities: Array<Entity> = [];
       jsonEntities.forEach((jsonEntity: JsonEntity) => {
-        entities.push(EntitiesFactory.createFromJson(jsonEntity)
+        entities.push(EntitiesFactory.getInstance()
+                                     .createEntityFromJson(jsonEntity)
                                      .setNextAction(new IdleAction()));
       });
       gameEntities.setEntities(entities);

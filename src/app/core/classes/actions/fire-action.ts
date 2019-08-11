@@ -36,6 +36,9 @@ export class FireAction implements Action {
   }
 
   private _fire(targets: Entity[]): void {
-    this._actor.setNextAction(new AttackDistanceAction(targets[0]));
+    console.log('Selected target : ' + targets[0]);
+    if (targets) {
+      this._actor.setNextAction(new AttackDistanceAction(targets[0]));
+    }
   }
 }

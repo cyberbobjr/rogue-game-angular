@@ -1,4 +1,4 @@
-import {Command} from './command';
+import {Command} from '../../interfaces/command';
 import {Entity} from '../base/entity';
 import {WalkAction} from '../actions/walk-action';
 import {Direction} from '../../enums/direction.enum';

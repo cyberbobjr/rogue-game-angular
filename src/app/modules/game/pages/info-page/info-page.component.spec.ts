@@ -9,19 +9,21 @@ import {RaceType} from '../../../../core/enums/race-type.enum';
 import {AttributesFactory} from '../../../../core/factories/attributes-factory';
 import {EntitiesEngine} from '../../services/entities-engine.service';
 import {GameEntities} from '../../../../core/classes/base/game-entities';
+import {Entity} from '../../../../core/classes/base/entity';
+import {AttributeSystem} from '../../../../core/classes/base/AttributeSystem';
 
 describe('InfoPageComponent', () => {
   let component: InfoPageComponent;
   let fixture: ComponentFixture<InfoPageComponent>;
 
   beforeEach(async(() => {
-    const attributes: Map<string, number> = new Map<string, number>(AttributesFactory.getAttributes());
+    const attributes: AttributeSystem = new AttributeSystem();
     attributes.set('dexterity', 10);
-    const player: Player = new Player().setGameClass(GameClassFactory.getInstance()
+    const player: Entity = new Player().setGameClass(GameClassFactory.getInstance()
                                                                      .createGameClass(ClassType.BARBARIAN))
                                        .setRace(RaceFactory.getInstance()
                                                            .createRace(RaceType.HUMAN))
-                                       .setAbilities(attributes) as Player;
+                                       .setAttributes(attributes);
 
     TestBed.configureTestingModule({
                                      declarations: [InfoPageComponent]
@@ -30,7 +32,7 @@ describe('InfoPageComponent', () => {
     const gameEntities: GameEntities = new GameEntities();
     const entitiesService: EntitiesEngine = TestBed.get(EntitiesEngine);
     entitiesService.setGameEntities(gameEntities);
-    entitiesService.setPlayer(player);
+    entitiesService.setPlayer(player as Player);
   }));
 
   beforeEach(() => {

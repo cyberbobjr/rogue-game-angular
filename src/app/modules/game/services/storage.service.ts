@@ -8,6 +8,7 @@ import {GameMap} from 'src/app/core/classes/base/game-map';
 import * as JsStore from 'jsstore';
 import * as workerPath from 'file-loader?name=scripts/[name].[hash].js!jsstore/dist/jsstore.worker.min.js';
 import {GameEntities} from '../../../core/classes/base/game-entities';
+import {EntitiesFactory} from '../../../core/factories/entities-factory';
 
 export const idbCon = new JsStore.Instance(new Worker(workerPath));
 
@@ -82,7 +83,8 @@ export class StorageService {
       throw new Error('Player not found');
     }
     const playerLoaded: JsonEntity = JSON.parse(json) as JsonEntity;
-    return Player.fromJSON(playerLoaded);
+    return EntitiesFactory.getInstance()
+                          .createEntityFromJson(playerLoaded) as Player;
   }
 
   async loadRawMap(level: number): Promise<{ map: JsonMap, entities: Array<JsonEntity> }> {

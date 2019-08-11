@@ -8,12 +8,11 @@ import {Gold} from '../gameObjects/gold';
 import {GameObject} from '../gameObjects/game-object';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Action} from '../../interfaces/action';
-import {ChaseAction} from '../actions/chase-action';
-import {IdleAction} from '../actions/idle-action';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {InventorySystem} from '../base/inventory-system';
 import {EntityType} from '../../enums/entity-type.enum';
+import {AttributeSystem} from '../base/AttributeSystem';
 
 export class Monster extends Entity {
   private _frequency: number;
@@ -24,32 +23,6 @@ export class Monster extends Entity {
 
   set frequency(value: number) {
     this._frequency = value;
-  }
-
-  static fromJSON(jsonData: JsonEntity): Monster {
-    const entity: Monster = new Monster();
-
-    for (const key of Object.keys(jsonData)) {
-      entity['_' + key] = jsonData[key];
-    }
-    entity._inventory = new InventorySystem();
-    if (jsonData.sprite) {
-      entity._sprite = new Sprite((jsonData.sprite as JsonSprite).character, (jsonData.sprite as JsonSprite).color);
-    }
-
-    if (jsonData.position) {
-      entity._position = new Position(jsonData.position.x, jsonData.position.y);
-    }
-
-    if (jsonData.inventory.length > 0) {
-      jsonData.inventory.forEach((value: JsonGameObject) => {
-        const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
-        gameObject.qty = value.qty;
-        entity._inventory.addToInventory(gameObject);
-      });
-    }
-
-    return entity;
   }
 
   static fromMonsterClass(monsterClass: GameMonsterClass): Monster {
@@ -74,6 +47,9 @@ export class Monster extends Entity {
   }
 
   toJSON(): JsonMonster {
+    console.log(this._attributes.get('wisdom'));
+    console.log(this._attributes.toJSON());
+    console.log(super.toJSON());
     return {
       ...super.toJSON(),
       ...{frequency: this._frequency}
@@ -82,7 +58,7 @@ export class Monster extends Entity {
 
   constructor() {
     super();
-    this._entityType = EntityType.PLAYER;
+    this._entityType = EntityType.MONSTER;
   }
 
   setPosition(position: Position): Monster {
@@ -110,9 +86,9 @@ export class Monster extends Entity {
   onHit(damage: number): void {
     const currentAction: Action = this.getAction();
     super.onHit(damage);
-/*    if (!currentAction || currentAction instanceof IdleAction) {
-      this.setNextAction(new ChaseAction());
-    }*/
+    /*    if (!currentAction || currentAction instanceof IdleAction) {
+     this.setNextAction(new ChaseAction());
+     }*/
   }
 
   // endregion

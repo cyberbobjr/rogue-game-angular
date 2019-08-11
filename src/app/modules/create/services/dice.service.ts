@@ -1,17 +1,15 @@
 import {Injectable} from '@angular/core';
 import {IDice} from '../interface/idice';
-import {AttributesFactory} from '../../../core/factories/attributes-factory';
-import {JsonAbilities} from '../../../core/interfaces/json-interfaces';
+import {AttributeSystem} from '../../../core/classes/base/AttributeSystem';
 
 @Injectable({
               providedIn: 'root'
             })
 export class DiceService {
   dicesScore: Array<IDice> = [];
-  attributesScore: Map<string, number> = null;
+  attributesScore: AttributeSystem = new AttributeSystem();
 
   constructor() {
-    this.attributesScore = new Map<string, number>(AttributesFactory.getAttributes());
   }
 
   addDiceScore(value: number) {

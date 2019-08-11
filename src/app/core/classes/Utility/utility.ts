@@ -63,4 +63,20 @@ export class Utility {
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
+  static strMapToObj(strMap: any): Object {
+    const obj = Object.create(null);
+    for (const [k, v] of strMap) {
+      obj[k] = v;
+    }
+    return obj;
+  }
+
+  static objToStrMap(obj: any): Map<any, any> {
+    const strMap = new Map();
+    for (const k of Object.keys(obj)) {
+      strMap.set(k, obj[k]);
+    }
+    return strMap;
+  }
 }

@@ -14,11 +14,12 @@ import {SlotType} from '../../enums/equiped-type.enum';
 import {GameEngine} from '../../../modules/game/services/game-engine.service';
 import {InventorySystem} from './inventory-system';
 import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
+import {AttributeSystem} from './AttributeSystem';
 
 @Injectable({
               providedIn: 'root'
             })
-export abstract class Entity implements Iobject, IEntity {
+export class Entity implements Iobject, IEntity {
   protected _backupSprite: Sprite = null;
   protected _currentAction: Action = null;
   protected _entityType: EntityType;
@@ -42,14 +43,7 @@ export abstract class Entity implements Iobject, IEntity {
 
   protected _inventory: InventorySystem = new InventorySystem();
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
-  protected _abilities: JsonAbilities = {
-    strength: 0,
-    dexterity: 0,
-    constitution: 0,
-    intelligence: 0,
-    wisdom: 0,
-    charisma: 0
-  };
+  protected _attributes: AttributeSystem = new AttributeSystem();
 
   lightRadius = 20;
   lightPower = 3; // max is lighter
@@ -103,6 +97,10 @@ export abstract class Entity implements Iobject, IEntity {
     this._id = value;
   }
 
+  set hitDice(value: number) {
+    this._hitDice = value;
+  }
+
   get hitDice(): number {
     return this._hitDice;
   }
@@ -116,51 +114,51 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   get constitution(): number {
-    return this._abilities.constitution;
+    return this.getAttributeValue('constitution');
   }
 
   set constitution(value: number) {
-    this._abilities['constitution'] = value;
+    this._attributes.set('constitution', value);
   }
 
   get intelligence(): number {
-    return this._abilities.intelligence;
+    return this.getAttributeValue('intelligence');
   }
 
   set intelligence(value: number) {
-    this._abilities['intelligence'] = value;
+    this._attributes.set('intelligence', value);
   }
 
   get wisdom(): number {
-    return this._abilities.wisdom;
+    return this.getAttributeValue('wisdom');
   }
 
   set wisdom(value: number) {
-    this._abilities['wisdom'] = value;
+    this._attributes.set('wisdom', value);
   }
 
   get charisma(): number {
-    return this._abilities.charisma;
+    return this.getAttributeValue('charisma');
   }
 
   set charisma(value: number) {
-    this._abilities['charisma'] = value;
+    this._attributes.set('charisma', value);
   }
 
   get dexterity(): number {
-    return this._abilities.dexterity;
+    return this.getAttributeValue('dexterity');
   }
 
   set dexterity(value: number) {
-    this._abilities['dexterity'] = value;
+    this._attributes.set('dexterity', value);
   }
 
   get strength(): number {
-    return this._abilities.strength;
+    return this.getAttributeValue('strength');
   }
 
   set strength(value: number) {
-    this._abilities['strength'] = value;
+    this._attributes.set('strength', value);
   }
 
   get ac(): number {
@@ -220,7 +218,7 @@ export abstract class Entity implements Iobject, IEntity {
   }
 
   getAttributeValue(attributes: string): number {
-    return this._abilities[attributes];
+    return this._attributes.get(attributes);
   }
 
   toJSON(): JsonEntity {
@@ -230,7 +228,7 @@ export abstract class Entity implements Iobject, IEntity {
       id: this.id,
       position: this._position ? this._position.toJSON() : null,
       sprite: this.sprite ? this.sprite.toJSON() : null,
-      abilities: this._abilities,
+      abilities: this._attributes.toJSON(),
       ac: this.ac,
       hp: this.hp,
       gp: this.gp,
@@ -333,10 +331,8 @@ export abstract class Entity implements Iobject, IEntity {
     return this._inventory.removeFromInventory(letterInventory);
   }
 
-  setAbilities(abilities: Map<string, number>): Entity {
-    abilities.forEach((value: number, ability: string) => {
-      this._abilities[ability] = value;
-    });
+  setAttributes(attributes: AttributeSystem): Entity {
+    this._attributes = attributes;
     return this;
   }
 

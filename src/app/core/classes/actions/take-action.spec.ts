@@ -55,7 +55,7 @@ describe('take-action', () => {
     const takeAction: TakeAction = new TakeAction();
     takeAction.execute(player, gameEngine);
     const inventoryFinalSize: number = player.inventory.getInventorySize();
-    expect(inventorySize + 1)
-      .toBeCloseTo(inventoryFinalSize);
+    expect(inventoryFinalSize)
+      .toBeCloseTo(inventorySize + 1);
   });
 });
