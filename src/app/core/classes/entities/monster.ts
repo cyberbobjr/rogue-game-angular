@@ -3,16 +3,14 @@ import {Sprite} from '../base/sprite';
 import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {GameMonsterClass} from '../base/game-monster-class';
-import {JsonEntity, JsonGameObject, JsonMonster, JsonSprite} from '../../interfaces/json-interfaces';
+import {JsonMonster} from '../../interfaces/json-interfaces';
 import {Gold} from '../gameObjects/gold';
 import {GameObject} from '../gameObjects/game-object';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Action} from '../../interfaces/action';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
-import {InventorySystem} from '../base/inventory-system';
 import {EntityType} from '../../enums/entity-type.enum';
-import {AttributeSystem} from '../base/AttributeSystem';
 
 export class Monster extends Entity {
   private _frequency: number;
@@ -47,9 +45,6 @@ export class Monster extends Entity {
   }
 
   toJSON(): JsonMonster {
-    console.log(this._attributes.get('wisdom'));
-    console.log(this._attributes.toJSON());
-    console.log(super.toJSON());
     return {
       ...super.toJSON(),
       ...{frequency: this._frequency}

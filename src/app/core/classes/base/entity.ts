@@ -43,7 +43,7 @@ export class Entity implements Iobject, IEntity {
 
   protected _inventory: InventorySystem = new InventorySystem();
   protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
-  protected _attributes: AttributeSystem = new AttributeSystem();
+  protected _abilities: AttributeSystem = new AttributeSystem();
 
   lightRadius = 20;
   lightPower = 3; // max is lighter
@@ -118,7 +118,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   set constitution(value: number) {
-    this._attributes.set('constitution', value);
+    this._abilities.set('constitution', value);
   }
 
   get intelligence(): number {
@@ -126,7 +126,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   set intelligence(value: number) {
-    this._attributes.set('intelligence', value);
+    this._abilities.set('intelligence', value);
   }
 
   get wisdom(): number {
@@ -134,7 +134,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   set wisdom(value: number) {
-    this._attributes.set('wisdom', value);
+    this._abilities.set('wisdom', value);
   }
 
   get charisma(): number {
@@ -142,7 +142,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   set charisma(value: number) {
-    this._attributes.set('charisma', value);
+    this._abilities.set('charisma', value);
   }
 
   get dexterity(): number {
@@ -150,7 +150,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   set dexterity(value: number) {
-    this._attributes.set('dexterity', value);
+    this._abilities.set('dexterity', value);
   }
 
   get strength(): number {
@@ -158,7 +158,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   set strength(value: number) {
-    this._attributes.set('strength', value);
+    this._abilities.set('strength', value);
   }
 
   get ac(): number {
@@ -218,7 +218,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   getAttributeValue(attributes: string): number {
-    return this._attributes.get(attributes);
+    return this._abilities.get(attributes);
   }
 
   toJSON(): JsonEntity {
@@ -228,7 +228,7 @@ export class Entity implements Iobject, IEntity {
       id: this.id,
       position: this._position ? this._position.toJSON() : null,
       sprite: this.sprite ? this.sprite.toJSON() : null,
-      abilities: this._attributes.toJSON(),
+      abilities: this._abilities.toJSON(),
       ac: this.ac,
       hp: this.hp,
       gp: this.gp,
@@ -332,7 +332,7 @@ export class Entity implements Iobject, IEntity {
   }
 
   setAttributes(attributes: AttributeSystem): Entity {
-    this._attributes = attributes;
+    this._abilities = attributes;
     return this;
   }
 

@@ -8,14 +8,13 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
-import {Entity} from '../../../core/classes/base/entity';
 import {MapBuilder} from '../../../core/factories/map-builder';
 
 @Component({
-             selector: 'app-menu-page',
-             templateUrl: './menu-page.component.html',
-             styleUrls: ['./menu-page.component.css']
-           })
+  selector: 'app-menu-page',
+  templateUrl: './menu-page.component.html',
+  styleUrls: ['./menu-page.component.css']
+})
 export class MenuPageComponent implements OnInit {
   private _isGameStarted = false;
   private _isPlayerExist = false;
@@ -48,7 +47,7 @@ export class MenuPageComponent implements OnInit {
   }
 
   async startNewGame() {
-    const maps: Array<GameMap> = this._mapEngine.generateMaps(Config.maxLevel);
+    const maps: Array<GameMap> = MapBuilder.generateMaps(Config.maxLevel);
     const saveMapPromise: Promise<void>[] = maps.map(map => this._storageService.saveMap(map));
     await Promise.all(saveMapPromise)
                  .then(() => {

@@ -24,18 +24,6 @@ export class MapEngine {
   constructor() {
   }
 
-  generateMaps(nbOfMaps: number = 42): Array<GameMap> {
-    const maps: Array<GameMap> = [];
-    for (let level = 1; level < nbOfMaps + 1; level++) {
-      maps.push(new MapBuilder().withLevel(level)
-                                .withSeed(Utility.rolldice(level * 100))
-                                .withRandomEntities(level)
-                                .withRandomChests(nbOfMaps - level)
-                                .build());
-    }
-    return maps;
-  }
-
   setGameMap(value: GameMap): GameMap {
     this._currentMap = value;
     return this._currentMap;

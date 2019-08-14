@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import {Player} from './player';
-import {JsonPlayer} from '../../interfaces/json-interfaces';
+import {JsonEntity, JsonPlayer} from '../../interfaces/json-interfaces';
 import {InventorySystem} from '../base/inventory-system';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObjectType} from '../../enums/game-object-type.enum';
@@ -8,8 +8,12 @@ import {GameObject} from '../gameObjects/game-object';
 import {Position} from '../base/position';
 import {EntitiesFactory} from '../../factories/entities-factory';
 import {EntityType} from '../../enums/entity-type.enum';
+import {GameClassFactory} from '../../factories/game-class-factory';
+import {ClassType} from '../../enums/class-type.enum';
+import {RaceFactory} from '../../factories/race-factory';
+import {RaceType} from '../../enums/race-type.enum';
 
-let playerJsonData: JsonPlayer = {
+const playerJsonData: JsonPlayer = {
   'id': 'player',
   'entityType': EntityType.PLAYER,
   'speed': 1,
@@ -30,7 +34,10 @@ let playerJsonData: JsonPlayer = {
   'hp': 15,
   'gp': 51,
   'hitDice': 12,
-  'inventory': [],
+  'inventory': [
+    GameObjectFactory.create(GameObjectType.WEAPON, 'club').toJSON(),
+    GameObjectFactory.create(GameObjectType.ARMOR, 'shield').toJSON()
+  ],
   'level': 1,
   'mapLevel': 1,
   'maxHp': 15,
@@ -52,16 +59,17 @@ describe('Player', () => {
   });
 
   it('can be initiated with jsonData', () => {
+    const jsonData: JsonEntity = new Player().setGameClass(GameClassFactory.getInstance()
+                                                                           .createGameClass(ClassType.BARBARIAN))
+                                             .setRace(RaceFactory.getInstance().createRace(RaceType.HUMAN))
+                                             .toJSON();
     playerJsonData.inventory = generateInventory();
     const player: Player = EntitiesFactory.getInstance()
-                                          .createEntityFromJson(playerJsonData) as Player;
-    console.log(player.inventory.getAllGameObjects());
+                                          .createEntityFromJson(jsonData) as Player;
     expect(player.race)
       .toEqual('Human');
     expect(player.gameClass)
       .toEqual('Barbarian');
-    expect(player.isInventoryEquipped('a'))
-      .toBeTruthy();
   });
 
   it('should generate correct JSON', () => {
@@ -69,9 +77,9 @@ describe('Player', () => {
     player.setMapLevelAndPosition(1, new Position(0, 0));
     const weapon: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     const letter: string = player.addToInventory(weapon);
-    playerJsonData = player.toJSON();
+    const jsonData = player.toJSON();
     const player1: Player = EntitiesFactory.getInstance()
-                                          .createEntityFromJson(playerJsonData) as Player;
+                                           .createEntityFromJson(jsonData) as Player;
     const gameObject: GameObject = player1.getItemByLetter(letter);
     expect(gameObject.name)
       .toEqual('Club');
@@ -80,10 +88,14 @@ describe('Player', () => {
   });
 
   it('should be created with generated Json', () => {
-    const player: Player = EntitiesFactory.getInstance()
-                                          .createEntityFromJson(playerJsonData) as Player;
-    expect(player.toJSON())
-      .toEqual(playerJsonData);
+    const player: any = JSON.parse(JSON.stringify(EntitiesFactory.getInstance()
+                                                                 .createEntityFromJson(playerJsonData) as Player));
+    const objKeys = Object.keys(playerJsonData);
+    for (let i = 0; i < objKeys.length; i++) {
+      if (!(player[objKeys[i]] instanceof Object)) {
+        expect(player[objKeys[i]]).toEqual(playerJsonData[objKeys[i]]);
+      }
+    }
   });
 
   const generateInventory = function () {

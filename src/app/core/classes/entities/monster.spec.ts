@@ -28,9 +28,11 @@ describe('Monster', () => {
   });
 
   it('can be initiated with jsonData', () => {
+    const monsterOriginal: Monster = EntitiesFactory.getInstance()
+                                                    .createEntity(EntityType.MONSTER, new Position(0, 0)) as Monster;
     const monster: Entity = EntitiesFactory.getInstance()
-                                           .createEntityFromJson(jsonMonster);
-    expect(JSON.stringify(jsonMonster))
+                                           .createEntityFromJson(monsterOriginal.toJSON());
+    expect(JSON.stringify(monsterOriginal))
       .toEqual(JSON.stringify(monster));
   });
 });

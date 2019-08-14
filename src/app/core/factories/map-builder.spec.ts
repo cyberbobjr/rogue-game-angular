@@ -29,7 +29,7 @@ describe('MapBuilder', () => {
     const nbChest = 2;
     const map: GameMap = new MapBuilder().withRandomChests(nbChest)
                                          .build();
-    expect(map.getAllPosition<ChestTile>(ChestTile).length).toBeCloseTo(nbChest);
+    expect(map.getAllPosition<ChestTile>(ChestTile).length).toBeGreaterThan(nbChest - 1);
   });
 
   it('map created with size', () => {

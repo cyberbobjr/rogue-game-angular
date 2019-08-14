@@ -16,6 +16,7 @@ describe('Inventorysystem', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
+    inventory.clear();
   });
 
   it('it should be empty', () => {
@@ -33,6 +34,10 @@ describe('Inventorysystem', () => {
   });
 
   it('a GameObject can be remove in inventory', () => {
+    weapon = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    inventoryLetter = inventory.addToInventory(weapon);
+    console.log(weapon);
+    console.log(inventoryLetter);
     expect(inventory.removeFromInventory(inventoryLetter))
       .toBeTruthy();
     expect(inventory.getInventorySize())
@@ -48,6 +53,9 @@ describe('Inventorysystem', () => {
   });
 
   it('a consumable GameObject can be consumed', () => {
+    potion = GameObjectFactory.create(GameObjectType.POTION, 'potion');
+    potion.qty = 2;
+    inventoryLetter = inventory.addToInventory(potion);
     inventory.removeFromInventory(inventoryLetter, 1);
     potion = inventory.getGameObjectByInventoryLetter(inventoryLetter);
     expect(potion)
@@ -63,8 +71,9 @@ describe('Inventorysystem', () => {
   });
 
   it('a GameObject can be equipped', () => {
-    weapon = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
-    inventoryLetter = inventory.addToInventory(weapon);
+    const newWeapon = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    inventory = new InventorySystem();
+    inventoryLetter = inventory.addToInventory(newWeapon);
     const isEquipped: boolean = inventory.equip(inventoryLetter);
     expect(isEquipped)
       .toBeTruthy();
@@ -80,6 +89,9 @@ describe('Inventorysystem', () => {
   });
 
   it('a GameObject can be unequipped', () => {
+    weapon = GameObjectFactory.create(GameObjectType.WEAPON, 'greataxe');
+    inventoryLetter = inventory.addToInventory(weapon);
+    inventory.equip(inventoryLetter);
     expect(inventory.unequip(inventoryLetter))
       .toBeTruthy();
   });
@@ -123,6 +135,10 @@ describe('Inventorysystem', () => {
   });
 
   it('a InventorySystem should return gameObject by Class', () => {
+    inventory.clear();
+    weapon = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    inventory.addToInventory(weapon);
+
     const gameObjectClass = 'Weapon';
     const arrayGameObject: Array<GameObject> = inventory.getGameObjectByClass(gameObjectClass);
     expect(arrayGameObject.length)

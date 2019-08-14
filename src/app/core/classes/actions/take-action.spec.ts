@@ -44,15 +44,16 @@ describe('take-action', () => {
   });
 
   it('should take objects from tile', () => {
+    const gameObject: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    const gameEngine: GameEngineImp = TestBed.get(GameEngineImp);
     const inventorySize: number = player.inventory.getInventorySize();
     const freePosition: Position = gameMap.getFreeSlotForRoom(0);
     const tile: Tile = gameMap.getTileAt(freePosition);
-    const gameObject: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
+    const takeAction: TakeAction = new TakeAction();
+
     tile.dropOn(gameObject);
-    const gameEngine: GameEngineImp = TestBed.get(GameEngineImp);
     gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(1, freePosition);
-    const takeAction: TakeAction = new TakeAction();
     takeAction.execute(player, gameEngine);
     const inventoryFinalSize: number = player.inventory.getInventorySize();
     expect(inventoryFinalSize)

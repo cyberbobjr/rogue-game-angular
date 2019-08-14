@@ -108,13 +108,13 @@ export class EntitiesFactory {
       jsonData.inventory.forEach((value: JsonGameObject) => {
         const gameObject: GameObject = GameObjectFactory.createFromJson(value.objectType, value);
         gameObject.qty = value.qty;
-        entity.inventory.addToInventory(gameObject);
+        entity.addToInventory(gameObject);
       });
     }
 
     if (jsonData.equipped) {
       jsonData.equipped.forEach((value: [SlotType, string]) => {
-        const gameObject: GameObject = entity.inventory.getGameObjectByInventoryLetter(value[1]);
+        const gameObject: GameObject = entity.getItemByLetter(value[1]);
         entity.inventory.equipItemAtSlot(value[0], value[1]);
         gameObject.onEquip(entity, value[1]);
       });

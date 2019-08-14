@@ -142,8 +142,8 @@ export class GameEngineImp implements GameEngine {
       EventLog.getInstance().message = `You Win !!!`;
     } else {
       const newLevel: number = player.mapLevel + 1;
-      this.changeMapLevel(newLevel);
       EventLog.getInstance().message = `You up the stair to level ${newLevel}`;
+      this.changeMapLevel(newLevel);
     }
   }
 
@@ -160,7 +160,7 @@ export class GameEngineImp implements GameEngine {
 
   public changeMapLevel(newLevel: number) {
     // save current level
-    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
+    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap());
     // get level if exist
     this._loadMapLevel(newLevel);
   }
@@ -170,7 +170,7 @@ export class GameEngineImp implements GameEngine {
         .loadRawMap(level)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
           const gameMap: GameMap = this.loadRawGameMap(data);
-          this._storageEngine.saveGameState(gameMap, this._entityEngine.getGameEntities());
+          this._storageEngine.saveGameState(gameMap);
         })
         .catch((e) => {
           console.log(e);
@@ -196,7 +196,7 @@ export class GameEngineImp implements GameEngine {
   }
 
   saveGameState(): void {
-    this.storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
+    this.storageEngine.saveGameState(this._mapEngine.getCurrentMap());
   }
 
 }

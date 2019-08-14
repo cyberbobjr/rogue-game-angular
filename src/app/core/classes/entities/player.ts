@@ -4,9 +4,8 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {EventLog} from '../Utility/event-log';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {JsonEntity, JsonGameObject, JsonPlayer, JsonSprite} from '../../interfaces/json-interfaces';
+import {JsonPlayer} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Utility} from '../Utility/utility';
 import {RaceClass} from '../base/race';
 import {GameClass} from '../base/game-class';
@@ -15,8 +14,6 @@ import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
 import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {EntityType} from '../../enums/entity-type.enum';
-import {InventorySystem} from '../base/inventory-system';
-import {AttributeSystem} from '../base/AttributeSystem';
 
 export class Player extends Entity {
   private _level = 1;

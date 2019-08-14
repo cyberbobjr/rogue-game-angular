@@ -41,6 +41,7 @@ export class CommandsService {
 
   set gameEngine(value: GameEngine) {
     this._gameEngine = value;
+    this._initDefaultCommand();
   }
 
   constructor() {

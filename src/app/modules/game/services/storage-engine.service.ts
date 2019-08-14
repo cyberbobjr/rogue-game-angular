@@ -13,8 +13,8 @@ import {EntitiesFactory} from '../../../core/factories/entities-factory';
 export const idbCon = new JsStore.Instance(new Worker(workerPath));
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class StorageEngine {
   private dbname = 'TsRogue';
   private dbVersion = 3;
@@ -35,14 +35,13 @@ export class StorageEngine {
   async initJsStore() {
     try {
       const isExist: boolean = await this.connection.isDbExist({
-                                                                 dbName: this.dbname,
-                                                                 table: {name: 'Map', version: this.dbVersion}
-                                                               });
+        dbName: this.dbname,
+        table: {name: 'Map', version: this.dbVersion}
+      });
       if (!isExist) {
         console.log('createDB');
         const dataBase = this.getDatabase();
-        const test: string[] = await this.connection.createDb(dataBase);
-        console.log(test);
+        console.log(await this.connection.initDb(dataBase));
       }
       console.log('openDB');
       await this.connection.openDb(this.dbname);
@@ -56,20 +55,12 @@ export class StorageEngine {
     const tblMap: ITable = {
       name: 'Map',
       version: this.dbVersion,
-      columns: [
+      columns:
         {
-          name: 'level',
-          primaryKey: true
-        },
-        {
-          name: 'map',
-          dataType: DATA_TYPE.String
-        },
-        {
-          name: 'entities',
-          dataType: DATA_TYPE.String
+          level: {primaryKey: true},
+          map: {dataType: DATA_TYPE.String},
+          entities: {dataType: DATA_TYPE.String}
         }
-      ]
     };
     return {
       name: this.dbname,
@@ -95,22 +86,22 @@ export class StorageEngine {
     return {map: JSON.parse(gameMap[0]['map']), entities: JSON.parse(gameMap[0]['entities'])};
   }
 
-  saveGameState(gameMap: GameMap, gameEntities: GameEntities) {
-    this.savePlayer(gameEntities.getPlayer());
+  saveGameState(gameMap: GameMap) {
+    this.savePlayer(gameMap.gameEntities.getPlayer());
     this.saveMap(gameMap);
   }
 
   async saveMap(gameMap: GameMap): Promise<any> {
     return await this.connection.insert({
-                                          into: 'Map',
-                                          return: true,
-                                          upsert: true,
-                                          values: [{
-                                            level: gameMap.level,
-                                            map: JSON.stringify(gameMap),
-                                            entities: JSON.stringify(gameMap.entities)
-                                          }]
-                                        });
+      into: 'Map',
+      return: true,
+      upsert: true,
+      values: [{
+        level: gameMap.level,
+        map: JSON.stringify(gameMap),
+        entities: JSON.stringify(gameMap.entities)
+      }]
+    });
   }
 
   async savePlayer(player: Entity) {

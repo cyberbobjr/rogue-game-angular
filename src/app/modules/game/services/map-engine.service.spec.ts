@@ -6,14 +6,15 @@ import {EntitiesEngine} from './entities-engine.service';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {Position} from '../../../core/classes/base/position';
 import {Tile} from '../../../core/classes/base/tile';
+import {MapBuilder} from '../../../core/factories/map-builder';
 
 describe('RotMapService', () => {
   beforeEach(() => TestBed.configureTestingModule({
-                                                    providers: [
-                                                      StorageEngine,
-                                                      EntitiesEngine
-                                                    ]
-                                                  }));
+    providers: [
+      StorageEngine,
+      EntitiesEngine
+    ]
+  }));
 
   it('should be created', () => {
     const service: MapEngine = TestBed.get(MapEngine);
@@ -23,8 +24,7 @@ describe('RotMapService', () => {
 
   it('should create a bunch of maps', async () => {
     const numberOfMap = 1;
-    const service: MapEngine = TestBed.get(MapEngine);
-    const map: Array<GameMap> = await service.generateMaps(numberOfMap);
+    const map: Array<GameMap> = await MapBuilder.generateMaps(numberOfMap);
     expect(map.length)
       .toEqual(numberOfMap);
     const currentMap: GameMap = map[0];

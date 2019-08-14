@@ -239,7 +239,7 @@ export class GameMap {
     return target;
   }
 
-  private isPositionVisible(position: Position): boolean {
+  public isPositionVisible(position: Position): boolean {
     return this.getLosForPosition(position) > 0;
   }
 

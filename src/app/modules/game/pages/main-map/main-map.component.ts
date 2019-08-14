@@ -8,7 +8,7 @@ import {GameEngineImp} from '../../services/game-engine-imp.service';
              styleUrls: ['./main-map.component.css']
            })
 export class MainMapComponent implements OnInit, OnDestroy {
-  @ViewChild('refMap') refMap: ElementRef;
+  @ViewChild('refMap', { static: true }) refMap: ElementRef;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyEvent(keyboardEvent: KeyboardEvent) {

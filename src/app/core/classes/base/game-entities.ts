@@ -45,14 +45,6 @@ export class GameEntities {
     this._entities = entities;
   }
 
-  getEntitiesVisibles(gameMap: GameMap): Array<Entity> {
-    return this.getEntities()
-               .filter((entity: Entity) => {
-                 const entityPosition: Position = entity.getPosition();
-                 return gameMap.getLosForPosition(entityPosition) > 0;
-               });
-  }
-
   getEntityAt(position: Position): Entity | null {
     let monster: Entity = null;
     this.getAllEntities()
