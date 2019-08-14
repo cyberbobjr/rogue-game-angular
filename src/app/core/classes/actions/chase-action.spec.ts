@@ -16,6 +16,7 @@ import {IdleAction} from './idle-action';
 import {FloorTile} from '../tiles/floor-tile';
 import {AttackMeleeAction} from './attack-melee-action';
 import {Player} from '../entities/player';
+import {GameEntities} from '../base/game-entities';
 
 describe('Chase action', () => {
   let gameEngine: GameEngineImp;
@@ -24,13 +25,17 @@ describe('Chase action', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               RouterTestingModule],
-                                     providers: [EntitiesEngine,
-                                                 GameEngineImp,
-                                                 MapEngine,
-                                                 StorageEngine]
-                                   });
+      imports: [
+        SharedModule,
+        RouterTestingModule
+      ],
+      providers: [
+        EntitiesEngine,
+        GameEngineImp,
+        MapEngine,
+        StorageEngine
+      ]
+    });
     entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().build();
@@ -39,7 +44,7 @@ describe('Chase action', () => {
         gameMap.setTile(new FloorTile(new Position(x, y)));
       }
     }
-    gameEngine.loadGameMap(gameMap);
+    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
   });
 
   it('should be stop chasing if target not more visible', () => {
@@ -47,7 +52,7 @@ describe('Chase action', () => {
     const monster: Entity = EntitiesFactory.generateRandomEntities(new Position(5, 5));
     monster.sprite.light = false;
     monster.size = 'm';
-    gameMap.gameEntities.setEntities([target, monster]);
+    entitiesService.setEntities([target, monster]);
     const chaseAction: ChaseAction = new ChaseAction(target);
     const result: ActionResult = chaseAction.execute(monster, gameEngine);
     expect(result)
@@ -65,7 +70,7 @@ describe('Chase action', () => {
                                               .clone();
     monster.sprite.light = true;
     monster.size = 'm';
-    gameMap.gameEntities.setEntities([target, monster]);
+    entitiesService.setEntities([target, monster]);
 
     const chaseAction: ChaseAction = new ChaseAction(target);
     const result: ActionResult = chaseAction.execute(monster, gameEngine);
@@ -80,11 +85,10 @@ describe('Chase action', () => {
     const monster: Entity = EntitiesFactory.generateRandomEntities(new Position(5, 5));
     monster.sprite.light = true;
     monster.size = 'm';
-    gameMap.gameEntities.setEntities([target, monster]);
+    entitiesService.setEntities([target, monster]);
 
     const chaseAction: ChaseAction = new ChaseAction(target);
     const result: ActionResult = chaseAction.execute(monster, gameEngine);
-    console.log(result);
     expect(result.alternative instanceof AttackMeleeAction)
       .toBeTruthy();
   });

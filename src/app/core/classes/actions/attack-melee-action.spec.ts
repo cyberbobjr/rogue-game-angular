@@ -12,7 +12,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
 import {AttackMeleeAction} from './attack-melee-action';
 import {Entity} from '../base/entity';
-import {GameEntities} from '../base/game-entities';
+import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('attack-melee-action', () => {
   let player: Player = null;
@@ -22,20 +22,26 @@ describe('attack-melee-action', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               RouterTestingModule],
-                                     providers: [EntitiesEngine, GameEngineImp]
-                                   });
+      imports: [
+        SharedModule,
+        RouterTestingModule
+      ],
+      providers: [
+        EntitiesEngine,
+        GameEngineImp
+      ]
+    });
     entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngineImp);
-    gameMap = new MapBuilder().withRandomEntities(5)
-                              .build();
-    gameEngine.loadGameMap(gameMap);
+    gameMap = new MapBuilder().build();
+    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
                                              .createRace(RaceType.HUMAN))
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+    entitiesService.setGameEntities(EntityBuilder.generateMonsters([], 5, gameMap));
+    entitiesService.setPlayer(player);
   });
 
   it('should be created', () => {
@@ -49,7 +55,7 @@ describe('attack-melee-action', () => {
       player.hp = 0;
     };
     const attackAction: AttackMeleeAction = new AttackMeleeAction(player);
-    const entity: Entity = gameMap.gameEntities.getEntities()[0];
+    const entity: Entity = entitiesService.getAllEntities()[0];
     attackAction.execute(entity, gameEngine);
     expect(player.hp)
       .toEqual(0);

@@ -24,14 +24,12 @@ export class MapBuilder {
   private _level = 1;
   private _jsonMap: JsonMap = null;
   private _maxChests = 0;
-  private _maxEntities = 0;
 
   static generateMaps(nbOfMaps: number = 42): Array<GameMap> {
     const maps: Array<GameMap> = [];
     for (let level = 1; level < nbOfMaps + 1; level++) {
       maps.push(new MapBuilder().withLevel(level)
                                 .withSeed(Utility.rolldice(level * 100))
-                                .withRandomEntities(level)
                                 .withRandomChests(nbOfMaps - level)
                                 .build());
     }
@@ -62,11 +60,6 @@ export class MapBuilder {
     return this;
   }
 
-  withRandomEntities(maxEntities: number): MapBuilder {
-    this._maxEntities = maxEntities;
-    return this;
-  }
-
   withRandomChests(maxChests: number): MapBuilder {
     this._maxChests = maxChests;
     return this;
@@ -87,17 +80,10 @@ export class MapBuilder {
     if (this._jsonMap) {
       this._generateFromJson(gameMap);
     }
-    if (this._maxEntities > 0) {
-      this._generateEntities(gameMap, this._maxEntities);
-    }
     if (this._maxChests > 0) {
       this._generateChests(gameMap, this._maxChests);
     }
     return gameMap;
-  }
-
-  private _generateEntities(gameMap: GameMap, maxEntities: number) {
-    gameMap.entities = this._generateMonsters([0], maxEntities, gameMap);
   }
 
   private _generateFromJson(gameMap: GameMap) {
@@ -121,7 +107,7 @@ export class MapBuilder {
 
   private _generateChests(map: GameMap, maxChests: number) {
     for (let chest = 0; chest < maxChests; chest++) {
-      const chestPosition: Position = map.getFreeSlotForRoom(Utility.rolldice(this._rotEngine.getRooms().length - 1));
+      const chestPosition: Position = map.getFreeSlotForRoom(Utility.rolldice(map.rooms.length - 1));
       if (chestPosition) {
         const chestTile: Tile = TilesFactory.createTile(TileType.CHEST);
         chestTile.position = new Position(chestPosition.x, chestPosition.y);
@@ -146,26 +132,6 @@ export class MapBuilder {
     this._generateExitPoint(map, this._rotEngine);
     map.rooms = this._rotEngine.getRooms();
     return map;
-  }
-
-  private _generateMonsters(excludeRooms: Array<number> = [], maxEntities: number, map: GameMap): Array<Entity> {
-    const monsters: Array<Entity> = [];
-    const rooms: Array<Room> = this._rotEngine.getRooms();
-    const nbRooms: number = rooms.length;
-    let roomNumber = 0;
-    EntitiesFactory.getInstance()
-                   .setMaxPop(maxEntities);
-    for (let nb = 0; nb < maxEntities; nb++) {
-      do {
-        roomNumber = Utility.rolldice(nbRooms - 1);
-      } while (excludeRooms.indexOf(roomNumber) !== 0);
-
-      const entityPosition: Position = map.getFreeSlotForRoom(roomNumber);
-      const entity: Entity = EntitiesFactory.generateRandomEntities(entityPosition);
-      entity.setNextAction(new IdleAction());
-      monsters.push(entity);
-    }
-    return monsters;
   }
 
   private _createMap(width: number, height: number, seed: number, level: number): GameMap {

@@ -12,17 +12,14 @@ describe('MapBuilder', () => {
       .toEqual(80);
     expect(map.level)
       .toEqual(1);
-    expect(map.entities.length)
-      .toEqual(0);
     expect(map.getAllPosition<ChestTile>(ChestTile).length)
       .toEqual(0);
   });
 
   it('map created with Entities', () => {
-    const map: GameMap = new MapBuilder().withRandomEntities(10)
-                                         .build();
-    expect(map.entities.length)
-      .toEqual(10);
+    const map: GameMap = new MapBuilder().build();
+    expect(map.level)
+      .toEqual(1);
   });
 
   it('map created with Chests', () => {

@@ -10,42 +10,28 @@ export class GameEntities {
   private _entities: Array<Entity> = [];
   private _player: Player = null;
 
-  static convertRawEntitiesToGameEntities(jsonEntities: Array<JsonEntity>): GameEntities {
-    const gameEntities: GameEntities = new GameEntities();
-    if (jsonEntities.length > 0) {
-      const entities: Array<Entity> = [];
-      jsonEntities.forEach((jsonEntity: JsonEntity) => {
-        entities.push(EntitiesFactory.getInstance()
-                                     .createEntityFromJson(jsonEntity)
-                                     .setNextAction(new IdleAction()));
-      });
-      gameEntities.setEntities(entities);
-    }
-    return gameEntities;
+  public setPlayer(actor: Player) {
+    this._player = actor;
   }
 
-  getEntities(): Array<Entity> {
+  public getPlayer(): Player {
+    return this._player;
+  }
+
+  public getEntities(): Array<Entity> {
     return this._entities;
   }
 
-  getAllEntities(): Array<Entity> {
+  public getAllEntities(): Array<Entity> {
     return this.getPlayer() ? this.getEntities()
                                   .concat(this.getPlayer()) : this.getEntities();
   }
 
-  setPlayer(actor: Player) {
-    this._player = actor;
-  }
-
-  getPlayer(): Player {
-    return this._player;
-  }
-
-  setEntities(entities: Array<Entity>) {
+  public setEntities(entities: Array<Entity>) {
     this._entities = entities;
   }
 
-  getEntityAt(position: Position): Entity | null {
+  public getEntityAt(position: Position): Entity | null {
     let monster: Entity = null;
     this.getAllEntities()
         .forEach((value: Entity, index: number) => {
@@ -56,8 +42,16 @@ export class GameEntities {
     return monster;
   }
 
-  removeEntity(index: number): Array<Entity> {
+  public removeEntity(index: number): Array<Entity> {
     return this._entities
                .splice(index, 1);
   }
+
+  public getEntitiesVisiblesOnMap(gameMap: GameMap): Array<Entity> {
+    return this.getAllEntities()
+               .filter((entity: Entity) => {
+                 return gameMap.isPositionVisible(entity.getPosition());
+               });
+  }
+
 }

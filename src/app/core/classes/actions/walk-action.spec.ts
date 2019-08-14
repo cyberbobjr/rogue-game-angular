@@ -14,6 +14,7 @@ import {WalkAction} from './walk-action';
 import {Direction} from '../../enums/direction.enum';
 import {Position} from '../base/position';
 import {ActionResult} from './action-result';
+import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('walk-action', () => {
   let player: Player = null;
@@ -22,10 +23,15 @@ describe('walk-action', () => {
   let entitiesService: EntitiesEngine;
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               RouterTestingModule],
-                                     providers: [EntitiesEngine, GameEngineImp]
-                                   });
+      imports: [
+        SharedModule,
+        RouterTestingModule
+      ],
+      providers: [
+        EntitiesEngine,
+        GameEngineImp
+      ]
+    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
     player = new Player().setGameClass(GameClassFactory.getInstance()
@@ -34,7 +40,7 @@ describe('walk-action', () => {
                                              .createRace(RaceType.HUMAN))
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
     gameEngine = TestBed.get(GameEngineImp);
-    gameEngine.loadGameMap(gameMap);
+    gameEngine.loadGameMap(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
     entitiesService = TestBed.get(EntitiesEngine);
     entitiesService.setPlayer(player);
   });

@@ -5,6 +5,10 @@ import {Utility} from '../Utility/utility';
 export class Rooms {
   private _rooms: Array<Room> = [];
 
+  get rooms(): Array<Room> {
+    return this._rooms;
+  }
+
   constructor(rooms: Array<Room>) {
     this._rooms = rooms;
   }
@@ -24,5 +28,4 @@ export class Rooms {
     const bottomright: Position = new Position(room.getRight(), room.getBottom());
     return [topleft, bottomright];
   }
-
 }

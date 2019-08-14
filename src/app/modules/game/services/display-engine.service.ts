@@ -11,6 +11,7 @@ import {Entity} from '../../../core/classes/base/entity';
 import {IEffect} from '../../../core/interfaces/i-effect';
 import {Utility} from '../../../core/classes/Utility/utility';
 import {Tile} from '../../../core/classes/base/tile';
+import {GameEntities} from '../../../core/classes/base/game-entities';
 
 interface BufferTile {
   sprite: Sprite;
@@ -18,8 +19,8 @@ interface BufferTile {
 }
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class DisplayEngine {
   private _display: Display = new Display();
   maxVisiblesCols = 20;
@@ -49,14 +50,14 @@ export class DisplayEngine {
     this.maxVisiblesRows = height;
   }
 
-  public drawGameMap(gameMap: GameMap) {
+  public drawGameMap(gameMap: GameMap, gameEntities: GameEntities) {
     // prepare map for drawing
-    const cameraPosition = gameMap.gameEntities.getPlayer().position;
+    const cameraPosition = gameEntities.getPlayer().position;
     const cameraStartPosition: Position = this._getStartViewPortOfPosition(cameraPosition);
     // get map data
     const bufferTile: Tile[][] = gameMap.extractTiles(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
     const bufferLos: number[][] = gameMap.extractLosMap(cameraStartPosition.x, cameraStartPosition.y, this.maxVisiblesCols, this.maxVisiblesRows);
-    const entities: Array<Entity> = gameMap.getEntitiesVisiblesOnMap();
+    const entities: Array<Entity> = gameEntities.getEntitiesVisiblesOnMap(gameMap);
     // build buffer
     const buffer: Array<Array<BufferTile>> = this._buildBuffer(bufferTile, bufferLos, entities);
 

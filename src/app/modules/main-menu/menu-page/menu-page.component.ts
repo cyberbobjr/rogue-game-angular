@@ -9,6 +9,8 @@ import {GameMap} from '../../../core/classes/base/game-map';
 import {Error} from 'tslint/lib/error';
 import {Config} from '../../../core/config';
 import {MapBuilder} from '../../../core/factories/map-builder';
+import {GameEntities} from '../../../core/classes/base/game-entities';
+import {EntityBuilder} from '../../../core/factories/entity-builder';
 
 @Component({
   selector: 'app-menu-page',
@@ -48,7 +50,10 @@ export class MenuPageComponent implements OnInit {
 
   async startNewGame() {
     const maps: Array<GameMap> = MapBuilder.generateMaps(Config.maxLevel);
-    const saveMapPromise: Promise<void>[] = maps.map(map => this._storageService.saveMap(map));
+    const saveMapPromise: Promise<void>[] = maps.map(map => {
+      const gameEntities: GameEntities = EntityBuilder.generateMonsters([], map.level, map);
+      return this._storageService.saveMap(map, gameEntities);
+    });
     await Promise.all(saveMapPromise)
                  .then(() => {
                    return this._storageService.loadRawMap(1);

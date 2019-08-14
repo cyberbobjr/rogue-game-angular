@@ -5,12 +5,13 @@ import {GameEngineImp} from './game-engine-imp.service';
 import {Action} from '../../../core/interfaces/action';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {GameEntities} from '../../../core/classes/base/game-entities';
+import {Position} from '../../../core/classes/base/position';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class EntitiesEngine {
-  private _gameEntities: GameEntities;
+  private _gameEntities: GameEntities = new GameEntities();
 
   constructor() {
   }
@@ -33,6 +34,10 @@ export class EntitiesEngine {
 
   getAllEntities(): Array<Entity> {
     return this._gameEntities.getAllEntities();
+  }
+
+  setEntities(entities: Array<Entity>): void {
+    this._gameEntities.setEntities(entities);
   }
 
   updateEntities(gameEngine: GameEngineImp) {
@@ -68,5 +73,9 @@ export class EntitiesEngine {
         }
       }
     }
+  }
+
+  getEntityAt(position: Position): Entity | undefined {
+    return this._gameEntities.getEntityAt(position);
   }
 }

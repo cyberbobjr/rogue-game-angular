@@ -20,8 +20,7 @@ export class IdleAction implements Action {
       actor.setNextAction(new ChaseAction(gameEngine.gameEntities.getPlayer()));
     } else {
       const destPosition: Position = this._getRandomPosition(actor);
-      const tile: Tile = <Tile>gameEngine.getMapEngine()
-                                         .getTileOrEntityAt(destPosition);
+      const tile: Tile = <Tile>gameEngine.getTileOrEntityAt(destPosition);
       if (tile instanceof Tile && tile.isWalkable()) {
         actor.position = destPosition;
         tile.onWalk(actor);

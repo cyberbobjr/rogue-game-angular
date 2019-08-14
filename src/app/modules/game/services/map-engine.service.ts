@@ -38,16 +38,6 @@ export class MapEngine {
                .getNextPosition(originPosition, destPosition);
   }
 
-  getTileOrEntityAt(position: Position): Iobject {
-    const gameEntities: GameEntities = this.getCurrentMap().gameEntities;
-    const entity: Iobject = gameEntities.getEntityAt(position);
-    if (entity) {
-      return entity;
-    }
-    return this.getCurrentMap()
-               .getDataAt(position.x, position.y);
-  }
-
   getTilesAround(position: Position): Array<Array<Iobject>> {
     return this.getCurrentMap()
                .getTilesAround(position);

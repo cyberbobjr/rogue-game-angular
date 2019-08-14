@@ -4,6 +4,9 @@ import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Entity} from '../classes/base/entity';
 import {KeyboardCapture} from './keyboardCapture';
 import {GameMap} from '../classes/base/game-map';
+import {Position} from '../classes/base/position';
+import {Iobject} from './iobject';
+import {GameEntities} from '../classes/base/game-entities';
 
 export interface GameEngine {
   getPlayer(): Player;
@@ -24,7 +27,9 @@ export interface GameEngine {
 
   captureKeyboardEvent(): void;
 
-  loadGameMap(gameMap: GameMap): void;
+  loadGameMap(gameMap: GameMap, gameEntities: GameEntities): void;
 
   executeEntitiesActions(): void;
+
+  getTileOrEntityAt(position: Position): Iobject;
 }

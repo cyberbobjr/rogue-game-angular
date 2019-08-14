@@ -11,6 +11,8 @@ import {MapBuilder} from '../../../core/factories/map-builder';
 import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
 import {EntitiesEngine} from './entities-engine.service';
 import {AttributeSystem} from '../../../core/classes/base/AttributeSystem';
+import {GameEntities} from '../../../core/classes/base/game-entities';
+import {EntityBuilder} from '../../../core/factories/entity-builder';
 
 describe('StorageService', () => {
   beforeEach(() => TestBed.configureTestingModule({providers: [EntitiesEngine]}));
@@ -25,8 +27,8 @@ describe('StorageService', () => {
     try {
       const service: StorageEngine = TestBed.get(StorageEngine);
       const abilities = new AttributeSystem({
-                                              strength: 10, dexterity: 11, constitution: 12, intelligence: 13, wisdom: 14, charisma: 15
-                                            });
+        strength: 10, dexterity: 11, constitution: 12, intelligence: 13, wisdom: 14, charisma: 15
+      });
       const player: Player = new Player().setGameClass(GameClassFactory.getInstance()
                                                                        .createGameClass(ClassType.BARBARIAN))
                                          .setRace(RaceFactory.getInstance()
@@ -50,7 +52,8 @@ describe('StorageService', () => {
     const gameMap: GameMap = new MapBuilder().withLevel(level)
                                              .withSeed(511)
                                              .build();
-    await service.saveMap(gameMap);
+    const gameEntities: GameEntities = EntityBuilder.generateMonsters([], 5, gameMap);
+    await service.saveMap(gameMap, gameEntities);
     const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await service.loadRawMap(level);
     const mapLoaded: GameMap = MapBuilder.fromJSON(mapData.map);
     expect(mapLoaded.level)

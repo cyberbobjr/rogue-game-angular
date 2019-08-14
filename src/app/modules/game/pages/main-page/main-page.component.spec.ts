@@ -18,6 +18,8 @@ import {RaceFactory} from '../../../../core/factories/race-factory';
 import {RaceType} from '../../../../core/enums/race-type.enum';
 import {GameMap} from '../../../../core/classes/base/game-map';
 import {MapBuilder} from '../../../../core/factories/map-builder';
+import {EntityBuilder} from '../../../../core/factories/entity-builder';
+import {GameEntities} from '../../../../core/classes/base/game-entities';
 
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
@@ -26,18 +28,18 @@ describe('MainPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               NgxSmartModalModule.forRoot(),
-                                               InventoryModule,
-                                               RouterTestingModule],
-                                     declarations: [MainPageComponent,
-                                                    MainMapComponent,
-                                                    InfoPageComponent,
-                                                    InventoryPageComponent,
-                                                    LogPageComponent],
-                                     providers: [StorageEngine,
-                                                 EntitiesEngine]
-                                   })
+      imports: [SharedModule,
+        NgxSmartModalModule.forRoot(),
+        InventoryModule,
+        RouterTestingModule],
+      declarations: [MainPageComponent,
+        MainMapComponent,
+        InfoPageComponent,
+        InventoryPageComponent,
+        LogPageComponent],
+      providers: [StorageEngine,
+        EntitiesEngine]
+    })
            .compileComponents();
   }));
 
@@ -60,7 +62,8 @@ describe('MainPageComponent', () => {
                                                            .createRace(RaceType.HUMAN));
     const map: GameMap = new MapBuilder().build();
     player.setMapLevelAndPosition(map.level, map.entryPosition);
-    storageService.saveMap(map);
+    const gameEntities: GameEntities = EntityBuilder.generateMonsters([], 5, map);
+    storageService.saveMap(map, gameEntities);
     storageService.savePlayer(player);
     fixture.detectChanges();
     expect(component)

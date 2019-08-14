@@ -18,30 +18,17 @@ export class GameMap {
   private _seed: number;
   private _level: number;
   private _rooms: Rooms;
-  private _gameEntities: GameEntities = new GameEntities();
   private _entryPosition: Position;
   private _exitPosition: Position;
 
   private _shadowCasting: PreciseShadowcasting = null;
 
-  set gameEntities(value: GameEntities) {
-    this._gameEntities = value;
-  }
-
-  get gameEntities(): GameEntities {
-    return this._gameEntities;
+  get rooms(): Array<Room> {
+    return this._rooms.rooms;
   }
 
   set rooms(value: Array<Room>) {
     this._rooms = new Rooms(value);
-  }
-
-  get entities(): Array<Entity> {
-    return this._gameEntities.getEntities();
-  }
-
-  set entities(value: Array<Entity>) {
-    this._gameEntities.setEntities(value);
   }
 
   get entryPosition(): Position {
@@ -242,13 +229,4 @@ export class GameMap {
   public isPositionVisible(position: Position): boolean {
     return this.getLosForPosition(position) > 0;
   }
-
-  public getEntitiesVisiblesOnMap(): Array<Entity> {
-    return this._gameEntities
-               .getAllEntities()
-               .filter((entity: Entity) => {
-                 return this.isPositionVisible(entity.getPosition());
-               });
-  }
-
 }

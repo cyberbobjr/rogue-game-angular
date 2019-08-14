@@ -17,6 +17,7 @@ import {GameObjectFactory} from '../../factories/game-object-factory';
 import {GameObjectType} from '../../enums/game-object-type.enum';
 import {GameObject} from '../gameObjects/game-object';
 import {GameEntities} from '../base/game-entities';
+import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('take-action', () => {
   let player: Player = null;
@@ -24,10 +25,10 @@ describe('take-action', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               RouterTestingModule],
-                                     providers: [EntitiesEngine, GameEngineImp]
-                                   });
+      imports: [SharedModule,
+        RouterTestingModule],
+      providers: [EntitiesEngine, GameEngineImp]
+    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
     player = new Player().setGameClass(GameClassFactory.getInstance()
@@ -52,7 +53,7 @@ describe('take-action', () => {
     const takeAction: TakeAction = new TakeAction();
 
     tile.dropOn(gameObject);
-    gameEngine.loadGameMap(gameMap);
+    gameEngine.loadGameMap(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
     player.setMapLevelAndPosition(1, freePosition);
     takeAction.execute(player, gameEngine);
     const inventoryFinalSize: number = player.inventory.getInventorySize();

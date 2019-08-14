@@ -16,6 +16,7 @@ import {Entity} from '../base/entity';
 import {Direction} from '../../enums/direction.enum';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
 import {StorageEngine} from '../../../modules/game/services/storage-engine.service';
+import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('Fire action', () => {
   let player: Player = null;
@@ -25,23 +26,27 @@ describe('Fire action', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               RouterTestingModule],
-                                     providers: [EntitiesEngine,
-                                                 GameEngineImp,
-                                                 MapEngine,
-                                                 StorageEngine]
-                                   });
+      imports: [
+        SharedModule,
+        RouterTestingModule
+      ],
+      providers: [
+        EntitiesEngine,
+        GameEngineImp,
+        MapEngine,
+        StorageEngine
+      ]
+    });
     entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngineImp);
-    gameMap = new MapBuilder().withRandomEntities(5)
-                              .build();
-    gameEngine.loadGameMap(gameMap);
+    gameMap = new MapBuilder().build();
+    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
                                              .createRace(RaceType.HUMAN))
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+    entitiesService.setGameEntities(EntityBuilder.generateMonsters([], 5, gameMap));
     entitiesService.setPlayer(player);
   });
 
@@ -59,9 +64,9 @@ describe('Fire action', () => {
   });
 
   it('should be waited with ennemy in range', () => {
-    const entities: Array<Entity> = gameMap.gameEntities.getEntities();
+    const entities: Array<Entity> = entitiesService.getAllEntities();
     const mainActor: Entity = (player as Entity);
-    gameEngine.loadGameMap(gameMap);
+    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
     gameMap.computeLOSMap(mainActor);
     entities[0].position = gameMap.entryPosition.computeDestination(Direction.N);
     const attackAction: FireAction = new FireAction();

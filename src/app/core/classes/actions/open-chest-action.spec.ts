@@ -14,6 +14,7 @@ import {EntitiesEngine} from '../../../modules/game/services/entities-engine.ser
 import {Position} from '../base/position';
 import {OpenChestAction} from './open-chest-action';
 import {ChestTile} from '../tiles/chest-tile';
+import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('open-chest-action', () => {
   let player: Player = null;
@@ -21,10 +22,10 @@ describe('open-chest-action', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               RouterTestingModule],
-                                     providers: [EntitiesEngine, GameEngineImp]
-                                   });
+      imports: [SharedModule,
+        RouterTestingModule],
+      providers: [EntitiesEngine, GameEngineImp]
+    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
     player = new Player().setGameClass(GameClassFactory.getInstance()
@@ -43,7 +44,7 @@ describe('open-chest-action', () => {
   it('should open chest', () => {
     const chestsPosition: Array<Position> = gameMap.getAllPosition<ChestTile>(ChestTile);
     const gameEngine: GameEngineImp = TestBed.get(GameEngineImp);
-    gameEngine.loadGameMap(gameMap);
+    gameEngine.loadGameMap(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
     player.setMapLevelAndPosition(gameMap.level, chestsPosition[0]);
     const openChestAction: OpenChestAction = new OpenChestAction();
     const resultAction: ActionResult = openChestAction.execute(player, gameEngine);

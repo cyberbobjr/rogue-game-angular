@@ -86,12 +86,12 @@ export class StorageEngine {
     return {map: JSON.parse(gameMap[0]['map']), entities: JSON.parse(gameMap[0]['entities'])};
   }
 
-  saveGameState(gameMap: GameMap) {
-    this.savePlayer(gameMap.gameEntities.getPlayer());
-    this.saveMap(gameMap);
+  saveGameState(gameMap: GameMap, gameEntities: GameEntities) {
+    this.savePlayer(gameEntities.getPlayer());
+    this.saveMap(gameMap, gameEntities);
   }
 
-  async saveMap(gameMap: GameMap): Promise<any> {
+  async saveMap(gameMap: GameMap, gameEntities: GameEntities): Promise<any> {
     return await this.connection.insert({
       into: 'Map',
       return: true,
@@ -99,7 +99,7 @@ export class StorageEngine {
       values: [{
         level: gameMap.level,
         map: JSON.stringify(gameMap),
-        entities: JSON.stringify(gameMap.entities)
+        entities: JSON.stringify(gameEntities.getEntities())
       }]
     });
   }

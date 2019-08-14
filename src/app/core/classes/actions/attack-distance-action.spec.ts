@@ -16,7 +16,7 @@ import {AttackDistanceAction} from './attack-distance-action';
 import {EntitiesFactory} from '../../factories/entities-factory';
 import {EntityType} from '../../enums/entity-type.enum';
 import {Entity} from '../base/entity';
-import {AttackMeleeAction} from './attack-melee-action';
+import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('Attack distance action', () => {
   let player: Player = null;
@@ -26,23 +26,27 @@ describe('Attack distance action', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [SharedModule,
-                                               RouterTestingModule],
-                                     providers: [EntitiesEngine,
-                                                 GameEngineImp,
-                                                 MapEngine,
-                                                 StorageEngine]
-                                   });
+      imports: [
+        SharedModule,
+        RouterTestingModule
+      ],
+      providers: [
+        EntitiesEngine,
+        GameEngineImp,
+        MapEngine,
+        StorageEngine
+      ]
+    });
     entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngineImp);
-    gameMap = new MapBuilder().withRandomEntities(5)
-                              .build();
-    gameEngine.loadGameMap(gameMap);
+    gameMap = new MapBuilder().build();
+    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
                                              .createRace(RaceType.HUMAN))
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+    entitiesService.setGameEntities(EntityBuilder.generateMonsters([], 5, gameMap));
     entitiesService.setPlayer(player);
   });
 
@@ -56,7 +60,7 @@ describe('Attack distance action', () => {
 
   it('should do damage on entity', () => {
     const attackAction: AttackDistanceAction = new AttackDistanceAction(player);
-    const entity: Entity = gameMap.gameEntities.getEntities()[0];
+    const entity: Entity = entitiesService.getAllEntities()[0];
     entity.dexterity = 100;
     player.onHit = function (damage: number) {
       player.hp = 0;

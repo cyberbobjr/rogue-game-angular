@@ -13,8 +13,19 @@ import {Sprite} from '../classes/base/sprite';
 import {GameObject} from '../classes/gameObjects/game-object';
 import {GameObjectFactory} from './game-object-factory';
 import {SlotType} from '../enums/equiped-type.enum';
+import {GameMap} from '../classes/base/game-map';
+import {Room} from 'rot-js/lib/map/features';
+import {IdleAction} from '../classes/actions/idle-action';
 
 export class EntitiesFactory {
+
+  constructor() {
+    console.log('EntitiesFactory created');
+    for (const key of Object.keys(gamemonster.default)) {
+      this._monstersClass.set(gamemonster.default[key].id, new GameMonsterClass(gamemonster.default[key]));
+    }
+    this.setMaxPop(1);
+  }
   private static instance: EntitiesFactory;
   private _monstersClass: Map<string, GameMonsterClass> = new Map<string, GameMonsterClass>();
   private _frequency: number;
@@ -30,14 +41,6 @@ export class EntitiesFactory {
   static generateRandomEntities(position: Position): Entity {
     return EntitiesFactory.getInstance()
                           .createEntity(EntityType.MONSTER, position);
-  }
-
-  constructor() {
-    console.log('EntitiesFactory created');
-    for (const key of Object.keys(gamemonster.default)) {
-      this._monstersClass.set(gamemonster.default[key].id, new GameMonsterClass(gamemonster.default[key]));
-    }
-    this.setMaxPop(1);
   }
 
   createEntityFromJson(jsonData: JsonEntity): Player | Monster {

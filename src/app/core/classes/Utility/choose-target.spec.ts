@@ -11,10 +11,13 @@ import {Entity} from '../base/entity';
 import {RouterTestingModule} from '@angular/router/testing';
 import {EntitiesFactory} from '../../factories/entities-factory';
 import {GameEngine} from '../../interfaces/game-engine';
+import {GameEntities} from '../base/game-entities';
+import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('choose target testing', () => {
   let gameEngine: GameEngine;
   let gameMap: GameMap;
+  let gameEntities: GameEntities;
   const visibleEntities: Array<Entity> = [
     EntitiesFactory.generateRandomEntities(new Position(1, 1)),
     EntitiesFactory.generateRandomEntities(new Position(2, 2)),
@@ -31,12 +34,13 @@ describe('choose target testing', () => {
     });
     gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().build();
+    gameEntities = EntityBuilder.generateMonsters([], 5, gameMap);
     for (let y = 0; y < gameMap.height; y++) {
       for (let x = 0; x < gameMap.width; x++) {
         gameMap.setTile(new FloorTile(new Position(x, y)));
       }
     }
-    gameEngine.loadGameMap(gameMap);
+    gameEngine.loadGameMap(gameMap, gameEntities);
   });
 
   it('should be created', () => {

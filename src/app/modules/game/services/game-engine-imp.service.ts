@@ -19,6 +19,9 @@ import {GameEntities} from '../../../core/classes/base/game-entities';
 import {GameEngine} from '../../../core/interfaces/game-engine';
 import {GeneralKeyboardCapture} from '../../../core/classes/Utility/generalKeyboardCapture';
 import {KeyboardCapture} from '../../../core/interfaces/keyboardCapture';
+import {EntityBuilder} from '../../../core/factories/entity-builder';
+import {Iobject} from '../../../core/interfaces/iobject';
+import {Position} from '../../../core/classes/base/position';
 
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
@@ -64,8 +67,12 @@ export class GameEngineImp implements GameEngine {
     this._commandEngine.gameEngine = this;
   }
 
-  setHandleKeyEvent(keyboardHandler: KeyboardCapture) {
+  public setHandleKeyEvent(keyboardHandler: KeyboardCapture) {
     this._keyboardHandler = keyboardHandler;
+  }
+
+  getTileOrEntityAt(position: Position): Iobject {
+    return this.gameEntities.getEntityAt(position) || this.gameMap.getTileAt(position);
   }
 
   public startGameLoop() {
@@ -100,8 +107,7 @@ export class GameEngineImp implements GameEngine {
   }
 
   private _drawGame() {
-    const gameMap: GameMap = this._mapEngine.getCurrentMap();
-    this._displayEngine.drawGameMap(gameMap);
+    this._displayEngine.drawGameMap(this.gameMap, this.gameEntities);
   }
 
   public gameOver() {
@@ -123,9 +129,9 @@ export class GameEngineImp implements GameEngine {
   }
 
   public getEntitiesVisibles(): Array<Entity> {
-    return this._mapEngine
-               .getCurrentMap()
-               .getEntitiesVisiblesOnMap();
+    return this._entityEngine
+               .getGameEntities()
+               .getEntitiesVisiblesOnMap(this.gameMap);
   }
 
   public getMapEngine(): MapEngine {
@@ -160,7 +166,7 @@ export class GameEngineImp implements GameEngine {
 
   public changeMapLevel(newLevel: number) {
     // save current level
-    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap());
+    this._storageEngine.saveGameState(this.gameMap, this.gameEntities);
     // get level if exist
     this._loadMapLevel(newLevel);
   }
@@ -169,8 +175,8 @@ export class GameEngineImp implements GameEngine {
     this._storageEngine
         .loadRawMap(level)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          const gameMap: GameMap = this.loadRawGameMap(data);
-          this._storageEngine.saveGameState(gameMap);
+          this.loadRawGameMap(data);
+          this._storageEngine.saveGameState(this.gameMap, this.gameEntities);
         })
         .catch((e) => {
           console.log(e);
@@ -178,16 +184,15 @@ export class GameEngineImp implements GameEngine {
         });
   }
 
-  public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameMap {
-    const gameMap: GameMap = MapBuilder.fromJSON(mapData.map);
-    gameMap.gameEntities = GameEntities.convertRawEntitiesToGameEntities(mapData.entities);
-    this.loadGameMap(gameMap);
-    return gameMap;
+  public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameEngine {
+    this._mapEngine.setGameMap(MapBuilder.fromJSON(mapData.map));
+    this._entityEngine.setGameEntities(EntityBuilder.fromJSON(mapData.entities));
+    return this;
   }
 
-  public loadGameMap(gameMap: GameMap): GameMap {
+  public loadGameMap(gameMap: GameMap, gameEntities: GameEntities): GameMap {
     this._mapEngine.setGameMap(gameMap);
-    this._entityEngine.setGameEntities(gameMap.gameEntities);
+    this._entityEngine.setGameEntities(gameEntities);
     return gameMap;
   }
 
@@ -196,7 +201,7 @@ export class GameEngineImp implements GameEngine {
   }
 
   saveGameState(): void {
-    this.storageEngine.saveGameState(this._mapEngine.getCurrentMap());
+    this.storageEngine.saveGameState(this.gameMap, this.gameEntities);
   }
 
 }

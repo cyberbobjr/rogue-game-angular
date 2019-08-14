@@ -21,8 +21,7 @@ export class WalkAction implements Action {
    */
   execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
     const destPosition: Position = actor.position.computeDestination(this._direction);
-    const tile: Tile | Entity = <Tile | Entity>gameEngine.getMapEngine()
-                                                         .getTileOrEntityAt(destPosition);
+    const tile: Tile | Entity = <Tile | Entity>gameEngine.getTileOrEntityAt(destPosition);
     if (tile instanceof Tile && tile.isWalkable()) {
       tile.onWalk(actor);
       actor.position = destPosition;
