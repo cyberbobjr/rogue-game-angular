@@ -1,15 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Entity} from '../../../core/classes/base/entity';
-import {Position} from '../../../core/classes/base/position';
 import {Player} from '../../../core/classes/entities/player';
-import {GameEngine} from './game-engine.service';
-import {JsonEntity, JsonMap} from '../../../core/interfaces/json-interfaces';
-import {EntitiesFactory} from '../../../core/factories/entities-factory';
-import {IdleAction} from '../../../core/classes/actions/idle-action';
-import {GameMap} from '../../../core/classes/base/game-map';
+import {GameEngineImp} from './game-engine-imp.service';
 import {Action} from '../../../core/interfaces/action';
 import {ActionResult} from '../../../core/classes/actions/action-result';
-import {MapEngine} from './map-engine.service';
 import {GameEntities} from '../../../core/classes/base/game-entities';
 
 @Injectable({
@@ -41,7 +35,7 @@ export class EntitiesEngine {
     return this._gameEntities.getAllEntities();
   }
 
-  updateEntities(gameEngine: GameEngine) {
+  updateEntities(gameEngine: GameEngineImp) {
     this.getAllEntities()
         .forEach((entity: Entity, index: number) => {
           entity.update();
@@ -55,7 +49,7 @@ export class EntitiesEngine {
         });
   }
 
-  executeEntitiesActions(gameEngine: GameEngine) {
+  executeEntitiesActions(gameEngine: GameEngineImp) {
     const entities: Array<Entity> = this.getAllEntities();
     for (let currentActorIndex = 0; currentActorIndex < entities.length; currentActorIndex++) {
       const currentActor: Entity = entities[currentActorIndex];

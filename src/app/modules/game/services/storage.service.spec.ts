@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 
-import {StorageService} from './storage.service';
+import {StorageEngine} from './storage-engine.service';
 import {Player} from '../../../core/classes/entities/player';
 import {GameClassFactory} from '../../../core/factories/game-class-factory';
 import {ClassType} from '../../../core/enums/class-type.enum';
@@ -16,14 +16,14 @@ describe('StorageService', () => {
   beforeEach(() => TestBed.configureTestingModule({providers: [EntitiesEngine]}));
 
   it('should be created', () => {
-    const service: StorageService = TestBed.get(StorageService);
+    const service: StorageEngine = TestBed.get(StorageEngine);
     expect(service)
       .toBeTruthy();
   });
 
   it('should save and load Player', async (done) => {
     try {
-      const service: StorageService = TestBed.get(StorageService);
+      const service: StorageEngine = TestBed.get(StorageEngine);
       const abilities = new AttributeSystem({
                                               strength: 10, dexterity: 11, constitution: 12, intelligence: 13, wisdom: 14, charisma: 15
                                             });
@@ -46,7 +46,7 @@ describe('StorageService', () => {
 
   it('should save and load map', async (done) => {
     const level = 1;
-    const service: StorageService = TestBed.get(StorageService);
+    const service: StorageEngine = TestBed.get(StorageEngine);
     const gameMap: GameMap = new MapBuilder().withLevel(level)
                                              .withSeed(511)
                                              .build();

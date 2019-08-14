@@ -8,19 +8,19 @@ import {InventoryModule} from './modules/inventory/inventory.module';
 import {NgxSmartModalModule} from 'ngx-smart-modal';
 
 @NgModule({
-            declarations: [
-              AppComponent
-            ],
-            imports: [
-              BrowserAnimationsModule,
-              BrowserModule,
-              AppRoutingModule,
-              SharedModule,
-              InventoryModule,
-              NgxSmartModalModule.forRoot()
-            ],
-            providers: [],
-            bootstrap: [AppComponent]
-          })
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserAnimationsModule,
+    BrowserModule,
+    AppRoutingModule,
+    SharedModule,
+    InventoryModule,
+    NgxSmartModalModule.forRoot()
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
 export class AppModule {
 }

@@ -1,13 +1,10 @@
-import {Command} from '../../interfaces/command';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {AbstractCommand, Command} from '../../interfaces/command';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {Entity} from '../base/entity';
 import {EventLog} from '../Utility/event-log';
 
-export class WaitCommand implements Command {
-  constructor() {
-  }
-
-  execute(actor: Entity, gameEngine: GameEngine) {
+export class WaitCommand extends AbstractCommand implements Command {
+  execute(actor: Entity) {
     EventLog.getInstance().message = 'Waiting...';
     actor.onRest();
     actor.setNextAction(null);

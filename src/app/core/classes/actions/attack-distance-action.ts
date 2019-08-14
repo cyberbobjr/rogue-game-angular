@@ -1,7 +1,7 @@
 import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {EventLog} from '../Utility/event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
 
@@ -15,7 +15,7 @@ export class AttackDistanceAction implements Action {
     return '';
   }
 
-  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
     EventLog.getInstance().message = `${actor.name} attack`;
     const damage: number = CombatResolver.DistanceAttack(actor, this._target);
     this._target.onHit(damage);

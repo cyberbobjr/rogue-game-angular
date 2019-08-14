@@ -1,26 +1,25 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {DisplayEngine} from '../../services/display-engine.service';
-import {GameEngine} from '../../services/game-engine.service';
+import {GameEngineImp} from '../../services/game-engine-imp.service';
 
 @Component({
-  selector: 'app-main-map',
-  templateUrl: './main-map.component.html',
-  styleUrls: ['./main-map.component.css']
-})
+             selector: 'app-main-map',
+             templateUrl: './main-map.component.html',
+             styleUrls: ['./main-map.component.css']
+           })
 export class MainMapComponent implements OnInit, OnDestroy {
   @ViewChild('refMap') refMap: ElementRef;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyEvent(keyboardEvent: KeyboardEvent) {
-    const handleKeyEvent = this._gameEngineService.handleKeyEvent;
-    handleKeyEvent(keyboardEvent);
+    this._gameEngineService.keyboardHandler.handleActionKeyEvent(keyboardEvent);
     keyboardEvent.preventDefault();
     keyboardEvent.stopPropagation();
     return false;
   }
 
   constructor(private _displayService: DisplayEngine,
-              private _gameEngineService: GameEngine) {
+              private _gameEngineService: GameEngineImp) {
   }
 
   ngOnInit() {

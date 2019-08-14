@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {EntitiesEngine} from '../../game/services/entities-engine.service';
 import {Router} from '@angular/router';
 import {MapEngine} from '../../game/services/map-engine.service';
-import {StorageService} from '../../game/services/storage.service';
+import {StorageEngine} from '../../game/services/storage-engine.service';
 import {Player} from '../../../core/classes/entities/player';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {GameMap} from '../../../core/classes/base/game-map';
@@ -22,7 +22,7 @@ export class MenuPageComponent implements OnInit {
   private _player: Player = null;
 
   constructor(private _entitiesServices: EntitiesEngine,
-              private _storageService: StorageService,
+              private _storageService: StorageEngine,
               private _mapEngine: MapEngine,
               private _router: Router) {
   }

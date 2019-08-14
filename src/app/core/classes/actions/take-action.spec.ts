@@ -5,7 +5,7 @@ import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
 import {GameMap} from '../base/game-map';
 import {MapBuilder} from '../../factories/map-builder';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -26,7 +26,7 @@ describe('take-action', () => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesEngine, GameEngine]
+                                     providers: [EntitiesEngine, GameEngineImp]
                                    });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
@@ -49,7 +49,7 @@ describe('take-action', () => {
     const tile: Tile = gameMap.getTileAt(freePosition);
     const gameObject: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     tile.dropOn(gameObject);
-    const gameEngine: GameEngine = TestBed.get(GameEngine);
+    const gameEngine: GameEngineImp = TestBed.get(GameEngineImp);
     gameEngine.loadGameMap(gameMap);
     player.setMapLevelAndPosition(1, freePosition);
     const takeAction: TakeAction = new TakeAction();

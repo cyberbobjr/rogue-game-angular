@@ -9,7 +9,7 @@ import {MainMapComponent} from '../main-map/main-map.component';
 import {InfoPageComponent} from '../info-page/info-page.component';
 import {InventoryPageComponent} from '../inventory-page/inventory-page.component';
 import {LogPageComponent} from '../log-page/log-page.component';
-import {StorageService} from '../../services/storage.service';
+import {StorageEngine} from '../../services/storage-engine.service';
 import {EntitiesEngine} from '../../services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameClassFactory} from '../../../../core/factories/game-class-factory';
@@ -22,7 +22,7 @@ import {MapBuilder} from '../../../../core/factories/map-builder';
 describe('MainPageComponent', () => {
   let component: MainPageComponent;
   let fixture: ComponentFixture<MainPageComponent>;
-  let storageService: StorageService;
+  let storageService: StorageEngine;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -35,14 +35,14 @@ describe('MainPageComponent', () => {
                                                     InfoPageComponent,
                                                     InventoryPageComponent,
                                                     LogPageComponent],
-                                     providers: [StorageService,
+                                     providers: [StorageEngine,
                                                  EntitiesEngine]
                                    })
            .compileComponents();
   }));
 
   beforeEach(() => {
-    storageService = TestBed.get(StorageService);
+    storageService = TestBed.get(StorageEngine);
     fixture = TestBed.createComponent(MainPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

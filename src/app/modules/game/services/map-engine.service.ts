@@ -3,7 +3,7 @@ import {GameMap} from '../../../core/classes/base/game-map';
 import {Iobject} from '../../../core/interfaces/iobject';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {MapBuilder} from 'src/app/core/factories/map-builder';
-import {StorageService} from 'src/app/modules/game/services/storage.service';
+import {StorageEngine} from 'src/app/modules/game/services/storage-engine.service';
 import {Position} from '../../../core/classes/base/position';
 import AStar from 'rot-js/lib/path/astar';
 import {Path} from 'rot-js';

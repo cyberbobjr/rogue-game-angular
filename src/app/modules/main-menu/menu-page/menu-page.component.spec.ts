@@ -7,7 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
 import {NgxSmartModalModule} from 'ngx-smart-modal';
 import {EntitiesEngine} from 'src/app/modules/game/services/entities-engine.service';
-import {StorageService} from 'src/app/modules/game/services/storage.service';
+import {StorageEngine} from 'src/app/modules/game/services/storage-engine.service';
 import {MapEngine} from 'src/app/modules/game/services/map-engine.service';
 import {MapBuilder} from 'src/app/core/factories/map-builder';
 import {MainMenuRoutingModule} from 'src/app/modules/main-menu/main-menu-routing/main-menu-routing.module';
@@ -28,7 +28,7 @@ describe('MenuPageComponent', () => {
                                                RouterTestingModule,
                                                NgxSmartModalModule.forRoot()],
                                      providers: [EntitiesEngine,
-                                                 StorageService,
+                                                 StorageEngine,
                                                  MapEngine,
                                                  MapBuilder]
                                    })

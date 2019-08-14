@@ -10,11 +10,13 @@ import {WaitCommand} from '../../../core/classes/commands/wait-command';
 import {UpStairCommand} from 'src/app/core/classes/commands/up-stair-command';
 import {DownStairCommand} from 'src/app/core/classes/commands/down-stair-command';
 import {OpenChestCommand} from '../../../core/classes/commands/open-chest-command';
+import {GameEngine} from '../../../core/interfaces/game-engine';
 
 @Injectable({
-              providedIn: 'root'
-            })
+  providedIn: 'root'
+})
 export class CommandsService {
+  private _gameEngine: GameEngine;
   ArrowUp: Command;
   ArrowDown: Command;
   ArrowLeft: Command;
@@ -37,31 +39,35 @@ export class CommandsService {
   KeySpace: Command;
   KeyC: Command;
 
-  constructor() {
-    this._initCommand();
+  set gameEngine(value: GameEngine) {
+    this._gameEngine = value;
   }
 
-  private _initCommand() {
-    this.ArrowUp = new MoveN();
-    this.ArrowDown = new MoveS();
-    this.ArrowLeft = new MoveW();
-    this.ArrowRight = new MoveE();
-    this.Keyw = new MoveSW();
-    this.Keyq = new MoveW();
-    this.Keye = new MoveNE();
-    this.Keyd = new MoveE();
-    this.Keyc = new MoveSE();
-    this.Keyx = new MoveS();
-    this.Keyz = new MoveN();
-    this.Keya = new MoveNW();
-    this.Keyo = new OpenDoorCommand();
-    this.Keys = new SaveCommand();
-    this.Keyt = new TakeCommand();
-    this.Keyf = new AttackDistanceCommand();
-    this.Keyi = new InventoryCommand();
-    this.KeySpace = new WaitCommand();
-    this.KeyUp = new UpStairCommand();
-    this.KeyDown = new DownStairCommand();
-    this.KeyC = new OpenChestCommand();
+  constructor() {
+    this._initDefaultCommand();
+  }
+
+  private _initDefaultCommand() {
+    this.ArrowUp = new MoveN(this._gameEngine);
+    this.ArrowDown = new MoveS(this._gameEngine);
+    this.ArrowLeft = new MoveW(this._gameEngine);
+    this.ArrowRight = new MoveE(this._gameEngine);
+    this.Keyw = new MoveSW(this._gameEngine);
+    this.Keyq = new MoveW(this._gameEngine);
+    this.Keye = new MoveNE(this._gameEngine);
+    this.Keyd = new MoveE(this._gameEngine);
+    this.Keyc = new MoveSE(this._gameEngine);
+    this.Keyx = new MoveS(this._gameEngine);
+    this.Keyz = new MoveN(this._gameEngine);
+    this.Keya = new MoveNW(this._gameEngine);
+    this.Keyo = new OpenDoorCommand(this._gameEngine);
+    this.Keys = new SaveCommand(this._gameEngine);
+    this.Keyt = new TakeCommand(this._gameEngine);
+    this.Keyf = new AttackDistanceCommand(this._gameEngine);
+    this.Keyi = new InventoryCommand(this._gameEngine);
+    this.KeySpace = new WaitCommand(this._gameEngine);
+    this.KeyUp = new UpStairCommand(this._gameEngine);
+    this.KeyDown = new DownStairCommand(this._gameEngine);
+    this.KeyC = new OpenChestCommand(this._gameEngine);
   }
 }

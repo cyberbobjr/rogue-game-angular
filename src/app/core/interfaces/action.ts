@@ -1,9 +1,9 @@
 import {ActionResult} from '../classes/actions/action-result';
 import {Entity} from '../classes/base/entity';
-import {GameEngine} from '../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../modules/game/services/game-engine-imp.service';
 
 export interface Action {
-  execute(actor: Entity, gameEngine: GameEngine): ActionResult;
+  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult;
 
   getInfo(): string;
 }

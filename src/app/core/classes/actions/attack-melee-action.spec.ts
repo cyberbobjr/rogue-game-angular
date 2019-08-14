@@ -5,7 +5,7 @@ import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
 import {GameMap} from '../base/game-map';
 import {MapBuilder} from '../../factories/map-builder';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -18,16 +18,16 @@ describe('attack-melee-action', () => {
   let player: Player = null;
   let gameMap: GameMap;
   let entitiesService: EntitiesEngine;
-  let gameEngine: GameEngine;
+  let gameEngine: GameEngineImp;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
-                                     providers: [EntitiesEngine, GameEngine]
+                                     providers: [EntitiesEngine, GameEngineImp]
                                    });
     entitiesService = TestBed.get(EntitiesEngine);
-    gameEngine = TestBed.get(GameEngine);
+    gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
     gameEngine.loadGameMap(gameMap);

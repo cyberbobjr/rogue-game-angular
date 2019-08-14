@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {GameEngine} from '../../services/game-engine.service';
+import {GameEngineImp} from '../../services/game-engine-imp.service';
 import {EntitiesEngine} from '../../services/entities-engine.service';
-import {StorageService} from '../../services/storage.service';
+import {StorageEngine} from '../../services/storage-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
 import {NgxSmartModalService} from 'ngx-smart-modal';
@@ -14,9 +14,9 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
            })
 export class MainPageComponent implements OnInit, OnDestroy {
 
-  constructor(private _gameEngineService: GameEngine,
+  constructor(private _gameEngineService: GameEngineImp,
               private _entitiesService: EntitiesEngine,
-              private _storageService: StorageService,
+              private _storageService: StorageEngine,
               private _router: Router,
               private _modalService: NgxSmartModalService) {
   }

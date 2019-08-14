@@ -1,9 +1,7 @@
 import {ChooseTarget} from './choose-target';
 import {SharedModule} from '../../../modules/shared/shared.module';
-import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {StorageService} from '../../../modules/game/services/storage.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {StorageEngine} from '../../../modules/game/services/storage-engine.service';
 import {MapBuilder} from '../../factories/map-builder';
 import {FloorTile} from '../tiles/floor-tile';
 import {Position} from '../base/position';
@@ -12,6 +10,7 @@ import {TestBed} from '@angular/core/testing';
 import {Entity} from '../base/entity';
 import {RouterTestingModule} from '@angular/router/testing';
 import {EntitiesFactory} from '../../factories/entities-factory';
+import {GameEngine} from '../../interfaces/game-engine';
 
 describe('choose target testing', () => {
   let gameEngine: GameEngine;
@@ -24,16 +23,13 @@ describe('choose target testing', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-                                     imports: [
-                                       SharedModule,
-                                       RouterTestingModule
-                                     ],
-                                     providers: [EntitiesEngine,
-                                                 GameEngine,
-                                                 MapEngine,
-                                                 StorageService]
-                                   });
-    gameEngine = TestBed.get(GameEngine);
+      imports: [
+        SharedModule,
+        RouterTestingModule
+      ],
+      providers: [StorageEngine]
+    });
+    gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().build();
     for (let y = 0; y < gameMap.height; y++) {
       for (let x = 0; x < gameMap.width; x++) {
@@ -58,7 +54,7 @@ describe('choose target testing', () => {
       expect(entities)
         .toBeNull();
     });
-    chooseTarget.keyboardHandler(new KeyboardEvent('', {code: 'Plus'}));
+    chooseTarget.keyboardHandler.handleActionKeyEvent(new KeyboardEvent('', {code: 'Plus'}));
     expect(chooseTarget.currentTargetIndex)
       .not
       .toEqual(0);
@@ -72,7 +68,7 @@ describe('choose target testing', () => {
       expect(entities)
         .toBeNull();
     });
-    chooseTarget.keyboardHandler(new KeyboardEvent('', {code: 'Minus'}));
+    chooseTarget.keyboardHandler.handleActionKeyEvent(new KeyboardEvent('', {code: 'Minus'}));
     expect(chooseTarget.currentTargetIndex)
       .toEqual(visibleEntities.length - 1);
   });
@@ -87,7 +83,7 @@ describe('choose target testing', () => {
       expect(entities[0])
         .toEqual(visibleEntities[0]);
     });
-    chooseTarget.keyboardHandler(new KeyboardEvent('', {code: 'KeyF'}));
+    chooseTarget.keyboardHandler.handleActionKeyEvent(new KeyboardEvent('', {code: 'KeyF'}));
   });
 
   it('should cancel action', () => {
@@ -98,6 +94,6 @@ describe('choose target testing', () => {
       expect(entities)
         .toBeNull();
     });
-    chooseTarget.keyboardHandler(new KeyboardEvent('', {code: 'KeyEsc'}));
+    chooseTarget.keyboardHandler.handleActionKeyEvent(new KeyboardEvent('', {code: 'KeyEsc'}));
   });
 });

@@ -13,7 +13,7 @@ import {GameClass} from '../base/game-class';
 import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {EntityType} from '../../enums/entity-type.enum';
 import {InventorySystem} from '../base/inventory-system';
 import {AttributeSystem} from '../base/AttributeSystem';
@@ -113,7 +113,7 @@ export class Player extends Entity {
     // this.hp -= damage;
   }
 
-  onDead(_gameEngine: GameEngine): void {
+  onDead(_gameEngine: GameEngineImp): void {
     super.onDead(_gameEngine);
   }
 

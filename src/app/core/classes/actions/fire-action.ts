@@ -1,14 +1,14 @@
 import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {EventLog} from '../Utility/event-log';
 import {AttackDistanceAction} from './attack-distance-action';
 import {ChooseTarget} from '../Utility/choose-target';
 
 export class FireAction implements Action {
   private _targets: Array<Entity> = [];
-  private _gameEngine: GameEngine = null;
+  private _gameEngine: GameEngineImp = null;
   private _actor: Entity;
   private _info = 'Fire action';
   private _chooseTarget: ChooseTarget;
@@ -16,7 +16,7 @@ export class FireAction implements Action {
   constructor() {
   }
 
-  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
     this._actor = actor;
     this._gameEngine = gameEngine;
     this._targets = gameEngine.getEntitiesVisibles();

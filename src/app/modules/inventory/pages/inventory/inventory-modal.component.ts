@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {StorageService} from '../../../game/services/storage.service';
+import {StorageEngine} from '../../../game/services/storage-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
-import {GameEngine} from '../../../game/services/game-engine.service';
+import {GameEngineImp} from '../../../game/services/game-engine-imp.service';
 import {Router} from '@angular/router';
 import {EntitiesEngine} from '../../../game/services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
@@ -31,10 +31,10 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _modalService: NgxSmartModalService,
-              private _gameEngine: GameEngine,
+              private _gameEngine: GameEngineImp,
               private _entitiesService: EntitiesEngine,
               private _router: Router,
-              private _storageService: StorageService,
+              private _storageService: StorageEngine,
               private _renderer: Renderer2) {
   }
 
@@ -64,13 +64,13 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
         .onOpen
         .subscribe(() => {
           this._player = this._entitiesService.getPlayer();
-          this._handleKeyBackup = this._gameEngine.handleKeyEvent;
-          this._gameEngine.handleKeyEvent = this.keyboardHandler.bind(this);
+          this._handleKeyBackup = this._gameEngine.keyboardHandler;
+          this._gameEngine.keyboardHandler = this.keyboardHandler.bind(this);
         });
     this._modalService.getModal('inventoryModal')
         .onAnyCloseEvent
         .subscribe(() => {
-          this._gameEngine.restoreGameKeyHandler();
+          this._gameEngine.captureKeyboardEvent();
         });
   }
 

@@ -1,14 +1,12 @@
-import {Command} from '../../interfaces/command';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {AbstractCommand, Command} from '../../interfaces/command';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {Entity} from '../base/entity';
 
-export class InventoryCommand implements Command {
-  constructor() {
-  }
-
-  execute(actor: Entity, gameEngine: GameEngine) {
-    gameEngine.getModalService()
-              .getModal('inventoryModal')
-              .open();
+export class InventoryCommand extends AbstractCommand implements Command {
+  execute(actor: Entity) {
+    this._gameEngine
+        .getModalService()
+        .getModal('inventoryModal')
+        .open();
   }
 }

@@ -3,7 +3,7 @@ import {Utility} from '../../../core/classes/Utility/utility';
 import {DiceService} from '../services/dice.service';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {EntityType} from '../../../core/enums/entity-type.enum';
-import {StorageService} from '../../game/services/storage.service';
+import {StorageEngine} from '../../game/services/storage-engine.service';
 import {IDice} from '../interface/idice';
 import {ClassType} from '../../../core/enums/class-type.enum';
 import {GameClassFactory} from '../../../core/factories/game-class-factory';
@@ -24,7 +24,7 @@ export class CreatePageComponent implements OnInit {
   attributesKeys: Array<string> = [];
 
   constructor(private _diceService: DiceService,
-              private _storageService: StorageService,
+              private _storageService: StorageEngine,
               private _router: Router) {
   }
 

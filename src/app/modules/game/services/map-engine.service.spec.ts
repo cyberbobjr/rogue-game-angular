@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {MapEngine} from './map-engine.service';
-import {StorageService} from './storage.service';
+import {StorageEngine} from './storage-engine.service';
 import {EntitiesEngine} from './entities-engine.service';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {Position} from '../../../core/classes/base/position';
@@ -10,7 +10,7 @@ import {Tile} from '../../../core/classes/base/tile';
 describe('RotMapService', () => {
   beforeEach(() => TestBed.configureTestingModule({
                                                     providers: [
-                                                      StorageService,
+                                                      StorageEngine,
                                                       EntitiesEngine
                                                     ]
                                                   }));

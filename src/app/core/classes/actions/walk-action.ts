@@ -6,7 +6,7 @@ import {ActionResult} from './action-result';
 import {EventLog} from '../Utility/event-log';
 import {Position} from '../base/position';
 import {AttackMeleeAction} from './attack-melee-action';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {Monster} from '../entities/monster';
 
 export class WalkAction implements Action {
@@ -19,7 +19,7 @@ export class WalkAction implements Action {
    * TODO : refactor to FSM
    * @param gameEngine GameEngine
    */
-  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
     const destPosition: Position = actor.position.computeDestination(this._direction);
     const tile: Tile | Entity = <Tile | Entity>gameEngine.getMapEngine()
                                                          .getTileOrEntityAt(destPosition);

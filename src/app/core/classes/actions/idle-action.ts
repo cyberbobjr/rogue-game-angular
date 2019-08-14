@@ -2,11 +2,11 @@ import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {EventLog} from '../Utility/event-log';
-import {ChaseAction} from './chase-action';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {Position} from '../base/position';
 import {Direction} from '../../enums/direction.enum';
 import {Tile} from '../base/tile';
+import {ChaseAction} from './chase-action';
 
 export class IdleAction implements Action {
   private _info = '';
@@ -14,7 +14,7 @@ export class IdleAction implements Action {
   constructor() {
   }
 
-  execute(actor: Entity, gameEngine: GameEngine): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
     if (actor.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
       actor.setNextAction(new ChaseAction(gameEngine.gameEntities.getPlayer()));

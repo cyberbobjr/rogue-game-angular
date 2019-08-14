@@ -11,7 +11,7 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {InventorySystem} from './inventory-system';
 import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
 import {AttributeSystem} from './AttributeSystem';
@@ -277,7 +277,7 @@ export class Entity implements Iobject, IEntity {
     }
   }
 
-  onDead(_gameEngine: GameEngine): void {
+  onDead(_gameEngine: GameEngineImp): void {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 

@@ -15,7 +15,7 @@ export const idbCon = new JsStore.Instance(new Worker(workerPath));
 @Injectable({
               providedIn: 'root'
             })
-export class StorageService {
+export class StorageEngine {
   private dbname = 'TsRogue';
   private dbVersion = 3;
 
@@ -23,7 +23,7 @@ export class StorageService {
     return idbCon;
   }
 
-  constructor(private _entitiesService: EntitiesEngine) {
+  constructor() {
     console.log('storage created');
     this.connection.setLogStatus(false);
     this.initJsStore()

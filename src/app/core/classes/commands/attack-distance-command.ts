@@ -1,10 +1,10 @@
-import {Command} from '../../interfaces/command';
+import {AbstractCommand, Command} from '../../interfaces/command';
 import {Entity} from '../base/entity';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {FireAction} from '../actions/fire-action';
 
-export class AttackDistanceCommand implements Command {
-  execute(actor: Entity, gameEngine: GameEngine) {
+export class AttackDistanceCommand  extends AbstractCommand implements Command {
+  execute(actor: Entity) {
     actor.setNextAction(new FireAction());
   }
 }

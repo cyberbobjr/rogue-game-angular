@@ -1,12 +1,12 @@
 import {Player} from '../entities/player';
 import {GameMap} from '../base/game-map';
 import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
-import {GameEngine} from '../../../modules/game/services/game-engine.service';
+import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
 import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {StorageService} from '../../../modules/game/services/storage.service';
+import {StorageEngine} from '../../../modules/game/services/storage-engine.service';
 import {MapBuilder} from '../../factories/map-builder';
 import {GameClassFactory} from '../../factories/game-class-factory';
 import {ClassType} from '../../enums/class-type.enum';
@@ -22,19 +22,19 @@ describe('Attack distance action', () => {
   let player: Player = null;
   let gameMap: GameMap;
   let entitiesService: EntitiesEngine;
-  let gameEngine: GameEngine;
+  let gameEngine: GameEngineImp;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule,
                                                RouterTestingModule],
                                      providers: [EntitiesEngine,
-                                                 GameEngine,
+                                                 GameEngineImp,
                                                  MapEngine,
-                                                 StorageService]
+                                                 StorageEngine]
                                    });
     entitiesService = TestBed.get(EntitiesEngine);
-    gameEngine = TestBed.get(GameEngine);
+    gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().withRandomEntities(5)
                               .build();
     gameEngine.loadGameMap(gameMap);
