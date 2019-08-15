@@ -44,7 +44,7 @@ describe('Chase action', () => {
         gameMap.setTile(new FloorTile(new Position(x, y)));
       }
     }
-    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
+    gameEngine.loadGame(gameMap, entitiesService.getGameEntities());
   });
 
   it('should be stop chasing if target not more visible', () => {

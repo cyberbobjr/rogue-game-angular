@@ -11,6 +11,7 @@ import {UpStairCommand} from 'src/app/core/classes/commands/up-stair-command';
 import {DownStairCommand} from 'src/app/core/classes/commands/down-stair-command';
 import {OpenChestCommand} from '../../../core/classes/commands/open-chest-command';
 import {GameEngine} from '../../../core/interfaces/game-engine';
+import {TeleportCommand} from '../../../core/classes/commands/teleport-command';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,7 @@ export class CommandsService {
   Keyt: Command;
   Keyf: Command;
   Keyi: Command;
+  KeyT: Command;
   KeyUp: Command;
   KeyDown: Command;
   KeySpace: Command;
@@ -70,5 +72,6 @@ export class CommandsService {
     this.KeyUp = new UpStairCommand(this._gameEngine);
     this.KeyDown = new DownStairCommand(this._gameEngine);
     this.KeyC = new OpenChestCommand(this._gameEngine);
+    this.KeyT = new TeleportCommand(this._gameEngine);
   }
 }

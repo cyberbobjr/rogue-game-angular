@@ -40,7 +40,7 @@ describe('Fire action', () => {
     entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().build();
-    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
+    gameEngine.loadGame(gameMap, entitiesService.getGameEntities());
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
@@ -66,7 +66,7 @@ describe('Fire action', () => {
   it('should be waited with ennemy in range', () => {
     const entities: Array<Entity> = entitiesService.getAllEntities();
     const mainActor: Entity = (player as Entity);
-    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
+    gameEngine.loadGame(gameMap, entitiesService.getGameEntities());
     gameMap.computeLOSMap(mainActor);
     entities[0].position = gameMap.entryPosition.computeDestination(Direction.N);
     const attackAction: FireAction = new FireAction();

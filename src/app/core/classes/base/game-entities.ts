@@ -10,8 +10,8 @@ export class GameEntities {
   private _entities: Array<Entity> = [];
   private _player: Player = null;
 
-  public setPlayer(actor: Player) {
-    this._player = actor;
+  public setPlayer(player: Player) {
+    this._player = player;
   }
 
   public getPlayer(): Player {

@@ -2,7 +2,6 @@ import {AbstractCommand, Command} from '../../interfaces/command';
 import {Entity} from '../base/entity';
 import {WalkAction} from '../actions/walk-action';
 import {Direction} from '../../enums/direction.enum';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 
 export class MoveE extends AbstractCommand implements Command {
   execute(actor: Entity) {

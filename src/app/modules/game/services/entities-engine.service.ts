@@ -6,6 +6,7 @@ import {Action} from '../../../core/interfaces/action';
 import {ActionResult} from '../../../core/classes/actions/action-result';
 import {GameEntities} from '../../../core/classes/base/game-entities';
 import {Position} from '../../../core/classes/base/position';
+import {GameMap} from '../../../core/classes/base/game-map';
 
 @Injectable({
   providedIn: 'root'
@@ -77,5 +78,9 @@ export class EntitiesEngine {
 
   getEntityAt(position: Position): Entity | undefined {
     return this._gameEntities.getEntityAt(position);
+  }
+
+  getEntitiesVisiblesOnMap(gameMap: GameMap) {
+    return this._gameEntities.getEntitiesVisiblesOnMap(gameMap);
   }
 }

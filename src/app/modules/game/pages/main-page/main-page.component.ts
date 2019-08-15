@@ -8,10 +8,10 @@ import {NgxSmartModalService} from 'ngx-smart-modal';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 
 @Component({
-             selector: 'app-main-page',
-             templateUrl: './main-page.component.html',
-             styleUrls: ['./main-page.component.css']
-           })
+  selector: 'app-main-page',
+  templateUrl: './main-page.component.html',
+  styleUrls: ['./main-page.component.css']
+})
 export class MainPageComponent implements OnInit, OnDestroy {
 
   constructor(private _gameEngineService: GameEngineImp,
@@ -28,9 +28,10 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   private async _initGame() {
     try {
-      const player: Player = await this._initPlayer();
+      const player: Player = await this._storageService.loadPlayer();
       const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await this._storageService.loadRawMap(player.mapLevel);
-      this._gameEngineService.loadRawGameMap(mapData);
+      const {gameMap, gameEntities} = this._gameEngineService.loadRawGameMap(mapData);
+      this._gameEngineService.loadGame(gameMap, gameEntities);
       this._entitiesService.setPlayer(player);
       this._gameEngineService.startGameLoop();
       this._gameEngineService.setModalService(this._modalService);
@@ -43,10 +44,6 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._gameEngineService.endGameLoop();
-  }
-
-  private _initPlayer(): Promise<Player> {
-    return this._storageService.loadPlayer();
   }
 
   private _goBackToMenu() {

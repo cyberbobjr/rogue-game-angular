@@ -7,11 +7,15 @@ import {GameMap} from '../classes/base/game-map';
 import {Position} from '../classes/base/position';
 import {Iobject} from './iobject';
 import {GameEntities} from '../classes/base/game-entities';
+import {EntitiesEngine} from '../../modules/game/services/entities-engine.service';
 
 export interface GameEngine {
   getPlayer(): Player;
+  setPlayer(player: Player): void;
 
   getMapEngine(): MapEngine;
+
+  getEntityEngine(): EntitiesEngine;
 
   getModalService(): NgxSmartModalService;
 
@@ -27,7 +31,7 @@ export interface GameEngine {
 
   captureKeyboardEvent(): void;
 
-  loadGameMap(gameMap: GameMap, gameEntities: GameEntities): void;
+  loadGame(gameMap: GameMap, gameEntities: GameEntities): void;
 
   executeEntitiesActions(): void;
 

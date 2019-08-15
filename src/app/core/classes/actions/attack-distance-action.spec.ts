@@ -40,7 +40,7 @@ describe('Attack distance action', () => {
     entitiesService = TestBed.get(EntitiesEngine);
     gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().build();
-    gameEngine.loadGameMap(gameMap, entitiesService.getGameEntities());
+    gameEngine.loadGame(gameMap, entitiesService.getGameEntities());
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()

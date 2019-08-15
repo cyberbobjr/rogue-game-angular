@@ -40,7 +40,7 @@ describe('choose target testing', () => {
         gameMap.setTile(new FloorTile(new Position(x, y)));
       }
     }
-    gameEngine.loadGameMap(gameMap, gameEntities);
+    gameEngine.loadGame(gameMap, gameEntities);
   });
 
   it('should be created', () => {

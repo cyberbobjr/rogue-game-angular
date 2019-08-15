@@ -40,7 +40,7 @@ describe('walk-action', () => {
                                              .createRace(RaceType.HUMAN))
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
     gameEngine = TestBed.get(GameEngineImp);
-    gameEngine.loadGameMap(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
+    gameEngine.loadGame(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
     entitiesService = TestBed.get(EntitiesEngine);
     entitiesService.setPlayer(player);
   });

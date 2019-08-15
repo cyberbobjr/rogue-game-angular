@@ -44,7 +44,7 @@ describe('open-chest-action', () => {
   it('should open chest', () => {
     const chestsPosition: Array<Position> = gameMap.getAllPosition<ChestTile>(ChestTile);
     const gameEngine: GameEngineImp = TestBed.get(GameEngineImp);
-    gameEngine.loadGameMap(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
+    gameEngine.loadGame(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
     player.setMapLevelAndPosition(gameMap.level, chestsPosition[0]);
     const openChestAction: OpenChestAction = new OpenChestAction();
     const resultAction: ActionResult = openChestAction.execute(player, gameEngine);

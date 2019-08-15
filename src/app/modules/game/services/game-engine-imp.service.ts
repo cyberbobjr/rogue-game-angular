@@ -42,18 +42,6 @@ export class GameEngineImp implements GameEngine {
     this._keyboardHandler = value;
   }
 
-  get storageEngine(): StorageEngine {
-    return this._storageEngine;
-  }
-
-  get gameEntities(): GameEntities {
-    return this._entityEngine.getGameEntities();
-  }
-
-  get gameMap(): GameMap {
-    return this._mapEngine.getCurrentMap();
-  }
-
   constructor(private _entityEngine: EntitiesEngine,
               private _mapEngine: MapEngine,
               private _logService: LoggingService,
@@ -67,12 +55,16 @@ export class GameEngineImp implements GameEngine {
     this._commandEngine.gameEngine = this;
   }
 
+  public getEntityEngine(): EntitiesEngine {
+    return this._entityEngine;
+  }
+
   public setHandleKeyEvent(keyboardHandler: KeyboardCapture) {
     this._keyboardHandler = keyboardHandler;
   }
 
-  getTileOrEntityAt(position: Position): Iobject {
-    return this.gameEntities.getEntityAt(position) || this.gameMap.getTileAt(position);
+  public getTileOrEntityAt(position: Position): Iobject {
+    return this._entityEngine.getEntityAt(position) || this._mapEngine.getTileAt(position);
   }
 
   public startGameLoop() {
@@ -107,7 +99,7 @@ export class GameEngineImp implements GameEngine {
   }
 
   private _drawGame() {
-    this._displayEngine.drawGameMap(this.gameMap, this.gameEntities);
+    this._displayEngine.drawGameMap(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
   }
 
   public gameOver() {
@@ -128,10 +120,12 @@ export class GameEngineImp implements GameEngine {
     return this._entityEngine.getPlayer();
   }
 
+  setPlayer(player: Player): void {
+    this._entityEngine.setPlayer(player);
+  }
+
   public getEntitiesVisibles(): Array<Entity> {
-    return this._entityEngine
-               .getGameEntities()
-               .getEntitiesVisiblesOnMap(this.gameMap);
+    return this._entityEngine.getEntitiesVisiblesOnMap(this._mapEngine.getCurrentMap());
   }
 
   public getMapEngine(): MapEngine {
@@ -164,19 +158,16 @@ export class GameEngineImp implements GameEngine {
     }
   }
 
-  public changeMapLevel(newLevel: number) {
-    // save current level
-    this._storageEngine.saveGameState(this.gameMap, this.gameEntities);
-    // get level if exist
-    this._loadMapLevel(newLevel);
-  }
-
-  private _loadMapLevel(level: number) {
+  public changeMapLevel(level: number) {
     this._storageEngine
         .loadRawMap(level)
         .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          this.loadRawGameMap(data);
-          this._storageEngine.saveGameState(this.gameMap, this.gameEntities);
+          this.saveGameState();
+          const {gameMap, gameEntities} = this.loadRawGameMap(data);
+          this.changePlayerLevel(level, gameMap);
+          gameEntities.setPlayer(this.getPlayer());
+          this.loadGame(gameMap, gameEntities);
+          this.saveGameState();
         })
         .catch((e) => {
           console.log(e);
@@ -184,24 +175,27 @@ export class GameEngineImp implements GameEngine {
         });
   }
 
-  public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): GameEngine {
-    this._mapEngine.setGameMap(MapBuilder.fromJSON(mapData.map));
-    this._entityEngine.setGameEntities(EntityBuilder.fromJSON(mapData.entities));
-    return this;
+  public changePlayerLevel(level: number, gameMap: GameMap) {
+    this._entityEngine.getPlayer().setMapLevelAndPosition(level, gameMap.entryPosition);
   }
 
-  public loadGameMap(gameMap: GameMap, gameEntities: GameEntities): GameMap {
+  public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): { gameMap: GameMap, gameEntities: GameEntities } {
+    const gameMap: GameMap = MapBuilder.fromJSON(mapData.map);
+    const gameEntities: GameEntities = EntityBuilder.fromJSON(mapData.entities);
+    return {gameMap, gameEntities};
+  }
+
+  public loadGame(gameMap: GameMap, gameEntities: GameEntities): void {
     this._mapEngine.setGameMap(gameMap);
     this._entityEngine.setGameEntities(gameEntities);
-    return gameMap;
   }
 
   public executeEntitiesActions() {
     this._entityEngine.executeEntitiesActions(this);
   }
 
-  saveGameState(): void {
-    this.storageEngine.saveGameState(this.gameMap, this.gameEntities);
+  public saveGameState(): void {
+    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
   }
 
 }

@@ -1,6 +1,5 @@
 import {AbstractCommand, Command} from '../../interfaces/command';
 import {Entity} from '../base/entity';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {EventLog} from '../Utility/event-log';
 
 export class SaveCommand extends AbstractCommand implements Command {

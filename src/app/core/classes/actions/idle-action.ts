@@ -17,7 +17,7 @@ export class IdleAction implements Action {
   execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
     if (actor.sprite.light) {
       EventLog.getInstance().message = 'Player in sight !';
-      actor.setNextAction(new ChaseAction(gameEngine.gameEntities.getPlayer()));
+      actor.setNextAction(new ChaseAction(gameEngine.getPlayer()));
     } else {
       const destPosition: Position = this._getRandomPosition(actor);
       const tile: Tile = <Tile>gameEngine.getTileOrEntityAt(destPosition);

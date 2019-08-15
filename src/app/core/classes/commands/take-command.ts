@@ -1,5 +1,4 @@
 import {AbstractCommand, Command} from '../../interfaces/command';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {Entity} from '../base/entity';
 import {TakeAction} from '../actions/take-action';
 

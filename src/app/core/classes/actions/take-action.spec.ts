@@ -53,11 +53,11 @@ describe('take-action', () => {
     const takeAction: TakeAction = new TakeAction();
 
     tile.dropOn(gameObject);
-    gameEngine.loadGameMap(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
+    gameEngine.loadGame(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
     player.setMapLevelAndPosition(1, freePosition);
     takeAction.execute(player, gameEngine);
     const inventoryFinalSize: number = player.inventory.getInventorySize();
     expect(inventoryFinalSize)
-      .toBeCloseTo(inventorySize + 1);
+      .toEqual(inventorySize + 1);
   });
 });

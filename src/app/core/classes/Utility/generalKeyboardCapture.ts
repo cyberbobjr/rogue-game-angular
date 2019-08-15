@@ -23,20 +23,8 @@ export class GeneralKeyboardCapture implements KeyboardCapture {
       case 'ArrowRight':
         this._commandEngine.ArrowRight.execute(player);
         break;
-      case 'q':
-        this._commandEngine.Keyq.execute(player);
-        break;
-      case 'z':
-        this._commandEngine.Keyz.execute(player);
-        break;
       case 'a':
         this._commandEngine.Keya.execute(player);
-        break;
-      case 'e':
-        this._commandEngine.Keye.execute(player);
-        break;
-      case 'w':
-        this._commandEngine.Keyw.execute(player);
         break;
       case 'c':
         this._commandEngine.Keyc.execute(player);
@@ -44,14 +32,23 @@ export class GeneralKeyboardCapture implements KeyboardCapture {
       case 'C':
         this._commandEngine.KeyC.execute(player);
         break;
-      case 'x':
-        this._commandEngine.Keyx.execute(player);
-        break;
       case 'd':
         this._commandEngine.Keyd.execute(player);
         break;
+      case 'e':
+        this._commandEngine.Keye.execute(player);
+        break;
+      case 'f':
+        this._commandEngine.Keyf.execute(player);
+        break;
+      case 'i':
+        this._commandEngine.Keyi.execute(player);
+        break;
       case 'o':
         this._commandEngine.Keyo.execute(player);
+        break;
+      case 'q':
+        this._commandEngine.Keyq.execute(player);
         break;
       case 's':
         this._commandEngine.Keys.execute(player);
@@ -59,11 +56,17 @@ export class GeneralKeyboardCapture implements KeyboardCapture {
       case 't':
         this._commandEngine.Keyt.execute(player);
         break;
-      case 'f':
-        this._commandEngine.Keyf.execute(player);
+      case 'T':
+        this._commandEngine.KeyT.execute(player);
         break;
-      case 'i':
-        this._commandEngine.Keyi.execute(player);
+      case 'w':
+        this._commandEngine.Keyw.execute(player);
+        break;
+      case 'x':
+        this._commandEngine.Keyx.execute(player);
+        break;
+      case 'z':
+        this._commandEngine.Keyz.execute(player);
         break;
       case ' ':
         this._commandEngine.KeySpace.execute(player);

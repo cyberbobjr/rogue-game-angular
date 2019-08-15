@@ -1,6 +1,5 @@
 import {AbstractCommand, Command} from '../../interfaces/command';
 import {Entity} from '../base/entity';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {Tile} from '../base/tile';
 import {TileType} from '../../enums/tile-type.enum';
 import {EventLog} from '../Utility/event-log';
