@@ -13,10 +13,10 @@ describe('Combat resolver', () => {
     const target: Entity = EntitiesFactory.generateRandomEntities(new Position(5, 5));
     target.ac = 0;
     attacker.strength = 50;
-    const damage: number = CombatResolver.HandToHandAttack(attacker, target);
     spyOn(Utility, 'rolldice')
       .and
       .returnValue(20);
+    const damage: number = CombatResolver.HandToHandAttack(attacker, target);
     expect(damage)
       .toBeGreaterThan(0);
   });
