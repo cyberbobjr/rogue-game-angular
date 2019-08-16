@@ -13,6 +13,7 @@ import {EntitiesFactory} from '../../factories/entities-factory';
 import {GameEngine} from '../../interfaces/game-engine';
 import {GameEntities} from '../base/game-entities';
 import {EntityBuilder} from '../../factories/entity-builder';
+import {Player} from '../entities/player';
 
 describe('choose target testing', () => {
   let gameEngine: GameEngine;
@@ -40,7 +41,7 @@ describe('choose target testing', () => {
         gameMap.setTile(new FloorTile(new Position(x, y)));
       }
     }
-    gameEngine.loadGame(gameMap, gameEntities);
+    gameEngine.loadGame(gameMap, gameEntities, new Player(new Position(5, 5)));
   });
 
   it('should be created', () => {

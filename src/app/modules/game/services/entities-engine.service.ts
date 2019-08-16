@@ -7,6 +7,7 @@ import {ActionResult} from '../../../core/classes/actions/action-result';
 import {GameEntities} from '../../../core/classes/base/game-entities';
 import {Position} from '../../../core/classes/base/position';
 import {GameMap} from '../../../core/classes/base/game-map';
+import {GameEngine} from '../../../core/interfaces/game-engine';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +42,7 @@ export class EntitiesEngine {
     this._gameEntities.setEntities(entities);
   }
 
-  updateEntities(gameEngine: GameEngineImp) {
+  updateEntities(gameEngine: GameEngine) {
     this.getAllEntities()
         .forEach((entity: Entity, index: number) => {
           entity.update();
@@ -49,7 +50,7 @@ export class EntitiesEngine {
             entity.onDead(gameEngine);
             this._gameEntities.removeEntity(index);
             if (entity instanceof Player) {
-              gameEngine.gameOver();
+              gameEngine.looseGame();
             }
           }
         });

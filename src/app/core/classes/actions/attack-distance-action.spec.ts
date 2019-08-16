@@ -37,17 +37,16 @@ describe('Attack distance action', () => {
         StorageEngine
       ]
     });
-    entitiesService = TestBed.get(EntitiesEngine);
-    gameEngine = TestBed.get(GameEngineImp);
     gameMap = new MapBuilder().build();
-    gameEngine.loadGame(gameMap, entitiesService.getGameEntities());
     player = new Player().setGameClass(GameClassFactory.getInstance()
                                                        .createGameClass(ClassType.BARBARIAN))
                          .setRace(RaceFactory.getInstance()
                                              .createRace(RaceType.HUMAN))
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+    entitiesService = TestBed.get(EntitiesEngine);
+    gameEngine = TestBed.get(GameEngineImp);
     entitiesService.setGameEntities(EntityBuilder.generateMonsters([], 5, gameMap));
-    entitiesService.setPlayer(player);
+    gameEngine.loadGame(gameMap, entitiesService.getGameEntities(), player);
   });
 
   it('should be created', () => {

@@ -29,10 +29,9 @@ export class MainPageComponent implements OnInit, OnDestroy {
   private async _initGame() {
     try {
       const player: Player = await this._storageService.loadPlayer();
-      const mapData: { map: JsonMap, entities: Array<JsonEntity> } = await this._storageService.loadRawMap(player.mapLevel);
-      const {gameMap, gameEntities} = this._gameEngineService.loadRawGameMap(mapData);
-      this._gameEngineService.loadGame(gameMap, gameEntities);
-      this._entitiesService.setPlayer(player);
+      const {map, entities} = await this._storageService.loadRawMap(player.mapLevel);
+      const {gameMap, gameEntities} = GameEngineImp.convertRawDataToGameData(map, entities);
+      this._gameEngineService.loadGame(gameMap, gameEntities, player);
       this._gameEngineService.startGameLoop();
       this._gameEngineService.setModalService(this._modalService);
     } catch (e) {

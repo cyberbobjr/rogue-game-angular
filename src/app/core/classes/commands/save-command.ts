@@ -1,11 +1,11 @@
 import {AbstractCommand, Command} from '../../interfaces/command';
-import {Entity} from '../base/entity';
 import {EventLog} from '../Utility/event-log';
 
 export class SaveCommand extends AbstractCommand implements Command {
-  execute(actor: Entity) {
-    this._gameEngine.saveGameState();
+  execute() {
+    this.actor = this._gameEngine.getPlayer();
     EventLog.getInstance().message = 'Game saved!';
-    actor.setNextAction(null);
+    this._gameEngine.saveGameState();
+    this.actor.setNextAction(null);
   }
 }

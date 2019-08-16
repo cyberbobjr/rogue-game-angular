@@ -11,6 +11,7 @@ import {EntitiesEngine} from '../../modules/game/services/entities-engine.servic
 
 export interface GameEngine {
   getPlayer(): Player;
+
   setPlayer(player: Player): void;
 
   getMapEngine(): MapEngine;
@@ -21,9 +22,7 @@ export interface GameEngine {
 
   saveGameState(): void;
 
-  gotoUpStair(): void;
-
-  gotoDownStair(): void;
+  changeLevel(level: number): void;
 
   getEntitiesVisibles(): Array<Entity>;
 
@@ -31,9 +30,13 @@ export interface GameEngine {
 
   captureKeyboardEvent(): void;
 
-  loadGame(gameMap: GameMap, gameEntities: GameEntities): void;
+  loadGame(gameMap: GameMap, gameEntities: GameEntities, player?: Player): void;
 
   executeEntitiesActions(): void;
 
   getTileOrEntityAt(position: Position): Iobject;
+
+  winGame(): void;
+
+  looseGame(): void;
 }

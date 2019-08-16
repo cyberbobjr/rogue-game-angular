@@ -1,12 +1,13 @@
-import {Entity} from '../classes/base/entity';
 import {GameEngine} from './game-engine';
+import {Player} from '../classes/entities/player';
 
 export interface Command {
-  execute(actor: Entity);
+  execute();
 }
 
 export abstract class AbstractCommand {
-  constructor(protected _gameEngine: GameEngine) {
+  protected actor: Player;
 
+  constructor(protected _gameEngine: GameEngine) {
   }
 }

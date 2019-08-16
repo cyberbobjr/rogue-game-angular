@@ -11,10 +11,10 @@ import {SpriteType} from '../../enums/sprite-type.enum';
 import {Weapon} from '../gameObjects/weapon';
 import {GameObject} from '../gameObjects/game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
 import {InventorySystem} from './inventory-system';
-import {JsonAbilities, JsonEntity} from '../../interfaces/json-interfaces';
+import {JsonEntity} from '../../interfaces/json-interfaces';
 import {AttributeSystem} from './AttributeSystem';
+import {GameEngine} from '../../interfaces/game-engine';
 
 @Injectable({
               providedIn: 'root'
@@ -277,7 +277,7 @@ export class Entity implements Iobject, IEntity {
     }
   }
 
-  onDead(_gameEngine: GameEngineImp): void {
+  onDead(_gameEngine: GameEngine): void {
     EventLog.getInstance().message = `${this.name} is dead`;
   }
 

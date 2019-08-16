@@ -13,7 +13,6 @@ import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {Player} from '../../../core/classes/entities/player';
 import {GameMap} from '../../../core/classes/base/game-map';
 import {EventLog} from '../../../core/classes/Utility/event-log';
-import {Config} from '../../../core/config';
 import {MapBuilder} from '../../../core/factories/map-builder';
 import {GameEntities} from '../../../core/classes/base/game-entities';
 import {GameEngine} from '../../../core/interfaces/game-engine';
@@ -29,10 +28,6 @@ window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequ
   providedIn: 'root'
 })
 export class GameEngineImp implements GameEngine {
-  private _gameLoopTimer: any = null;
-  private _timeStart: any = null;
-  private _keyboardHandler: KeyboardCapture;
-  private _modalService: NgxSmartModalService;
 
   get keyboardHandler(): KeyboardCapture {
     return this._keyboardHandler;
@@ -53,6 +48,17 @@ export class GameEngineImp implements GameEngine {
     console.log('Game engine created');
     this.captureKeyboardEvent();
     this._commandEngine.gameEngine = this;
+  }
+
+  private _gameLoopTimer: any = null;
+  private _timeStart: any = null;
+  private _keyboardHandler: KeyboardCapture;
+  private _modalService: NgxSmartModalService;
+
+  public static convertRawDataToGameData(map: JsonMap, entities: Array<JsonEntity>): { gameMap: GameMap, gameEntities: GameEntities } {
+    const gameMap: GameMap = MapBuilder.fromJSON(map);
+    const gameEntities: GameEntities = EntityBuilder.fromJSON(entities);
+    return {gameMap, gameEntities};
   }
 
   public getEntityEngine(): EntitiesEngine {
@@ -102,12 +108,6 @@ export class GameEngineImp implements GameEngine {
     this._displayEngine.drawGameMap(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
   }
 
-  public gameOver() {
-    this.endGameLoop();
-    window.alert('You loose !');
-    this._router.navigateByUrl('game/gameover');
-  }
-
   public getModalService(): NgxSmartModalService {
     return this._modalService;
   }
@@ -120,7 +120,7 @@ export class GameEngineImp implements GameEngine {
     return this._entityEngine.getPlayer();
   }
 
-  setPlayer(player: Player): void {
+  public setPlayer(player: Player): void {
     this._entityEngine.setPlayer(player);
   }
 
@@ -136,56 +136,28 @@ export class GameEngineImp implements GameEngine {
     this._keyboardHandler = new GeneralKeyboardCapture(this, this._commandEngine);
   }
 
-  public gotoUpStair(): void {
-    const player: Player = this._entityEngine.getPlayer();
-    if (player.mapLevel === Config.maxLevel) {
-      EventLog.getInstance().message = `You Win !!!`;
-    } else {
-      const newLevel: number = player.mapLevel + 1;
-      EventLog.getInstance().message = `You up the stair to level ${newLevel}`;
-      this.changeMapLevel(newLevel);
-    }
+  public looseGame(): void {
+    this.endGameLoop();
+    window.alert('You loose !');
+    EventLog.getInstance().message = `You Loose !!!`;
+    this._router.navigateByUrl('game/gameover');
   }
 
-  public gotoDownStair(): void {
-    const player: Player = this._entityEngine.getPlayer();
-    if (player.mapLevel === 1) {
-      EventLog.getInstance().message = `You  can't go down !`;
-    } else {
-      const newLevel: number = player.mapLevel - 1;
-      this.changeMapLevel(newLevel);
-      EventLog.getInstance().message = `You down the stair to level ${newLevel}`;
-    }
+  public winGame(): void {
+    EventLog.getInstance().message = `You Win !!!`;
   }
 
-  public changeMapLevel(level: number) {
-    this._storageEngine
-        .loadRawMap(level)
-        .then((data: { map: JsonMap, entities: Array<JsonEntity> }) => {
-          this.saveGameState();
-          const {gameMap, gameEntities} = this.loadRawGameMap(data);
-          this.changePlayerLevel(level, gameMap);
-          gameEntities.setPlayer(this.getPlayer());
-          this.loadGame(gameMap, gameEntities);
-          this.saveGameState();
-        })
-        .catch((e) => {
-          console.log(e);
-          console.trace();
-        });
+  async changeLevel(level: number): Promise<void> {
+    this.saveGameState();
+    const {map, entities} = await this._storageEngine.loadRawMap(level);
+    const {gameMap, gameEntities} = GameEngineImp.convertRawDataToGameData(map, entities);
+    this.getPlayer().setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+    this.loadGame(gameMap, gameEntities, this.getPlayer());
+    this.saveGameState();
   }
 
-  public changePlayerLevel(level: number, gameMap: GameMap) {
-    this._entityEngine.getPlayer().setMapLevelAndPosition(level, gameMap.entryPosition);
-  }
-
-  public loadRawGameMap(mapData: { map: JsonMap, entities: Array<JsonEntity> }): { gameMap: GameMap, gameEntities: GameEntities } {
-    const gameMap: GameMap = MapBuilder.fromJSON(mapData.map);
-    const gameEntities: GameEntities = EntityBuilder.fromJSON(mapData.entities);
-    return {gameMap, gameEntities};
-  }
-
-  public loadGame(gameMap: GameMap, gameEntities: GameEntities): void {
+  public loadGame(gameMap: GameMap, gameEntities: GameEntities, player: Player = null): void {
+    gameEntities.setPlayer(player);
     this._mapEngine.setGameMap(gameMap);
     this._entityEngine.setGameEntities(gameEntities);
   }

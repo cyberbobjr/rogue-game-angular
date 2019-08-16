@@ -11,8 +11,6 @@ import {EntityBuilder} from '../../../core/factories/entity-builder';
 import {EntityType} from '../../../core/enums/entity-type.enum';
 import {EntitiesFactory} from '../../../core/factories/entities-factory';
 import {Player} from '../../../core/classes/entities/player';
-import {Position} from '../../../core/classes/base/position';
-import {Entity} from '../../../core/classes/base/entity';
 
 describe('GameEngine', () => {
   beforeEach(() => TestBed.configureTestingModule({
@@ -38,25 +36,20 @@ describe('GameEngine', () => {
     const gameEngine: GameEngine = TestBed.get(GameEngineImp);
     const gameMap: GameMap = new MapBuilder().withSize(width, height).build();
     const gameEntities: GameEntities = EntityBuilder.generateMonsters([], maxEntities, gameMap);
-    gameEngine.loadGame(gameMap, gameEntities);
+    gameEngine.loadGame(gameMap, gameEntities, null);
     expect(gameEngine.getEntityEngine().getAllEntities().length).toEqual(maxEntities);
     expect(gameEngine.getMapEngine().getCurrentMap().width).toEqual(width);
     expect(gameEngine.getMapEngine().getCurrentMap().height).toEqual(height);
   });
 
-  it('should return player', () => {
-    const player: Player = EntitiesFactory.getInstance().createEntity(EntityType.PLAYER) as Player;
-    player.setMapLevelAndPosition(1, new Position(5, 5));
-    const gameEngine: GameEngine = TestBed.get(GameEngineImp);
-    gameEngine.setPlayer(player);
-  });
-
-  it('should return visible entities', () => {
-
-  });
-
   it('should return tile or entity at position', () => {
-
+    const gameEngine: GameEngine = TestBed.get(GameEngineImp);
+    const gameMap: GameMap = new MapBuilder().build();
+    const player: Player = EntitiesFactory.getInstance().createEntity(EntityType.PLAYER) as Player;
+    player.setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+    const gameEntities: GameEntities = EntityBuilder.generateMonsters([], 0, gameMap);
+    gameEngine.loadGame(gameMap, gameEntities, player);
+    expect(gameEngine.getTileOrEntityAt(gameMap.entryPosition) instanceof Player).toBeTruthy();
   });
 
   it('should goto downstair', () => {
