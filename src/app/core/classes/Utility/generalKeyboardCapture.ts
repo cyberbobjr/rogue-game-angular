@@ -1,5 +1,4 @@
 import {KeyboardCapture} from '../../interfaces/keyboardCapture';
-import {Entity} from '../base/entity';
 import {CommandsService} from '../../../modules/game/services/commands.service';
 import {GameEngine} from '../../interfaces/game-engine';
 
@@ -9,7 +8,6 @@ export class GeneralKeyboardCapture implements KeyboardCapture {
   }
 
   handleActionKeyEvent(key: KeyboardEvent): void {
-    const player: Entity = this._gameEngine.getPlayer() as Entity;
     switch (key.key) {
       case 'ArrowUp':
         this._commandEngine.ArrowUp.execute();
