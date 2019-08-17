@@ -26,6 +26,7 @@ export class EntitiesFactory {
     }
     this.setMaxPop(1);
   }
+
   private static instance: EntitiesFactory;
   private _monstersClass: Map<string, GameMonsterClass> = new Map<string, GameMonsterClass>();
   private _frequency: number;
@@ -127,6 +128,7 @@ export class EntitiesFactory {
       entity.gameClass = jsonData.gameClass;
       entity.hitDice = jsonData.hitDice;
       entity.maxHp = jsonData.maxHp;
+      entity.mapLevel = jsonData.mapLevel;
     }
     return entity;
   }

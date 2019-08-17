@@ -51,6 +51,7 @@ export interface JsonEntity {
   equipped?: Array<[number, string]>;
   race: string;
   gameClass?: string;
+  mapLevel?: number;
 }
 
 export interface JsonPlayer extends JsonEntity {

@@ -24,12 +24,11 @@ export class NextLevelTile extends Tile {
   }
 
   getInfo(): string {
-    return this._type === TileType.STAIRUP ? 'Stair up' : 'Stair down';
+    return (this._type === TileType.STAIRUP ? 'Stair up' : 'Stair down') + super.getInfo();
   }
 
   onHit(actor: Entity): Action | null {
     return null;
   }
-
 
 }

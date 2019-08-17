@@ -1,4 +1,3 @@
-import {Sprite} from '../base/sprite';
 import {SpritesFactory} from '../../factories/sprites-factory';
 import {SpriteType} from '../../enums/sprite-type.enum';
 import {Entity} from '../base/entity';

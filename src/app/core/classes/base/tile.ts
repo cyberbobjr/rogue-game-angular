@@ -69,7 +69,7 @@ export abstract class Tile implements Iobject {
 
   getInfo(): string {
     if (this._contents.length > 0) {
-      return `, you see :  + ${this._getContentInfo()}`;
+      return `, you see : ${this._getContentInfo()}`;
     }
     return '';
   }
