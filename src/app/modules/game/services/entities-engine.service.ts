@@ -84,4 +84,10 @@ export class EntitiesEngine {
   getEntitiesVisiblesOnMap(gameMap: GameMap) {
     return this._gameEntities.getEntitiesVisiblesOnMap(gameMap);
   }
+
+  setVisibilityForEntities(gameMap: GameMap) {
+    this.getGameEntities().getEntities().forEach(entity => {
+      entity.sprite.light = gameMap.getLosForPosition(entity.position) > 0;
+    });
+  }
 }

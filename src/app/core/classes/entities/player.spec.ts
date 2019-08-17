@@ -88,14 +88,17 @@ describe('Player', () => {
   });
 
   it('should be created with generated Json', () => {
-    const player: any = JSON.parse(JSON.stringify(EntitiesFactory.getInstance()
-                                                                 .createEntityFromJson(playerJsonData) as Player));
+    const playerLoaded: Player = EntitiesFactory.getInstance()
+                                                .createEntityFromJson(playerJsonData) as Player;
+    const player: any = JSON.parse(JSON.stringify(playerLoaded));
     const objKeys = Object.keys(playerJsonData);
     for (let i = 0; i < objKeys.length; i++) {
       if (!(player[objKeys[i]] instanceof Object)) {
         expect(player[objKeys[i]]).toEqual(playerJsonData[objKeys[i]]);
       }
     }
+    expect(playerLoaded.isInventoryEquipped('a')).toBeTruthy();
+    expect(playerLoaded.isInventoryEquipped('b')).toBeTruthy();
   });
 
   const generateInventory = function () {

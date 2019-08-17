@@ -1,7 +1,7 @@
 import {JsonRace} from '../../interfaces/json-interfaces';
 
 
-export class RaceClass {
+export class GameRace {
   private _name: string;
 
   get jsonData(): JsonRace {

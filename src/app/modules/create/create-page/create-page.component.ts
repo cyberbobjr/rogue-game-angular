@@ -11,7 +11,7 @@ import {RaceFactory} from '../../../core/factories/race-factory';
 import {RaceType} from '../../../core/enums/race-type.enum';
 import {Router} from '@angular/router';
 import {GameClass} from '../../../core/classes/base/game-class';
-import {RaceClass} from '../../../core/classes/base/race';
+import {GameRace} from '../../../core/classes/base/game-race';
 import {Player} from '../../../core/classes/entities/player';
 
 @Component({
@@ -56,8 +56,8 @@ export class CreatePageComponent implements OnInit {
                                         .setAttributes(this._diceService.attributesScore) as Player;
     const gameClass: GameClass = GameClassFactory.getInstance()
                                                  .createGameClass(ClassType.BARBARIAN);
-    const gameRace: RaceClass = RaceFactory.getInstance()
-                                           .createRace(RaceType.HUMAN);
+    const gameRace: GameRace = RaceFactory.getInstance()
+                                          .createRace(RaceType.HUMAN);
 
     player = player.setRace(gameRace)
                    .setGameClass(gameClass);

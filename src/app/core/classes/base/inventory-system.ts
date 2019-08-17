@@ -77,6 +77,7 @@ export class InventorySystem {
 
   public equipItemAtSlot(slot: SlotType, inventoryletter: string): void {
     this._equippedItem.set(slot, inventoryletter);
+
   }
 
   public getItemEquippedWithSlot(slot: SlotType): GameObject | undefined {

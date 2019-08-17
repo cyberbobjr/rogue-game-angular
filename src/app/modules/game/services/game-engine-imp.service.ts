@@ -102,6 +102,7 @@ export class GameEngineImp implements GameEngine {
     this._entityEngine.updateEntities(this);
     this._effectEngine.updateEffects(timestamp);
     this._mapEngine.computeLOSMap(player);
+    this._entityEngine.setVisibilityForEntities(this._mapEngine.getCurrentMap());
   }
 
   private _drawGame() {

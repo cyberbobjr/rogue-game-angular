@@ -36,8 +36,6 @@ describe('Inventorysystem', () => {
   it('a GameObject can be remove in inventory', () => {
     weapon = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
     inventoryLetter = inventory.addToInventory(weapon);
-    console.log(weapon);
-    console.log(inventoryLetter);
     expect(inventory.removeFromInventory(inventoryLetter))
       .toBeTruthy();
     expect(inventory.getInventorySize())

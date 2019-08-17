@@ -28,16 +28,12 @@ export class Torch extends GameObject {
   }
 
   onEquip(actor: Entity, letterInventory?: string) {
-    if (actor.equipInventory(letterInventory)) {
-      actor.lightPower = 10;
-      EventLog.getInstance().message = 'You see better';
-    }
+    actor.lightPower = 10;
+    EventLog.getInstance().message = 'You see better';
   }
 
   onUnequip(actor: Entity, letterInventory?: string) {
-    if (actor.unequipItem(letterInventory)) {
-      actor.lightPower = 3;
-    }
+    actor.lightPower = 3;
   }
 
   constructor() {

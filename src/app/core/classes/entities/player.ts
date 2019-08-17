@@ -7,7 +7,7 @@ import {Sprite} from '../base/sprite';
 import {JsonPlayer} from '../../interfaces/json-interfaces';
 import {SlotType} from '../../enums/equiped-type.enum';
 import {Utility} from '../Utility/utility';
-import {RaceClass} from '../base/race';
+import {GameRace} from '../base/game-race';
 import {GameClass} from '../base/game-class';
 import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
@@ -72,7 +72,7 @@ export class Player extends Entity {
       ...{
         level: this.level,
         maxHp: this._maxHp,
-        equipped: [...this._equippedItem],
+        equipped: [...this.inventory.equippedItem],
         gameClass: this._gameClass,
         mapLevel: this._mapLevel
       }
@@ -95,7 +95,7 @@ export class Player extends Entity {
 
   private _getArmorEquipped(): Array<Armor> {
     const armorEquipped: Array<Armor> = [];
-    for (const [key, value] of this._equippedItem) {
+    for (const [key, value] of this.inventory.equippedItem) {
       const gameObject: GameObject = this._inventory.getGameObjectByInventoryLetter(value);
       if (gameObject instanceof Armor) {
         armorEquipped.push(gameObject as Armor);
@@ -136,7 +136,7 @@ export class Player extends Entity {
     return Utility.getSlotTypeLabel(slotEquipped);
   }
 
-  setRace(race: RaceClass): Player {
+  setRace(race: GameRace): Player {
     this._race = race.name;
     return this;
   }

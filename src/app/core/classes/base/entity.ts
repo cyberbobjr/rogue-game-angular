@@ -42,7 +42,6 @@ export class Entity implements Iobject, IEntity {
   protected _xp = 0; // xp for player or challenge point
 
   protected _inventory: InventorySystem = new InventorySystem();
-  protected _equippedItem: Map<SlotType, string> = new Map<SlotType, string>();
   protected _abilities: AttributeSystem = new AttributeSystem();
 
   lightRadius = 20;
@@ -338,7 +337,7 @@ export class Entity implements Iobject, IEntity {
 
   private _getEquippedWeapons(): Array<Weapon> {
     const weaponsEquipped: Array<Weapon> = [];
-    for (const [key, value] of this._equippedItem) {
+    for (const [key, value] of this.inventory.equippedItem) {
       const gameObject: GameObject = this._inventory.getGameObjectByInventoryLetter(value);
       if ((key === SlotType.TWOHANDS || key === SlotType.RIGHTHAND || key === SlotType.LEFTHAND) && (gameObject instanceof Weapon)) {
         weaponsEquipped.push(gameObject as Weapon);
