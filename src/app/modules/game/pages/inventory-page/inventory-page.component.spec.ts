@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {InventoryPageComponent} from './inventory-page.component';
 import {EntitiesFactory} from '../../../../core/factories/entities-factory';
@@ -20,7 +20,7 @@ describe('InventoryPageComponent', () => {
   let fixture: ComponentFixture<InventoryPageComponent>;
   let entitiesService: EntitiesEngine;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
                                      declarations: [InventoryPageComponent],
                                      providers: [EntitiesEngine]

@@ -33,13 +33,13 @@ export interface JsonMap {
 }
 
 export interface JsonEntity {
-  id: string;
+  id?: string;
   gp: number;
   hp: number;
   maxHp?: number;
+  speed?: number;
+  size?: string;
   name: string;
-  speed: number;
-  size: string;
   position: JsonPosition;
   sprite: JsonSprite;
   entityType: number;
@@ -52,6 +52,7 @@ export interface JsonEntity {
   race: string;
   gameClass?: string;
   mapLevel?: number;
+  level?: number;
 }
 
 export interface JsonPlayer extends JsonEntity {
@@ -72,19 +73,20 @@ export interface JsonArmor extends JsonGameObject {
 export interface JsonGameObject {
   id: string;
   name: string;
-  type: string;
+  type?: string;
   empilable: boolean;
   objectType: string;
-  cost: {
+  cost?: {
     unit: string,
     value: number
   };
-  weight: number;
-  properties: [
-    string
-  ];
+  weight?: number;
+  properties?: string[];
   sprite: JsonSprite | Sprite;
   qty: number;
+  damage?: any;
+  ac?: number;
+  thrown?: any;
 }
 
 export interface JsonWeapon extends JsonGameObject {

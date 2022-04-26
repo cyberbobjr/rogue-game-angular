@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {InfoPageComponent} from './info-page.component';
 import {Player} from '../../../../core/classes/entities/player';
@@ -16,7 +16,7 @@ describe('InfoPageComponent', () => {
   let component: InfoPageComponent;
   let fixture: ComponentFixture<InfoPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const attributes: AttributeSystem = new AttributeSystem();
     attributes.set('dexterity', 10);
     const player: Entity = new Player().setGameClass(GameClassFactory.getInstance()

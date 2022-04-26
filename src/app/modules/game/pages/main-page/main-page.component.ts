@@ -5,7 +5,6 @@ import {StorageEngine} from '../../services/storage-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
 import {NgxSmartModalService} from 'ngx-smart-modal';
-import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 
 @Component({
   selector: 'app-main-page',

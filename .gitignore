@@ -37,3 +37,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+fortawesome-fontawesome-pro-5.15.4.tgz
+entities.json
+test.json

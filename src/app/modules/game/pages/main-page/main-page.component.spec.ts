@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {MainPageComponent} from './main-page.component';
 import {SharedModule} from '../../../shared/shared.module';
@@ -26,7 +26,7 @@ describe('MainPageComponent', () => {
   let fixture: ComponentFixture<MainPageComponent>;
   let storageService: StorageEngine;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [SharedModule,
         NgxSmartModalModule.forRoot(),

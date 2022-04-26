@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import {RollDicesComponent} from './roll-dices.component';
 import {SharedModule} from '../../../shared/shared.module';
@@ -7,7 +7,7 @@ describe('RollDicesComponent', () => {
   let component: RollDicesComponent;
   let fixture: ComponentFixture<RollDicesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule],
                                      declarations: [RollDicesComponent]

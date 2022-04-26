@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import {AbilityComponent} from 'src/app/modules/create/ui/ability/ability.component';
 import {SharedModule} from '../../../shared/shared.module';
 
@@ -7,7 +7,7 @@ describe('AbilityComponent', () => {
   let component: AbilityComponent;
   let fixture: ComponentFixture<AbilityComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
                                      imports: [SharedModule],
                                      declarations: [AbilityComponent]

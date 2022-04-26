@@ -129,6 +129,7 @@ export class EntitiesFactory {
       entity.hitDice = jsonData.hitDice;
       entity.maxHp = jsonData.maxHp;
       entity.mapLevel = jsonData.mapLevel;
+      entity.level = jsonData.level;
     }
     return entity;
   }

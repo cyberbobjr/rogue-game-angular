@@ -10,7 +10,7 @@ export class Food extends GameObject {
   protected _name = 'food';
 
   get id(): string {
-    return 'FOOD';
+    return this._id;
   }
 
   static fromJson(jsonData: any): Food {
@@ -21,6 +21,7 @@ export class Food extends GameObject {
     super();
     this._sprite = SpritesFactory.createSprite(SpriteType.FOOD);
     this._objectType = 'FOOD';
+    this._id = 'food';
   }
 
   getInfo(): string {
