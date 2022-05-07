@@ -1,4 +1,4 @@
-import {GameMap} from './game-map';
+import {GameMapImp} from './game-map-imp';
 import {ChestTile} from '../tiles/chest-tile';
 import {Position} from './position';
 import {TilesFactory} from '../../factories/tiles-factory';
@@ -8,7 +8,7 @@ import {Tile} from './tile';
 describe('Game map', () => {
 
   it('will be created', () => {
-    const gameMap: GameMap = new GameMap(10, 10);
+    const gameMap: GameMapImp = new GameMapImp(10, 10);
     expect(gameMap.width)
       .toEqual(10);
     expect(gameMap.height)
@@ -17,7 +17,7 @@ describe('Game map', () => {
 
   it('will check for generic Tile', () => {
     const chestPosition: Position = new Position(5, 5);
-    const gameMap: GameMap = new GameMap(10, 10);
+    const gameMap: GameMapImp = new GameMapImp(10, 10);
     const chestTile: ChestTile = new ChestTile(chestPosition);
     gameMap.setTile(chestTile);
     const testingArray: Array<Position> = gameMap.getAllPosition<ChestTile>(ChestTile);
@@ -29,7 +29,7 @@ describe('Game map', () => {
 
   it('should set tile', () => {
     const chestPosition: Position = new Position(5, 5);
-    const gameMap: GameMap = new GameMap(10, 10);
+    const gameMap: GameMapImp = new GameMapImp(10, 10);
     const chestTile: ChestTile = new ChestTile(chestPosition);
 
     gameMap.setTile(chestTile);
@@ -38,7 +38,7 @@ describe('Game map', () => {
   });
 
   it('should extract tile from map', () => {
-    const gameMap: GameMap = new GameMap(10, 10);
+    const gameMap: GameMapImp = new GameMapImp(10, 10);
     const tile: Tile = TilesFactory.createTile(TileType.FLOOR, new Position(5, 5));
     gameMap.setTile(tile);
     const tilesExtracted: Tile[][] = gameMap.extractTiles(5, 5, 1, 1);

@@ -9,7 +9,7 @@ import {GameObject} from '../gameObjects/game-object';
 import {GameObjectFactory} from '../../factories/game-object-factory';
 import {Action} from '../../interfaces/action';
 import {GameObjectType} from '../../enums/game-object-type.enum';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {EntityType} from '../../enums/entity-type.enum';
 
 export class Monster extends Entity {
@@ -62,7 +62,7 @@ export class Monster extends Entity {
   }
 
   // region events
-  onDead(gameEngine: GameEngineImp): void {
+  onDead(gameEngine: GameEngineService): void {
     // drop gold
     const goldObject: GameObject = new Gold(this.gp);
     const tile: Tile = gameEngine.getMapEngine()

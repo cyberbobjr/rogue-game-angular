@@ -8,11 +8,11 @@ import {RaceFactory} from '../../../../core/factories/race-factory';
 import {RaceType} from '../../../../core/enums/race-type.enum';
 import {GameClassFactory} from '../../../../core/factories/game-class-factory';
 import {ClassType} from '../../../../core/enums/class-type.enum';
-import {GameMap} from '../../../../core/classes/base/game-map';
+import {GameMapImp} from '../../../../core/classes/base/game-map-imp';
 import {MapBuilder} from '../../../../core/factories/map-builder';
 import {GameObjectFactory} from '../../../../core/factories/game-object-factory';
 import {GameObjectType} from '../../../../core/enums/game-object-type.enum';
-import {EntitiesEngine} from '../../services/entities-engine.service';
+import {EntitiesEngine} from '../../../../services/entities-engine.service';
 import {GameEntities} from '../../../../core/classes/base/game-entities';
 
 describe('InventoryPageComponent', () => {

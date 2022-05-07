@@ -12,7 +12,7 @@ import {GameClass} from '../base/game-class';
 import {Armor} from '../gameObjects/armor';
 import {GameObject} from '../gameObjects/game-object';
 import {AttributesFactory} from '../../factories/attributes-factory';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {EntityType} from '../../enums/entity-type.enum';
 
 export class Player extends Entity {
@@ -110,7 +110,7 @@ export class Player extends Entity {
     // this.hp -= damage;
   }
 
-  onDead(_gameEngine: GameEngineImp): void {
+  onDead(_gameEngine: GameEngineService): void {
     super.onDead(_gameEngine);
   }
 

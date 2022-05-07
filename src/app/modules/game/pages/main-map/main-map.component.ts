@@ -1,11 +1,11 @@
 import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {DisplayEngine} from '../../services/display-engine.service';
-import {GameEngineImp} from '../../services/game-engine-imp.service';
+import {DisplayEngine} from '../../../../services/display-engine.service';
+import {GameEngineService} from '../../../../services/game-engine-imp.service';
 
 @Component({
              selector: 'app-main-map',
              templateUrl: './main-map.component.html',
-             styleUrls: ['./main-map.component.css']
+             styleUrls: ['./main-map.component.scss']
            })
 export class MainMapComponent implements OnInit, OnDestroy {
   @ViewChild('refMap', { static: true }) refMap: ElementRef;
@@ -19,7 +19,7 @@ export class MainMapComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _displayService: DisplayEngine,
-              private _gameEngineService: GameEngineImp) {
+              private _gameEngineService: GameEngineService) {
   }
 
   ngOnInit() {

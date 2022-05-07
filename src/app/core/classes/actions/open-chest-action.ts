@@ -1,9 +1,9 @@
 import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {ActionResult} from './action-result';
 import {EventLog} from '../Utility/event-log';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {MapEngine} from '../../../services/map-engine.service';
 import {Tile} from '../base/tile';
 import {ChestTile} from '../tiles/chest-tile';
 
@@ -11,7 +11,7 @@ export class OpenChestAction implements Action {
   constructor() {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
     const mapEngine: MapEngine = gameEngine.getMapEngine();
     const tile: Tile = mapEngine.getTileAt(actor.position);
     if (tile instanceof ChestTile) {

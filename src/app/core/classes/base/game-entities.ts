@@ -1,8 +1,5 @@
 import {Entity} from './entity';
-import {JsonEntity} from '../../interfaces/json-interfaces';
-import {EntitiesFactory} from '../../factories/entities-factory';
-import {IdleAction} from '../actions/idle-action';
-import {GameMap} from './game-map';
+import {GameMapImp} from './game-map-imp';
 import {Position} from './position';
 import {Player} from '../entities/player';
 
@@ -47,7 +44,7 @@ export class GameEntities {
                .splice(index, 1);
   }
 
-  public getEntitiesVisiblesOnMap(gameMap: GameMap): Array<Entity> {
+  public getEntitiesVisiblesOnMap(gameMap: GameMapImp): Array<Entity> {
     return this.getAllEntities()
                .filter((entity: Entity) => {
                  return gameMap.isPositionVisible(entity.getPosition());

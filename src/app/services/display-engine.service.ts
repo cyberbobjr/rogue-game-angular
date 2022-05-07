@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {Position} from '../../../core/classes/base/position';
-import {GameMap} from '../../../core/classes/base/game-map';
-import {Sprite} from '../../../core/classes/base/sprite';
+import {Position} from '../core/classes/base/position';
+import {GameMapImp} from '../core/classes/base/game-map-imp';
+import {Sprite} from '../core/classes/base/sprite';
 import {DisplayOptions} from 'rot-js/lib/display/types';
 import {Display} from 'rot-js/lib';
 import {EntitiesEngine} from './entities-engine.service';
-import {Player} from '../../../core/classes/entities/player';
+import {Player} from '../core/classes/entities/player';
 import * as Color from 'color';
-import {Entity} from '../../../core/classes/base/entity';
-import {IEffect} from '../../../core/interfaces/i-effect';
-import {Utility} from '../../../core/classes/Utility/utility';
-import {Tile} from '../../../core/classes/base/tile';
-import {GameEntities} from '../../../core/classes/base/game-entities';
+import {Entity} from '../core/classes/base/entity';
+import {IEffect} from '../core/interfaces/i-effect';
+import {Utility} from '../core/classes/Utility/utility';
+import {Tile} from '../core/classes/base/tile';
+import {GameEntities} from '../core/classes/base/game-entities';
 
 interface BufferTile {
   sprite: Sprite;
@@ -50,7 +50,7 @@ export class DisplayEngine {
     this.maxVisiblesRows = height;
   }
 
-  public drawGameMap(gameMap: GameMap, gameEntities: GameEntities) {
+  public drawGameMap(gameMap: GameMapImp, gameEntities: GameEntities) {
     // prepare map for drawing
     const cameraPosition = gameEntities.getPlayer().position;
     const cameraStartPosition: Position = this._getStartViewPortOfPosition(cameraPosition);

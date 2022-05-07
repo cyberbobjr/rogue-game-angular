@@ -1,12 +1,15 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "outDir": "../out-tsc/app",
     "paths": {
-      "@core": [
-        "app/core"
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@services/*": [
+        "app/services/*"
       ]
     },
-    "outDir": "../out-tsc/app",
     "types": []
   },
   "files": [

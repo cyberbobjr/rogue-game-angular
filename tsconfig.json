@@ -1,6 +1,16 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@core/*": [
+        "app/core/*"
+      ],
+      "@services/*": [
+        "app/services/*"
+      ]
+    },
     "baseUrl": "./",
     "importHelpers": true,
     "outDir": "./dist/out-tsc",

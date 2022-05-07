@@ -3,7 +3,7 @@ import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {EventLog} from '../Utility/event-log';
 import {CombatResolver} from '../../rules/combat/combat-resolver';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 
 export class AttackMeleeAction implements Action {
   private _info = '';
@@ -11,7 +11,7 @@ export class AttackMeleeAction implements Action {
   constructor(private _target: Entity) {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
     EventLog.getInstance().message = `${actor.name} attack`;
     const damage: number = CombatResolver.HandToHandAttack(actor, this._target);
     this._target.onHit(damage);

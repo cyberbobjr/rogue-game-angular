@@ -3,26 +3,26 @@ import {GameClassFactory} from '../../factories/game-class-factory';
 import {ClassType} from '../../enums/class-type.enum';
 import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
-import {GameMap} from '../base/game-map';
+import {GameMapImp} from '../base/game-map-imp';
 import {MapBuilder} from '../../factories/map-builder';
 import {FireAction} from './fire-action';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ActionResult} from './action-result';
-import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
+import {EntitiesEngine} from '../../../services/entities-engine.service';
 import {Entity} from '../base/entity';
 import {Direction} from '../../enums/direction.enum';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {StorageEngine} from '../../../modules/game/services/storage-engine.service';
+import {MapEngine} from '../../../services/map-engine.service';
+import {StorageEngine} from '../../../services/storage-engine.service';
 import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('Fire action', () => {
   let player: Player = null;
-  let gameMap: GameMap;
+  let gameMap: GameMapImp;
   let entitiesService: EntitiesEngine;
-  let gameEngine: GameEngineImp;
+  let gameEngine: GameEngineService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -32,13 +32,13 @@ describe('Fire action', () => {
       ],
       providers: [
         EntitiesEngine,
-        GameEngineImp,
+        GameEngineService,
         MapEngine,
         StorageEngine
       ]
     });
     entitiesService = TestBed.get(EntitiesEngine);
-    gameEngine = TestBed.get(GameEngineImp);
+    gameEngine = TestBed.get(GameEngineService);
     gameMap = new MapBuilder().build();
     gameEngine.loadGame(gameMap, entitiesService.getGameEntities());
     player = new Player().setGameClass(GameClassFactory.getInstance()

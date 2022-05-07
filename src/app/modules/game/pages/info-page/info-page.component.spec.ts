@@ -7,7 +7,7 @@ import {ClassType} from '../../../../core/enums/class-type.enum';
 import {RaceFactory} from '../../../../core/factories/race-factory';
 import {RaceType} from '../../../../core/enums/race-type.enum';
 import {AttributesFactory} from '../../../../core/factories/attributes-factory';
-import {EntitiesEngine} from '../../services/entities-engine.service';
+import {EntitiesEngine} from '../../../../services/entities-engine.service';
 import {GameEntities} from '../../../../core/classes/base/game-entities';
 import {Entity} from '../../../../core/classes/base/entity';
 import {AttributeSystem} from '../../../../core/classes/base/AttributeSystem';

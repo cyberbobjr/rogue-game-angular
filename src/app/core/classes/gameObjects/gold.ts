@@ -5,31 +5,31 @@ import {GameObject} from './game-object';
 import {SlotType} from '../../enums/equiped-type.enum';
 
 export class Gold extends GameObject {
-  name = 'Gold';
+    _name = 'Gold';
 
-  get id(): string {
-    return 'GOLD';
-  }
+    get id(): string {
+        return 'GOLD';
+    }
 
-  get amount(): number {
-    return this._amount;
-  }
+    get amount(): number {
+        return this._amount;
+    }
 
-  constructor(private _amount: number) {
-    super();
-    this._sprite = SpritesFactory.createSprite(SpriteType.GOLD);
-    this.objectType = 'GOLD';
-  }
+    constructor(private _amount: number) {
+        super();
+        this._sprite = SpritesFactory.createSprite(SpriteType.GOLD);
+        this.objectType = 'GOLD';
+    }
 
-  getInfo(): string {
-    return `${this._amount} gold pieces`;
-  }
+    getInfo(): string {
+        return `${this._amount} gold pieces`;
+    }
 
-  onTake(actor: Entity): void {
-    actor.gp += this.amount;
-  }
+    onTake(actor: Entity): void {
+        actor.gp += this.amount;
+    }
 
-  getSlots(): Array<SlotType> {
-    return [];
-  }
+    getSlots(): Array<SlotType> {
+        return [];
+    }
 }

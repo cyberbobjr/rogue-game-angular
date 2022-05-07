@@ -3,13 +3,13 @@ import {GameClassFactory} from '../../factories/game-class-factory';
 import {ClassType} from '../../enums/class-type.enum';
 import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
-import {GameMap} from '../base/game-map';
+import {GameMapImp} from '../base/game-map-imp';
 import {MapBuilder} from '../../factories/map-builder';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
+import {EntitiesEngine} from '../../../services/entities-engine.service';
 import {Position} from '../base/position';
 import {TakeAction} from './take-action';
 import {Tile} from '../base/tile';
@@ -21,13 +21,13 @@ import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('take-action', () => {
   let player: Player = null;
-  let gameMap: GameMap;
+  let gameMap: GameMapImp;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [SharedModule,
         RouterTestingModule],
-      providers: [EntitiesEngine, GameEngineImp]
+      providers: [EntitiesEngine, GameEngineService]
     });
     gameMap = new MapBuilder().withRandomChests(5)
                               .build();
@@ -46,9 +46,9 @@ describe('take-action', () => {
 
   it('should take objects from tile', () => {
     const gameObject: GameObject = GameObjectFactory.create(GameObjectType.WEAPON, 'club');
-    const gameEngine: GameEngineImp = TestBed.get(GameEngineImp);
+    const gameEngine: GameEngineService = TestBed.get(GameEngineService);
     const inventorySize: number = player.inventory.getInventorySize();
-    const freePosition: Position = gameMap.getFreeSlotForRoom(0);
+    const freePosition: Position = gameMap.getFreePositionForRoom(0);
     const tile: Tile = gameMap.getTileAt(freePosition);
     const takeAction: TakeAction = new TakeAction();
 

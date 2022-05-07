@@ -9,14 +9,14 @@ import {MainMapComponent} from '../main-map/main-map.component';
 import {InfoPageComponent} from '../info-page/info-page.component';
 import {InventoryPageComponent} from '../inventory-page/inventory-page.component';
 import {LogPageComponent} from '../log-page/log-page.component';
-import {StorageEngine} from '../../services/storage-engine.service';
-import {EntitiesEngine} from '../../services/entities-engine.service';
+import {StorageEngine} from '../../../../services/storage-engine.service';
+import {EntitiesEngine} from '../../../../services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameClassFactory} from '../../../../core/factories/game-class-factory';
 import {ClassType} from '../../../../core/enums/class-type.enum';
 import {RaceFactory} from '../../../../core/factories/race-factory';
 import {RaceType} from '../../../../core/enums/race-type.enum';
-import {GameMap} from '../../../../core/classes/base/game-map';
+import {GameMapImp} from '../../../../core/classes/base/game-map-imp';
 import {MapBuilder} from '../../../../core/factories/map-builder';
 import {EntityBuilder} from '../../../../core/factories/entity-builder';
 import {GameEntities} from '../../../../core/classes/base/game-entities';
@@ -60,7 +60,7 @@ describe('MainPageComponent', () => {
                                                                      .createGameClass(ClassType.BARBARIAN))
                                        .setRace(RaceFactory.getInstance()
                                                            .createRace(RaceType.HUMAN));
-    const map: GameMap = new MapBuilder().build();
+    const map: GameMapImp = new MapBuilder().build();
     player.setMapLevelAndPosition(map.level, map.entryPosition);
     const gameEntities: GameEntities = EntityBuilder.generateMonsters([], 5, map);
     storageService.saveMap(map, gameEntities);

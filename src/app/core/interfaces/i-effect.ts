@@ -1,5 +1,5 @@
 import {Position} from '../classes/base/position';
-import {GameMap} from '../classes/base/game-map';
+import {GameMapImp} from '../classes/base/game-map-imp';
 
 export interface IEffect {
   type: string;
@@ -9,7 +9,7 @@ export interface IEffect {
 
   tick(timestamp: number);
 
-  draw_callback(gameMap: GameMap): GameMap;
+  draw_callback(gameMap: GameMapImp): GameMapImp;
 
   unregister_callback();
 }

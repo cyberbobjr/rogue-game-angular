@@ -4,7 +4,7 @@ import {EventLog} from '../../../../core/classes/Utility/event-log';
 @Component({
              selector: 'app-log-page',
              templateUrl: './log-page.component.html',
-             styleUrls: ['./log-page.component.css']
+             styleUrls: ['./log-page.component.scss']
            })
 export class LogPageComponent implements OnInit {
   messages: Array<string> = [];

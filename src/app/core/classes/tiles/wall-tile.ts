@@ -8,25 +8,25 @@ import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 
 export class WallTile extends Tile {
-  _type = TileType.WALL;
-  name = 'wall';
+    _type = TileType.WALL;
+    _name = 'wall';
 
-  static fromJSON(json: JSonCell): WallTile {
-    return new this(new Position(json.position.x, json.position.y));
-  }
+    static fromJSON(json: JSonCell): WallTile {
+        return new this(new Position(json.position.x, json.position.y));
+    }
 
-  constructor(position?: Position) {
-    super();
-    this.sprite = SpritesFactory.createSprite(SpriteType.WALL);
-    this._opaque = true;
-    this.position = position;
-  }
+    constructor(position?: Position) {
+        super();
+        this.sprite = SpritesFactory.createSprite(SpriteType.WALL);
+        this._opaque = true;
+        this.position = position;
+    }
 
-  isWalkable(): boolean {
-    return false;
-  }
+    isWalkable(): boolean {
+        return false;
+    }
 
-  onHit(actor: Entity): Action | null {
-    return null;
-  }
+    onHit(actor: Entity): Action | null {
+        return null;
+    }
 }

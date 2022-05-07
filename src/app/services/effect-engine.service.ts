@@ -1,4 +1,4 @@
-import {IEffect} from '../../../core/interfaces/i-effect';
+import {IEffect} from '../core/interfaces/i-effect';
 import {Injectable} from '@angular/core';
 
 @Injectable({

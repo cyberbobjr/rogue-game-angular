@@ -6,10 +6,10 @@ import {Position} from '../base/position';
 import {Tile} from '../base/tile';
 import {Player} from '../entities/player';
 import {AttackMeleeAction} from './attack-melee-action';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {DoorTile} from '../tiles/door-tile';
 import {Monster} from '../entities/monster';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {MapEngine} from '../../../services/map-engine.service';
 import {IdleAction} from './idle-action';
 import {GameEngine} from '../../interfaces/game-engine';
 
@@ -21,7 +21,7 @@ export class ChaseAction implements Action {
   constructor(private _target: Entity) {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
     this._mapEngine = gameEngine.getMapEngine();
     this._gameEngine = gameEngine;
     if (!actor.sprite.light && (actor instanceof Monster)) {

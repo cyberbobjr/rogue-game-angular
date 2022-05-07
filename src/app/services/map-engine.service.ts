@@ -1,35 +1,35 @@
 import {Injectable} from '@angular/core';
-import {GameMap} from '../../../core/classes/base/game-map';
-import {Iobject} from '../../../core/interfaces/iobject';
+import {GameMapImp} from '../core/classes/base/game-map-imp';
+import {Iobject} from '../core/interfaces/iobject';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
 import {MapBuilder} from 'src/app/core/factories/map-builder';
-import {StorageEngine} from 'src/app/modules/game/services/storage-engine.service';
-import {Position} from '../../../core/classes/base/position';
+import {StorageEngine} from 'src/app/services/storage-engine.service';
+import {Position} from '../core/classes/base/position';
 import AStar from 'rot-js/lib/path/astar';
 import {Path} from 'rot-js';
-import {Entity} from '../../../core/classes/base/entity';
-import {Tile} from '../../../core/classes/base/tile';
-import {DoorTile} from '../../../core/classes/tiles/door-tile';
+import {Entity} from '../core/classes/base/entity';
+import {Tile} from '../core/classes/base/tile';
+import {DoorTile} from '../core/classes/tiles/door-tile';
 import {EntitiesEngine} from './entities-engine.service';
-import {Utility} from '../../../core/classes/Utility/utility';
+import {Utility} from '../core/classes/Utility/utility';
 import {json} from '@angular-devkit/core';
-import {GameEntities} from '../../../core/classes/base/game-entities';
+import {GameEntities} from '../core/classes/base/game-entities';
 
 @Injectable({
               providedIn: 'root'
             })
 export class MapEngine {
-  private _currentMap: GameMap = null;
+  private _currentMap: GameMapImp = null;
 
   constructor() {
   }
 
-  setGameMap(value: GameMap): GameMap {
+  setGameMap(value: GameMapImp): GameMapImp {
     this._currentMap = value;
     return this._currentMap;
   }
 
-  getCurrentMap(): GameMap {
+  getCurrentMap(): GameMapImp {
     return this._currentMap;
   }
 

@@ -1,34 +1,34 @@
 <div class="row">
-  <div class="span8 offset5 text-center">
-    <h3>{{'Create character'|translate}}</h3>
-  </div>
+    <div class="span8 offset5 text-center">
+        <h3>{{'Create character'|translate}}</h3>
+    </div>
 </div>
 <div class="row">
-  <div class="span12 offset3 text-center">
-    <form class="form-horizontal">
-      <div class="row">
-        <div class="span7">
-          <app-ability *ngFor="let ability of attributesKeys" ability="{{ability}}"></app-ability>
-        </div>
-        <div class="span3">
-          <app-dices></app-dices>
-        </div>
-        <div class="span2">
-          <div class="row">
-            <button *ngIf="_diceService.dicesScore.length <= 5" class="btn" (click)="onDice()">
-              <i class="fas fa-dice"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
+    <div class="span12 offset3 text-center">
+        <form class="form-horizontal">
+            <div class="row">
+                <div class="span7">
+                    <app-ability *ngFor="let ability of attributesKeys" ability="{{ability}}"></app-ability>
+                </div>
+                <div class="span3">
+                    <app-dices></app-dices>
+                </div>
+                <div class="span2">
+                    <div class="row">
+                        <button *ngIf="dicesScore.length <= 5" class="btn" (click)="onDice()">
+                            <i class="fas fa-dice"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 <div class="row">
-  <div class="span8 offset5">
-    <button class="btn btn-primary btn-block" (click)="onSave()">Save character</button>
-  </div>
-  <div class="span8 offset5">
-    <a class="btn btn-block" routerLink="/main">Back to main menu</a>
-  </div>
+    <div class="span8 offset5">
+        <button class="btn btn-primary btn-block" (click)="onSave()">Save character</button>
+    </div>
+    <div class="span8 offset5">
+        <a class="btn btn-block" routerLink="/main">Back to main menu</a>
+    </div>
 </div>

@@ -1,15 +1,15 @@
 import {ChaseAction} from './chase-action';
 import {EntitiesFactory} from '../../factories/entities-factory';
 import {Position} from '../base/position';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
-import {StorageEngine} from '../../../modules/game/services/storage-engine.service';
+import {EntitiesEngine} from '../../../services/entities-engine.service';
+import {MapEngine} from '../../../services/map-engine.service';
+import {StorageEngine} from '../../../services/storage-engine.service';
 import {MapBuilder} from '../../factories/map-builder';
-import {GameMap} from '../base/game-map';
+import {GameMapImp} from '../base/game-map-imp';
 import {Entity} from '../base/entity';
 import {ActionResult} from './action-result';
 import {IdleAction} from './idle-action';
@@ -19,9 +19,9 @@ import {Player} from '../entities/player';
 import {GameEntities} from '../base/game-entities';
 
 describe('Chase action', () => {
-  let gameEngine: GameEngineImp;
+  let gameEngine: GameEngineService;
   let entitiesService: EntitiesEngine;
-  let gameMap: GameMap;
+  let gameMap: GameMapImp;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -31,13 +31,13 @@ describe('Chase action', () => {
       ],
       providers: [
         EntitiesEngine,
-        GameEngineImp,
+        GameEngineService,
         MapEngine,
         StorageEngine
       ]
     });
     entitiesService = TestBed.get(EntitiesEngine);
-    gameEngine = TestBed.get(GameEngineImp);
+    gameEngine = TestBed.get(GameEngineService);
     gameMap = new MapBuilder().build();
     for (let y = 0; y < gameMap.height; y++) {
       for (let x = 0; x < gameMap.width; x++) {

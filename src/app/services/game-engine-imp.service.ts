@@ -5,29 +5,30 @@ import {LoggingService} from './logging.service';
 import {DisplayEngine} from './display-engine.service';
 import {CommandsService} from './commands.service';
 import {StorageEngine} from './storage-engine.service';
-import {Entity} from '../../../core/classes/base/entity';
+import {Entity} from '../core/classes/base/entity';
 import {EffectEngine} from './effect-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Router} from '@angular/router';
 import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
-import {Player} from '../../../core/classes/entities/player';
-import {GameMap} from '../../../core/classes/base/game-map';
-import {EventLog} from '../../../core/classes/Utility/event-log';
-import {MapBuilder} from '../../../core/factories/map-builder';
-import {GameEntities} from '../../../core/classes/base/game-entities';
-import {GameEngine} from '../../../core/interfaces/game-engine';
-import {GeneralKeyboardCapture} from '../../../core/classes/Utility/generalKeyboardCapture';
-import {KeyboardCapture} from '../../../core/interfaces/keyboardCapture';
-import {EntityBuilder} from '../../../core/factories/entity-builder';
-import {Iobject} from '../../../core/interfaces/iobject';
-import {Position} from '../../../core/classes/base/position';
+import {Player} from '../core/classes/entities/player';
+import {GameMapImp} from '../core/classes/base/game-map-imp';
+import {EventLog} from '../core/classes/Utility/event-log';
+import {MapBuilder} from '../core/factories/map-builder';
+import {GameEntities} from '../core/classes/base/game-entities';
+import {GameEngine} from '../core/interfaces/game-engine';
+import {GeneralKeyboardCapture} from '../core/classes/Utility/generalKeyboardCapture';
+import {KeyboardCapture} from '../core/interfaces/keyboardCapture';
+import {EntityBuilder} from '../core/factories/entity-builder';
+import {Iobject} from '../core/interfaces/iobject';
+import {Position} from '../core/classes/base/position';
 
+// @ts-ignore
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 @Injectable({
   providedIn: 'root'
 })
-export class GameEngineImp implements GameEngine {
+export class GameEngineService implements GameEngine {
 
   get keyboardHandler(): KeyboardCapture {
     return this._keyboardHandler;
@@ -55,8 +56,8 @@ export class GameEngineImp implements GameEngine {
   private _keyboardHandler: KeyboardCapture;
   private _modalService: NgxSmartModalService;
 
-  public static convertRawDataToGameData(map: JsonMap, entities: Array<JsonEntity>): { gameMap: GameMap, gameEntities: GameEntities } {
-    const gameMap: GameMap = MapBuilder.fromJSON(map);
+  public static convertRawDataToGameData(map: JsonMap, entities: Array<JsonEntity>): { gameMap: GameMapImp, gameEntities: GameEntities } {
+    const gameMap: GameMapImp = MapBuilder.fromJSON(map);
     const gameEntities: GameEntities = EntityBuilder.fromJSON(entities);
     return {gameMap, gameEntities};
   }
@@ -151,13 +152,13 @@ export class GameEngineImp implements GameEngine {
   async changeLevel(level: number): Promise<void> {
     this.saveGameState();
     const {map, entities} = await this._storageEngine.loadRawMap(level);
-    const {gameMap, gameEntities} = GameEngineImp.convertRawDataToGameData(map, entities);
+    const {gameMap, gameEntities} = GameEngineService.convertRawDataToGameData(map, entities);
     this.getPlayer().setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
     this.loadGame(gameMap, gameEntities, this.getPlayer());
     this.saveGameState();
   }
 
-  public loadGame(gameMap: GameMap, gameEntities: GameEntities, player: Player = null): void {
+  public loadGame(gameMap: GameMapImp, gameEntities: GameEntities, player: Player = null): void {
     gameEntities.setPlayer(player);
     this._mapEngine.setGameMap(gameMap);
     this._entityEngine.setGameEntities(gameEntities);

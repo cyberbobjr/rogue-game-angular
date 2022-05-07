@@ -6,29 +6,29 @@ import {Action} from '../../interfaces/action';
 import {Entity} from '../base/entity';
 
 export class NextLevelTile extends Tile {
-  name = 'Stair';
+    _name = 'Stair';
 
-  static fromJSON(json: any): NextLevelTile {
-    return new this(json.type, new Position(json.position._x, json.position._y));
-  }
+    static fromJSON(json: any): NextLevelTile {
+        return new this(json.type, new Position(json.position._x, json.position._y));
+    }
 
-  constructor(gotoLevel: TileType, position?: Position) {
-    super(position);
-    this._type = gotoLevel;
-    this.sprite = new Sprite(gotoLevel === TileType.STAIRUP ? '>' : '<');
-    this._opaque = false;
-  }
+    constructor(gotoLevel: TileType, position?: Position) {
+        super(position);
+        this._type = gotoLevel;
+        this.sprite = new Sprite(gotoLevel === TileType.STAIRUP ? '>' : '<');
+        this._opaque = false;
+    }
 
-  isWalkable(): boolean {
-    return true;
-  }
+    isWalkable(): boolean {
+        return true;
+    }
 
-  getInfo(): string {
-    return (this._type === TileType.STAIRUP ? 'Stair up' : 'Stair down') + super.getInfo();
-  }
+    getInfo(): string {
+        return (this._type === TileType.STAIRUP ? 'Stair up' : 'Stair down') + super.getInfo();
+    }
 
-  onHit(actor: Entity): Action | null {
-    return null;
-  }
+    onHit(actor: Entity): Action | null {
+        return null;
+    }
 
 }

@@ -1,5 +1,5 @@
-import * as weapons from '../rules/object/weapons.json';
-import * as armors from '../rules/object/armors.json';
+import * as weapons from '../data/object/weapons.json';
+import * as armors from '../data/object/armors.json';
 import {Weapon} from '../classes/gameObjects/weapon';
 import {GameObject} from '../classes/gameObjects/game-object';
 import {Gold} from '../classes/gameObjects/gold';
@@ -12,108 +12,108 @@ import {Utility} from '../classes/Utility/utility';
 import {JsonArmor, JsonGameObject, JsonWeapon} from '../interfaces/json-interfaces';
 
 export class GameObjectFactory {
-  private static instance: GameObjectFactory;
-  private _weapons: Map<string, Weapon> = new Map<string, Weapon>();
-  private _armors: Map<string, Armor> = new Map<string, Armor>();
+    private static instance: GameObjectFactory;
+    private _weapons: Map<string, Weapon> = new Map<string, Weapon>();
+    private _armors: Map<string, Armor> = new Map<string, Armor>();
 
-  constructor() {
-    console.log('GameObjectFactory created');
-    for (const key of Object.keys(weapons.default)) {
-      this._weapons.set(weapons.default[key]['id'], Weapon.fromJson(weapons.default[key]));
+    constructor() {
+        console.log('GameObjectFactory created');
+        for (const key of Object.keys(weapons)) {
+            this._weapons.set(weapons[key]['id'], Weapon.fromJson(weapons[key]));
+        }
+        for (const key of Object.keys(armors)) {
+            this._armors.set(armors[key]['id'], Armor.fromJson(armors[key]));
+        }
     }
-    for (const key of Object.keys(armors.default)) {
-      this._armors.set(armors.default[key]['id'], Armor.fromJson(armors.default[key]));
+
+    static getInstance() {
+        if (!GameObjectFactory.instance) {
+            GameObjectFactory.instance = new GameObjectFactory();
+        }
+        return GameObjectFactory.instance;
     }
-  }
 
-  static getInstance() {
-    if (!GameObjectFactory.instance) {
-      GameObjectFactory.instance = new GameObjectFactory();
+    static create(objectType: GameObjectType, id?: string): GameObject {
+        switch (objectType) {
+            case GameObjectType.TORCH:
+                return new Torch();
+            case GameObjectType.POTION:
+                return new Potion();
+            case GameObjectType.FOOD:
+                return new Food();
+            case GameObjectType.ARMOR:
+                return GameObjectFactory.getInstance()
+                                        .getArmorById(id);
+            case GameObjectType.WEAPON:
+                return GameObjectFactory.getInstance()
+                                        .getWeaponById(id);
+            default:
+                return null;
+        }
     }
-    return GameObjectFactory.instance;
-  }
 
-  static create(objectType: GameObjectType, id?: string): GameObject {
-    switch (objectType) {
-      case GameObjectType.TORCH:
-        return new Torch();
-      case GameObjectType.POTION:
-        return new Potion();
-      case GameObjectType.FOOD:
-        return new Food();
-      case GameObjectType.ARMOR:
-        return GameObjectFactory.getInstance()
-                                .getArmorById(id);
-      case GameObjectType.WEAPON:
-        return GameObjectFactory.getInstance()
-                                .getWeaponById(id);
-      default:
-        return null;
+    static createFromJson(objectType: string, data: JsonGameObject): GameObject | Armor | Weapon | undefined {
+        switch (objectType) {
+            case 'GOLD' :
+                return new Gold(data['_amount']);
+            case 'WEAPON' :
+                return Weapon.fromJson(data as JsonWeapon);
+            case 'ARMOR' :
+                return Armor.fromJson(data as JsonArmor);
+            case 'POTION' :
+                return Potion.fromJson();
+            case 'FOOD' :
+                return Food.fromJson(data);
+            case 'TORCH' :
+                return Torch.fromJson(data);
+            default:
+                return undefined;
+        }
     }
-  }
 
-  static createFromJson(objectType: string, data: JsonGameObject): GameObject | Armor | Weapon | undefined {
-    switch (objectType) {
-      case 'GOLD' :
-        return new Gold(data['_amount']);
-      case 'WEAPON' :
-        return Weapon.fromJson(data as JsonWeapon);
-      case 'ARMOR' :
-        return Armor.fromJson(data as JsonArmor);
-      case 'POTION' :
-        return Potion.fromJson();
-      case 'FOOD' :
-        return Food.fromJson(data);
-      case 'TORCH' :
-        return Torch.fromJson(data);
-      default:
-        return undefined;
+    generateRandomObjects(nbObjects: number): Array<GameObject> {
+        const chestContents: Array<GameObject> = [];
+        for (let i = 0; i < nbObjects; i++) {
+            chestContents.push(this._createRandomObject(GameObjectType.getRandomType()));
+        }
+        return chestContents;
     }
-  }
 
-  generateRandomObjects(nbObjects: number): Array<GameObject> {
-    const chestContents: Array<GameObject> = [];
-    for (let i = 0; i < nbObjects; i++) {
-      chestContents.push(this._createRandomObject(GameObjectType.getRandomType()));
+    private _createRandomObject(type: GameObjectType): GameObject {
+        switch (type) {
+            case GameObjectType.GOLD :
+                return new Gold(Utility.rolldice(10));
+            case GameObjectType.TORCH:
+                return new Torch();
+            case GameObjectType.WEAPON:
+                return this._getRandomWeapon();
+            case GameObjectType.ARMOR:
+                return this._getRandomArmor();
+            case GameObjectType.POTION:
+                return new Potion();
+            case GameObjectType.FOOD:
+                return new Food();
+        }
     }
-    return chestContents;
-  }
 
-  private _createRandomObject(type: GameObjectType): GameObject {
-    switch (type) {
-      case GameObjectType.GOLD :
-        return new Gold(Utility.rolldice(10));
-      case GameObjectType.TORCH:
-        return new Torch();
-      case GameObjectType.WEAPON:
-        return this._getRandomWeapon();
-      case GameObjectType.ARMOR:
-        return this._getRandomArmor();
-      case GameObjectType.POTION:
-        return new Potion();
-      case GameObjectType.FOOD:
-        return new Food();
+    private _getRandomWeapon(): GameObject {
+        const weaponCount: number = this._weapons.size;
+        const items: Array<Weapon> = Array.from(this._weapons.values());
+        return items[Utility.rolldice(weaponCount - 1)];
     }
-  }
 
-  private _getRandomWeapon(): GameObject {
-    const weaponCount: number = this._weapons.size;
-    const items: Array<Weapon> = Array.from(this._weapons.values());
-    return items[Utility.rolldice(weaponCount - 1)];
-  }
+    private _getRandomArmor(): GameObject {
+        const armorCount: number = this._armors.size;
+        const items: Array<Armor> = Array.from(this._armors.values());
+        return items[Utility.rolldice(armorCount - 1)];
+    }
 
-  private _getRandomArmor(): GameObject {
-    const armorCount: number = this._armors.size;
-    const items: Array<Armor> = Array.from(this._armors.values());
-    return items[Utility.rolldice(armorCount - 1)];
-  }
+    getWeaponById(weaponId: string): Weapon | null {
+        return this._weapons.get(weaponId);
+    }
 
-  getWeaponById(weaponId: string): Weapon | null {
-    return this._weapons.get(weaponId);
-  }
-
-  getArmorById(armorId: string): Armor | null {
-    return this._armors.get(armorId);
-  }
+    getArmorById(armorId: string): Armor | null {
+        return this._armors.get(armorId);
+    }
 
 }

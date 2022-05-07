@@ -3,13 +3,13 @@ import {GameClassFactory} from '../../factories/game-class-factory';
 import {ClassType} from '../../enums/class-type.enum';
 import {RaceFactory} from '../../factories/race-factory';
 import {RaceType} from '../../enums/race-type.enum';
-import {GameMap} from '../base/game-map';
+import {GameMapImp} from '../base/game-map-imp';
 import {MapBuilder} from '../../factories/map-builder';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 import {TestBed} from '@angular/core/testing';
 import {SharedModule} from '../../../modules/shared/shared.module';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntitiesEngine} from '../../../modules/game/services/entities-engine.service';
+import {EntitiesEngine} from '../../../services/entities-engine.service';
 import {WalkAction} from './walk-action';
 import {Direction} from '../../enums/direction.enum';
 import {Position} from '../base/position';
@@ -18,8 +18,8 @@ import {EntityBuilder} from '../../factories/entity-builder';
 
 describe('walk-action', () => {
   let player: Player = null;
-  let gameMap: GameMap;
-  let gameEngine: GameEngineImp;
+  let gameMap: GameMapImp;
+  let gameEngine: GameEngineService;
   let entitiesService: EntitiesEngine;
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -29,7 +29,7 @@ describe('walk-action', () => {
       ],
       providers: [
         EntitiesEngine,
-        GameEngineImp
+        GameEngineService
       ]
     });
     gameMap = new MapBuilder().withRandomChests(5)
@@ -39,7 +39,7 @@ describe('walk-action', () => {
                          .setRace(RaceFactory.getInstance()
                                              .createRace(RaceType.HUMAN))
                          .setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
-    gameEngine = TestBed.get(GameEngineImp);
+    gameEngine = TestBed.get(GameEngineService);
     gameEngine.loadGame(gameMap, EntityBuilder.generateMonsters([], 1, gameMap));
     entitiesService = TestBed.get(EntitiesEngine);
     entitiesService.setPlayer(player);

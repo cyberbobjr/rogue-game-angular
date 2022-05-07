@@ -1,11 +1,11 @@
 import {ChooseTarget} from './choose-target';
 import {SharedModule} from '../../../modules/shared/shared.module';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
-import {StorageEngine} from '../../../modules/game/services/storage-engine.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
+import {StorageEngine} from '../../../services/storage-engine.service';
 import {MapBuilder} from '../../factories/map-builder';
 import {FloorTile} from '../tiles/floor-tile';
 import {Position} from '../base/position';
-import {GameMap} from '../base/game-map';
+import {GameMapImp} from '../base/game-map-imp';
 import {TestBed} from '@angular/core/testing';
 import {Entity} from '../base/entity';
 import {RouterTestingModule} from '@angular/router/testing';
@@ -17,7 +17,7 @@ import {Player} from '../entities/player';
 
 describe('choose target testing', () => {
   let gameEngine: GameEngine;
-  let gameMap: GameMap;
+  let gameMap: GameMapImp;
   let gameEntities: GameEntities;
   const visibleEntities: Array<Entity> = [
     EntitiesFactory.generateRandomEntities(new Position(1, 1)),
@@ -33,7 +33,7 @@ describe('choose target testing', () => {
       ],
       providers: [StorageEngine]
     });
-    gameEngine = TestBed.get(GameEngineImp);
+    gameEngine = TestBed.get(GameEngineService);
     gameMap = new MapBuilder().build();
     gameEntities = EntityBuilder.generateMonsters([], 5, gameMap);
     for (let y = 0; y < gameMap.height; y++) {

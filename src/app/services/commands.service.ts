@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {Command} from '../../../core/interfaces/command';
-import {MoveE, MoveN, MoveNE, MoveNW, MoveS, MoveSE, MoveSW, MoveW} from '../../../core/classes/commands/move';
-import {SaveCommand} from '../../../core/classes/commands/save-command';
-import {OpenDoorCommand} from '../../../core/classes/commands/open-door-command';
-import {TakeCommand} from '../../../core/classes/commands/take-command';
-import {InventoryCommand} from '../../../core/classes/commands/inventory-command';
-import {AttackDistanceCommand} from '../../../core/classes/commands/attack-distance-command';
-import {WaitCommand} from '../../../core/classes/commands/wait-command';
+import {Command} from '../core/interfaces/command';
+import {MoveE, MoveN, MoveNE, MoveNW, MoveS, MoveSE, MoveSW, MoveW} from '../core/classes/commands/move';
+import {SaveCommand} from '../core/classes/commands/save-command';
+import {OpenDoorCommand} from '../core/classes/commands/open-door-command';
+import {TakeCommand} from '../core/classes/commands/take-command';
+import {InventoryCommand} from '../core/classes/commands/inventory-command';
+import {AttackDistanceCommand} from '../core/classes/commands/attack-distance-command';
+import {WaitCommand} from '../core/classes/commands/wait-command';
 import {UpStairCommand} from 'src/app/core/classes/commands/up-stair-command';
 import {DownStairCommand} from 'src/app/core/classes/commands/down-stair-command';
-import {OpenChestCommand} from '../../../core/classes/commands/open-chest-command';
-import {GameEngine} from '../../../core/interfaces/game-engine';
-import {TeleportCommand} from '../../../core/classes/commands/teleport-command';
+import {OpenChestCommand} from '../core/classes/commands/open-chest-command';
+import {GameEngine} from '../core/interfaces/game-engine';
+import {TeleportCommand} from '../core/classes/commands/teleport-command';
 
 @Injectable({
   providedIn: 'root'

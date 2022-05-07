@@ -1,12 +1,13 @@
 <div class="panel">
-  <div class="panel-heading">
-    Dice results :
-  </div>
-  <div class="panel-body">
-    <ul>
-      <li *ngFor="let ability of _diceService.dicesScore; let i = index" [class.used]="ability.used">
-        {{ability.value}}
-      </li>
-    </ul>
-  </div>
+    <div class="panel-heading">
+        Dice results :
+    </div>
+    <div class="panel-body">
+        <ul>
+            <li *ngFor="let ability of dicesScore; let i = index"
+                [class.used]="ability.used">
+                {{ability.value}}
+            </li>
+        </ul>
+    </div>
 </div>

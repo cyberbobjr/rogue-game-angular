@@ -1,9 +1,9 @@
 import {IEffect} from '../../interfaces/i-effect';
 import {Position} from '../base/position';
 import {Sprite} from '../base/sprite';
-import {GameMap} from '../base/game-map';
+import {GameMapImp} from '../base/game-map-imp';
 import {Tile} from '../base/tile';
-import {EffectEngine} from '../../../modules/game/services/effect-engine.service';
+import {EffectEngine} from '../../../services/effect-engine.service';
 import {Iobject} from '../../interfaces/iobject';
 
 export class FireEffect implements IEffect {
@@ -32,7 +32,7 @@ export class FireEffect implements IEffect {
     }
   }
 
-  draw_callback(gameMap: GameMap): GameMap {
+  draw_callback(gameMap: GameMapImp): GameMapImp {
     const tile: Iobject = gameMap.getDataAt(this.position.x, this.position.y);
     const spriteEffect: Sprite = tile.sprite.clone();
     spriteEffect.visibility = this.intensity;

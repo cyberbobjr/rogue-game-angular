@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgxSmartModalService} from 'ngx-smart-modal';
-import {GameEngineImp} from '../../../game/services/game-engine-imp.service';
-import {EntitiesEngine} from '../../../game/services/entities-engine.service';
+import {GameEngineService} from '../../../../services/game-engine-imp.service';
+import {EntitiesEngine} from '../../../../services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {GameObject} from '../../../../core/classes/gameObjects/game-object';
 import {InventoryKeyboardCapture} from '../../../../core/classes/Utility/inventoryKeyboardCapture';
@@ -9,7 +9,7 @@ import {InventoryKeyboardCapture} from '../../../../core/classes/Utility/invento
 @Component({
   selector: 'app-inventory-modal',
   templateUrl: './inventory-modal.component.html',
-  styleUrls: ['./inventory-modal.component.css']
+  styleUrls: ['./inventory-modal.component.scss']
 })
 export class InventoryModalComponent implements OnInit, OnDestroy {
   get selected(): string {
@@ -30,7 +30,7 @@ export class InventoryModalComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _modalService: NgxSmartModalService,
-              private _gameEngine: GameEngineImp,
+              private _gameEngine: GameEngineService,
               private _entitiesService: EntitiesEngine) {
   }
 

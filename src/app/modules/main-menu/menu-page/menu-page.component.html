@@ -11,7 +11,7 @@
 <div class="row">
     <ul class="nav nav-list">
       <li><a routerLink="/create">Create new player</a></li>
-      <li *ngIf="_isGameStarted"><a routerLink="/game">Continue game</a></li>
-      <li *ngIf="_isPlayerExist"><a (click)="startNewGame()">New game</a></li>
+      <li *ngIf="isGameStarted"><a routerLink="/game">Continue game</a></li>
+      <li *ngIf="isPlayerExist"><a (click)="startNewGame()">New game</a></li>
     </ul>
 </div>

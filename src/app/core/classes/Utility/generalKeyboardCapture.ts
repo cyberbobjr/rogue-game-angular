@@ -1,5 +1,5 @@
 import {KeyboardCapture} from '../../interfaces/keyboardCapture';
-import {CommandsService} from '../../../modules/game/services/commands.service';
+import {CommandsService} from '../../../services/commands.service';
 import {GameEngine} from '../../interfaces/game-engine';
 
 export class GeneralKeyboardCapture implements KeyboardCapture {

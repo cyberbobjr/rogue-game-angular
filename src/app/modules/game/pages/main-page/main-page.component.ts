@@ -1,19 +1,19 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {GameEngineImp} from '../../services/game-engine-imp.service';
-import {EntitiesEngine} from '../../services/entities-engine.service';
-import {StorageEngine} from '../../services/storage-engine.service';
+import {GameEngineService} from '../../../../services/game-engine-imp.service';
+import {EntitiesEngine} from '../../../../services/entities-engine.service';
 import {Player} from '../../../../core/classes/entities/player';
 import {Router} from '@angular/router';
 import {NgxSmartModalService} from 'ngx-smart-modal';
+import {StorageEngine} from '../../../../services/storage-engine.service';
 
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
-  styleUrls: ['./main-page.component.css']
+  styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent implements OnInit, OnDestroy {
 
-  constructor(private _gameEngineService: GameEngineImp,
+  constructor(private _gameEngineService: GameEngineService,
               private _entitiesService: EntitiesEngine,
               private _storageService: StorageEngine,
               private _router: Router,
@@ -29,7 +29,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
     try {
       const player: Player = await this._storageService.loadPlayer();
       const {map, entities} = await this._storageService.loadRawMap(player.mapLevel);
-      const {gameMap, gameEntities} = GameEngineImp.convertRawDataToGameData(map, entities);
+      const {gameMap, gameEntities} = GameEngineService.convertRawDataToGameData(map, entities);
       this._gameEngineService.loadGame(gameMap, gameEntities, player);
       this._gameEngineService.startGameLoop();
       this._gameEngineService.setModalService(this._modalService);

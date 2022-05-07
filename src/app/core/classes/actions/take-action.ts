@@ -1,16 +1,16 @@
 import {Action} from '../../interfaces/action';
 import {ActionResult} from './action-result';
-import {MapEngine} from '../../../modules/game/services/map-engine.service';
+import {MapEngine} from '../../../services/map-engine.service';
 import {EventLog} from '../Utility/event-log';
 import {Entity} from '../base/entity';
 import {Tile} from '../base/tile';
-import {GameEngineImp} from '../../../modules/game/services/game-engine-imp.service';
+import {GameEngineService} from '../../../services/game-engine-imp.service';
 
 export class TakeAction implements Action {
   constructor() {
   }
 
-  execute(actor: Entity, gameEngine: GameEngineImp): ActionResult {
+  execute(actor: Entity, gameEngine: GameEngineService): ActionResult {
     const mapEngine: MapEngine = gameEngine.getMapEngine();
     const tile: Tile = mapEngine.getTileAt(actor.position) as Tile;
     EventLog.getInstance().message = 'Take object';
