@@ -6,6 +6,7 @@ import {SharedModule} from './modules/shared/shared.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {InventoryModule} from './modules/inventory/inventory.module';
 import {NgxSmartModalModule} from 'ngx-smart-modal';
+import {GameEngineImp} from '@services/game-engine-imp.service';
 
 @NgModule({
     declarations: [

@@ -11,7 +11,7 @@
         "app/services/*"
       ]
     },
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "importHelpers": true,
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

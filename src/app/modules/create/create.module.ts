@@ -7,16 +7,16 @@ import {SharedModule} from '../shared/shared.module';
 import {CreateRoutingModule} from './create-routing/create-routing.module';
 
 @NgModule({
-            declarations: [
-              CreatePageComponent,
-              AbilityComponent,
-              DicesComponent,
-              RollDicesComponent
-            ],
-            imports: [
-              SharedModule,
-              CreateRoutingModule
-            ]
-          })
+  declarations: [
+    CreatePageComponent,
+    AbilityComponent,
+    DicesComponent,
+    RollDicesComponent
+  ],
+  imports: [
+    SharedModule,
+    CreateRoutingModule
+  ]
+})
 export class CreateModule {
 }

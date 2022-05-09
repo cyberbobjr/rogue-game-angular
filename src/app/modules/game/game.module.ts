@@ -8,23 +8,27 @@ import {InfoPageComponent} from './pages/info-page/info-page.component';
 import {LogPageComponent} from './pages/log-page/log-page.component';
 import {InventoryPageComponent} from './pages/inventory-page/inventory-page.component';
 import {InventoryModule} from '../inventory/inventory.module';
-import { GameOverComponent } from './pages/game-over/game-over.component';
+import {GameOverComponent} from './pages/game-over/game-over.component';
+import {DebugPageComponent} from './pages/debug-page/debug-page.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
-            declarations: [
-              MainPageComponent,
-              MainMapComponent,
-              InventoryPageComponent,
-              InfoPageComponent,
-              LogPageComponent,
-              GameOverComponent
-            ],
-            imports: [
-              CommonModule,
-              SharedModule,
-              GameRoutingModule,
-              InventoryModule
-            ]
-          })
+    declarations: [
+        MainPageComponent,
+        MainMapComponent,
+        InventoryPageComponent,
+        InfoPageComponent,
+        LogPageComponent,
+        GameOverComponent,
+        DebugPageComponent
+    ],
+    imports: [
+        CommonModule,
+        SharedModule,
+        GameRoutingModule,
+        InventoryModule,
+        ReactiveFormsModule
+    ]
+})
 export class GameModule {
 }

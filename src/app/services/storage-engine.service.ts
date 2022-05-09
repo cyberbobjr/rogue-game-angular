@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Player} from '../core/classes/entities/player';
-import {Entity} from '../core/classes/base/entity';
-import {JsonEntity, JsonMap} from '../core/interfaces/json-interfaces';
-import {GameMapImp} from 'src/app/core/classes/base/game-map-imp';
-import {GameEntities} from '../core/classes/base/game-entities';
-import {EntitiesFactory} from '../core/factories/entities-factory';
-import {AppDB, db} from '../core/helpers/AppDB';
+import {Player} from '@core/core/entities/player';
+import {JsonEntity, JsonMap} from '@core/interfaces/json-interfaces';
+import {GameEntities} from '@core/core/base/game-entities';
+import {EntitiesFactory} from '@core/factories/entities-factory';
+import {AppDB, db} from '@core/helpers/AppDB';
+import {GameMap} from '@core/interfaces/GameMap';
 
 @Injectable({
     providedIn: 'root'
@@ -26,26 +25,9 @@ export class StorageEngine {
             });
     }
 
-    /*private getDatabase(): IDataBase {
-        const tblMap: ITable = {
-            name: 'Map',
-            columns:
-                {
-                    level: {primaryKey: true},
-                    map: {dataType: DATA_TYPE.String},
-                    entities: {dataType: DATA_TYPE.String}
-                }
-        };
-        return {
-            name: this.dbname,
-            tables: [tblMap],
-            version: this.dbVersion
-        };
-    }*/
-
     async loadPlayer(): Promise<Player> {
         const json: string = await this.idbCon.Player.get(1);
-        if (!json) {
+        if (!json || json.length === 0) {
             throw new Error('Player not found');
         }
         const playerLoaded: JsonEntity = JSON.parse(json) as JsonEntity;
@@ -54,19 +36,23 @@ export class StorageEngine {
     }
 
     async loadRawMap(level: number): Promise<{ map: JsonMap, entities: Array<JsonEntity> }> {
-        const gameMap: Array<any> = await this.idbCon.Map.where({from: 'Map', limit: 1, where: {level: level}});
+        const gameMap: Array<any> = await this.idbCon
+                                              .Map
+                                              .where({level})
+                                              .limit(1)
+                                              .toArray();
         if (gameMap.length === 0) {
             throw new Error('No maps in storage');
         }
         return {map: JSON.parse(gameMap[0]['map']), entities: JSON.parse(gameMap[0]['entities'])};
     }
 
-    saveGameState(gameMap: GameMapImp, gameEntities: GameEntities) {
+    saveGameState(gameMap: GameMap, gameEntities: GameEntities) {
         this.savePlayer(gameEntities.getPlayer());
         this.saveMap(gameMap, gameEntities);
     }
 
-    async saveMap(gameMap: GameMapImp, gameEntities: GameEntities): Promise<any> {
+    async saveMap(gameMap: GameMap, gameEntities: GameEntities): Promise<any> {
         return await this.idbCon
                          .Map
                          .put({
@@ -76,7 +62,7 @@ export class StorageEngine {
                          });
     }
 
-    async savePlayer(player: Entity) {
-        await this.idbCon.Player.put(JSON.stringify(player));
+    async savePlayer(player: Player) {
+        await this.idbCon.Player.put(JSON.stringify(player), 1);
     }
 }

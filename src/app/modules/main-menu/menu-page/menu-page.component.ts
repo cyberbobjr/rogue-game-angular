@@ -1,16 +1,18 @@
 import {Component, OnInit} from '@angular/core';
-import {EntitiesEngine} from '../../../services/entities-engine.service';
+import {EntitiesEngine} from '@core/core/engines/entities-engine';
 import {Router} from '@angular/router';
-import {MapEngine} from '../../../services/map-engine.service';
-import {StorageEngine} from '../../../services/storage-engine.service';
-import {Player} from '../../../core/classes/entities/player';
-import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
-import {GameMapImp} from '../../../core/classes/base/game-map-imp';
+import {StorageEngine} from '@services/storage-engine.service';
+import {Player} from '@core/core/entities/player';
+import {JsonEntity, JsonMap} from '@core/interfaces/json-interfaces';
+import {GameMapImp} from '@core/core/base/game-map-imp';
 import {Error} from 'tslint/lib/error';
-import {Config} from '../../../core/config';
-import {MapBuilder} from '../../../core/factories/map-builder';
-import {GameEntities} from '../../../core/classes/base/game-entities';
-import {EntityBuilder} from '../../../core/factories/entity-builder';
+import {Config} from '@core/config';
+import {MapBuilder} from '@core/factories/map-builder';
+import {GameEntities} from '@core/core/base/game-entities';
+import {EntityBuilder} from '@core/factories/entity-builder';
+import {GameMap} from '@core/interfaces/GameMap';
+import {IdleAction} from '@core/core/actions/idle-action';
+import {GameEngineImp} from '@services/game-engine-imp.service';
 
 @Component({
     selector: 'app-menu-page',
@@ -21,11 +23,12 @@ export class MenuPageComponent implements OnInit {
     public isGameStarted = false;
     public isPlayerExist = false;
     private _player: Player = null;
+    private entitiesEngine: EntitiesEngine;
 
-    constructor(private _entitiesServices: EntitiesEngine,
+    constructor(private _gameEngine: GameEngineImp,
                 private _storageService: StorageEngine,
-                private _mapEngine: MapEngine,
                 private _router: Router) {
+        this.entitiesEngine = this._gameEngine.getEntityEngine();
     }
 
     ngOnInit() {
@@ -49,10 +52,11 @@ export class MenuPageComponent implements OnInit {
     }
 
     async startNewGame() {
-        const maps: Array<GameMapImp> = MapBuilder.generateMaps(Config.maxLevel);
+        const maps: Array<GameMap> = MapBuilder.generateMaps(Config.maxLevel);
         const saveMapPromise: Promise<void>[] = maps
             .map(map => {
-                const gameEntities: GameEntities = EntityBuilder.generateMonsters([], map.level, map);
+                const gameEntities: GameEntities = EntityBuilder.generateEntitiesOnMap([], map.level, map);
+                gameEntities.getEntities().map(e => e.setNextAction(new IdleAction(null, this._gameEngine)));
                 return this._storageService.saveMap(map, gameEntities);
             });
         await Promise.all(saveMapPromise)

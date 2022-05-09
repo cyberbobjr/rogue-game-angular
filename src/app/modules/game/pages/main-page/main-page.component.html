@@ -1,12 +1,13 @@
 <ngx-smart-modal #inventoryModal [identifier]="'inventoryModal'" [closable]="false">
-  <app-inventory-modal></app-inventory-modal>
+    <app-inventory-modal></app-inventory-modal>
 </ngx-smart-modal>
 
 <div style="display: flex">
-  <app-main-map></app-main-map>
-  <div class="container">
-    <app-info-page></app-info-page>
-    <app-inventory-page></app-inventory-page>
-    <app-log-page></app-log-page>
-  </div>
+    <app-main-map></app-main-map>
+    <div class="container">
+        <app-info-page [player]="player"></app-info-page>
+        <app-inventory-page [player]="player"></app-inventory-page>
+        <app-log-page></app-log-page>
+        <app-debug-page></app-debug-page>
+    </div>
 </div>

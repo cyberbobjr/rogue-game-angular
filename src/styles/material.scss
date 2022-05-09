@@ -240,12 +240,12 @@ body {
   background-color: map-get($mat-dark-theme-background, "background");
 }
 
+body.theme-alternate {
+  background-color: map-get($mat-light-theme-background, "background");
+}
+
 .theme-alternate {
   @include mat.all-component-themes($altTheme);
-
-  body {
-    background-color: map-get($mat-light-theme-background, "background");
-  }
 }
 
 // Specific component overrides, pieces that are not in line with the general theming
@@ -268,6 +268,6 @@ body {
   font-family: 'Material Icons', 'Material Icons';
 
   .mat-badge-content {
-    font-family: 'Roboto';
+    font-family: 'Roboto', sans-serif;
   }
 }

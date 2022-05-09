@@ -1,15 +1,14 @@
 <div class="panel-title">Player Info</div>
 <ul class="info-list-player">
-  <li *ngFor="let attribute of attributes">
-    {{attribute}} : {{entitiesService.getPlayer()?.getAttributeValue(attribute)}}
-  </li>
-  <li>
-    Gold : {{entitiesService.getPlayer()?.gp}}
-  </li>
-  <li>
-    AC : {{entitiesService.getPlayer()?.ac}}</li>
-  <li>
-    HP : {{entitiesService.getPlayer()?.hp}}
-  </li>
+    <li *ngFor="let attribute of attributes">
+        {{attribute}} : {{player?.getAttributeValue(attribute)}}
+    </li>
+    <li>
+        Gold : {{player?.gp}}
+    </li>
+    <li>
+        AC : {{player?.ac}}</li>
+    <li>
+        HP : {{player?.hp}}
+    </li>
 </ul>
-{{entitiesService.getPlayer()?.position | json}}

@@ -1,85 +1,90 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {NgxSmartModalService} from 'ngx-smart-modal';
-import {GameEngineService} from '../../../../services/game-engine-imp.service';
-import {EntitiesEngine} from '../../../../services/entities-engine.service';
-import {Player} from '../../../../core/classes/entities/player';
-import {GameObject} from '../../../../core/classes/gameObjects/game-object';
-import {InventoryKeyboardCapture} from '../../../../core/classes/Utility/inventoryKeyboardCapture';
+import {GameEngineImp} from '@services/game-engine-imp.service';
+import {EntitiesEngine} from '@core/core/engines/entities-engine';
+import {Player} from '@core/core/entities/player';
+import {GameObject} from '@core/core/gameObjects/game-object';
+import {InventoryKeyboardCapture} from '@core/core/keyboardCapture/inventoryKeyboardCapture';
+import {KeyboardEngine} from '@services/keyboard-engine.service';
 
 @Component({
-  selector: 'app-inventory-modal',
-  templateUrl: './inventory-modal.component.html',
-  styleUrls: ['./inventory-modal.component.scss']
+    selector: 'app-inventory-modal',
+    templateUrl: './inventory-modal.component.html',
+    styleUrls: ['./inventory-modal.component.scss']
 })
 export class InventoryModalComponent implements OnInit, OnDestroy {
-  get selected(): string {
-    return this._selected;
-  }
+    private readonly _entitiesService: EntitiesEngine;
 
-  get player(): Player {
-    return this._player;
-  }
-
-  private _handleKeyBackup: any;
-  private _listener: any = null;
-  private _selected: string = null;
-  private _player: Player = null;
-
-  get entitiesService(): EntitiesEngine {
-    return this._entitiesService;
-  }
-
-  constructor(private _modalService: NgxSmartModalService,
-              private _gameEngine: GameEngineService,
-              private _entitiesService: EntitiesEngine) {
-  }
-
-  ngOnInit() {
-    this._player = this._entitiesService.getPlayer();
-    this.initModalHandler();
-  }
-
-  ngOnDestroy() {
-    if (this._listener) {
-      this._listener();
+    get selected(): string {
+        return this._selected;
     }
-  }
 
-  initModalHandler() {
-    this._modalService.getModal('inventoryModal')
-        .onOpen
-        .subscribe(() => {
-          this._player = this._entitiesService.getPlayer();
-          this._handleKeyBackup = this._gameEngine.keyboardHandler;
-          this._gameEngine.keyboardHandler = new InventoryKeyboardCapture(this._player, this._gameEngine, (selected: string) => {
-            this._selected = selected;
-          });
-        }, (err) => {
-          console.log(err);
-        });
-    this._modalService.getModal('inventoryModal')
-        .onAnyCloseEvent
-        .subscribe(() => {
-          this._gameEngine.captureKeyboardEvent();
-        });
-  }
+    get player(): Player {
+        return this._player;
+    }
 
-  isDroppable(): boolean {
-    return !!this._player.position;
-  }
+    private _listener: any = null;
+    private _selected: string = null;
+    private _player: Player = null;
+    private _keyboardEngine: KeyboardEngine;
 
-  isSelectedEquipable(): boolean {
-    const object: GameObject = this._player.getItemByLetter(this._selected);
-    return object.canEquip() && !this._player.isInventoryEquipped(this._selected);
-  }
+    get entitiesService(): EntitiesEngine {
+        return this._entitiesService;
+    }
 
-  isSelectedUsable(): boolean {
-    const object: GameObject = this._player.getItemByLetter(this._selected);
-    return object.canUse();
-  }
+    constructor(private _modalService: NgxSmartModalService,
+                private _gameEngine: GameEngineImp) {
+        this._entitiesService = this._gameEngine.getEntityEngine();
+    }
 
-  isSelectedUnequippable(): boolean {
-    const object: GameObject = this._player.getItemByLetter(this._selected);
-    return object.canEquip() && this._player.isInventoryEquipped(this._selected);
-  }
+    ngOnInit() {
+        this._player = this._entitiesService.getPlayer();
+        this._keyboardEngine = this._gameEngine.getKeyboardEngine();
+        this.initModalHandler();
+    }
+
+    ngOnDestroy() {
+        if (this._listener) {
+            this._listener();
+        }
+    }
+
+    initModalHandler() {
+        this._modalService.getModal('inventoryModal')
+            .onOpen
+            .subscribe(() => {
+                this._player = this._entitiesService.getPlayer();
+                const keyboardHandler = new InventoryKeyboardCapture(this._player, this._gameEngine, (selected: string) => {
+                    console.log(selected);
+                    this._selected = selected;
+                });
+                this._keyboardEngine.setKeyboardHandler(keyboardHandler);
+            }, (err) => {
+                console.log(err);
+            });
+        this._modalService.getModal('inventoryModal')
+            .onAnyCloseEvent
+            .subscribe(() => {
+                this._gameEngine.setGeneralKeyboardHandlerCommand();
+            });
+    }
+
+    isDroppable(): boolean {
+        return !!this._player.position;
+    }
+
+    isSelectedEquipable(): boolean {
+        const object: GameObject = this._player.getItemByLetter(this._selected);
+        return object.canEquip() && !this._player.isInventoryEquipped(this._selected);
+    }
+
+    isSelectedUsable(): boolean {
+        const object: GameObject = this._player.getItemByLetter(this._selected);
+        return object.canUse();
+    }
+
+    isSelectedUnequippable(): boolean {
+        const object: GameObject = this._player.getItemByLetter(this._selected);
+        return object.canEquip() && this._player.isInventoryEquipped(this._selected);
+    }
 }

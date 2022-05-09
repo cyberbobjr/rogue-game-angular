@@ -1,35 +1,27 @@
-import {Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {DisplayEngine} from '../../../../services/display-engine.service';
-import {GameEngineService} from '../../../../services/game-engine-imp.service';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {DisplayEngine} from '@core/core/engines/display-engine';
+import {GameEngineImp} from '@services/game-engine-imp.service';
 
 @Component({
-             selector: 'app-main-map',
-             templateUrl: './main-map.component.html',
-             styleUrls: ['./main-map.component.scss']
-           })
+    selector: 'app-main-map',
+    templateUrl: './main-map.component.html',
+    styleUrls: ['./main-map.component.scss']
+})
 export class MainMapComponent implements OnInit, OnDestroy {
-  @ViewChild('refMap', { static: true }) refMap: ElementRef;
+    @ViewChild('refMap', {static: true}) refMap: ElementRef;
+    private _displayService: DisplayEngine;
 
-  @HostListener('document:keydown', ['$event'])
-  handleKeyEvent(keyboardEvent: KeyboardEvent) {
-    this._gameEngineService.keyboardHandler.handleActionKeyEvent(keyboardEvent);
-    keyboardEvent.preventDefault();
-    keyboardEvent.stopPropagation();
-    return false;
-  }
+    constructor(private _gameEngineService: GameEngineImp) {
+        this._displayService = this._gameEngineService.getDisplayEngine();
+    }
 
-  constructor(private _displayService: DisplayEngine,
-              private _gameEngineService: GameEngineService) {
-  }
+    ngOnInit() {
+        const fontsize = 18;
+        const maxHeight = Math.round(window.innerHeight / fontsize) - 1;
+        this.refMap.nativeElement.appendChild(this._displayService.container);
+        this._displayService.initDisplay(maxHeight, fontsize);
+    }
 
-  ngOnInit() {
-    const fontsize = 18;
-    const maxHeight = Math.round(window.innerHeight / fontsize) - 1;
-    this._displayService.options = {height: maxHeight, fontSize: fontsize};
-    this.refMap.nativeElement.appendChild(this._displayService.container);
-    this._displayService.computeVisiblesRowsCols();
-  }
-
-  ngOnDestroy() {
-  }
+    ngOnDestroy() {
+    }
 }

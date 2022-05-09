@@ -1,5 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
@@ -13,6 +15,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 @NgModule({
     declarations: [],
     imports: [
+        MatInputModule,
+        MatButtonModule,
         CommonModule,
         FormsModule,
         HttpClientModule,
@@ -30,7 +34,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         TranslateModule,
         FormsModule,
         HttpClientModule,
-        NgxSmartModalModule
+        NgxSmartModalModule,
+        MatInputModule,
+        MatButtonModule
     ]
 })
 export class SharedModule {

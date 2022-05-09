@@ -1,175 +1,179 @@
-import {Injectable} from '@angular/core';
-import {EntitiesEngine} from './entities-engine.service';
-import {MapEngine} from './map-engine.service';
+import {Injectable, OnDestroy} from '@angular/core';
+import {EntitiesEngine} from '@core/core/engines/entities-engine';
+import {MapEngine} from '@core/core/engines/map-engine';
 import {LoggingService} from './logging.service';
-import {DisplayEngine} from './display-engine.service';
-import {CommandsService} from './commands.service';
+import {DisplayEngine} from '@core/core/engines/display-engine';
 import {StorageEngine} from './storage-engine.service';
-import {Entity} from '../core/classes/base/entity';
+import {Entity} from '@core/core/base/entity';
 import {EffectEngine} from './effect-engine.service';
 import {NgxSmartModalService} from 'ngx-smart-modal';
 import {Router} from '@angular/router';
-import {JsonEntity, JsonMap} from 'src/app/core/interfaces/json-interfaces';
-import {Player} from '../core/classes/entities/player';
-import {GameMapImp} from '../core/classes/base/game-map-imp';
-import {EventLog} from '../core/classes/Utility/event-log';
-import {MapBuilder} from '../core/factories/map-builder';
-import {GameEntities} from '../core/classes/base/game-entities';
-import {GameEngine} from '../core/interfaces/game-engine';
-import {GeneralKeyboardCapture} from '../core/classes/Utility/generalKeyboardCapture';
-import {KeyboardCapture} from '../core/interfaces/keyboardCapture';
-import {EntityBuilder} from '../core/factories/entity-builder';
-import {Iobject} from '../core/interfaces/iobject';
-import {Position} from '../core/classes/base/position';
+import {Player} from '@core/core/entities/player';
+import {EventLog} from '@core/core/Utility/event-log';
+import {GameEntities} from '@core/core/base/game-entities';
+import {GameEngine} from '@core/core/engines/GameEngine';
+import {GeneralKeyboardCapture} from '@core/core/keyboardCapture/generalKeyboardCapture';
+import {Iobject} from '@core/interfaces/iobject';
+import {Position2D} from '@core/core/base/position2D';
+import {LoadEngine} from '@core/core/engines/load-engine';
+import {LoadEngineImp} from '@core/core/engines/LoadEngineImp';
+import {KeyboardEngine} from '@services/keyboard-engine.service';
+import {BusEventsGame} from '@core/core/busEvents/BusEventsGame';
+import {GameMap} from '@core/interfaces/GameMap';
 
 // @ts-ignore
 window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
-export class GameEngineService implements GameEngine {
+export class GameEngineImp implements GameEngine, OnDestroy {
+    private _gameLoopTimer: any = null;
+    private _timeStart: any = null;
+    private _keyboardEngine: KeyboardEngine = new KeyboardEngine();
+    private _displayEngine: DisplayEngine = new DisplayEngine();
+    private _mapEngine: MapEngine = new MapEngine();
+    private _entityEngine: EntitiesEngine = new EntitiesEngine();
+    private _busEventsGame: BusEventsGame = new BusEventsGame();
 
-  get keyboardHandler(): KeyboardCapture {
-    return this._keyboardHandler;
-  }
-
-  set keyboardHandler(value: KeyboardCapture) {
-    this._keyboardHandler = value;
-  }
-
-  constructor(private _entityEngine: EntitiesEngine,
-              private _mapEngine: MapEngine,
-              private _logService: LoggingService,
-              private _displayEngine: DisplayEngine,
-              private _commandEngine: CommandsService,
-              private _storageEngine: StorageEngine,
-              private _effectEngine: EffectEngine,
-              private _router: Router) {
-    console.log('Game engine created');
-    this.captureKeyboardEvent();
-    this._commandEngine.gameEngine = this;
-  }
-
-  private _gameLoopTimer: any = null;
-  private _timeStart: any = null;
-  private _keyboardHandler: KeyboardCapture;
-  private _modalService: NgxSmartModalService;
-
-  public static convertRawDataToGameData(map: JsonMap, entities: Array<JsonEntity>): { gameMap: GameMapImp, gameEntities: GameEntities } {
-    const gameMap: GameMapImp = MapBuilder.fromJSON(map);
-    const gameEntities: GameEntities = EntityBuilder.fromJSON(entities);
-    return {gameMap, gameEntities};
-  }
-
-  public getEntityEngine(): EntitiesEngine {
-    return this._entityEngine;
-  }
-
-  public setHandleKeyEvent(keyboardHandler: KeyboardCapture) {
-    this._keyboardHandler = keyboardHandler;
-  }
-
-  public getTileOrEntityAt(position: Position): Iobject {
-    return this._entityEngine.getEntityAt(position) || this._mapEngine.getTileAt(position);
-  }
-
-  public startGameLoop() {
-    console.log('Game loop started');
-    this._timeStart = performance.now();
-    this._gameLoopTimer = window.requestAnimationFrame((timestamp: any) => {
-      this._gameLoop(timestamp);
-    });
-  }
-
-  public endGameLoop() {
-    console.log('Game loop stop');
-    window.cancelAnimationFrame(this._gameLoopTimer);
-  }
-
-  private _gameLoop(timestamp: any) {
-    if (timestamp - this._timeStart > 50) {
-      this._updateGame(timestamp);
-      this._drawGame();
-      this._timeStart = performance.now();
+    constructor(private _logService: LoggingService,
+                private _modalService: NgxSmartModalService,
+                private _storageEngine: StorageEngine,
+                private _effectEngine: EffectEngine,
+                private _router: Router) {
+        console.log('Game engine created');
     }
-    this._gameLoopTimer = window.requestAnimationFrame((timestamp2: any) => {
-      this._gameLoop(timestamp2);
-    });
-  }
 
-  private _updateGame(timestamp: number) {
-    const player: Player = this._entityEngine.getPlayer();
-    this._entityEngine.updateEntities(this);
-    this._effectEngine.updateEffects(timestamp);
-    this._mapEngine.computeLOSMap(player);
-    this._entityEngine.setVisibilityForEntities(this._mapEngine.getCurrentMap());
-  }
+    public ngOnDestroy(): void {
+        this.stopEngine();
+    }
 
-  private _drawGame() {
-    this._displayEngine.drawGameMap(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
-  }
+    public initEngine() {
+        this.setGeneralKeyboardHandlerCommand();
+    }
 
-  public getModalService(): NgxSmartModalService {
-    return this._modalService;
-  }
+    public stopEngine() {
+        console.log('Stop Engine');
+        this.endGameLoop();
+        this._keyboardEngine.ngOnDestroy();
+    }
 
-  public setModalService(value: NgxSmartModalService) {
-    this._modalService = value;
-  }
+    public getEntityEngine(): EntitiesEngine {
+        return this._entityEngine;
+    }
 
-  public getPlayer(): Player {
-    return this._entityEngine.getPlayer();
-  }
+    public getKeyboardEngine(): KeyboardEngine {
+        return this._keyboardEngine;
+    }
 
-  public setPlayer(player: Player): void {
-    this._entityEngine.setPlayer(player);
-  }
+    getDisplayEngine(): DisplayEngine {
+        return this._displayEngine;
+    }
 
-  public getEntitiesVisibles(): Array<Entity> {
-    return this._entityEngine.getEntitiesVisiblesOnMap(this._mapEngine.getCurrentMap());
-  }
+    getBusEventGame(): BusEventsGame {
+        return this._busEventsGame;
+    }
 
-  public getMapEngine(): MapEngine {
-    return this._mapEngine;
-  }
+    public getTileOrEntityAt(position: Position2D): Iobject {
+        return this._entityEngine.getEntityAt(position) || this._mapEngine.getTileAt(position);
+    }
 
-  public captureKeyboardEvent() {
-    this._keyboardHandler = new GeneralKeyboardCapture(this, this._commandEngine);
-  }
+    public startEngine() {
+        console.log('Game loop started');
+        this._timeStart = performance.now();
+        this._gameLoopTimer = window.requestAnimationFrame((timestamp: any) => {
+            this._gameLoop(timestamp);
+        });
+    }
 
-  public looseGame(): void {
-    this.endGameLoop();
-    window.alert('You loose !');
-    EventLog.getInstance().message = `You Loose !!!`;
-    this._router.navigateByUrl('game/gameover');
-  }
+    public endGameLoop() {
+        console.log('Game loop stop');
+        window.cancelAnimationFrame(this._gameLoopTimer);
+    }
 
-  public winGame(): void {
-    EventLog.getInstance().message = `You Win !!!`;
-  }
+    private _gameLoop(timestamp: any) {
+        if (timestamp - this._timeStart > 50) {
+            this._updateGame(timestamp);
+            this._drawGame();
+            this._timeStart = performance.now();
+        }
+        this._gameLoopTimer = window.requestAnimationFrame((timestamp2: any) => {
+            this._gameLoop(timestamp2);
+        });
+    }
 
-  async changeLevel(level: number): Promise<void> {
-    this.saveGameState();
-    const {map, entities} = await this._storageEngine.loadRawMap(level);
-    const {gameMap, gameEntities} = GameEngineService.convertRawDataToGameData(map, entities);
-    this.getPlayer().setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
-    this.loadGame(gameMap, gameEntities, this.getPlayer());
-    this.saveGameState();
-  }
+    private _updateGame(timestamp: number) {
+        this._entityEngine.updateEntities(this);
+        this._effectEngine.updateEffects(timestamp);
+    }
 
-  public loadGame(gameMap: GameMapImp, gameEntities: GameEntities, player: Player = null): void {
-    gameEntities.setPlayer(player);
-    this._mapEngine.setGameMap(gameMap);
-    this._entityEngine.setGameEntities(gameEntities);
-  }
+    private _drawGame() {
+        const player: Player = this._entityEngine.getPlayer();
+        this._mapEngine.computeLOSMap(player);
+        this._entityEngine.setVisibilityForEntities(this._mapEngine.getCurrentMap());
+        this._displayEngine.drawGameMap(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
+    }
 
-  public executeEntitiesActions() {
-    this._entityEngine.executeEntitiesActions(this);
-  }
+    public getPlayer(): Player {
+        return this._entityEngine.getPlayer();
+    }
 
-  public saveGameState(): void {
-    this._storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
-  }
+    public getEntitiesVisibles(): Array<Entity> {
+        return this._entityEngine.getEntitiesVisiblesOnMap(this._mapEngine.getCurrentMap());
+    }
+
+    public getMapEngine(): MapEngine {
+        return this._mapEngine;
+    }
+
+    public setGeneralKeyboardHandlerCommand() {
+        this._keyboardEngine.setKeyboardHandler(new GeneralKeyboardCapture(this));
+    }
+
+    public looseGame(): void {
+        window.alert('You loose !');
+        EventLog.getInstance().message = `You Loose !!!`;
+        this.endGameLoop();
+        this.stopEngine();
+        this._router.navigateByUrl('game/gameover');
+    }
+
+    public winGame(): void {
+        window.alert('You win !');
+        EventLog.getInstance().message = `You Win !!!`;
+        this.endGameLoop();
+        this.stopEngine();
+    }
+
+    public async changeLevel(level: number): Promise<void> {
+        this.saveGameState();
+        const {map, entities} = await this._storageEngine.loadRawMap(level);
+        const loadEngine: LoadEngine = new LoadEngineImp();
+        const {gameMap, gameEntities} = loadEngine.convertRawDataToGameData(map, entities, this);
+        this.getPlayer().setMapLevelAndPosition(gameMap.level, gameMap.entryPosition);
+        this.loadGame(gameMap, gameEntities, this.getPlayer());
+        this.saveGameState();
+    }
+
+    public loadGame(gameMap: GameMap, gameEntities: GameEntities, player: Player = null): void {
+        console.log('load Game');
+        gameEntities.setPlayer(player);
+        this._mapEngine.setGameMap(gameMap);
+        this._entityEngine.setGameEntities(gameEntities);
+    }
+
+    public executeEntitiesActions() {
+        this._entityEngine.executeEntitiesActions();
+    }
+
+    public saveGameState(): void {
+        this._storageEngine.saveGameState(this._mapEngine.getCurrentMap(), this._entityEngine.getGameEntities());
+    }
+
+    public openModal(id: string): void {
+        this._modalService
+            .getModal(id)
+            .open();
+    }
 
 }

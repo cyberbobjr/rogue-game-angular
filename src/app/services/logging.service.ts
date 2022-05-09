@@ -2,15 +2,15 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
-              providedIn: 'root'
-            })
+    providedIn: 'root'
+})
 export class LoggingService {
-  public displayText: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    public displayText: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  constructor() {
-  }
+    constructor() {
+    }
 
-  put(text: string) {
-    this.displayText.next(text);
-  }
+    put(text: string) {
+        this.displayText.next(text);
+    }
 }

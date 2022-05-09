@@ -1,0 +1,40 @@
+import {TestBed} from '@angular/core/testing';
+import {ChestTile} from '../core/tiles/chest-tile';
+import {MapBuilder} from '@core/factories/map-builder';
+import {GameMap} from '@core/interfaces/GameMap';
+
+describe('MapBuilder', () => {
+    beforeEach(() => TestBed.configureTestingModule({}));
+
+    it('empty map created', () => {
+        const map: GameMap = new MapBuilder().build();
+        expect(map.width)
+            .toEqual(80);
+        expect(map.level)
+            .toEqual(1);
+        expect(map.getAllPosition<ChestTile>(ChestTile).length)
+            .toEqual(0);
+    });
+
+    it('map created with Entities', () => {
+        const map: GameMap = new MapBuilder().build();
+        expect(map.level)
+            .toEqual(1);
+    });
+
+    it('map created with Chests', () => {
+        const nbChest = 2;
+        const map: GameMap = new MapBuilder().withRandomChests(nbChest)
+                                             .build();
+        expect(map.getAllPosition<ChestTile>(ChestTile).length).toBeGreaterThan(nbChest - 1);
+    });
+
+    it('map created with size', () => {
+        const map: GameMap = new MapBuilder().withSize(100, 100)
+                                             .build();
+        expect(map.height)
+            .toEqual(100);
+        expect(map.width)
+            .toEqual(100);
+    });
+});

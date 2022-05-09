@@ -9,9 +9,13 @@
     </pre>
 </div>
 <div class="row">
-    <ul class="nav nav-list">
-      <li><a routerLink="/create">Create new player</a></li>
-      <li *ngIf="isGameStarted"><a routerLink="/game">Continue game</a></li>
-      <li *ngIf="isPlayerExist"><a (click)="startNewGame()">New game</a></li>
-    </ul>
+  <button mat-button color="primary" routerLink="/create">
+    Create new player
+  </button>
+  <button mat-button color="primary" routerLink="/game" *ngIf="isGameStarted">
+    Continue game
+  </button>
+  <button mat-button color="accent" (click)="startNewGame()" *ngIf="isPlayerExist">
+    New game
+  </button>
 </div>

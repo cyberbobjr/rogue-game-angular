@@ -1,6 +1,6 @@
 <div class="panel-title">Items Equipped</div>
 <ul>
-  <li *ngFor="let gameObject of getPlayer()?.equippedItem | keyvalue">
-    {{getSlotTypeLabel(gameObject.key)}} - {{gameObject.value.name}}
-  </li>
+    <li *ngFor="let gameObject of player?.equippedItem | keyvalue">
+        {{getSlotTypeLabel(gameObject.key)}} - {{gameObject.value.name}}
+    </li>
 </ul>
